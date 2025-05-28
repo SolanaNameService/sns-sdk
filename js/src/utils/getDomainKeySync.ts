@@ -22,9 +22,10 @@ const _deriveSync = (
  * This function can be used to compute the public key of a domain or subdomain
  * @param domain The domain to compute the public key for (e.g `bonfida.sol`, `dex.bonfida.sol`)
  * @param record Optional parameter: If the domain being resolved is a record
+ * @param customRoot Optional parameter: Custom root domain tld
  * @returns
  */
-export const getDomainKeySync = (domain: string, record?: RecordVersion) => {
+export const getDomainKeySync = (domain: string, record?: RecordVersion, customRoot?:PublicKey) => {
   if (domain.endsWith(".sol")) {
     domain = domain.slice(0, -4);
   }
@@ -34,12 +35,12 @@ export const getDomainKeySync = (domain: string, record?: RecordVersion) => {
   if (splitted.length === 2) {
     const prefix = Buffer.from([record ? record : 0]).toString();
     const sub = prefix.concat(splitted[0]);
-    const { pubkey: parentKey } = _deriveSync(splitted[1]);
+    const { pubkey: parentKey } = _deriveSync(splitted[1], !!customRoot ? customRoot : ROOT_DOMAIN_ACCOUNT);
     const result = _deriveSync(sub, parentKey, recordClass);
     return { ...result, isSub: true, parent: parentKey };
   } else if (splitted.length === 3 && !!record) {
     // Parent key
-    const { pubkey: parentKey } = _deriveSync(splitted[2]);
+    const { pubkey: parentKey } = _deriveSync(splitted[2], customRoot ?? ROOT_DOMAIN_ACCOUNT);
     // Sub domain
     const { pubkey: subKey } = _deriveSync("\0".concat(splitted[1]), parentKey);
     // Sub record
@@ -53,6 +54,6 @@ export const getDomainKeySync = (domain: string, record?: RecordVersion) => {
   } else if (splitted.length >= 3) {
     throw new InvalidInputError("The domain is malformed");
   }
-  const result = _deriveSync(domain, ROOT_DOMAIN_ACCOUNT);
+  const result = _deriveSync(domain, !!customRoot? customRoot :ROOT_DOMAIN_ACCOUNT);
   return { ...result, isSub: false, parent: undefined };
 };
