@@ -7,13 +7,18 @@
   ],
   "type": "module",
   "main": "./dist/cjs/index.cjs",
-  "module": "./dist/esm/index.mjs",
-  "types": "./dist/types/index.d.ts",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/esm/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/esm/index.mjs",
-      "require": "./dist/cjs/index.cjs",
-      "types": "./dist/types/index.d.ts"
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      }
     }
   },
   "repository": {
@@ -23,11 +28,11 @@
   "homepage": "https://sns.guide",
   "scripts": {
     "dev": "tsc && node --trace-warnings dist/test.js",
-    "build": "rm -rf dist && rollup -c && tsc --emitDeclarationOnly --outDir dist/types",
-    "prepublish": "rm -rf dist && rollup -c && tsc --emitDeclarationOnly --outDir dist/types",
-    "prepack": "rm -rf dist && rollup -c && tsc --emitDeclarationOnly --outDir dist/types",
-    "lint": "yarn pretty && eslint .",
-    "lint:fix": "yarn pretty:fix && eslint . --fix",
+    "build": "rm -rf dist && rollup -c && tsc --emitDeclarationOnly --declarationDir dist/cjs && tsc --emitDeclarationOnly --declarationDir dist/esm && echo '{\"type\": \"commonjs\"}' > ./dist/cjs/package.json",
+    "prepublish": "npm run build",
+    "prepack": "npm run build",
+    "lint": "npm run pretty && eslint .",
+    "lint:fix": "npm run pretty:fix && eslint . --fix",
     "pretty": "prettier --check 'src/*.[jt]s'",
     "pretty:fix": "prettier --write 'src/*.[jt]s'",
     "test": "jest ./tests"
