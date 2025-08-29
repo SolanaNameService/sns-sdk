@@ -37,6 +37,7 @@ pub enum SnsError {
     RecordsError(sns_records::error::SnsRecordsError),
     StaleRecord,
     UnverifiedRecord,
+    InvalidSubRegistrar,
 }
 
 impl From<ClientError> for SnsError {

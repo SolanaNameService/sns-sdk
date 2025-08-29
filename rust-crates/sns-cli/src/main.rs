@@ -1,11 +1,13 @@
 use serde::Serialize;
 use sns_sdk::{
+    derivation::ROOT_DOMAIN_ACCOUNT,
     favourite_domain::register_favourite::Accounts,
     record::{self, get_record_v2_key},
     NAME_OFFERS_PROGRAM_ID,
 };
-use solana_account_decoder::UiAccountEncoding;
+use solana_account_decoder::{UiAccountEncoding, UiDataSliceConfig};
 use solana_client::{
+    client_error::ClientError,
     rpc_config::{RpcAccountInfoConfig, RpcProgramAccountsConfig},
     rpc_filter::{Memcmp, RpcFilterType},
 };
@@ -174,6 +176,14 @@ enum Commands {
         owners: Vec<String>,
     },
     Record(RecordCommand),
+    GetSubRegistrarInfo {
+        #[arg(long, short, help = "Optional custom RPC URL")]
+        url: Option<String>,
+
+        #[arg(required = true, help = "The domain to get information for")]
+        domain: String,
+    },
+    Count(CountCommand),
 }
 
 #[derive(Debug, Args)]
@@ -208,6 +218,22 @@ pub enum RecordSubCommand {
     },
     #[command(about = "Dump records system info")]
     SystemDump,
+}
+
+#[derive(Debug, Args)]
+pub struct CountCommand {
+    #[command(subcommand)]
+    pub cmd: CountSubCommand,
+    #[arg(long, short, help = "Optional custom RPC URL")]
+    url: Option<String>,
+}
+
+#[derive(Debug, Subcommand)]
+pub enum CountSubCommand {
+    #[command(about = "Get registered domains")]
+    RegisteredDomains,
+    #[command(about = "GetRegisteredSubdomains")]
+    SubDomains,
 }
 
 const RPC_URL: &str = "https://api.mainnet-beta.solana.com";
@@ -800,6 +826,85 @@ pub async fn process_system_dump(rpc_client: &RpcClient) -> CliResult {
     Ok(())
 }
 
+async fn process_sub_registrar_info(rpc_client: &RpcClient, domain: &str) -> CliResult {
+    let registrar =
+        sns_sdk::non_blocking::subdomain::get_sub_registrar_info(rpc_client, domain).await?;
+    println!("{registrar:#?}");
+    Ok(())
+}
+
+async fn process_count_command(rpc_client: &RpcClient, count_type: CountSubCommand) -> CliResult {
+    let (filters, data_slice) = match count_type {
+        CountSubCommand::RegisteredDomains => (
+            Some(vec![RpcFilterType::Memcmp(Memcmp::new_raw_bytes(
+                0,
+                ROOT_DOMAIN_ACCOUNT.to_bytes().to_vec(),
+            ))]),
+            Some(UiDataSliceConfig {
+                offset: 0,
+                length: 0,
+            }),
+        ),
+        CountSubCommand::SubDomains => (
+            None,
+            Some(UiDataSliceConfig {
+                offset: 0,
+                length: 32,
+            }),
+        ),
+    };
+    let accounts = rpc_client
+        .get_program_accounts_with_config(
+            &spl_name_service::ID,
+            RpcProgramAccountsConfig {
+                filters,
+                account_config: RpcAccountInfoConfig {
+                    data_slice,
+                    encoding: Some(UiAccountEncoding::Base64Zstd),
+                    ..Default::default()
+                },
+                ..Default::default()
+            },
+        )
+        .await?;
+    match count_type {
+        CountSubCommand::RegisteredDomains => println!("{}", accounts.len()),
+        CountSubCommand::SubDomains => {
+            let mut name_accounts = HashMap::<Pubkey, Vec<Pubkey>>::with_capacity(accounts.len());
+            for (key, account) in accounts {
+                let parent = Pubkey::new_from_array(
+                    account.data.try_into().expect("Invalid name account data"),
+                );
+                use std::collections::hash_map::Entry;
+                match name_accounts.entry(parent) {
+                    Entry::Occupied(mut occupied_entry) => occupied_entry.get_mut().push(key),
+                    Entry::Vacant(vacant_entry) => {
+                        vacant_entry.insert(vec![key]);
+                    }
+                }
+            }
+            let domains = name_accounts.get(&ROOT_DOMAIN_ACCOUNT).unwrap();
+            let mut number_of_subdomains: usize = 0;
+            for d in domains {
+                number_of_subdomains += name_accounts.get(d).map(|v| v.len()).unwrap_or_default();
+            }
+
+            #[derive(Serialize)]
+            struct Result {
+                number_of_domains: usize,
+                number_of_subdomains: usize,
+            }
+
+            let result = serde_json::to_string_pretty(&Result {
+                number_of_domains: domains.len(),
+                number_of_subdomains,
+            })?;
+            println!("{result}");
+        }
+    }
+    Ok(())
+}
+
 #[tokio::main]
 async fn main() {
     let args = Cli::parse();
@@ -851,6 +956,12 @@ async fn main() {
             }
             RecordSubCommand::SystemDump {} => process_system_dump(&get_rpc_client(url)).await,
         },
+        Commands::GetSubRegistrarInfo { url, domain } => {
+            process_sub_registrar_info(&get_rpc_client(url), domain.as_str()).await
+        }
+        Commands::Count(CountCommand { cmd, url }) => {
+            process_count_command(&get_rpc_client(url), cmd).await
+        }
     };
 
     if let Err(err) = res {
