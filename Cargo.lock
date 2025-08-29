@@ -7075,7 +7075,8 @@ checksum = "7da8b5736845d9f2fcb837ea5d9e2628564b3b043a70948a3f0b778838c5fb4f"
 [[package]]
 name = "sub-registrar"
 version = "0.1.0"
-source = "git+https://github.com/SolanaNameService/sub-registrar?branch=chore%2Fupgrade-solana-toolchain#574620eef6d3da4c7b8cc87dd8fa35df4d7ec547"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3a9520a766ba995b83aa1f636e1b0d6cbc92ec80d16e2c8c6f053a26b7832514"
 dependencies = [
  "bonfida-utils",
  "borsh 0.10.4",
