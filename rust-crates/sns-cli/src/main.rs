@@ -7,12 +7,11 @@ use sns_sdk::{
 };
 use solana_account_decoder::{UiAccountEncoding, UiDataSliceConfig};
 use solana_client::{
-    client_error::ClientError,
     rpc_config::{RpcAccountInfoConfig, RpcProgramAccountsConfig},
     rpc_filter::{Memcmp, RpcFilterType},
 };
 use solana_sdk::{bs58, signature::Keypair, system_program};
-use std::collections::HashMap;
+use std::collections::{BTreeSet, HashMap};
 
 use {
     anyhow::anyhow,
@@ -233,7 +232,10 @@ pub enum CountSubCommand {
     #[command(about = "Get registered domains")]
     RegisteredDomains,
     #[command(about = "GetRegisteredSubdomains")]
-    SubDomains,
+    SubDomains {
+        #[clap(long, help = "Print the top n domains by number of subdomains")]
+        top_domains: Option<usize>,
+    },
 }
 
 const RPC_URL: &str = "https://api.mainnet-beta.solana.com";
@@ -845,11 +847,11 @@ async fn process_count_command(rpc_client: &RpcClient, count_type: CountSubComma
                 length: 0,
             }),
         ),
-        CountSubCommand::SubDomains => (
+        CountSubCommand::SubDomains { .. } => (
             None,
             Some(UiDataSliceConfig {
                 offset: 0,
-                length: 32,
+                length: NameRecordHeader::LEN,
             }),
         ),
     };
@@ -869,14 +871,16 @@ async fn process_count_command(rpc_client: &RpcClient, count_type: CountSubComma
         .await?;
     match count_type {
         CountSubCommand::RegisteredDomains => println!("{}", accounts.len()),
-        CountSubCommand::SubDomains => {
+        CountSubCommand::SubDomains { top_domains } => {
             let mut name_accounts = HashMap::<Pubkey, Vec<Pubkey>>::with_capacity(accounts.len());
+            const NULL_PUBKEY: Pubkey = Pubkey::new_from_array([0; 32]);
             for (key, account) in accounts {
-                let parent = Pubkey::new_from_array(
-                    account.data.try_into().expect("Invalid name account data"),
-                );
+                let name_record = NameRecordHeader::unpack_unchecked(&account.data)?;
                 use std::collections::hash_map::Entry;
-                match name_accounts.entry(parent) {
+                if name_record.class != NULL_PUBKEY {
+                    continue;
+                }
+                match name_accounts.entry(name_record.parent_name) {
                     Entry::Occupied(mut occupied_entry) => occupied_entry.get_mut().push(key),
                     Entry::Vacant(vacant_entry) => {
                         vacant_entry.insert(vec![key]);
@@ -884,20 +888,44 @@ async fn process_count_command(rpc_client: &RpcClient, count_type: CountSubComma
                 }
             }
             let domains = name_accounts.get(&ROOT_DOMAIN_ACCOUNT).unwrap();
-            let mut number_of_subdomains: usize = 0;
+            let mut total_number_of_subdomains: usize = 0;
+            let mut number_of_domains_with_subdomains: usize = 0;
+            let mut top_domains = top_domains.map(|n| (n, BTreeSet::new()));
             for d in domains {
-                number_of_subdomains += name_accounts.get(d).map(|v| v.len()).unwrap_or_default();
+                let number_of_subdomains =
+                    name_accounts.get(d).map(|v| v.len()).unwrap_or_default();
+                if number_of_subdomains != 0 {
+                    number_of_domains_with_subdomains += 1;
+                }
+                if let Some((max_size, top_domains)) = top_domains.as_mut() {
+                    top_domains.insert((number_of_subdomains, *d));
+                    if &top_domains.len() > max_size {
+                        top_domains.pop_first();
+                    }
+                }
+                total_number_of_subdomains += number_of_subdomains;
             }
+
+            let top_domains = top_domains.map(|(_, s)| {
+                s.into_iter()
+                    .rev()
+                    .map(|(k, v)| (v.to_string(), k))
+                    .collect::<Vec<_>>()
+            });
 
             #[derive(Serialize)]
             struct Result {
                 number_of_domains: usize,
                 number_of_subdomains: usize,
+                number_of_domains_with_subdomains: usize,
+                top_domains: Option<Vec<(String, usize)>>,
             }
 
             let result = serde_json::to_string_pretty(&Result {
                 number_of_domains: domains.len(),
-                number_of_subdomains,
+                number_of_subdomains: total_number_of_subdomains,
+                top_domains,
+                number_of_domains_with_subdomains,
             })?;
             println!("{result}");
         }
@@ -965,6 +993,6 @@ async fn main() {
     };
 
     if let Err(err) = res {
-        println!("Error: {err:?}")
+        eprintln!("Error: {err:?}")
     }
 }
