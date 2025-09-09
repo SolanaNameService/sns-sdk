@@ -1,6 +1,8 @@
 include: package:lints/recommended.yaml
 
 analyzer:
+  errors:
+    lines_longer_than_80_chars: ignore
   exclude:
     - "**/*.g.dart"
     - "**/*.freezed.dart"
