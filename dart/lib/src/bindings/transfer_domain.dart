@@ -41,13 +41,15 @@ Future<TransactionInstruction> transferDomain(
     classAddress: params.classAddress,
   );
 
+  // Use the provided current owner or default to domain address for registry owner
+  final currentOwner = params.classAddress ?? domainAddress;
+
   // Create transfer instruction parameters
   final transferParams = TransferInstructionParams(
     newOwner: params.newOwner,
     programAddress: nameProgramAddress,
     domainAddress: domainAddress,
-    currentOwner: params.classAddress ??
-        domainAddress, // Simplified - would need RPC call
+    currentOwner: currentOwner,
     classAddress: params.classAddress,
     parentAddress: params.parentAddress,
     parentOwner: params.parentOwner,

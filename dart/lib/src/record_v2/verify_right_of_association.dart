@@ -33,7 +33,7 @@ Uint8List? getDefaultVerifier({
       // Convert guardian address from base58 string to bytes
       try {
         return Uint8List.fromList(base58decode(guardian));
-      } on Exception catch (e) {
+      } on Exception {
         // Invalid base58 guardian address
         return null;
       }

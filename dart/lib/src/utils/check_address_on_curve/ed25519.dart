@@ -61,7 +61,7 @@ bool pointIsOnCurve(BigInt y, int signBit) {
     final right = (BigInt.one + _d * x * x * y2) % _p;
 
     return left == right;
-  } on Exception catch (e) {
+  } on Exception {
     return false;
   }
 }

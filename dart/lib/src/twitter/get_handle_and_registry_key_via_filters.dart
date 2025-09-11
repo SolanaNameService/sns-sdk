@@ -13,7 +13,7 @@ import 'reverse_twitter_registry_state.dart';
 /// [connection] - The RPC client for Solana blockchain communication
 /// [verifiedPubkey] - The verified public key to look up
 ///
-/// Returns a tuple of [handle, registryKey] or throws if not found
+/// Returns a tuple of handle and registry key or throws if not found
 Future<(String, Ed25519HDPublicKey)> getHandleAndRegistryKeyViaFilters(
   RpcClient connection,
   Ed25519HDPublicKey verifiedPubkey,

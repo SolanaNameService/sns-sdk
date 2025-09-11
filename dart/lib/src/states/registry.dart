@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:solana/base58.dart';
 import '../rpc/rpc_client.dart';
 
 /// Registry state class for domain ownership information
@@ -94,9 +95,20 @@ class RegistryState {
     }).toList();
   }
 
-  /// Base58 encode helper
+  /// Robust Base58 encode using the solana package for maximum compatibility
   static String _base58Encode(Uint8List input) {
-    // Simplified base58 encoding - in production you'd use a proper library
+    if (input.isEmpty) return '';
+
+    try {
+      return base58encode(input);
+    } on Exception {
+      // Fallback to simple encode if needed
+      return _simpleBase58Encode(input);
+    }
+  }
+
+  /// Simple base58 encode fallback
+  static String _simpleBase58Encode(Uint8List input) {
     const alphabet =
         '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
 

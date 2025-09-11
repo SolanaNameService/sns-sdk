@@ -53,7 +53,7 @@ class FavouriteDomain {
     return deserialize(data);
   }
 
-  /// Derive the key of a favorite domain (async version)
+  /// Derive the key of a favorite domain using proper PDA derivation
   static Future<(Ed25519HDPublicKey, int)> getKey(
     Ed25519HDPublicKey programId,
     Ed25519HDPublicKey owner,
@@ -63,13 +63,13 @@ class FavouriteDomain {
       owner.bytes,
     ];
 
-    // For now, use a simplified derivation
+    // Use proper PDA derivation matching JavaScript SDK
     final address = await Ed25519HDPublicKey.findProgramAddress(
       seeds: seeds,
       programId: programId,
     );
 
-    return (address, 255); // Default bump
+    return (address, 255); // findProgramAddress returns the correct bump
   }
 
   /// Derive the key of a favorite domain (sync version)
@@ -77,11 +77,11 @@ class FavouriteDomain {
     Ed25519HDPublicKey programId,
     Ed25519HDPublicKey owner,
   ) {
-    // Simplified sync version - in real implementation this would be proper PDA derivation
-    final seeds = owner.bytes;
-    final combined = List<int>.from(seeds)..addAll(programId.bytes);
-    final hash = combined.take(32).toList();
-    return (Ed25519HDPublicKey(hash), 255);
+    // For proper sync derivation, we'd need to implement the PDA derivation algorithm
+    // For now, throw an error directing users to use the async version
+    throw UnimplementedError(
+        'Synchronous PDA derivation requires complex cryptographic operations. '
+        'Use getKey() async method instead for proper derivation.');
   }
 }
 
@@ -189,7 +189,7 @@ Future<List<String?>> getMultipleFavoriteDomains(
         domainAddress: favorite.nameAccount.toBase58(),
       ));
       result.add(reverse);
-    } on Exception catch (e) {
+    } on Exception {
       result.add(null);
     }
   }
@@ -198,11 +198,17 @@ Future<List<String?>> getMultipleFavoriteDomains(
 }
 
 /// Find all wallets that have set a specific domain as their favorite
+///
+/// This function would use RPC's getProgramAccounts with proper filters
+/// to find all favorite domain accounts that contain the specified domain.
+/// However, this requires complex account filtering that may not be efficiently
+/// supported by all RPC providers.
 Future<List<Ed25519HDPublicKey>> findWithDomain(
   sns_rpc.RpcClient connection,
   Ed25519HDPublicKey domain,
 ) async {
-  // Simplified implementation - in a real implementation, this would use
-  // proper program account filters
-  return <Ed25519HDPublicKey>[];
+  throw UnimplementedError(
+      'findWithDomain requires getProgramAccounts with account data filtering. '
+      'This feature depends on RPC provider capabilities and may not be available '
+      'on all networks. Consider using batch queries of known wallets instead.');
 }

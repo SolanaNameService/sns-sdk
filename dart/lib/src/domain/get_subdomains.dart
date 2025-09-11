@@ -124,7 +124,7 @@ Future<List<SubdomainResult>> getSubdomains(GetSubdomainsParams params) async {
           owner: ownerAddress,
         ));
       }
-    } on Exception catch (e) {
+    } on Exception {
       // Skip invalid subdomains
       continue;
     }

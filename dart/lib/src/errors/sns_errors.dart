@@ -1,10 +1,10 @@
-/// SNS error definitions and hierarchical error system
+/// SNS error definitions and hierarchical error system.
 ///
 /// Provides comprehensive error handling for all SNS operations including
 /// domain resolution, record management, and NFT operations.
 library;
 
-/// Enumeration of all possible SNS error types
+/// Enumeration of all possible SNS error types.
 ///
 /// These error types correspond to various failure conditions in SNS operations:
 /// - Domain resolution errors (domain not found, invalid format)

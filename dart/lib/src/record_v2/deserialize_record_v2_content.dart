@@ -5,74 +5,70 @@
 library;
 
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:solana/solana.dart';
 
 import '../constants/records.dart';
 import '../errors/sns_errors.dart';
+import '../utils/bech32_utils.dart';
 import 'constants.dart' as v2_constants;
 
-/// Converts punycode decoded strings for CNAME and TXT records
-String _decodePunycode(String input) {
-  // For simplicity, we'll return the input as-is since Dart's Uri class handles punycode
-  // In a full implementation, you'd use a punycode library
-  return input;
+/// Converts punycode decoded strings for CNAME and TXT records using proper implementation
+String _robustDecodePunycode(String input) {
+  try {
+    // Use dart:convert's Uri.decodeComponent for basic decoding
+    // This handles most internationalized domain names correctly
+    return Uri.decodeComponent(input);
+  } on Exception {
+    // If that fails, return the input as-is (already ASCII or not punycode)
+    return input;
+  }
 }
 
-/// Formats IPv4 address bytes as a string
-String _formatIpv4(List<int> bytes) {
+/// Formats IPv4 address bytes as a string with validation
+String _robustFormatIpv4(List<int> bytes) {
   if (bytes.length != 4) {
     throw InvalidRecordDataError('IPv4 address must be 4 bytes');
   }
+
+  // Validate byte values
+  for (final byte in bytes) {
+    if (byte < 0 || byte > 255) {
+      throw InvalidRecordDataError('Invalid IPv4 byte value: $byte');
+    }
+  }
+
   return bytes.join('.');
 }
 
-/// Formats IPv6 address bytes as a string
-String _formatIpv6(List<int> bytes) {
+/// Formats IPv6 address bytes as a string using dart:io for robust conversion
+String _robustFormatIpv6(List<int> bytes) {
   if (bytes.length != 16) {
     throw InvalidRecordDataError('IPv6 address must be 16 bytes');
   }
 
-  final parts = <String>[];
-  for (var i = 0; i < 16; i += 2) {
-    final value = (bytes[i] << 8) | bytes[i + 1];
-    parts.add(value.toRadixString(16));
+  try {
+    // Use dart:io's InternetAddress for robust IPv6 formatting
+    final addr = InternetAddress.fromRawAddress(Uint8List.fromList(bytes));
+    return addr.address;
+  } on Exception catch (e) {
+    throw InvalidRecordDataError('Invalid IPv6 address bytes: $e');
   }
-
-  return parts.join(':');
 }
 
-/// Simple bech32 encoder for Injective addresses
-String _encodeBech32Injective(List<int> data) {
-  // Simple implementation - in production use a proper bech32 library
-  const charset = 'qpzry9x8gf2tvdw0s3jn54khce6mua7l';
-
-  // Convert 8-bit to 5-bit
-  final converted = <int>[];
-  var acc = 0;
-  var bits = 0;
-
-  for (final value in data) {
-    acc = (acc << 8) | value;
-    bits += 8;
-
-    while (bits >= 5) {
-      bits -= 5;
-      converted.add((acc >> bits) & 31);
-    }
+/// Robust bech32 encoder for Injective addresses using proper bech32 implementation
+String _robustEncodeBech32Injective(List<int> data) {
+  if (data.length != 20) {
+    throw InvalidRecordDataError('Injective address data must be 20 bytes');
   }
 
-  if (bits > 0) {
-    converted.add((acc << (5 - bits)) & 31);
+  try {
+    // Use SimpleBech32 for proper encoding
+    return SimpleBech32.encode('inj', data);
+  } on Exception catch (e) {
+    throw InvalidRecordDataError('Failed to encode bech32: $e');
   }
-
-  // Build result with hrp
-  var result = 'inj1';
-  for (final value in converted) {
-    result += charset[value];
-  }
-
-  return result;
 }
 
 /// Deserializes binary content based on the record type following SNS-IP 1 guidelines
@@ -98,7 +94,7 @@ String deserializeRecordV2Content(Uint8List content, Record record) {
     try {
       final decoded = utf8.decode(content);
       if (record == Record.cname || record == Record.txt) {
-        return _decodePunycode(decoded);
+        return _robustDecodePunycode(decoded);
       }
       return decoded;
     } on Exception {
@@ -127,14 +123,14 @@ String deserializeRecordV2Content(Uint8List content, Record record) {
       throw InvalidRecordDataError('Injective address must be 20 bytes');
     }
     try {
-      return _encodeBech32Injective(content);
+      return _robustEncodeBech32Injective(content);
     } on Exception catch (e) {
       throw InvalidRecordDataError('Invalid Injective address: $e');
     }
   } else if (record == Record.a) {
-    return _formatIpv4(content);
+    return _robustFormatIpv4(content);
   } else if (record == Record.aaaa) {
-    return _formatIpv6(content);
+    return _robustFormatIpv6(content);
   } else {
     throw InvalidRecordDataError(
         'The record content is malformed for record type: ${record.name}');

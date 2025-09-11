@@ -4,8 +4,8 @@ import '../types/validation.dart';
 
 /// The length of the NAME_REGISTRY data structure (96 bytes)
 ///
-/// This critical offset mirrors js-kit/src/states/record.ts NAME_REGISTRY_LEN
-const int NAME_REGISTRY_LEN = 96;
+/// This critical offset mirrors js-kit/src/states/record.ts nameRegistryLen
+const int nameRegistryLen = 96;
 
 /// Record header state for Record V2 following JavaScript SDK structure
 ///
@@ -28,15 +28,15 @@ class RecordHeaderState {
 
   /// The total length of the RecordHeaderState struct in bytes
   /// Calculated as: stalenessValidation(2) + rightOfAssociationValidation(2) + contentLength(4) = 8 bytes
-  static const int LEN = 8;
+  static const int len = 8;
 
   /// Deserialize RecordHeaderState from raw bytes using Borsh format
   ///
   /// Mirrors js-kit/src/states/record.ts RecordHeaderState.deserialize
   static RecordHeaderState deserialize(Uint8List data) {
-    if (data.length < LEN) {
+    if (data.length < len) {
       throw ArgumentError(
-          'Record header data too short: ${data.length} < $LEN');
+          'Record header data too short: ${data.length} < $len');
     }
 
     // Parse Borsh format: u16 + u16 + u32 (little-endian)
@@ -65,9 +65,9 @@ class RecordHeaderState {
       throw Exception('Record header account not found');
     }
 
-    // Extract header data at NAME_REGISTRY_LEN offset
+    // Extract header data at nameRegistryLen offset
     final headerData = Uint8List.fromList(
-      accountInfo.data.sublist(NAME_REGISTRY_LEN, NAME_REGISTRY_LEN + LEN),
+      accountInfo.data.sublist(nameRegistryLen, nameRegistryLen + len),
     );
 
     return deserialize(headerData);
@@ -90,27 +90,27 @@ class RecordState {
   /// Record header containing validation info and content length
   final RecordHeaderState header;
 
-  /// Raw record data (after NAME_REGISTRY_LEN + RecordHeaderState.LEN offset)
+  /// Raw record data (after nameRegistryLen + RecordHeaderState.len offset)
   final Uint8List data;
 
   /// Deserialize RecordState from account data
   ///
-  /// Mirrors js-kit/src/states/record.ts RecordState.deserialize with proper NAME_REGISTRY_LEN offset
+  /// Mirrors js-kit/src/states/record.ts RecordState.deserialize with proper nameRegistryLen offset
   static RecordState deserialize(Uint8List accountData) {
-    if (accountData.length < NAME_REGISTRY_LEN + RecordHeaderState.LEN) {
+    if (accountData.length < nameRegistryLen + RecordHeaderState.len) {
       throw ArgumentError(
-          'Record account data too short: ${accountData.length} < ${NAME_REGISTRY_LEN + RecordHeaderState.LEN}');
+          'Record account data too short: ${accountData.length} < ${nameRegistryLen + RecordHeaderState.len}');
     }
 
-    // Parse header at NAME_REGISTRY_LEN offset
+    // Parse header at nameRegistryLen offset
     final headerData = accountData.sublist(
-      NAME_REGISTRY_LEN,
-      NAME_REGISTRY_LEN + RecordHeaderState.LEN,
+      nameRegistryLen,
+      nameRegistryLen + RecordHeaderState.len,
     );
     final header = RecordHeaderState.deserialize(headerData);
 
     // Extract data after header
-    const dataOffset = NAME_REGISTRY_LEN + RecordHeaderState.LEN;
+    final dataOffset = nameRegistryLen + RecordHeaderState.len;
     final data = accountData.sublist(dataOffset);
 
     return RecordState(header: header, data: data);

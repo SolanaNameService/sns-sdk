@@ -73,8 +73,8 @@ class ResolveConfig {
 /// Throws [DomainDoesNotExistError] if domain registry not found.
 /// Throws [CouldNotFindNftOwnerError] if NFT owner undetermined.
 /// Throws [RecordMalformedError] if record data is malformed.
-/// Throws [WrongValidationError] if validation method incorrect.
-/// Throws [InvalidRoaError] if Right-of-Association fails.
+/// Throws [SnsError] if validation method incorrect.
+/// Throws [SnsError] if Right-of-Association fails.
 /// Throws [PdaOwnerNotAllowedError] if PDA not allowed by config.
 Future<String> resolve(
   SnsClient connection,
@@ -107,7 +107,7 @@ Future<String> resolve(
     addresses.map((addr) async {
       try {
         return await connection.getAccountInfo(addr);
-      } on Exception catch (e) {
+      } on Exception {
         return null;
       }
     }),
@@ -181,7 +181,7 @@ Future<String> resolve(
           'The RoA ID should be $expectedRoA but is $actualRoA',
         );
       }
-    } on Exception catch (e) {
+    } on Exception {
       // If V2 record processing fails, continue to V1
     }
   }
@@ -217,7 +217,7 @@ Future<String> resolve(
           return Base58Utils.encode(Uint8List.fromList(publicKeyBytes));
         }
       }
-    } on Exception catch (e) {
+    } on Exception {
       // If V1 record processing fails, continue to registry owner
     }
   }
@@ -237,7 +237,7 @@ Future<String> resolve(
     }
   }
 
-  // Default: return registry owner
+  // Default: return registry owner (only if it's on curve)
   return registry.owner;
 }
 
@@ -253,10 +253,10 @@ bool _bytesEqual(List<int> a, List<int> b) {
 /// Helper function to check if a public key is on the ed25519 curve
 bool _isOnCurve(solana.Ed25519HDPublicKey publicKey) {
   try {
-    // In Solana, if the key can be constructed and used, it's on curve
-    // This is a simplified check - in practice, more validation might be needed
-    return publicKey.bytes.length == 32;
-  } on Exception catch (e) {
+    // Use the same curve checking as the Solana package
+    return solana.isPointOnEd25519Curve(publicKey.bytes);
+  } on Exception {
+    // If curve checking fails, assume it's not on curve (PDA)
     return false;
   }
 }

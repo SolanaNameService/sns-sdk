@@ -1,7 +1,10 @@
 import 'dart:typed_data';
+import 'package:solana/solana.dart' as solana;
+import 'package:solana/base58.dart' as base58;
 import '../constants/records.dart';
 import '../domain/get_domain_address.dart';
 import '../errors/sns_errors.dart';
+import '../nft/get_nft_owner.dart';
 import '../record/get_record_v1_address.dart';
 import '../record/get_record_v2_address.dart';
 import '../rpc/rpc_client.dart';
@@ -10,14 +13,14 @@ import '../states/registry.dart';
 import '../types/validation.dart';
 import '../utils/check_address_on_curve/index.dart';
 
-/// Options for domain resolution
+/// Options for domain resolution.
 class ResolveOptions {
   const ResolveOptions({
     this.allowPda = false,
     this.programIds,
   });
 
-  /// Whether to allow PDA (Program Derived Address) owners
+  /// Whether to allow PDA (Program Derived Address) owners.
   ///
   /// Can be:
   /// - `false`: Only allow standard wallet owners (default)
@@ -25,7 +28,7 @@ class ResolveOptions {
   /// - `List<String>`: Allow only specific program IDs
   final dynamic allowPda;
 
-  /// List of allowed program IDs (when allowPda is a list)
+  /// List of allowed program IDs (when allowPda is a list).
   final List<String>? programIds;
 }
 
@@ -124,7 +127,7 @@ Future<String> resolveDomain(
         solRecordV2Account,
         registry,
       );
-    } on Exception catch (e) {
+    } on Exception {
       // If V2 validation fails, continue to V1
     }
   }
@@ -172,14 +175,13 @@ Future<String> _validateSolRecordV2(
     throw InvalidValidationError();
   }
 
-  if (registry.owner !=
-      _base58Encode(Uint8List.fromList(_base58Decode(stalenessId)))) {
+  if (registry.owner != _base58Encode(Uint8List.fromList(stalenessId))) {
     throw InvalidRoAError('Staleness validation failed');
   }
 
-  if (!_uint8ArraysEqual(_base58Decode(roaId), content.toList())) {
+  if (!_uint8ArraysEqual(roaId, content.toList())) {
     final contentAddress = _base58Encode(content);
-    final roaAddress = _base58Encode(Uint8List.fromList(_base58Decode(roaId)));
+    final roaAddress = _base58Encode(Uint8List.fromList(roaId));
     throw InvalidRoAError(
       'The RoA ID should be $contentAddress but is $roaAddress',
     );
@@ -256,22 +258,45 @@ Future<String> _handlePdaOwner(
   }
 }
 
-/// Gets the NFT owner for a domain
+/// Gets the NFT owner for a domain using robust token account lookup
 Future<String?> _getNftOwner(RpcClient rpc, String domainAddress) async {
-  // This would implement the NFT owner lookup
-  // For now, return null as a placeholder
-  return null;
+  try {
+    // Use the existing getNftOwner utility which properly handles token account parsing
+    final nftOwnerResult = await getNftOwner(GetNftOwnerParams(
+      rpc: rpc,
+      domainAddress: domainAddress,
+    ));
+    return nftOwnerResult;
+  } on Exception {
+    // If NFT owner lookup fails, return null to continue with other resolution methods
+    return null;
+  }
 }
 
-/// Verifies SOL record V1 signature
+/// Verifies SOL record V1 signature using Ed25519 cryptographic verification
 Future<bool> _verifySolRecordV1Signature({
   required Uint8List data,
   required Uint8List signature,
   required String address,
 }) async {
-  // This would implement Ed25519 signature verification
-  // For now, return false as a placeholder
-  return false;
+  try {
+    // Validate inputs
+    if (signature.length != 64) {
+      return false; // Ed25519 signatures are always 64 bytes
+    }
+
+    // Create public key from address
+    final publicKey = solana.Ed25519HDPublicKey.fromBase58(address);
+
+    // Verify signature using the solana package's cryptographic functions
+    return await solana.verifySignature(
+      message: data,
+      signature: signature,
+      publicKey: publicKey,
+    );
+  } on Exception {
+    return false;
+  }
 }
 
 /// Compares two Uint8List for equality
@@ -283,18 +308,69 @@ bool _uint8ArraysEqual(List<int> a, List<int> b) {
   return true;
 }
 
-/// Base58 decode helper (simplified implementation)
+/// Base58 decode helper using solana package for robust decoding
 List<int> _base58Decode(String input) {
-  // Simplified implementation - in production use a proper library
   if (input.isEmpty) return [];
-  // Return placeholder for now
-  return List.filled(32, 0);
+
+  try {
+    // Try with solana package first (most robust for public keys)
+    final pubkey = solana.Ed25519HDPublicKey.fromBase58(input);
+    return pubkey.bytes;
+  } on Exception {
+    // Fall back to custom base58 decode for non-public-key data
+    return _customBase58Decode(input);
+  }
 }
 
-/// Base58 encode helper (simplified implementation)
+/// Base58 encode helper using solana package for robust encoding
 String _base58Encode(Uint8List input) {
-  // Simplified implementation - in production use a proper library
   if (input.isEmpty) return '';
-  // Return placeholder for now
-  return '11111111111111111111111111111111';
+
+  // Use the robust base58 implementation from solana package
+  return base58.base58encode(input);
+}
+
+/// Custom base58 decoder for non-public-key data
+List<int> _customBase58Decode(String input) {
+  if (input.isEmpty) return [];
+
+  const String alphabet =
+      '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+
+  // Count leading zeros
+  var leadingZeros = 0;
+  for (var i = 0; i < input.length; i++) {
+    if (input[i] == '1') {
+      leadingZeros++;
+    } else {
+      break;
+    }
+  }
+
+  // Decode base58
+  var decoded = BigInt.zero;
+  final base = BigInt.from(58);
+
+  for (var i = leadingZeros; i < input.length; i++) {
+    final char = input[i];
+    final index = alphabet.indexOf(char);
+    if (index == -1) {
+      throw ArgumentError('Invalid base58 character: $char');
+    }
+    decoded = decoded * base + BigInt.from(index);
+  }
+
+  // Convert to bytes
+  final bytes = <int>[];
+  while (decoded > BigInt.zero) {
+    bytes.insert(0, (decoded % BigInt.from(256)).toInt());
+    decoded = decoded ~/ BigInt.from(256);
+  }
+
+  // Add leading zeros
+  for (var i = 0; i < leadingZeros; i++) {
+    bytes.insert(0, 0);
+  }
+
+  return bytes;
 }

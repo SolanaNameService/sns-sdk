@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:solana/solana.dart' hide RpcClient;
 
 import '../constants/addresses.dart';
 import '../nft/get_nft_mint.dart';
@@ -187,7 +188,7 @@ Future<List<String?>> getPrimaryDomainsBatch(
         if (parentName != null) {
           parentRevName = '.$parentName';
         }
-      } on Exception catch (e) {
+      } on Exception {
         // Continue processing if parent reverse lookup fails
       }
     }
@@ -204,7 +205,7 @@ Future<List<String?>> getPrimaryDomainsBatch(
         if (domainName != null) {
           result[validPrimary.index] = domainName + parentRevName;
         }
-      } on Exception catch (e) {
+      } on Exception {
         // Continue processing if domain name deserialization fails
       }
       continue;
@@ -233,7 +234,7 @@ Future<List<String?>> getPrimaryDomainsBatch(
               result[validPrimary.index] = domainName + parentRevName;
             }
           }
-        } on Exception catch (e) {
+        } on Exception {
           // Continue processing if token account parsing fails
         }
       }
@@ -257,12 +258,18 @@ Future<String?> _getAssociatedTokenAddress(
     final mint =
         await getNftMint(GetNftMintParams(domainAddress: domainAddress));
 
-    // Simplified associated token address derivation
-    // In a full implementation, this would use proper PDA generation with:
-    // seeds: [walletAddress, tokenProgramAddress, mint]
-    // program: ASSOCIATED_TOKEN_PROGRAM_ADDRESS
-    return 'ATA_${mint}_$walletAddress';
-  } on Exception catch (e) {
+    // Use proper ATA PDA derivation matching Solana standards
+    final result = await Ed25519HDPublicKey.findProgramAddress(
+      seeds: [
+        Ed25519HDPublicKey.fromBase58(walletAddress).bytes,
+        Ed25519HDPublicKey.fromBase58(tokenProgramAddress).bytes,
+        Ed25519HDPublicKey.fromBase58(mint).bytes,
+      ],
+      programId: Ed25519HDPublicKey.fromBase58(associatedTokenProgramAddress),
+    );
+
+    return result.toBase58();
+  } on Exception {
     return null;
   }
 }

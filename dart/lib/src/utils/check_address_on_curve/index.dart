@@ -21,7 +21,7 @@ bool checkAddressOnCurve(Uint8List addressBytes) {
     final signBit = addressBytes[31] >> 7; // Extract the sign bit
 
     return pointIsOnCurve(y, signBit);
-  } on Exception catch (e) {
+  } on Exception {
     return false;
   }
 }

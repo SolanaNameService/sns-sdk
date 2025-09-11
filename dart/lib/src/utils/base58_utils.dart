@@ -56,7 +56,7 @@ class Base58Utils {
       try {
         final pubkey = Ed25519HDPublicKey.fromBase58(input);
         return pubkey.bytes;
-      } on Exception catch (e) {
+      } on Exception {
         // Fall through to custom decode
       }
     }

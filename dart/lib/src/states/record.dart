@@ -134,7 +134,7 @@ class RecordState {
               Validation.fromValue(header.rightOfAssociationValidation));
 
       return data.sublist(startOffset);
-    } on Exception catch (e) {
+    } on Exception {
       // If validation values are invalid, return empty content
       return Uint8List(0);
     }
@@ -147,7 +147,7 @@ class RecordState {
           getValidationLength(Validation.fromValue(header.stalenessValidation));
 
       return data.sublist(0, endOffset);
-    } on Exception catch (e) {
+    } on Exception {
       // If validation value is invalid, return empty ID
       return Uint8List(0);
     }
@@ -163,7 +163,7 @@ class RecordState {
               Validation.fromValue(header.rightOfAssociationValidation));
 
       return data.sublist(startOffset, endOffset);
-    } on Exception catch (e) {
+    } on Exception {
       // If validation values are invalid, return empty ID
       return Uint8List(0);
     }

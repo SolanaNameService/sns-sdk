@@ -2,17 +2,28 @@
 /// Mirrors js/tests/resolve.test.ts exactly
 library;
 
+import 'dart:io';
+import 'package:dotenv/dotenv.dart';
 import 'package:sns_sdk/sns_sdk.dart';
 import 'package:test/test.dart';
+
+import 'constants.dart';
 
 void main() {
   group('resolve', () {
     late SnsClient connection;
 
     setUpAll(() {
-      // Use the exact same setup as working debug script
-      final rpc = EnhancedSolanaRpcClient(
-          'https://solana-api.projectserum.com');
+      // Load environment like JavaScript tests do
+      final envFile = File('.env');
+      if (envFile.existsSync()) {
+        final env = DotEnv();
+        env.load(['.env']);
+      }
+
+      // Use same RPC URL as JavaScript tests
+      final rpcUrl = testRpcUrl; // From constants.dart
+      final rpc = EnhancedSolanaRpcClient(rpcUrl);
       connection = SnsClient(rpc);
     });
 

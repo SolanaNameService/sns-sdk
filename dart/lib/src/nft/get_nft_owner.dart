@@ -1,4 +1,7 @@
+import 'dart:typed_data';
+
 import '../rpc/rpc_client.dart';
+import '../utils/base58_utils.dart';
 import 'get_nft_mint.dart';
 
 /// Parameters for getting NFT owner
@@ -62,26 +65,34 @@ Future<String?> getNftOwner(GetNftOwnerParams params) async {
     }
 
     return null;
-  } on Exception catch (e) {
+  } on Exception {
     // If invalid params or other RPC error, return null
     return null;
   }
 }
 
-/// Simplified token account decoder
+/// Robust token account decoder using proper SPL Token account structure
 TokenAccountInfo _decodeTokenAccount(List<int> data) {
-  // This is a simplified implementation
-  // In a full implementation, you'd properly decode the token account structure
+  // SPL Token account structure (165 bytes total):
+  // - mint: 32 bytes (0-31)
+  // - owner: 32 bytes (32-63)
+  // - amount: 8 bytes (64-71) - little-endian u64
+  // - delegate: 36 bytes (72-107) - optional + 32 bytes
+  // - state: 1 byte (108)
+  // - is_native: 12 bytes (109-120) - optional + 8 bytes
+  // - delegated_amount: 8 bytes (121-128) - little-endian u64
+  // - close_authority: 36 bytes (129-164) - optional + 32 bytes
 
-  if (data.length < 72) {
-    throw ArgumentError('Invalid token account data');
+  if (data.length < 165) {
+    throw ArgumentError(
+        'Invalid token account data length: ${data.length}, expected 165 bytes');
   }
 
-  // Extract owner (bytes 32-64)
-  final ownerBytes = data.sublist(32, 64);
-  final owner = _base58Encode(ownerBytes);
+  // Extract owner (bytes 32-63)
+  final ownerBytes = Uint8List.fromList(data.sublist(32, 64));
+  final owner = Base58Utils.encode(ownerBytes);
 
-  // Extract amount (bytes 64-72, little-endian u64)
+  // Extract amount (bytes 64-71, little-endian u64)
   var amount = 0;
   for (var i = 0; i < 8; i++) {
     amount |= data[64 + i] << (i * 8);
@@ -91,44 +102,4 @@ TokenAccountInfo _decodeTokenAccount(List<int> data) {
     amount: amount.toString(),
     owner: owner,
   );
-}
-
-/// Base58 encode helper
-String _base58Encode(List<int> input) {
-  const alphabet = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
-
-  if (input.isEmpty) return '';
-
-  // Count leading zeros
-  var leadingZeros = 0;
-  for (var i = 0; i < input.length; i++) {
-    if (input[i] == 0) {
-      leadingZeros++;
-    } else {
-      break;
-    }
-  }
-
-  // Convert to BigInt
-  var value = BigInt.zero;
-  for (var i = 0; i < input.length; i++) {
-    value = value * BigInt.from(256) + BigInt.from(input[i]);
-  }
-
-  // Encode to base58
-  final result = <String>[];
-  final base = BigInt.from(58);
-
-  while (value > BigInt.zero) {
-    final remainder = (value % base).toInt();
-    result.insert(0, alphabet[remainder]);
-    value = value ~/ base;
-  }
-
-  // Add leading ones for leading zeros
-  for (var i = 0; i < leadingZeros; i++) {
-    result.insert(0, '1');
-  }
-
-  return result.join();
 }

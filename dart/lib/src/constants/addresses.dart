@@ -1,7 +1,7 @@
-/// Constants and addresses for the Solana Name Service (SNS) SDK
+/// Constants and addresses for the Solana Name Service (SNS) SDK.
 ///
 /// Contains program addresses, token mints, and other constants
-/// required for interacting with SNS on the Solana blockchain
+/// required for interacting with SNS on the Solana blockchain.
 library;
 
 /// System program address

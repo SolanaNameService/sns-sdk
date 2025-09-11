@@ -7,6 +7,7 @@ import '../constants/addresses.dart';
 import '../rpc/rpc_client.dart';
 import '../types/validation.dart';
 import '../utils/base58_utils.dart';
+import 'record_v2.dart';
 
 /// NFT tag enumeration
 enum NftTag {
@@ -181,7 +182,7 @@ class NftState {
       }
 
       return deserialize(Uint8List.fromList(data[0].account.data));
-    } on Exception catch (e) {
+    } on Exception {
       return null; // Return null instead of throwing on error
     }
   }
@@ -204,7 +205,7 @@ class NftState {
       // Take first 32 bytes and encode as base58
       final addressBytes = Uint8List.fromList(hash.bytes.take(32).toList());
       return _base58Encode(addressBytes);
-    } on Exception catch (e) {
+    } on Exception {
       // If derivation fails, return the domain address itself as fallback
       // This ensures we always return a valid address format
       return domainAddress;
@@ -226,7 +227,7 @@ class RecordState {
   });
 
   /// Record header containing validation information
-  final RecordValidationHeader header;
+  final RecordHeaderState header;
 
   /// The record content
   final Uint8List content;
@@ -235,23 +236,29 @@ class RecordState {
   final Uint8List data;
 
   /// Gets the staleness ID from the record
-  String getStalenessId() {
-    // Extract staleness ID from record data
-    // This is a simplified implementation
-    if (data.length >= 64) {
-      return _base58Encode(data.sublist(0, 32));
+  List<int> getStalenessId() {
+    // Extract staleness ID from record data at the correct offset
+    // Following RecordState structure: content + staleness(32) + roa(32)
+    final contentLength = header.contentLength;
+    final stalenessOffset = contentLength;
+
+    if (data.length >= stalenessOffset + 32) {
+      return data.sublist(stalenessOffset, stalenessOffset + 32);
     }
-    return '';
+    return <int>[];
   }
 
   /// Gets the Right of Association (RoA) ID from the record
-  String getRoAId() {
-    // Extract RoA ID from record data
-    // This is a simplified implementation
-    if (data.length >= 64) {
-      return _base58Encode(data.sublist(32, 64));
+  List<int> getRoAId() {
+    // Extract RoA ID from record data at the correct offset
+    // Following RecordState structure: content + staleness(32) + roa(32)
+    final contentLength = header.contentLength;
+    final roaOffset = contentLength + 32; // After content and staleness
+
+    if (data.length >= roaOffset + 32) {
+      return data.sublist(roaOffset, roaOffset + 32);
     }
-    return '';
+    return <int>[];
   }
 
   /// Gets the record content
@@ -263,26 +270,27 @@ class RecordState {
   ///
   /// Returns a RecordState instance
   static RecordState deserialize(Uint8List data) {
-    if (data.length < 96) {
+    if (data.length < nameRegistryLen + RecordHeaderState.len) {
       throw ArgumentError('Invalid record data length');
     }
 
-    // Extract header information (first 32 bytes)
-    final headerData = data.sublist(0, 32);
-    final header = RecordValidationHeader.deserialize(headerData);
+    // Extract header information at nameRegistryLen offset
+    final headerData =
+        data.sublist(nameRegistryLen, nameRegistryLen + RecordHeaderState.len);
+    final header = RecordHeaderState.deserialize(headerData);
 
-    // Extract content (next 32 bytes)
-    final content = data.sublist(32, 64);
+    // Extract data after nameRegistryLen + header
+    final recordData = data.sublist(nameRegistryLen + RecordHeaderState.len);
+
+    // Extract content based on header's contentLength
+    final content = recordData.sublist(0, header.contentLength);
 
     return RecordState(
       header: header,
       content: content,
-      data: data,
+      data: recordData,
     );
   }
-
-  /// Base58 encode helper - now using shared utility
-  static String _base58Encode(Uint8List input) => Base58Utils.encode(input);
 }
 
 /// Record header containing validation information

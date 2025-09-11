@@ -82,7 +82,7 @@ List<int> _parseIpAddress(String ipString, {required bool isV6}) {
       }
       return parts.map(int.parse).toList();
     }
-  } on Exception catch (e) {
+  } on Exception {
     throw InvalidRecordInputError('Invalid IP address format: $ipString');
   }
 }
@@ -116,7 +116,7 @@ Uint8List serializeRecordV2Content(String content, Record record) {
     try {
       final pubkey = Ed25519HDPublicKey.fromBase58(content);
       return Uint8List.fromList(pubkey.bytes);
-    } on Exception catch (e) {
+    } on Exception {
       throw InvalidRecordInputError(
           'Invalid Solana public key format: $content');
     }
@@ -137,7 +137,7 @@ Uint8List serializeRecordV2Content(String content, Record record) {
         InvalidEvmAddressError('EVM addresses must be exactly 20 bytes'),
       );
       return Uint8List.fromList(bytes);
-    } on Exception catch (e) {
+    } on Exception {
       throw InvalidEvmAddressError(
           'Invalid hex format in EVM address: $content');
     }
@@ -155,7 +155,7 @@ Uint8List serializeRecordV2Content(String content, Record record) {
         InvalidInjectiveAddressError('The record data must be 20 bytes long'),
       );
       return Uint8List.fromList(bytes);
-    } on Exception catch (e) {
+    } on Exception {
       throw InvalidInjectiveAddressError(
           'Invalid Injective address format: $content');
     }

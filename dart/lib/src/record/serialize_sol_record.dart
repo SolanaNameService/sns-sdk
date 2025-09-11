@@ -93,7 +93,7 @@ Future<bool> _checkSolRecord(
     // Verify the signature
     final isValid = await ed25519.verify(record, signature: signature);
     return isValid;
-  } on Exception catch (e) {
+  } on Exception {
     return false;
   }
 }

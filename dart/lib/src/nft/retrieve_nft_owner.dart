@@ -25,9 +25,33 @@ Future<Ed25519HDPublicKey?> retrieveNftOwner(
       return null;
     }
 
-    // Parse mint data to check supply (simplified check)
-    // For a proper implementation, we would parse the full mint account structure
-    // For now, we'll proceed to find the token account
+    // Parse mint data to check supply using proper mint account structure
+    // Use the getMint method from espresso-cash-public Solana package
+    try {
+      final mintData = await rpc.fetchEncodedAccount(mint.toBase58());
+      if (!mintData.exists || mintData.data.isEmpty) {
+        return null;
+      }
+
+      // Parse mint account data - mint structure has supply at bytes 36-44 (u64 little endian)
+      final data = mintData.data;
+      if (data.length < 82) {
+        // Minimum mint account size
+        return null;
+      }
+
+      // Extract supply (8 bytes starting at offset 36)
+      var supply = 0;
+      for (var i = 0; i < 8; i++) {
+        supply += data[36 + i] << (8 * i);
+      }
+
+      if (supply == 0) {
+        return null;
+      }
+    } on Exception {
+      return null;
+    }
 
     // Create filters to find the token account for this mint
     final filters = <AccountFilter>[
@@ -64,7 +88,7 @@ Future<Ed25519HDPublicKey?> retrieveNftOwner(
     }
 
     return null;
-  } on Exception catch (e) {
+  } on Exception {
     return null;
   }
 }

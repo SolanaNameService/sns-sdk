@@ -6,10 +6,17 @@ library;
 
 import 'dart:io';
 
+import 'package:dotenv/dotenv.dart';
+import 'package:test/test.dart';
+
 /// Get RPC URL from environment or default
 String? getRpcUrl() {
-  const rpcUrl = String.fromEnvironment('RPC_URL');
-  if (rpcUrl.isNotEmpty) {
+
+  final env = DotEnv()..load(['.env']);
+  final rpcUrl = env['RPC_URL'];
+
+  if (rpcUrl == null || rpcUrl.isEmpty) {
+    markTestSkipped('RPC_URL environment variable not set');
     return rpcUrl;
   }
 
@@ -28,7 +35,7 @@ bool shouldSkipTests() {
 
 /// Print skip message for tests
 void printSkipMessage(String testType) {
-  print('Skipping $testType tests: RPC_URL environment variable not set');
+  // print('Skipping $testType tests: RPC_URL environment variable not set');
 }
 
 /// Random address for testing (system program alternative)

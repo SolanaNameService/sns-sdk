@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import '../constants/addresses.dart';
 import '../instructions/instruction_types.dart';
+import '../int.dart';
 import '../rpc/rpc_client.dart';
 import '../utils/get_domain_key_sync.dart';
 import 'create_reverse_twitter_registry.dart';
@@ -33,10 +34,17 @@ Future<List<TransactionInstruction>> createVerifiedTwitterRegistry(
     nameParent: twitterRootParentRegistryAddress,
   );
 
+  // Calculate rent exemption for the account
+  // This mirrors the JavaScript SDK's getMinimumBalanceForRentExemption call
+  // Using approximate calculation similar to other instructions in the codebase
+  final accountSize =
+      space + 96; // space + NameRegistryState.HEADER_LEN equivalent
+  final rentExemptionLamports =
+      accountSize * 6960; // Approximate rent exemption calculation
+
   final instructions = <TransactionInstruction>[];
 
-  // Create the main user-facing registry instruction
-  // TODO: Implement proper CreateNameRegistryInstruction when instruction infrastructure is complete
+  // Create the main user-facing registry instruction matching JavaScript SDK's createInstruction
   final createInstruction = TransactionInstruction(
     programAddress: nameProgramAddress,
     accounts: [
@@ -45,27 +53,36 @@ Future<List<TransactionInstruction>> createVerifiedTwitterRegistry(
         role: AccountRole.readonly,
       ),
       AccountMeta(
+        address: payerKey,
+        role: AccountRole.writableSigner,
+      ),
+      AccountMeta(
         address: await twitterHandleRegistryKey,
         role: AccountRole.writable,
       ),
       AccountMeta(
         address: verifiedPubkey,
-        role: AccountRole.readonlySigner,
-      ),
-      AccountMeta(
-        address: payerKey,
-        role: AccountRole.writableSigner,
-      ),
-      const AccountMeta(
-        address: twitterVerificationAuthority,
         role: AccountRole.readonly,
       ),
+      // Optional class key - unused for user-facing registries
+      const AccountMeta(
+        address:
+            '11111111111111111111111111111111', // PublicKey(Buffer.alloc(32)) equivalent
+        role: AccountRole.readonly,
+      ),
+      // Parent key
       const AccountMeta(
         address: twitterRootParentRegistryAddress,
         role: AccountRole.readonly,
       ),
+      // Parent owner (Twitter verification authority acts as owner of the parent)
+      const AccountMeta(
+        address: twitterVerificationAuthority,
+        role: AccountRole.readonlySigner,
+      ),
     ],
-    data: _buildCreateInstructionData(hashedTwitterHandle, 2000000, space),
+    data: _buildCreateInstructionData(
+        hashedTwitterHandle, rentExemptionLamports, space),
   );
   instructions.add(createInstruction);
 
@@ -82,31 +99,38 @@ Future<List<TransactionInstruction>> createVerifiedTwitterRegistry(
   return instructions;
 }
 
-/// Build create instruction data (placeholder implementation)
+/// Build create instruction data matching JavaScript SDK implementation
+///
+/// This mirrors js/src/instructions/createInstruction.ts format:
+/// [0] - Instruction tag (0 for create)
+/// [1-4] - Hashed name length (u32, little-endian)
+/// [5-36] - Hashed name (32 bytes)
+/// [37-44] - Lamports (u64, little-endian)
+/// [45-48] - Space (u32, little-endian)
 Uint8List _buildCreateInstructionData(
   Uint8List hashedName,
   int lamports,
   int space,
 ) {
-  // This is a placeholder implementation
-  // TODO: Implement proper instruction data serialization
-  final data = Uint8List(45);
+  final data = <int>[
+    // Instruction tag (0 for create)
+    0,
+  ];
 
-  // Instruction tag (0 for create)
-  data[0] = 0;
+  // Add hashed name length (4 bytes, little-endian)
+  final nameLength = Numberu32(hashedName.length);
+  data.addAll(nameLength.toBuffer());
 
-  // Hashed name (32 bytes)
-  data.setRange(1, 33, hashedName);
+  // Add hashed name (32 bytes)
+  data.addAll(hashedName);
 
-  // Lamports (8 bytes, little endian)
-  final lamportsBytes = Uint8List(8);
-  lamportsBytes.buffer.asByteData().setUint64(0, lamports, Endian.little);
-  data.setRange(33, 41, lamportsBytes);
+  // Add lamports (8 bytes, little-endian)
+  final lamportsBuffer = Numberu64(lamports);
+  data.addAll(lamportsBuffer.toBuffer());
 
-  // Space (4 bytes, little endian)
-  final spaceBytes = Uint8List(4);
-  spaceBytes.buffer.asByteData().setUint32(0, space, Endian.little);
-  data.setRange(41, 45, spaceBytes);
+  // Add space (4 bytes, little-endian)
+  final spaceBuffer = Numberu32(space);
+  data.addAll(spaceBuffer.toBuffer());
 
-  return data;
+  return Uint8List.fromList(data);
 }

@@ -80,7 +80,7 @@ Future<List<String>> findSubdomains(
       if (reverseName != null && reverseName.isNotEmpty) {
         result.add(reverseName);
       }
-    } on Exception catch (e) {
+    } on Exception {
       // Skip invalid subdomains
       continue;
     }

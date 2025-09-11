@@ -132,12 +132,12 @@ Future<TransactionInstruction> validateRoa(ValidateRoaParams params) async {
 /// right to associate their domain with specific record data, using Ethereum
 /// secp256k1 signatures for cross-chain validation.
 ///
-/// - [domain]: The domain under which the record resides
-/// - [record]: The type of record to validate
-/// - [owner]: The address of the domain's owner
-/// - [payer]: The address funding the validation process
-/// - [signature]: The Ethereum signature used for validation (65 bytes)
-/// - [expectedPubkey]: The expected Ethereum public key (64 bytes uncompressed)
+/// - domain: The domain under which the record resides
+/// - record: The type of record to validate
+/// - owner: The address of the domain's owner
+/// - payer: The address funding the validation process
+/// - signature: The Ethereum signature used for validation (65 bytes)
+/// - expectedPubkey: The expected Ethereum public key (64 bytes uncompressed)
 ///
 /// Returns a [TransactionInstruction] for the validate ROA Ethereum operation.
 ///

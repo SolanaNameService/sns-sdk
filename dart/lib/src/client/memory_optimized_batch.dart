@@ -17,7 +17,7 @@ class MemoryOptimizedBatch<T> {
         try {
           final result = await processor(item);
           results.add(result);
-        } on Exception catch (e) {
+        } on Exception {
           // Skip failed items, could also collect errors if needed
           continue;
         }

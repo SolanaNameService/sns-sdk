@@ -52,7 +52,7 @@ Future<Ed25519HDPublicKey?> retrieveNftOwnerV2(
     }
 
     return null;
-  } on Exception catch (e) {
+  } on Exception {
     // Handle RPC errors (mint does not exist, etc.)
     return null;
   }

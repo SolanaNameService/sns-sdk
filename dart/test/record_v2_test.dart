@@ -21,9 +21,9 @@ void main() {
 
           // Record V2 addresses should be derivable
           // This tests the address derivation logic exists
-          print('Record V2 derivation test completed for $testDomain');
+          // print('Record V2 derivation test completed for $testDomain');
         } catch (e) {
-          print('Record V2 address test completed: $e');
+          // print('Record V2 address test completed: $e');
         }
       });
     });
@@ -32,7 +32,10 @@ void main() {
       test('should handle record V2 data serialization', () {
         // Test record V2 data structure handling
         const testRecords = [
-          {'type': 'SOL', 'content': '11111111111111111111111111111112'},
+          {
+            'type': 'SOL',
+            'content': 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'
+          },
           {
             'type': 'ETH',
             'content': '0x0000000000000000000000000000000000000000'
@@ -49,8 +52,12 @@ void main() {
               reason: '$recordType record content should not be empty');
 
           if (recordType == 'SOL') {
-            expect(content.length, equals(44),
-                reason: 'SOL address should be 44 characters');
+            // Base58 validation and reasonable length (Solana addresses vary 32-44)
+            final base58Pattern = RegExp(r'^[1-9A-HJ-NP-Za-km-z]+$');
+            expect(base58Pattern.hasMatch(content), isTrue,
+                reason: 'SOL address should be valid base58');
+            expect(content.length >= 32 && content.length <= 44, isTrue,
+                reason: 'SOL address length should be between 32 and 44');
           } else if (recordType == 'ETH') {
             expect(content.startsWith('0x'), isTrue,
                 reason: 'ETH address should start with 0x');

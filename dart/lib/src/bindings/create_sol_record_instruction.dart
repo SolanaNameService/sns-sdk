@@ -72,16 +72,10 @@ Uint8List _buildSolRecordInstructionData(
   List<int> hashedName,
   List<int> serializedRecord,
 ) {
-  final builder = <int>[];
-
-  // Instruction discriminator for CREATE (0)
-  builder.add(0);
-
-  // Add hashed name
-  builder.addAll(hashedName);
-
-  // Add serialized SOL record data
-  builder.addAll(serializedRecord);
+  final builder = <int>[]
+    ..add(0) // Instruction discriminator for CREATE (0)
+    ..addAll(hashedName) // Add hashed name
+    ..addAll(serializedRecord); // Add serialized SOL record data
 
   return Uint8List.fromList(builder);
 }

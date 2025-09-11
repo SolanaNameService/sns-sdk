@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
 import '../../constants/records.dart';
 import '../../errors/sns_errors.dart';
+import '../bech32_utils.dart';
 
 /// Parameters for serializing record content
 class SerializeRecordContentParams {
@@ -57,8 +59,8 @@ Uint8List serializeRecordContent({
       throw InvalidInjectiveAddressError(
           'The record content must be 42 characters long');
     }
-    // Simplified bech32 decoding - in production would use proper bech32 library
-    final decoded = _simpleBech32Decode(content);
+    // Robust bech32 decoding using proper bech32 library
+    final decoded = _robustBech32Decode(content);
     if (decoded.length != 20) {
       throw InvalidInjectiveAddressError(
           'The record data must be 20 bytes long');
@@ -84,8 +86,8 @@ Uint8List serializeRecordContent({
     }
     return Uint8List.fromList(bytes);
   } else if (record == Record.aaaa) {
-    // IPv6 address parsing - simplified
-    final bytes = _parseIPv6(content);
+    // IPv6 address parsing using robust dart:io validation
+    final bytes = _robustParseIPv6(content);
     if (bytes.length != 16) {
       throw InvalidAAAARecordError('The record content must be 16 bytes long');
     }
@@ -151,41 +153,52 @@ Uint8List _base58Decode(String input) {
   return Uint8List.fromList(bytes);
 }
 
-/// Simplified bech32 decoding for injective addresses
-Uint8List _simpleBech32Decode(String address) {
-  // This is a simplified implementation
-  // In production, use a proper bech32 library
+/// Robust bech32 decoding for injective addresses using proper bech32 implementation
+Uint8List _robustBech32Decode(String address) {
   if (!address.startsWith('inj')) {
-    throw ArgumentError('Invalid injective address');
+    throw InvalidInjectiveAddressError(
+        'The record content must start with `inj`');
   }
 
-  // For now, return a 20-byte placeholder
-  // In real implementation, would decode the bech32 properly
-  return Uint8List(20);
+  try {
+    // Use the SimpleBech32 decoder from bech32_utils.dart
+    final decoded = SimpleBech32.decode(address);
+
+    if (decoded.hrp != 'inj') {
+      throw InvalidInjectiveAddressError(
+          'Invalid human readable part, expected "inj"');
+    }
+
+    if (decoded.data.length != 20) {
+      throw InvalidInjectiveAddressError(
+          'The record data must be 20 bytes long');
+    }
+
+    return Uint8List.fromList(decoded.data);
+  } on Exception catch (e) {
+    throw InvalidInjectiveAddressError('Invalid bech32 encoding: $e');
+  }
 }
 
-/// Simple IPv6 address parsing
-Uint8List _parseIPv6(String address) {
-  // This is a simplified implementation
-  // In production, use a proper IPv6 parsing library
+/// Robust IPv6 address parsing using dart:io for validation
+Uint8List _robustParseIPv6(String address) {
   try {
-    final parts = address.split(':');
-    final bytes = <int>[];
-
-    for (final part in parts) {
-      if (part.isEmpty) continue;
-      final value = int.parse(part, radix: 16);
-      bytes.add((value >> 8) & 0xFF);
-      bytes.add(value & 0xFF);
+    // First validate using dart:io's InternetAddress for robust parsing
+    final internetAddr = InternetAddress(address);
+    if (internetAddr.type != InternetAddressType.IPv6) {
+      throw InvalidAAAARecordError('Not a valid IPv6 address');
     }
 
-    // Pad to 16 bytes if needed
-    while (bytes.length < 16) {
-      bytes.add(0);
+    // Get the raw address bytes (16 bytes for IPv6)
+    final bytes = internetAddr.rawAddress;
+    if (bytes.length != 16) {
+      throw InvalidAAAARecordError('IPv6 address must be 16 bytes long');
     }
 
-    return Uint8List.fromList(bytes.take(16).toList());
+    return Uint8List.fromList(bytes);
+  } on SocketException catch (e) {
+    throw InvalidAAAARecordError('Invalid IPv6 address format: $e');
   } on Exception catch (e) {
-    throw InvalidAAAARecordError('Invalid IPv6 address format');
+    throw InvalidAAAARecordError('IPv6 parsing failed: $e');
   }
 }

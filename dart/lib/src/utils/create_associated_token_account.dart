@@ -28,7 +28,7 @@ Future<TransactionInstruction?> createAssociatedTokenAccountIdempotent(
     if (accountInfo.data.isNotEmpty) {
       return null;
     }
-  } on Exception catch (e) {
+  } on Exception {
     // Account doesn't exist, we need to create it
   }
 

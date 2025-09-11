@@ -1,8 +1,10 @@
 import 'dart:typed_data';
+import 'package:solana/base58.dart';
 
 import '../constants/addresses.dart';
 import '../instructions/instruction_types.dart';
 import '../instructions/update_name_registry_instruction.dart';
+import '../int.dart';
 import '../rpc/rpc_client.dart';
 import '../utils/get_domain_key_sync.dart';
 import 'reverse_twitter_registry_state.dart';
@@ -40,10 +42,17 @@ Future<List<TransactionInstruction>> createReverseTwitterRegistry(
   );
   final reverseTwitterRegistryStateBuff = reverseState.serialize();
 
+  // Calculate rent exemption for the account
+  // This mirrors the JavaScript SDK's getMinimumBalanceForRentExemption call
+  // Using approximate calculation similar to other instructions in the codebase
+  final accountSize = reverseTwitterRegistryStateBuff.length +
+      96; // NameRegistryState.HEADER_LEN equivalent
+  final rentExemptionLamports =
+      accountSize * 6960; // Approximate rent exemption calculation
+
   final instructions = <TransactionInstruction>[];
 
-  // Create a basic instruction placeholder
-  // TODO: Implement proper CreateNameRegistryInstruction when instruction infrastructure is complete
+  // Create instruction matching JavaScript SDK's createInstruction call
   final createInstruction = TransactionInstruction(
     programAddress: nameProgramAddress,
     accounts: [
@@ -52,19 +61,38 @@ Future<List<TransactionInstruction>> createReverseTwitterRegistry(
         role: AccountRole.readonly,
       ),
       AccountMeta(
+        address: payerKey,
+        role: AccountRole.writableSigner,
+      ),
+      AccountMeta(
         address: await reverseRegistryKey,
         role: AccountRole.writable,
       ),
       AccountMeta(
         address: verifiedPubkey,
+        role: AccountRole.readonly,
+      ),
+      // Optional class key (Twitter verification authority)
+      const AccountMeta(
+        address: twitterVerificationAuthority,
         role: AccountRole.readonlySigner,
       ),
-      AccountMeta(
-        address: payerKey,
-        role: AccountRole.writableSigner,
+      // Parent key
+      const AccountMeta(
+        address: twitterRootParentRegistryAddress,
+        role: AccountRole.readonly,
+      ),
+      // Parent owner (Twitter verification authority)
+      const AccountMeta(
+        address: twitterVerificationAuthority,
+        role: AccountRole.readonlySigner,
       ),
     ],
-    data: _buildPlaceholderCreateData(),
+    data: _buildCreateInstructionData(
+      hashedVerifiedPubkey,
+      rentExemptionLamports,
+      reverseTwitterRegistryStateBuff.length,
+    ),
   );
   instructions.add(createInstruction);
 
@@ -84,20 +112,51 @@ Future<List<TransactionInstruction>> createReverseTwitterRegistry(
   return instructions;
 }
 
-/// Convert public key string to bytes (placeholder implementation)
+/// Convert public key string to bytes using robust base58 decoding
+///
+/// This mirrors the JavaScript SDK's PublicKey.toBytes() functionality
+/// by properly decoding base58-encoded public keys to their 32-byte representation.
 Uint8List _publicKeyToBytes(String pubkey) {
-  // This is a placeholder - proper implementation would decode base58
-  final bytes = Uint8List(32);
-  // Fill with dummy data for now
-  for (var i = 0; i < 32; i++) {
-    bytes[i] = i;
+  try {
+    // Use the base58 decoding from the solana package
+    return Uint8List.fromList(base58decode(pubkey));
+  } catch (e) {
+    throw ArgumentError('Invalid public key format: $pubkey - $e');
   }
-  return bytes;
 }
 
-/// Build placeholder create instruction data
-Uint8List _buildPlaceholderCreateData() {
-  // This is a basic placeholder implementation
-  // TODO: Implement proper instruction data serialization
-  return Uint8List.fromList([0]); // Basic create instruction tag
+/// Build create instruction data matching JavaScript SDK implementation
+///
+/// This mirrors js/src/instructions/createInstruction.ts format:
+/// [0] - Instruction tag (0 for create)
+/// [1-4] - Hashed name length (u32, little-endian)
+/// [5-36] - Hashed name (32 bytes)
+/// [37-44] - Lamports (u64, little-endian) - calculated from rent exemption
+/// [45-48] - Space (u32, little-endian) - size of reverse registry state
+Uint8List _buildCreateInstructionData(
+  Uint8List hashedName,
+  int lamports,
+  int space,
+) {
+  final data = <int>[
+    // Instruction tag (0 for create)
+    0,
+  ];
+
+  // Add hashed name length (4 bytes, little-endian)
+  final nameLength = Numberu32(hashedName.length);
+  data.addAll(nameLength.toBuffer());
+
+  // Add hashed name (32 bytes)
+  data.addAll(hashedName);
+
+  // Add lamports (8 bytes, little-endian)
+  final lamportsBuffer = Numberu64(lamports);
+  data.addAll(lamportsBuffer.toBuffer());
+
+  // Add space (4 bytes, little-endian)
+  final spaceBuffer = Numberu32(space);
+  data.addAll(spaceBuffer.toBuffer());
+
+  return Uint8List.fromList(data);
 }

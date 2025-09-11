@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:solana/solana.dart' hide RpcClient;
 
 import '../constants/addresses.dart';
@@ -42,14 +43,16 @@ Future<TransactionInstruction> registerFavorite(
     if (registry.parentName != rootDomainAddress) {
       parent = Ed25519HDPublicKey.fromBase58(registry.parentName);
     }
-  } on Exception catch (e) {
+  } on Exception {
     // If we can't retrieve registry state, assume no parent
     parent = null;
   }
 
-  // Get the favorite domain key (simplified PDA derivation)
+  // Get the favorite domain key using proper PDA derivation
+  // This mirrors the JavaScript SDK's PublicKey.findProgramAddressSync pattern
   final favoriteKeySeeds = [
-    params.owner.toByteArray(),
+    utf8.encode("favourite_domain"), // Buffer.from("favourite_domain")
+    params.owner.bytes, // owner.toBuffer()
   ];
 
   final favoriteKeyResult = await Ed25519HDPublicKey.findProgramAddress(

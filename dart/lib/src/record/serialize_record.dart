@@ -238,9 +238,98 @@ Uint8List _parseIPv6(String address) {
   return Uint8List.fromList(bytes);
 }
 
-/// Encodes a string with punycode (simplified implementation)
+/// Encodes a string with punycode following RFC 3492
 String _encodePunycode(String input) {
-  // For now, return as-is. A full punycode implementation would be needed
-  // for complete compatibility with the JS SDK
-  return input;
+  // Check if encoding is needed (contains non-ASCII)
+  if (input.codeUnits.every((c) => c < 128)) {
+    return input;
+  }
+
+  const base = 36;
+  const tMin = 1;
+  const tMax = 26;
+  const initialBias = 72;
+  const initialN = 128;
+
+  final output = <int>[];
+  var n = initialN;
+  var delta = 0;
+  var bias = initialBias;
+
+  // Extract ASCII characters
+  final basicChars = input.codeUnits.where((c) => c < 128).toList();
+  output.addAll(basicChars);
+
+  final basicLength = basicChars.length;
+  var handledCodePoints = basicLength;
+
+  if (basicLength > 0) {
+    output.add(45); // '-' separator
+  }
+
+  final inputCodePoints = input.runes.toList();
+  final inputLength = inputCodePoints.length;
+
+  while (handledCodePoints < inputLength) {
+    // Find the next code point to handle
+    var minCodePoint = 0x110000; // Max Unicode code point + 1
+    for (final codePoint in inputCodePoints) {
+      if (codePoint >= n && codePoint < minCodePoint) {
+        minCodePoint = codePoint;
+      }
+    }
+
+    // Increase delta by the number of code points we're skipping
+    delta += (minCodePoint - n) * (handledCodePoints + 1);
+    n = minCodePoint;
+
+    for (final codePoint in inputCodePoints) {
+      if (codePoint < n) {
+        delta++;
+      } else if (codePoint == n) {
+        // Encode this code point
+        var q = delta;
+
+        for (var k = base;; k += base) {
+          final t = k <= bias ? tMin : (k >= bias + tMax ? tMax : k - bias);
+          if (q < t) break;
+
+          final digit = t + (q - t) % (base - t);
+          output.add(digit < 26 ? digit + 97 : digit - 26 + 48); // a-z or 0-9
+          q = (q - t) ~/ (base - t);
+        }
+
+        output.add(q < 26 ? q + 97 : q - 26 + 48); // a-z or 0-9
+        bias = _adaptBias(
+            delta, handledCodePoints + 1, handledCodePoints == basicLength);
+        delta = 0;
+        handledCodePoints++;
+      }
+    }
+
+    delta++;
+    n++;
+  }
+
+  return 'xn--${String.fromCharCodes(output)}';
+}
+
+/// Adapt the bias for punycode encoding
+int _adaptBias(int delta, int numPoints, bool firstTime) {
+  const base = 36;
+  const tMin = 1;
+  const tMax = 26;
+  const skew = 38;
+  const damp = 700;
+
+  delta = firstTime ? delta ~/ damp : delta ~/ 2;
+  delta += delta ~/ numPoints;
+
+  var k = 0;
+  while (delta > ((base - tMin) * tMax) ~/ 2) {
+    delta ~/= base - tMin;
+    k += base;
+  }
+
+  return k + (((base - tMin + 1) * delta) ~/ (delta + skew));
 }

@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:solana/solana.dart' hide RpcClient;
 
 import '../../sns_sdk.dart';
 import '../utils/get_pyth_feed_address.dart';
@@ -168,44 +169,48 @@ Future<List<TransactionInstruction>> registerDomain(
   return instructions;
 }
 
-/// Creates an ATA instruction
+/// Creates an ATA instruction using proper Solana Associated Token Account format
 Future<TransactionInstruction> _createAtaInstruction({
   required String buyer,
   required String ata,
   required String owner,
   required String mint,
-}) async =>
-    // This is a simplified ATA creation instruction
-    // In a full implementation, you'd use the proper ATA instruction format
-    TransactionInstruction(
-      programAddress: associatedTokenProgramAddress,
-      accounts: [
-        AccountMeta(address: buyer, role: AccountRole.writableSigner),
-        AccountMeta(address: ata, role: AccountRole.writable),
-        AccountMeta(address: owner, role: AccountRole.readonly),
-        AccountMeta(address: mint, role: AccountRole.readonly),
-        const AccountMeta(
-            address: systemProgramAddress, role: AccountRole.readonly),
-        const AccountMeta(
-            address: tokenProgramAddress, role: AccountRole.readonly),
-      ],
-      data: Uint8List.fromList([1]), // Simplified instruction data
-    );
+}) async {
+  // Use proper ATA creation instruction format matching Solana standards
+  return TransactionInstruction(
+    programAddress: associatedTokenProgramAddress,
+    accounts: [
+      AccountMeta(address: buyer, role: AccountRole.writableSigner),
+      AccountMeta(address: ata, role: AccountRole.writable),
+      AccountMeta(address: owner, role: AccountRole.readonly),
+      AccountMeta(address: mint, role: AccountRole.readonly),
+      const AccountMeta(
+          address: systemProgramAddress, role: AccountRole.readonly),
+      const AccountMeta(
+          address: tokenProgramAddress, role: AccountRole.readonly),
+      const AccountMeta(address: sysvarRentAddress, role: AccountRole.readonly),
+    ],
+    data: Uint8List.fromList([]), // ATA creation uses empty data
+  );
+}
 
-/// Finds associated token address
+/// Finds associated token address using proper PDA derivation
 Future<String> _findAssociatedTokenAddress({
   required String mint,
   required String owner,
-}) async =>
-    // Generate ATA PDA
-    _getProgramDerivedAddress(
-      seeds: [
-        _base58Decode(owner),
-        _base58Decode(tokenProgramAddress),
-        _base58Decode(mint),
-      ],
-      programId: associatedTokenProgramAddress,
-    );
+}) async {
+  // Use proper ATA PDA derivation matching espresso-cash-public pattern
+  final result = await Ed25519HDPublicKey.findProgramAddress(
+    seeds: [
+      _base58Decode(owner),
+      _base58Decode(tokenProgramAddress),
+      _base58Decode(mint),
+    ],
+    programId: Ed25519HDPublicKey.fromBase58(associatedTokenProgramAddress),
+  );
+
+  return result.toBase58();
+}
 
 /// Generates a Program Derived Address (PDA)
 Future<String> _getProgramDerivedAddress({

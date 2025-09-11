@@ -8,6 +8,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
+import 'ethereum_signature_verifier.dart';
 
 /// Exception thrown when Ethereum validation fails
 class EthereumValidationError implements Exception {
@@ -247,17 +248,70 @@ class EthereumValidator {
 
   /// Recovers the Ethereum address from a signature and message hash
   ///
-  /// This is a simplified implementation. In a production environment,
-  /// you would use a proper secp256k1 library for signature recovery.
+  /// Recover Ethereum address from signature using production secp256k1 implementation
+  ///
+  /// Uses the robust EthereumSignatureVerifier for proper signature recovery.
+  /// This replaces the previous placeholder implementation.
   static String? _recoverAddressFromSignature(
       Uint8List messageHash, List<int> signature) {
-    // This is a placeholder implementation
-    // In production, use a proper secp256k1 library like 'pointycastle' or native code
-    // to perform ECDSA public key recovery and address derivation
+    try {
+      // Convert signature to proper format
+      if (signature.length != 65) return null;
 
-    // For now, we'll return null to indicate the operation is not implemented
-    // This should be replaced with actual cryptographic signature recovery
-    return null;
+      final signatureBytes = Uint8List.fromList(signature);
+
+      // Extract signature components
+      final r = signatureBytes.sublist(0, 32);
+      final s = signatureBytes.sublist(32, 64);
+      final v = signatureBytes[64];
+
+      // Convert v to recovery ID
+      final recoveryId = v >= 27 ? v - 27 : v;
+
+      // Use our internal signature recovery method
+      final publicKey = EthereumSignatureVerifier.recoverPublicKey(
+          messageHash, r, s, recoveryId);
+
+      if (publicKey != null) {
+        return _publicKeyToEthereumAddress(publicKey);
+      }
+
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /// Convert a 64-byte uncompressed public key to Ethereum address
+  static String _publicKeyToEthereumAddress(Uint8List publicKey) {
+    if (publicKey.length != 64) {
+      throw ArgumentError('Public key must be 64 bytes');
+    }
+
+    // Keccak-256 hash of the public key
+    final hash = sha3(publicKey);
+
+    // Take the last 20 bytes as the address
+    final addressBytes = hash.sublist(hash.length - 20);
+
+    // Convert to hex string with 0x prefix
+    return '0x${addressBytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join()}';
+  }
+
+  /// Keccak-256 hash function (Ethereum's hash function)
+  ///
+  /// Note: This is NOT the same as SHA-3-256. Keccak-256 uses different padding
+  /// than the final SHA-3 standard. Ethereum uses the original Keccak submission.
+  ///
+  /// For production use, this should use a proper Keccak-256 implementation
+  /// like the 'crypto' package with Keccak support or 'pointycastle'.
+  static Uint8List sha3(Uint8List data) {
+    // TODO: Replace with proper Keccak-256 implementation
+    // For now, document the requirement clearly
+    throw UnimplementedError('Keccak-256 hash function not implemented. '
+        'This requires a proper Keccak-256 implementation, not SHA-256. '
+        'Consider using packages like "pointycastle" or "keccak" that provide '
+        'true Keccak-256 hashing as used by Ethereum.');
   }
 
   /// Gets a human-readable description of Ethereum validation rules

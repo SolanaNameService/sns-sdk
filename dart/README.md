@@ -1,12 +1,12 @@
 # SNS Dart SDK
 
-A comprehensive Dart/Flutter SDK for the Solana Name Service (SNS) providing domain resolution, registration, and management. This SDK maintains complete feature parity with the TypeScript SDK.
+Dart/Flutter SDK for the Solana Name Service (SNS) providing domain resolution, registration, and management functionality. This SDK maintains complete feature parity with the JavaScript SDK.
 
 ## Features
 
 - **Domain Resolution**: Resolve .sol domains to owner addresses with full NFT and PDA support
 - **Record Management**: Create, read, and verify domain records (SOL, ETH, URL, social media)
-- **Subdomain Support**: Create and manage hierarchical subdomains
+- **Subdomain Support**: Create and manage hierarchical subdomains  
 - **NFT Integration**: Handle tokenized domains and NFT ownership
 - **Right-of-Association**: Validate domain ownership with cryptographic proofs
 - **Flutter Optimized**: Designed for mobile and web applications
@@ -17,10 +17,10 @@ Add this to your package's `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  sns_sdk: ^0.1.0
+  sns_sdk: ^1.0.0
 ```
 
-## Quick Start
+## Basic Usage
 
 ```dart
 import 'package:sns_sdk/sns_sdk.dart';
@@ -121,9 +121,9 @@ This SDK mirrors the [TypeScript SDK](https://github.com/Bonfida/sns-sdk) APIs. 
 
 For detailed protocol information, see the [Solana Name Service documentation](https://docs.bonfida.org/collection/naming-service/overview).
 
-## TypeScript SDK Parity
+## JavaScript SDK Parity
 
-This Dart SDK maintains 100% feature parity with the official TypeScript SDK, ensuring consistent behavior across platforms.
+This Dart SDK maintains 100% feature parity with the official [JavaScript SDK](https://github.com/Bonfida/sns-sdk), ensuring consistent behavior across platforms.
 
 ## Testing
 
@@ -132,8 +132,6 @@ Run tests with:
 ```bash
 dart test
 ```
-
-Tests validate against live Solana data. Set `RPC_URL` environment variable for custom endpoints.
 
 ## License
 

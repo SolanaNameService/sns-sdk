@@ -51,7 +51,7 @@ Future<bool> checkSolRecord(
     // Verify the signature against the record data
     final isValid = await ed25519.verify(record, signature: signature);
     return isValid;
-  } on Exception catch (e) {
+  } on Exception {
     // If verification fails due to any error, return false
     return false;
   }

@@ -1,7 +1,7 @@
-/// SNS Dart SDK - Comprehensive Solana Name Service SDK
+/// SNS Dart SDK - Comprehensive Solana Name Service SDK.
 ///
 /// Provides complete domain resolution, registration, and management functionality
-/// with full feature parity to the TypeScript SDK.
+/// with full feature parity to the JavaScript SDK.
 ///
 /// ## Key Features
 /// - SNS-IP-5 compliant domain resolution with NFT and PDA support
@@ -41,12 +41,18 @@ export 'src/bindings/burn_domain.dart' show burnDomain, BurnDomainParams;
 export 'src/bindings/create_name_registry.dart'
     show createNameRegistry, CreateNameRegistryParams;
 export 'src/bindings/create_record.dart' show createRecord;
+export 'src/bindings/create_record_v2_instruction.dart'
+    show createRecordV2Instruction;
 export 'src/bindings/create_reverse_name.dart'
     show createReverseName, CreateReverseNameParams;
 export 'src/bindings/create_subdomain.dart'
     show createSubdomain, CreateSubdomainParams;
 export 'src/bindings/delete_name_registry.dart'
     show deleteNameRegistry, DeleteNameRegistryParams;
+export 'src/bindings/delete_record_v2.dart'
+    show deleteRecordV2, DeleteRecordV2Params;
+export 'src/bindings/eth_validate_record_v2_content.dart'
+    show ethValidateRecordV2Content, EthValidateRecordV2ContentParams;
 export 'src/bindings/register_domain_name.dart'
     show registerDomainName, RegisterDomainNameParams;
 export 'src/bindings/register_domain_name_v2.dart' show registerDomainNameV2;
@@ -61,6 +67,12 @@ export 'src/bindings/update_name_registry_data.dart'
     show updateNameRegistryData, UpdateNameRegistryDataParams;
 export 'src/bindings/update_sol_record_instruction.dart'
     show updateSolRecordInstruction;
+export 'src/bindings/update_record_v2_instruction.dart'
+    show updateRecordV2Instruction, UpdateRecordV2InstructionParams;
+export 'src/bindings/validate_record_v2_content.dart'
+    show validateRecordV2Content, ValidateRecordV2ContentParams;
+export 'src/bindings/writ_roa_record_v2.dart'
+    show writRoaRecordV2, WritRoaRecordV2Params;
 export 'src/bindings/validate_roa.dart' show validateRoa;
 export 'src/bindings/validate_roa_advanced.dart'
     show validateRoaEthereum, ValidateRoaParams, ValidateRoaEthereumParams;
@@ -73,7 +85,7 @@ export 'src/constants/records.dart';
 // Devnet support
 export 'src/devnet.dart';
 // Domain operations
-export 'src/domain/get_all_domains.dart';
+export 'src/domain/get_all_domains.dart' hide getAllDomains;
 export 'src/domain/get_domain_address.dart';
 export 'src/domain/get_domain_owner.dart';
 export 'src/domain/get_domain_record.dart';
@@ -82,8 +94,11 @@ export 'src/domain/get_domains_for_address.dart';
 export 'src/domain/get_subdomains.dart';
 export 'src/domain/resolve_domain.dart';
 // Errors
+// Errors
 export 'src/errors/sns_errors.dart';
 // Favorite Domain functionality
+export 'src/favorite/favorite_domain.dart'
+    show getFavoriteDomain, getMultipleFavoriteDomains;
 export 'src/favorite_domain/favorite_domain.dart';
 // Instruction builders
 export 'src/instructions/instructions.dart';
@@ -132,7 +147,7 @@ export 'src/record/helpers/record_helpers.dart'
         getUrlRecord;
 export 'src/record/helpers/record_helpers.dart';
 export 'src/record/serialize_record.dart';
-export 'src/record/simple_deserialize_record.dart' show deserializeRecord;
+export 'src/record/deserialize_record.dart' show deserializeRecord;
 export 'src/record/verify_record_staleness.dart';
 // Record V2 operations - Full Record V2 functionality
 export 'src/record_v2/deserialize_record_v2_content.dart';
@@ -157,7 +172,7 @@ export 'src/states/primary_domain.dart';
 export 'src/states/registry.dart';
 // Twitter integration
 export 'src/twitter/twitter.dart';
-// Transaction builders (Phase 4: Security Infrastructure)
+// Transaction builders
 export 'src/tx/unsigned_transaction.dart';
 // Types
 export 'src/types/custom_bg.dart';
@@ -170,9 +185,10 @@ export 'src/utils/deserialize_record_content.dart';
 export 'src/utils/deserialize_reverse.dart';
 export 'src/utils/find_subdomains.dart';
 // Individual utility exports for TypeScript parity
+export 'src/utils/get_all_domains.dart' show getAllDomains;
+export 'src/utils/get_all_registered_domains.dart';
 export 'src/utils/get_domain_key_sync.dart'
-    show getHashedNameSync, getNameAccountKeySync;
-export 'src/utils/get_domain_key_sync.dart';
+    show getHashedNameSync, getNameAccountKeySync, getDomainKeySync;
 export 'src/utils/get_domain_keys_with_reverses.dart';
 export 'src/utils/get_domain_price_from_name.dart';
 export 'src/utils/get_pyth_feed_account_key.dart';

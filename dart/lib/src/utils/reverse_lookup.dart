@@ -57,7 +57,7 @@ Future<String?> reverseLookup(ReverseLookupParams params) async {
       registry.data!,
       trimFirstNullByte: params.parentAddress != null,
     );
-  } on Exception catch (e) {
+  } on Exception {
     // Return null if reverse lookup fails instead of throwing
     return null;
   }

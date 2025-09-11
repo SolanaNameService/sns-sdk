@@ -1,7 +1,8 @@
-/// Simple bech32 decoding utilities
+/// Bech32 encoding and decoding utilities
 ///
-/// Provides basic bech32 decoding for Injective addresses.
-/// This is a simplified implementation for SNS purposes.
+/// Provides complete bech32 encoding/decoding for Injective addresses and other
+/// blockchain applications. Implements the full BIP 173 specification with
+/// proper checksum validation and bit conversion.
 library;
 
 /// Result of bech32 decoding
@@ -11,9 +12,83 @@ class Bech32DecodeResult {
   final List<int> data;
 }
 
-/// Simple bech32 decoder for Injective addresses
+/// Robust bech32 encoder/decoder following BIP 173 specification
+///
+/// This implementation provides complete bech32 functionality including:
+/// - Full checksum validation using the bech32 polymod algorithm
+/// - Proper bit conversion between 5-bit and 8-bit representations
+/// - Comprehensive error handling for malformed inputs
+/// - Support for both encoding and decoding operations
 class SimpleBech32 {
   static const String _charset = 'qpzry9x8gf2tvdw0s3jn54khce6mua7l';
+  static const List<int> _generator = [
+    0x3b6a57b2,
+    0x26508e6d,
+    0x1ea119fa,
+    0x3d4233dd,
+    0x2a1462b3
+  ];
+
+  /// Encodes data with HRP using bech32
+  static String encode(String hrp, List<int> data) {
+    if (data.isEmpty) {
+      throw ArgumentError('Data cannot be empty');
+    }
+
+    // Convert data to 5-bit
+    final converted = convertBits(data, 8, 5, true);
+
+    // Create checksum
+    final checksum = _createChecksum(hrp, converted);
+
+    // Combine data and checksum
+    final combined = [...converted, ...checksum];
+
+    // Build final string
+    final result = StringBuffer(hrp + '1');
+    for (final value in combined) {
+      result.write(_charset[value]);
+    }
+
+    return result.toString();
+  }
+
+  /// Creates bech32 checksum
+  static List<int> _createChecksum(String hrp, List<int> data) {
+    final values = _hrpExpand(hrp) + data;
+    final polymod = _polymod(values + [0, 0, 0, 0, 0, 0]) ^ 1;
+    final checksum = <int>[];
+    for (int i = 0; i < 6; i++) {
+      checksum.add((polymod >> (5 * (5 - i))) & 31);
+    }
+    return checksum;
+  }
+
+  /// Expands HRP for checksum calculation
+  static List<int> _hrpExpand(String hrp) {
+    final result = <int>[];
+    for (int i = 0; i < hrp.length; i++) {
+      result.add(hrp.codeUnitAt(i) >> 5);
+    }
+    result.add(0);
+    for (int i = 0; i < hrp.length; i++) {
+      result.add(hrp.codeUnitAt(i) & 31);
+    }
+    return result;
+  }
+
+  /// Computes bech32 polymod
+  static int _polymod(List<int> values) {
+    int chk = 1;
+    for (final value in values) {
+      final top = chk >> 25;
+      chk = (chk & 0x1ffffff) << 5 ^ value;
+      for (int i = 0; i < 5; i++) {
+        chk ^= ((top >> i) & 1) != 0 ? _generator[i] : 0;
+      }
+    }
+    return chk;
+  }
 
   /// Converts 5-bit data to 8-bit data
   static List<int> convertBits(

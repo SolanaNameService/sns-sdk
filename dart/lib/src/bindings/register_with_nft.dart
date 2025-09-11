@@ -1,3 +1,5 @@
+import 'package:solana/solana.dart' hide RpcClient;
+
 import '../constants/addresses.dart';
 import '../instructions/create_with_nft_instruction.dart';
 import '../instructions/instruction_types.dart';
@@ -44,11 +46,34 @@ Future<TransactionInstruction> registerWithNft(
     classAddress: centralState,
   );
 
-  // For now, we'll use simplified PDA generation
-  // In full implementation, would use proper PDA derivation
-  const state = registryProgramAddress;
-  const nftMetadata = metaplexProgramAddress;
-  const masterEdition = metaplexProgramAddress;
+  // Use proper PDA derivation for state using registry program
+  final nftMintKey = Ed25519HDPublicKey.fromBase58(params.nftMint);
+
+  // Generate state PDA with domain address as seed (same pattern as register_domain.dart)
+  final stateAddress = await Ed25519HDPublicKey.findProgramAddress(
+    seeds: [Ed25519HDPublicKey.fromBase58(domainAddress).bytes],
+    programId: Ed25519HDPublicKey.fromBase58(registryProgramAddress),
+  );
+
+  // Derive proper Metaplex metadata and master edition addresses
+  final nftMetadata = await Ed25519HDPublicKey.findProgramAddress(
+    seeds: [
+      'metadata'.codeUnits,
+      Ed25519HDPublicKey.fromBase58(metaplexProgramAddress).bytes,
+      nftMintKey.bytes,
+    ],
+    programId: Ed25519HDPublicKey.fromBase58(metaplexProgramAddress),
+  );
+
+  final masterEdition = await Ed25519HDPublicKey.findProgramAddress(
+    seeds: [
+      'metadata'.codeUnits,
+      Ed25519HDPublicKey.fromBase58(metaplexProgramAddress).bytes,
+      nftMintKey.bytes,
+      'edition'.codeUnits,
+    ],
+    programId: Ed25519HDPublicKey.fromBase58(metaplexProgramAddress),
+  );
 
   final instruction = CreateWithNftInstruction(
     space: params.space,
@@ -65,13 +90,13 @@ Future<TransactionInstruction> registerWithNft(
     centralState: reverseLookupClass,
     buyer: params.buyer,
     nftSource: params.nftSource,
-    nftMetadata: nftMetadata,
+    nftMetadata: nftMetadata.toBase58(),
     nftMint: params.nftMint,
-    masterEdition: masterEdition,
+    masterEdition: masterEdition.toBase58(),
     collection: wolvesCollectionMetadata,
     splTokenProgram: tokenProgramAddress,
     rentSysvar: sysvarRentAddress,
-    state: state,
+    state: stateAddress.toBase58(),
     mplTokenMetadata: metaplexProgramAddress,
   );
 

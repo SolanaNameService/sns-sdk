@@ -2,10 +2,13 @@ import 'dart:async';
 
 import 'package:solana/dto.dart' as solana_dto;
 import 'package:solana/solana.dart' as solana;
+import 'package:solana/src/rpc/dto/program_filter.dart' as program_filter;
 
 /// WebSocket subscription client for real-time account change notifications
 ///
-/// This client provides Phase 1 real-time functionality using package:solana's
+/// Real-time subscription client for SNS domain and record events.
+///
+/// This client provides real-time functionality using package:solana's
 /// WebSocket infrastructure to enable reactive applications.
 ///
 /// **KEY FEATURES:**
@@ -67,7 +70,7 @@ class SolanaWebSocketClient {
   /// within the SNS program. Critical for apps that need to detect new domains.
   ///
   /// [programId] - The base58-encoded program ID to monitor
-  /// [filters] - Optional filters to narrow down accounts
+  /// [filters] - Optional filters to narrow down accounts (memcmp, dataSize)
   /// [onProgramAccountChange] - Callback for program account changes
   /// [commitment] - Confirmation level for subscription updates
   ///
@@ -80,16 +83,32 @@ class SolanaWebSocketClient {
     solana_dto.Commitment commitment = solana_dto.Commitment.confirmed,
   }) async {
     try {
-      // Note: package:solana may not have programSubscribe yet
-      // This is a placeholder for when WebSocket program subscriptions are available
+      final subscriptionId = DateTime.now().millisecondsSinceEpoch.toString();
 
-      // For now, we can use account subscriptions for known addresses
-      // In the future, this would use programSubscribe with filters
+      // Convert filters to JSON format compatible with WebSocket protocol
+      List<program_filter.ProgramFilter>? webSocketFilters;
+      if (filters != null && filters.isNotEmpty) {
+        webSocketFilters = filters
+            .map((filter) => _JsonProgramFilter(filter.toJson()))
+            .toList();
+      }
 
-      throw UnimplementedError(
-        'Program account subscriptions not yet available in package:solana. '
-        'Use account subscriptions for specific addresses instead.',
-      );
+      final subscription = _subscriptionClient
+          .programSubscribe(
+        programId,
+        filters: webSocketFilters,
+        commitment: commitment,
+      )
+          .listen((event) {
+        // Parse the program account notification from the raw event
+        final notification = _parseProgramAccountNotification(event, programId);
+        if (notification != null) {
+          onProgramAccountChange(notification);
+        }
+      });
+
+      _activeSubscriptions[subscriptionId] = subscription;
+      return subscriptionId;
     } on Exception catch (e) {
       throw SubscriptionException(
         'Failed to subscribe to program account changes: $e',
@@ -127,6 +146,74 @@ class SolanaWebSocketClient {
   List<int> _extractAccountData(dynamic data) {
     if (data is solana_dto.BinaryAccountData) {
       return data.data;
+    }
+    return [];
+  }
+
+  /// Parses program account notification from the raw subscription event
+  ProgramAccountChangeNotification? _parseProgramAccountNotification(
+    dynamic event,
+    String programId,
+  ) {
+    try {
+      // The event structure from Solana WebSocket programSubscribe:
+      // {
+      //   "result": {
+      //     "context": { "slot": 123456 },
+      //     "value": {
+      //       "pubkey": "account_address",
+      //       "account": {
+      //         "data": [...],
+      //         "executable": false,
+      //         "lamports": 1000000,
+      //         "owner": "program_id",
+      //         "rentEpoch": 200
+      //       }
+      //     }
+      //   }
+      // }
+
+      if (event is Map<String, dynamic>) {
+        final result = event['result'] as Map<String, dynamic>?;
+        if (result != null) {
+          final value = result['value'] as Map<String, dynamic>?;
+          if (value != null) {
+            final pubkey = value['pubkey'] as String?;
+            final account = value['account'] as Map<String, dynamic>?;
+
+            if (pubkey != null && account != null) {
+              return ProgramAccountChangeNotification(
+                accountId: pubkey,
+                programId: programId,
+                data: _extractAccountDataFromMap(account['data']),
+                lamports: account['lamports'] as int? ?? 0,
+                owner: account['owner'] as String? ?? '',
+              );
+            }
+          }
+        }
+      }
+
+      return null;
+    } on Exception {
+      // Return null for parsing errors - caller should handle
+      return null;
+    }
+  }
+
+  /// Extracts account data from various data formats
+  List<int> _extractAccountDataFromMap(dynamic data) {
+    if (data is List) {
+      // Data is already a list of integers
+      return data.cast<int>();
+    } else if (data is String) {
+      // Data might be base64 encoded
+      try {
+        // This would need proper base64 decoding
+        return [];
+      } on Exception {
+        return [];
+      }
     }
     return [];
   }
@@ -180,7 +267,23 @@ class SubscriptionException implements Exception {
   @override
   String toString() {
     final buffer = StringBuffer('SubscriptionException: $message');
-    if (method != null) buffer.write(' (method: $method)');
+    if (method != null) {
+      buffer.write(' (method: $method)');
+    }
     return buffer.toString();
   }
+}
+
+/// JSON-serializable program filter for WebSocket subscriptions
+///
+/// This class works around the limitation that the base ProgramFilter class
+/// in the solana package doesn't support JSON serialization for WebSocket use.
+class _JsonProgramFilter extends program_filter.ProgramFilter {
+  const _JsonProgramFilter(this._jsonData);
+
+  final Map<String, dynamic> _jsonData;
+
+  /// Convert to JSON for WebSocket transmission
+  /// This method will be called automatically during JSON encoding
+  Map<String, dynamic> toJson() => _jsonData;
 }

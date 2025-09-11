@@ -1,10 +1,10 @@
-/// Record types and constants for the SNS SDK
+/// Record types and constants for the SNS SDK.
 ///
 /// Defines all supported record types for Solana Name Service domains,
 /// including cryptocurrency addresses, social media handles, and metadata.
 library;
 
-/// Enumeration of all supported SNS record types
+/// Enumeration of all supported SNS record types.
 ///
 /// Records allow domains to store various types of information:
 /// - Cryptocurrency addresses (SOL, ETH, BTC, etc.)

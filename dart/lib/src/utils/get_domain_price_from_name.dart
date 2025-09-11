@@ -4,6 +4,8 @@
 /// mirroring the functionality from the JavaScript SDK exactly.
 library;
 
+import 'package:characters/characters.dart';
+
 /// Retrieves the registration cost in USD of a domain from its name
 ///
 /// The pricing is based on the number of grapheme clusters (characters)
@@ -19,9 +21,8 @@ library;
 /// @param name The domain name (without .sol suffix)
 /// @returns The price in USD
 int getDomainPriceFromName(String name) {
-  // Count grapheme clusters (characters that may be composed of multiple code units)
-  final characters = name.runes.toList();
-  final length = characters.length;
+  // Count grapheme clusters (actual visual characters) - emojis can be complex
+  final length = name.characters.length;
 
   switch (length) {
     case 1:

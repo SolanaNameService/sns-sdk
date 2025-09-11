@@ -72,7 +72,7 @@ Future<TransferSubdomainResult> transferSubdomain(
     final registryState =
         await RegistryState.retrieve(params.rpc, domainResult.pubkey);
     currentOwner = Ed25519HDPublicKey.fromBase58(registryState.owner);
-  } on Exception catch (e) {
+  } on Exception {
     // If we can't get the owner, we'll let the instruction fail
     throw SnsError(
         ErrorType.accountDoesNotExist, 'Could not retrieve subdomain owner');
@@ -85,7 +85,7 @@ Future<TransferSubdomainResult> transferSubdomain(
       final parentRegistryState =
           await RegistryState.retrieve(params.rpc, domainResult.parent!);
       parentOwner = Ed25519HDPublicKey.fromBase58(parentRegistryState.owner);
-    } on Exception catch (e) {
+    } on Exception {
       throw SnsError(ErrorType.accountDoesNotExist,
           'Could not retrieve parent domain owner');
     }

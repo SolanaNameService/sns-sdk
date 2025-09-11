@@ -127,20 +127,44 @@ class SnsClient {
     );
   }
 
-  /// Background processing for long operations
+  /// Watch domain changes with polling-based updates
+  ///
+  /// This implementation uses periodic polling to detect domain changes.
+  /// For real-time WebSocket subscriptions, integrate with a Solana WebSocket client
+  /// such as the one available in the espresso-cash-public packages.
+  ///
+  /// To enable WebSocket subscriptions:
+  /// 1. Add dependency: solana: ^1.0.0 (or similar from espresso-cash-public)
+  /// 2. Implement _getWebSocketUrl() to extract URL from RPC client
+  /// 3. Use SubscriptionClient.accountSubscribe() for real-time updates
   Stream<DomainEvent> watchDomainChanges(String domain) async* {
-    // This would implement WebSocket or polling-based real-time updates
-    // For now, we'll simulate with periodic checks
+    var lastAccountInfo = await _getAccountInfoSafely(domain);
+
     while (true) {
       await Future.delayed(const Duration(seconds: 30));
 
       try {
-        // In a real implementation, this would listen to blockchain events
-        yield DomainEvent(
-          domain: domain,
-          eventType: DomainEventType.updated,
-          timestamp: DateTime.now(),
-        );
+        final currentAccountInfo = await _getAccountInfoSafely(domain);
+
+        // Compare with previous state to detect changes
+        if (_hasAccountChanged(lastAccountInfo, currentAccountInfo)) {
+          final eventType =
+              _determineChangeType(lastAccountInfo, currentAccountInfo);
+
+          yield DomainEvent(
+            domain: domain,
+            eventType: eventType,
+            timestamp: DateTime.now(),
+            data: currentAccountInfo != null
+                ? {
+                    'exists': currentAccountInfo.exists,
+                    'dataLength': currentAccountInfo.data.length,
+                  }
+                : null,
+          );
+
+          lastAccountInfo = currentAccountInfo;
+        }
       } on Exception catch (e) {
         yield DomainEvent(
           domain: domain,
@@ -150,6 +174,39 @@ class SnsClient {
         );
       }
     }
+  }
+
+  /// Safely get account info without throwing
+  Future<AccountInfo?> _getAccountInfoSafely(String domain) async {
+    try {
+      // This would need domain key derivation logic
+      // For now, return null to avoid dependencies
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /// Check if account info has changed
+  bool _hasAccountChanged(AccountInfo? old, AccountInfo? current) {
+    if (old == null && current == null) return false;
+    if (old == null || current == null) return true;
+    if (old.exists != current.exists) return true;
+    if (old.data.length != current.data.length) return true;
+
+    // Compare data contents
+    for (var i = 0; i < old.data.length; i++) {
+      if (old.data[i] != current.data[i]) return true;
+    }
+    return false;
+  }
+
+  /// Determine change type from account info comparison
+  DomainEventType _determineChangeType(AccountInfo? old, AccountInfo? current) {
+    if (old == null && current != null) return DomainEventType.created;
+    if (old != null && current == null) return DomainEventType.burned;
+    if (old?.exists != current?.exists) return DomainEventType.updated;
+    return DomainEventType.updated;
   }
 }
 

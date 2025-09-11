@@ -203,7 +203,7 @@ class BatchRpcClient {
         }
 
         return record;
-      } on Exception catch (e) {
+      } on Exception {
         return null;
       }
     });

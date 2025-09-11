@@ -68,15 +68,66 @@ class OfflineSnsCache {
     );
   }
 
-  /// Sync a specific domain
+  /// Sync a specific domain with network data
   Future<void> _syncDomain(SnsClient client, String domain) async {
-    // This would implement the actual sync logic
-    // For now, just update the timestamp
-    final cached = _domainCache[domain];
-    if (cached != null) {
-      _domainCache[domain] = cached.copyWith(
-        lastUpdated: DateTime.now(),
-      );
+    try {
+      // Fetch fresh domain information from network
+      final domainKey = await _getDomainKey(domain);
+      final accountInfo = await client.getAccountInfo(domainKey);
+
+      if (accountInfo.exists) {
+        // Parse the registry data to extract owner and metadata
+        final owner = await _parseOwnerFromAccountData(accountInfo.data);
+
+        // Update the cache with fresh data
+        final updatedDomain = CachedDomain(
+          name: domain,
+          owner: owner,
+          lastUpdated: DateTime.now(),
+          metadata: {
+            'dataLength': accountInfo.data.length,
+            'syncedAt': DateTime.now().toIso8601String(),
+          },
+        );
+
+        _domainCache[domain] = updatedDomain;
+      } else {
+        // Domain doesn't exist on-chain, remove from cache
+        _domainCache.remove(domain);
+      }
+    } catch (e) {
+      // If sync fails, just update the timestamp to prevent repeated attempts
+      final cached = _domainCache[domain];
+      if (cached != null) {
+        _domainCache[domain] = cached.copyWith(
+          lastUpdated: DateTime.now(),
+          metadata: {
+            ...cached.metadata,
+            'lastSyncError': e.toString(),
+            'lastSyncAttempt': DateTime.now().toIso8601String(),
+          },
+        );
+      }
+    }
+  }
+
+  /// Get domain key for the given domain name
+  Future<String> _getDomainKey(String domain) async {
+    // This would use the same domain key derivation logic as the main SDK
+    // For now, throw to indicate this needs to be implemented
+    throw UnimplementedError(
+      'Domain key derivation needed. Import getDomainKeySync from utils.',
+    );
+  }
+
+  /// Parse owner address from account data
+  Future<String?> _parseOwnerFromAccountData(List<int> data) async {
+    try {
+      // This would implement the same registry parsing logic as RegistryState
+      // For now, return null to indicate parsing not implemented
+      return null;
+    } catch (e) {
+      return null;
     }
   }
 

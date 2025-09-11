@@ -18,7 +18,7 @@ void main() {
   // Skip tests if RPC_URL is not available
   final rpcUrl = getRpcUrl();
   if (rpcUrl == null) {
-    print('Skipping record tests: RPC_URL environment variable not set');
+    // print('Skipping record tests: RPC_URL environment variable not set');
     return;
   }
 

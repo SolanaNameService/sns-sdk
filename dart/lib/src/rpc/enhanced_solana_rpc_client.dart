@@ -3,7 +3,7 @@ import 'package:solana/solana.dart' as solana;
 
 import '../rpc/rpc_client.dart';
 
-/// Enhanced RPC client using package:solana infrastructure for Phase 1 implementation
+/// Enhanced RPC client using package:solana infrastructure for optimized operations.
 ///
 /// This client bridges the SNS SDK RpcClient interface with package:solana's
 /// advanced filtering and WebSocket capabilities to resolve critical performance bottlenecks.
@@ -28,11 +28,11 @@ class EnhancedSolanaRpcClient implements RpcClient {
   final solana.RpcClient _solanaClient;
   final String endpoint;
 
-  /// Connection pooling for concurrent requests (Phase 2 optimization)
+  /// Connection pooling for concurrent requests.
   static const int _maxConcurrentRequests = 10;
   int _activeRequests = 0;
 
-  /// Enhanced batch fetching with connection pooling (Phase 2 optimization)
+  /// Enhanced batch fetching with connection pooling.
   @override
   Future<List<AccountInfo>> fetchEncodedAccounts(List<String> addresses) async {
     if (addresses.isEmpty) return [];

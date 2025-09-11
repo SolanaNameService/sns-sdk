@@ -63,7 +63,7 @@ Future<Uint8List?> resolveSolRecordV2(
     }
 
     return null;
-  } on Exception catch (e) {
+  } on Exception {
     // Other errors indicate the record doesn't exist or is invalid
     return null;
   }
