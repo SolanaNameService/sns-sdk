@@ -121,7 +121,7 @@ The SDK proxy is a Cloudflare worker that proxies the JS SDK via REST calls. It'
 
 NOTE: All endpoints capable of performing RPC calls currently support an optional `rpc` query parameter for specifying a custom RPC URL. In the future, this parameter will become mandatory, and the Cloudflare worker will exclusively proxy calls to a specified custom RPC URL.
 
-The SDK proxy is deployed at: https://sns-sdk-proxy.bonfida.workers.dev/
+The SDK proxy is deployed at: https://sdk-proxy.sns.id/
 
 <br />
 <a name="cli"></a>
@@ -253,7 +253,7 @@ $ sns resolve bonfida
 4. With the Cloudflare worker
 
 ```bash
-GET https://sns-sdk-proxy.bonfida.workers.dev/resolve/bonfida
+GET https://sdk-proxy.sns.id/resolve/bonfida
 ```
 
 ```json

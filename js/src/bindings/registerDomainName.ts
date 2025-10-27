@@ -30,7 +30,7 @@ import { InvalidDomainError, PythFeedNotFoundError } from "../error";
  * @deprecated This function is deprecated and will be removed in future releases. Use `registerDomainNameV2` instead.
  * This function can be used to register a .sol domain
  * @param connection The Solana RPC connection object
- * @param name The domain name to register e.g bonfida if you want to register bonfida.sol
+ * @param name The domain name to register e.g sns if you want to register sns.sol
  * @param space The domain name account size (max 10kB)
  * @param buyer The public key of the buyer
  * @param buyerTokenAccount The buyer token account (USDC)

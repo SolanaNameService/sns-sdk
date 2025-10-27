@@ -1,7 +1,7 @@
 import { MaybeRef, unref } from "vue";
 import { useLoadingFactory } from "@/utils";
 
-const URL = "https://sns-api.bonfida.com/sales/top";
+const URL = "https://api.sns.id/sales/top";
 
 interface SearchResponseEntity {
   domain_name: string;
