@@ -24,6 +24,7 @@ SNS SDK monorepo
 <img src="https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54" />
 <img src="https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=java&logoColor=white" />
 <img src="https://img.shields.io/badge/swift-F54A2A?style=for-the-badge&logo=swift&logoColor=white" />
+<img src="https://img.shields.io/badge/dart-%230175C2.svg?style=for-the-badge&logo=dart&logoColor=white" />
 </div>
 
 <br />
@@ -43,10 +44,11 @@ SNS SDK monorepo
 5. [Python](#python)
 6. [Java](#java)
 7. [Swift](#swift)
-8. [CLI](#cli)
-9. [React](#react)
-10. [Vue](#vue)
-11. [Examples](#examples)
+8. [Dart](#dart)
+9. [CLI](#cli)
+10. [React](#react)
+11. [Vue](#vue)
+12. [Examples](#examples)
 
 - Resolving a domain
 
@@ -179,6 +181,23 @@ Work in progress
 <h2 align="center">Swift</h2>
 <br />
 Work in progress
+
+<br />
+<a name="dart"></a>
+<h2 align="center">Dart</h2>
+<br />
+
+The Dart SDK provides comprehensive SNS functionality for Flutter and Dart applications, with complete feature parity to the JavaScript SDK.
+
+- Complete domain registration and management
+- Full record operations (V1 and V2)
+- NFT tokenization support  
+- Twitter integration and verification
+- Favorite domain management
+- Real-time subscription capabilities
+- Mobile platform integration with secure storage
+
+The Dart SDK is production-ready and offers efficient domain resolution, advanced RPC filtering, and comprehensive error handling for robust mobile and web applications.
 
 <br />
 <a name="examples"></a>
