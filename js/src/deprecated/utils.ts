@@ -138,7 +138,7 @@ const _derive = async (
 /**
  * This function can be used to compute the public key of a domain or subdomain
  * @deprecated Use {@link getDomainKeySync} instead
- * @param domain The domain to compute the public key for (e.g `bonfida.sol`, `dex.bonfida.sol`)
+ * @param domain The domain to compute the public key for (e.g `sns.sol`, `sub.sns.sol`)
  * @param record Optional parameter: If the domain being resolved is a record
  * @returns
  */

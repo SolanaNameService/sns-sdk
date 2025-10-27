@@ -12,7 +12,7 @@ export const useSolanaConnection = () => solanaUtils.connection;
 
 export const initSolanaConnection = () => {
   const connection = new Connection(
-    'https://helius-proxy.bonfida.com',
+    'https://helius-proxy.sns.id',
     commitment,
   );
 

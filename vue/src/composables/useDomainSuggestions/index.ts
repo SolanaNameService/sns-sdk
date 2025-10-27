@@ -3,7 +3,7 @@ import { Connection } from "@solana/web3.js";
 import { useLoadingFactory, generateRandomDomain } from "@/utils";
 import { type Result, getDomainsResult } from "../useSearch";
 
-const URL = "https://sns-api.bonfida.com/v2/suggestion/search";
+const URL = "https://api.sns.id/v2/suggestion/search";
 
 /**
  * Asynchronously tries to provide suggestions for provided domain. If nothing

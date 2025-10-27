@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { Options } from "../../types";
 import { useQuery } from "@tanstack/react-query";
 
-const URL = "https://sns-api.bonfida.com/sales/top";
+const URL = "https://api.sns.id/sales/top";
 
 type Result = {
   domain: string;
