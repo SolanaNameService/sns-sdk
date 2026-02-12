@@ -1,16 +1,17 @@
 use serde::Serialize;
 use sns_sdk::{
+    derivation::ROOT_DOMAIN_ACCOUNT,
     favourite_domain::register_favourite::Accounts,
     record::{self, get_record_v2_key},
     NAME_OFFERS_PROGRAM_ID,
 };
-use solana_account_decoder::UiAccountEncoding;
+use solana_account_decoder::{UiAccountEncoding, UiDataSliceConfig};
 use solana_client::{
     rpc_config::{RpcAccountInfoConfig, RpcProgramAccountsConfig},
     rpc_filter::{Memcmp, RpcFilterType},
 };
 use solana_sdk::{bs58, signature::Keypair, system_program};
-use std::collections::HashMap;
+use std::collections::{BTreeSet, HashMap};
 
 use {
     anyhow::anyhow,
@@ -174,6 +175,14 @@ enum Commands {
         owners: Vec<String>,
     },
     Record(RecordCommand),
+    GetSubRegistrarInfo {
+        #[arg(long, short, help = "Optional custom RPC URL")]
+        url: Option<String>,
+
+        #[arg(required = true, help = "The domain to get information for")]
+        domain: String,
+    },
+    Count(CountCommand),
 }
 
 #[derive(Debug, Args)]
@@ -208,6 +217,25 @@ pub enum RecordSubCommand {
     },
     #[command(about = "Dump records system info")]
     SystemDump,
+}
+
+#[derive(Debug, Args)]
+pub struct CountCommand {
+    #[command(subcommand)]
+    pub cmd: CountSubCommand,
+    #[arg(long, short, help = "Optional custom RPC URL")]
+    url: Option<String>,
+}
+
+#[derive(Debug, Subcommand)]
+pub enum CountSubCommand {
+    #[command(about = "Get registered domains")]
+    RegisteredDomains,
+    #[command(about = "GetRegisteredSubdomains")]
+    SubDomains {
+        #[clap(long, help = "Print the top n domains by number of subdomains")]
+        top_domains: Option<usize>,
+    },
 }
 
 const RPC_URL: &str = "https://api.mainnet-beta.solana.com";
@@ -800,6 +828,111 @@ pub async fn process_system_dump(rpc_client: &RpcClient) -> CliResult {
     Ok(())
 }
 
+async fn process_sub_registrar_info(rpc_client: &RpcClient, domain: &str) -> CliResult {
+    let registrar =
+        sns_sdk::non_blocking::subdomain::get_sub_registrar_info(rpc_client, domain).await?;
+    println!("{registrar:#?}");
+    Ok(())
+}
+
+async fn process_count_command(rpc_client: &RpcClient, count_type: CountSubCommand) -> CliResult {
+    let (filters, data_slice) = match count_type {
+        CountSubCommand::RegisteredDomains => (
+            Some(vec![RpcFilterType::Memcmp(Memcmp::new_raw_bytes(
+                0,
+                ROOT_DOMAIN_ACCOUNT.to_bytes().to_vec(),
+            ))]),
+            Some(UiDataSliceConfig {
+                offset: 0,
+                length: 0,
+            }),
+        ),
+        CountSubCommand::SubDomains { .. } => (
+            None,
+            Some(UiDataSliceConfig {
+                offset: 0,
+                length: NameRecordHeader::LEN,
+            }),
+        ),
+    };
+    let accounts = rpc_client
+        .get_program_accounts_with_config(
+            &spl_name_service::ID,
+            RpcProgramAccountsConfig {
+                filters,
+                account_config: RpcAccountInfoConfig {
+                    data_slice,
+                    encoding: Some(UiAccountEncoding::Base64Zstd),
+                    ..Default::default()
+                },
+                ..Default::default()
+            },
+        )
+        .await?;
+    match count_type {
+        CountSubCommand::RegisteredDomains => println!("{}", accounts.len()),
+        CountSubCommand::SubDomains { top_domains } => {
+            let mut name_accounts = HashMap::<Pubkey, Vec<Pubkey>>::with_capacity(accounts.len());
+            const NULL_PUBKEY: Pubkey = Pubkey::new_from_array([0; 32]);
+            for (key, account) in accounts {
+                let name_record = NameRecordHeader::unpack_unchecked(&account.data)?;
+                use std::collections::hash_map::Entry;
+                if name_record.class != NULL_PUBKEY {
+                    continue;
+                }
+                match name_accounts.entry(name_record.parent_name) {
+                    Entry::Occupied(mut occupied_entry) => occupied_entry.get_mut().push(key),
+                    Entry::Vacant(vacant_entry) => {
+                        vacant_entry.insert(vec![key]);
+                    }
+                }
+            }
+            let domains = name_accounts.get(&ROOT_DOMAIN_ACCOUNT).unwrap();
+            let mut total_number_of_subdomains: usize = 0;
+            let mut number_of_domains_with_subdomains: usize = 0;
+            let mut top_domains = top_domains.map(|n| (n, BTreeSet::new()));
+            for d in domains {
+                let number_of_subdomains =
+                    name_accounts.get(d).map(|v| v.len()).unwrap_or_default();
+                if number_of_subdomains != 0 {
+                    number_of_domains_with_subdomains += 1;
+                }
+                if let Some((max_size, top_domains)) = top_domains.as_mut() {
+                    top_domains.insert((number_of_subdomains, *d));
+                    if &top_domains.len() > max_size {
+                        top_domains.pop_first();
+                    }
+                }
+                total_number_of_subdomains += number_of_subdomains;
+            }
+
+            let top_domains = top_domains.map(|(_, s)| {
+                s.into_iter()
+                    .rev()
+                    .map(|(k, v)| (v.to_string(), k))
+                    .collect::<Vec<_>>()
+            });
+
+            #[derive(Serialize)]
+            struct Result {
+                number_of_domains: usize,
+                number_of_subdomains: usize,
+                number_of_domains_with_subdomains: usize,
+                top_domains: Option<Vec<(String, usize)>>,
+            }
+
+            let result = serde_json::to_string_pretty(&Result {
+                number_of_domains: domains.len(),
+                number_of_subdomains: total_number_of_subdomains,
+                top_domains,
+                number_of_domains_with_subdomains,
+            })?;
+            println!("{result}");
+        }
+    }
+    Ok(())
+}
+
 #[tokio::main]
 async fn main() {
     let args = Cli::parse();
@@ -851,9 +984,15 @@ async fn main() {
             }
             RecordSubCommand::SystemDump {} => process_system_dump(&get_rpc_client(url)).await,
         },
+        Commands::GetSubRegistrarInfo { url, domain } => {
+            process_sub_registrar_info(&get_rpc_client(url), domain.as_str()).await
+        }
+        Commands::Count(CountCommand { cmd, url }) => {
+            process_count_command(&get_rpc_client(url), cmd).await
+        }
     };
 
     if let Err(err) = res {
-        println!("Error: {err:?}")
+        eprintln!("Error: {err:?}")
     }
 }
