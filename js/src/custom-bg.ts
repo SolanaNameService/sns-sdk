@@ -57,6 +57,7 @@ export const getArtistPubkey = (bg: CustomBg): PublicKey => {
       return NUMBER_ART_KEY;
     case CustomBg.ValentineDay2025:
     case CustomBg.Monkedao:
+    case CustomBg.LunarNewYear2026:
       return VAULT_OWNER;
     default:
       throw new InvalidCustomBgError("The given background is invalid");
