@@ -12,7 +12,7 @@ import { Metaplex } from "@metaplex-foundation/js";
 
 jest.setTimeout(20_000);
 jest.retryTimes(3);
-const FIDA_MINT = new PublicKey("EchesyfXePKdLtoiZSL8pBe8Myagyy8ZRqsACNCFGnvp");
+const USDC_MINT = new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
 const PYTH_MINT = new PublicKey("HZ1JovNiVvGrGNiiYvEozEVgZ58xaU3RKwX8eACQBCt3");
 
 const connection = new Connection(process.env.RPC_URL!);
@@ -81,8 +81,8 @@ test("Register V2", async () => {
     randomBytes(10).toString("hex"),
     1_000,
     VAULT_OWNER,
-    getAssociatedTokenAddressSync(FIDA_MINT, VAULT_OWNER, true),
-    FIDA_MINT,
+    getAssociatedTokenAddressSync(USDC_MINT, VAULT_OWNER, true),
+    USDC_MINT,
     REFERRERS[1],
   );
   tx.add(...ix);
@@ -100,8 +100,8 @@ test("Registration V2 with ref", async () => {
     randomBytes(10).toString("hex"),
     1_000,
     VAULT_OWNER,
-    getAssociatedTokenAddressSync(FIDA_MINT, VAULT_OWNER, true),
-    FIDA_MINT,
+    getAssociatedTokenAddressSync(USDC_MINT, VAULT_OWNER, true),
+    USDC_MINT,
     REFERRERS[1],
   );
   tx.add(...ix);
