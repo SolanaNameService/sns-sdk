@@ -1,0 +1,72 @@
+name: sns_sdk
+description: >-
+  A comprehensive Flutter/Dart SDK for the Solana Name Service (SNS).
+  Provides complete functionality for domain resolution, registration, 
+  and management with built-in caching, NFT support, and mobile optimizations.
+version: 1.0.0
+homepage: https://sns.guide
+repository: https://github.com/Bonfida/sns-sdk
+issue_tracker: https://github.com/Bonfida/sns-sdk/issues
+documentation: https://docs.bonfida.org/collection/naming-service/overview
+
+funding:
+  - https://github.com/sponsors/Bonfida
+
+topics:
+  - solana
+  - sns
+  - blockchain
+  - domain
+  - web3
+  - nft
+  - mobile
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: '>=3.0.0'
+
+dependencies:
+  crypto: ^3.0.3
+  http: ^1.1.0
+  convert: ^3.1.1
+  meta: ^1.9.1
+  collection: ^1.17.2
+  json_annotation: ^4.8.1
+  hex: ^0.2.0
+  solana: ^0.31.2+1
+  borsh_annotation: ^0.3.1+5
+  pinenacl: ^0.6.0
+  cryptography: ^2.5.0
+  characters: ^1.3.0
+  flutter_dotenv: ^6.0.0
+  logging: ^1.2.0
+  punycode: ^1.0.0
+  # Robust cryptographic implementations
+  web3dart: ^2.7.3  # Ethereum cryptography and utilities
+  hashlib: ^2.2.0   # Keccak-256 hashing
+  web_socket_channel: ^3.0.0
+  blockchain_utils: ^5.2.0  # Comprehensive cryptography toolkit with secp256k1
+
+dev_dependencies:
+  test: ^1.24.6
+  build_runner: ^2.4.7
+  json_serializable: ^6.7.1
+  mockito: ^5.4.2
+  coverage: ^1.6.3
+  lints: ^3.0.0
+  dotenv: ^4.2.0
+  borsh: ^0.3.1+5
+  flutter_test:
+    sdk: flutter
+
+platforms:
+  android:
+  ios:
+  linux:
+  macos:
+  web:
+  windows:
+
+flutter:
+  assets:
+    - .env
