@@ -52,6 +52,7 @@ export const UTF8_ENCODED_RECORDS = new Set<Record>([
   Record.Twitter,
   Record.TXT,
   Record.Url,
+  Record.Bio,
 ]);
 
 /**
