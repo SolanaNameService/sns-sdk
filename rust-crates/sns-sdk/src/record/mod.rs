@@ -37,6 +37,7 @@ pub enum Record {
     CNAME,
     TXT,
     BASE,
+    Bio,
 }
 
 #[derive(Copy, Clone, Debug)]
@@ -73,6 +74,7 @@ impl Record {
             Record::CNAME => "CNAME",
             Record::TXT => "TXT",
             Record::BASE => "BASE",
+            Record::Bio => "bio",
         }
     }
 
@@ -103,6 +105,7 @@ impl Record {
             "CNAME" => Ok(Record::CNAME),
             "TXT" => Ok(Record::TXT),
             "BASE" => Ok(Record::BASE),
+            "bio" => Ok(Record::Bio),
             _ => Err(SnsError::UnrecognizedRecord),
         }
     }
@@ -127,6 +130,7 @@ impl Record {
                 | Record::Backpack
                 | Record::TXT
                 | Record::CNAME
+                | Record::Bio
         )
     }
 

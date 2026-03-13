@@ -156,7 +156,8 @@ pub fn deserialize_record_v2_content(content: &[u8], record: Record) -> Result<S
         | Record::Backpack
         | Record::TXT
         | Record::Btc
-        | Record::CNAME => {
+        | Record::CNAME
+        | Record::Bio => {
             let decoded = String::from_utf8(content.to_vec())?;
             if matches!(record, Record::CNAME | Record::TXT) {
                 let decoded = punycode::decode(&decoded).map_err(|_| SnsError::Punycode)?;
@@ -211,7 +212,8 @@ pub fn serialize_record_v2_content(content: &str, record: Record) -> Result<Vec<
         | Record::Backpack
         | Record::TXT
         | Record::Btc
-        | Record::CNAME => {
+        | Record::CNAME
+        | Record::Bio => {
             if matches!(record, Record::CNAME | Record::TXT) {
                 let encoded = punycode::encode(content).map_err(|_| SnsError::Punycode)?;
                 Ok(encoded.as_bytes().to_vec())
