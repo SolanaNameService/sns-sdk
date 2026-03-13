@@ -4220,7 +4220,7 @@ dependencies = [
 
 [[package]]
 name = "sns-sdk"
-version = "1.6.0"
+version = "1.6.1"
 dependencies = [
  "bech32",
  "bonfida-utils",

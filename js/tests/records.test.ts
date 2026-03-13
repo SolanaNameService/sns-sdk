@@ -1,5 +1,5 @@
 require("dotenv").config();
-import { test, jest, expect } from "@jest/globals";
+import { describe, expect, jest, test } from "@jest/globals";
 import { getIpfsRecord } from "../src/record/helpers/getIpfsRecord";
 import { getArweaveRecord } from "../src/record/helpers/getArweaveRecord";
 import { getEthRecord } from "../src/record/helpers/getEthRecord";
