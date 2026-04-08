@@ -1,5 +1,6 @@
 import { Record } from "../types/record";
 import { PublicKey } from "@solana/web3.js";
+export { Validation } from "@bonfida/sns-records";
 
 /**
  * A map that associates each record type with a public key, known as guardians.
