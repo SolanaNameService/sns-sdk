@@ -4,4 +4,5 @@ export default {
   testEnvironment: "node",
   testPathIgnorePatterns: ["/node_modules/", "/dist/"],
   moduleDirectories: ["node_modules"],
+  workerThreads: true,
 };
