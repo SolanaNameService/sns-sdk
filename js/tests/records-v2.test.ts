@@ -309,24 +309,49 @@ test("Create record for sub & update & verify staleness & delete", async () => {
 test("getRecordV2", async () => {
   const domain = "wallet-guide-9.sol";
   const items = [
-    { record: Record.IPFS, value: "ipfs://test" },
-    { record: Record.Email, value: "test@gmail.com" },
-    { record: Record.Url, value: "https://google.com" },
+    {
+      record: Record.IPFS,
+      value: "ipfs://test",
+      verified: { staleness: true },
+    },
+    {
+      record: Record.Email,
+      value: "test@gmail.com",
+      verified: { staleness: false },
+    },
+    {
+      record: Record.Url,
+      value: "https://google.com",
+      verified: { staleness: false },
+    },
   ];
   for (let item of items) {
     const res = await getRecordV2(connection, domain, item.record, {
       deserialize: true,
     });
     expect(res.deserializedContent).toBe(item.value);
+    expect(res.verified.staleness).toBe(item.verified.staleness);
   }
 });
 
 test("getMultipleRecordsV2", async () => {
   const domain = "wallet-guide-9.sol";
   const items = [
-    { record: Record.IPFS, value: "ipfs://test" },
-    { record: Record.Email, value: "test@gmail.com" },
-    { record: Record.Url, value: "https://google.com" },
+    {
+      record: Record.IPFS,
+      value: "ipfs://test",
+      verified: { staleness: true },
+    },
+    {
+      record: Record.Email,
+      value: "test@gmail.com",
+      verified: { staleness: false },
+    },
+    {
+      record: Record.Url,
+      value: "https://google.com",
+      verified: { staleness: false },
+    },
   ];
   const res = await getMultipleRecordsV2(
     connection,
@@ -339,6 +364,7 @@ test("getMultipleRecordsV2", async () => {
   for (let i = 0; i < items.length; i++) {
     expect(items[i].value).toBe(res[i]?.deserializedContent);
     expect(items[i].record).toBe(res[i]?.record);
+    expect(items[i].verified.staleness).toBe(res[i]?.verified.staleness);
   }
 });
 
