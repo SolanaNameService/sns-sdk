@@ -1,5 +1,6 @@
 import { Record } from "../types/record";
 import { PublicKey } from "@solana/web3.js";
+export { Validation } from "@bonfida/sns-records";
 
 /**
  * A map that associates each record type with a public key, known as guardians.
@@ -56,6 +57,8 @@ export const UTF8_ENCODED = new Set<Record>([
  * in the record itself.
  */
 export const SELF_SIGNED = new Set<Record>([
+  Record.BASE,
+  Record.BSC,
   Record.ETH,
   Record.Injective,
   Record.SOL,

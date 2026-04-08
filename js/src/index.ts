@@ -127,6 +127,6 @@ export * from "./record_v2/getRecordV2";
 export * from "./record_v2/getRecordV2Key";
 export * from "./record_v2/getMultipleRecordsV2";
 export * from "./record_v2/verifyRightOfAssociation";
-export * from "./record_v2/utils";
+export * from "./record_v2/verifyStaleness";
 
 export * from "./devnet";
