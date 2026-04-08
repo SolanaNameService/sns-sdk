@@ -119,13 +119,13 @@ app.get("/domains/:owner", async (c) => {
     const rpc = c.req.query("rpc");
     const res = await getAllDomains(
       getConnection(c, rpc),
-      new PublicKey(owner)
+      new PublicKey(owner),
     );
     const revs = await reverseLookupBatch(getConnection(c, rpc), res);
 
     const tokenized = await getTokenizedDomains(
       getConnection(c, rpc),
-      new PublicKey(owner)
+      new PublicKey(owner),
     );
 
     return c.json(
@@ -138,9 +138,9 @@ app.get("/domains/:owner", async (c) => {
           .concat(
             tokenized.map((e) => {
               return { key: e.key.toBase58(), domain: e.reverse };
-            })
-          )
-      )
+            }),
+          ),
+      ),
     );
   } catch (err) {
     console.log(err);
@@ -223,7 +223,7 @@ app.get("/record-v2/:domain/:record", async (c) => {
     const connection = getConnection(c, rpc);
     const { registry } = await NameRegistryState.retrieve(
       connection,
-      getDomainKeySync(domain).pubkey
+      getDomainKeySync(domain).pubkey,
     );
     const owner = registry.owner;
     const res = await getRecordV2(connection, domain, record, {
@@ -252,7 +252,7 @@ app.get("/record-v2/:domain/:record", async (c) => {
           .equals(res.retrievedRecord.getContent()) &&
         res.retrievedRecord.header.rightOfAssociationValidation ===
           Validation.Ethereum;
-    } else if ([Record.Url]) {
+    } else {
       const guardian = GUARDIANS.get(record);
       if (guardian) {
         roa =
@@ -271,7 +271,7 @@ app.get("/record-v2/:domain/:record", async (c) => {
           header: res.retrievedRecord.header,
           data: res.retrievedRecord.data.toString("base64"),
         },
-      })
+      }),
     );
   } catch (err) {
     console.log(err);
@@ -292,10 +292,10 @@ app.get("/favorite-domain/:owner", async (c) => {
     const rpc = c.req.query("rpc");
     const res = await getFavoriteDomain(
       getConnection(c, rpc),
-      new PublicKey(owner)
+      new PublicKey(owner),
     );
     return c.json(
-      response(true, { domain: res.domain.toBase58(), reverse: res.reverse })
+      response(true, { domain: res.domain.toBase58(), reverse: res.reverse }),
     );
   } catch (err) {
     console.log(err);
@@ -345,7 +345,7 @@ app.get("/reverse-lookup/:pubkey", async (c) => {
     const rpc = c.req.query("rpc");
     const res = await reverseLookup(
       getConnection(c, rpc),
-      new PublicKey(pubkey)
+      new PublicKey(pubkey),
     );
     return c.json(response(true, res));
   } catch (err) {
@@ -363,7 +363,7 @@ app.get("/subdomains/:parent", async (c) => {
     const rpc = c.req.query("rpc");
     const subs = await findSubdomains(
       getConnection(c, rpc),
-      getDomainKeySync(parent).pubkey
+      getDomainKeySync(parent).pubkey,
     );
     return c.json(response(true, subs));
   } catch (err) {
@@ -425,7 +425,7 @@ app.get("/records-v2/:domain", async (c) => {
     const connection = getConnection(c, rpc);
     const { registry } = await NameRegistryState.retrieve(
       connection,
-      getDomainKeySync(domain).pubkey
+      getDomainKeySync(domain).pubkey,
     );
     const owner = registry.owner;
     const results = [];
@@ -449,26 +449,23 @@ app.get("/records-v2/:domain", async (c) => {
             .getRoAId()
             .equals(res.retrievedRecord.getContent()) &&
           res.retrievedRecord.header.rightOfAssociationValidation ===
-          Validation.Solana;
-      } else if ([
-        Record.ETH,
-        Record.BSC,
-        Record.Injective,
-        Record.BASE
-      ].includes(record)) {
+            Validation.Solana;
+      } else if (
+        [Record.ETH, Record.BSC, Record.Injective, Record.BASE].includes(record)
+      ) {
         roa =
           res.retrievedRecord
             .getRoAId()
             .equals(res.retrievedRecord.getContent()) &&
           res.retrievedRecord.header.rightOfAssociationValidation ===
-          Validation.Ethereum;
-      } else if ([Record.Url]) {
+            Validation.Ethereum;
+      } else {
         const guardian = GUARDIANS.get(record);
         if (guardian) {
           roa =
             res.retrievedRecord.getRoAId().equals(guardian.toBuffer()) &&
             res.retrievedRecord.header.rightOfAssociationValidation ===
-            Validation.Solana;
+              Validation.Solana;
         }
       }
 
@@ -482,7 +479,7 @@ app.get("/records-v2/:domain", async (c) => {
           data: res.retrievedRecord.data.toString("base64"),
         },
       });
-    };
+    }
 
     return c.json(response(true, results));
   } catch (err) {
@@ -506,7 +503,7 @@ app.get("/twitter/get-handle-by-key/:key", async (c) => {
     const connection = getConnection(c, rpc);
     const [handle] = await getHandleAndRegistryKey(
       connection,
-      new PublicKey(key)
+      new PublicKey(key),
     );
     return c.json(response(true, handle));
   } catch (err) {
@@ -564,7 +561,7 @@ app.get("/register", async (c) => {
       buyer,
       ata,
       mint,
-      refKey ? new PublicKey(refKey) : undefined
+      refKey ? new PublicKey(refKey) : undefined,
     );
 
     if (serialize) {
@@ -619,7 +616,7 @@ app.get("/create-sub", async (c) => {
     });
 
     const { owner, subdomain, rpc, serialize, finalOwner } = Query.parse(
-      c.req.query()
+      c.req.query(),
     );
 
     const connection = getConnection(c, rpc);
@@ -629,7 +626,7 @@ app.get("/create-sub", async (c) => {
       connection,
       subdomain,
       new PublicKey(owner),
-      0
+      0,
     );
     ixs.push(...ix);
 
@@ -638,7 +635,7 @@ app.get("/create-sub", async (c) => {
         NAME_PROGRAM_ID,
         getDomainKeySync(subdomain).pubkey,
         new PublicKey(finalOwner),
-        new PublicKey(owner)
+        new PublicKey(owner),
       );
       ixs.push(ix);
     }
