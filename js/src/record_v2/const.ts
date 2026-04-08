@@ -56,6 +56,8 @@ export const UTF8_ENCODED = new Set<Record>([
  * in the record itself.
  */
 export const SELF_SIGNED = new Set<Record>([
+  Record.BASE,
+  Record.BSC,
   Record.ETH,
   Record.Injective,
   Record.SOL,
