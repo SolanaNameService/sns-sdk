@@ -1,22 +1,24 @@
 {
   "name": "sns-sdk-proxy",
-  "version": "0.0.0",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=20.3.0"
+  },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20240117.0",
-    "typescript": "^5.3.3",
-    "wrangler": "^3.72.2"
+    "@cloudflare/workers-types": "^4.20260317.1",
+    "wrangler": "^4.77.0"
   },
   "private": true,
   "scripts": {
-    "start": "wrangler dev",
-    "deploy": "wrangler publish"
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy --keep-vars"
   },
   "dependencies": {
-    "@bonfida/sns-records": "^0.0.1",
-    "@bonfida/spl-name-service": "^3.0.6",
-    "@solana/spl-token": "^0.4.8",
-    "@solana/web3.js": "^1.95.2",
-    "hono": "^3.12.6",
-    "zod": "^3.22.4"
+    "@bonfida/sns-records": "^0.1.0",
+    "@bonfida/spl-name-service": "^3.0.21",
+    "@solana/spl-token": "^0.4.14",
+    "@solana/web3.js": "^1.98.4",
+    "hono": "^4.12.14",
+    "zod": "^4.3.6"
   }
 }
