@@ -1,4 +1,4 @@
-import { Hono, Context } from "hono";
+import { Hono, type Context } from "hono";
 import {
   getDomainKeySync,
   resolve,
@@ -40,9 +40,11 @@ import { Validation } from "@bonfida/sns-records";
 
 const USDC_MINT = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
 
-export interface Env {
-  RPC_URL: string;
-}
+type Env = {
+  Bindings: {
+    RPC_URL: string;
+  };
+};
 
 const isPubkey = (x: string) => {
   try {
@@ -57,19 +59,19 @@ const booleanSchema = z
   .union([z.boolean(), z.literal("true"), z.literal("false")])
   .transform((value) => value === true || value === "true");
 
-const getConnection = (c: Context<any>, clientRpc: string | undefined) => {
-  return new Connection(clientRpc || (c.env?.RPC_URL as string), "processed");
+const getConnection = (c: Context<Env>, clientRpc?: string) => {
+  const endpoint = clientRpc && clientRpc.trim() ? clientRpc : c.env.RPC_URL;
+  return new Connection(endpoint, "processed");
 };
 
 function response<T>(success: boolean, result: T) {
   return { s: success ? "ok" : "error", result };
 }
 
-const app = new Hono();
+const app = new Hono<Env>();
 
 app.use("*", logger());
 app.use("/*", cors({ origin: "*" }));
-
 app.get("/", async (c) => c.text("Visit https://github.com/Bonfida/sns-sdk"));
 
 /**
@@ -94,7 +96,7 @@ app.get("/domain-key/:domain", (c) => {
   try {
     const { domain } = c.req.param();
     const Query = z.object({
-      record: z.nativeEnum(RecordVersion).optional(),
+      record: z.enum(RecordVersion).optional(),
     });
     const { record } = Query.parse(c.req.query());
 
@@ -171,7 +173,7 @@ app.get("/record-key/:domain/:record", (c) => {
   try {
     const Params = z.object({
       domain: z.string(),
-      record: z.nativeEnum(Record),
+      record: z.enum(Record),
     });
     const { domain, record } = Params.parse(c.req.param());
     const res = getRecordKeySync(domain, record);
@@ -191,12 +193,15 @@ app.get("/record-key/:domain/:record", (c) => {
  */
 app.get("/record/:domain/:record", async (c) => {
   try {
-    const Query = z.object({
+    const Params = z.object({
       domain: z.string(),
-      record: z.nativeEnum(Record),
+      record: z.enum(Record),
+    });
+    const Query = z.object({
       rpc: z.string().optional(),
     });
-    const { domain, record, rpc } = Query.parse(c.req.param());
+    const { domain, record } = Params.parse(c.req.param());
+    const { rpc } = Query.parse(c.req.query());
     const res = await getRecord(getConnection(c, rpc), domain, record);
     return c.json(response(true, res?.data?.toString("base64")));
   } catch (err) {
@@ -214,12 +219,15 @@ app.get("/record/:domain/:record", async (c) => {
  */
 app.get("/record-v2/:domain/:record", async (c) => {
   try {
-    const Query = z.object({
+    const Params = z.object({
       domain: z.string(),
-      record: z.nativeEnum(Record),
+      record: z.enum(Record),
+    });
+    const Query = z.object({
       rpc: z.string().optional(),
     });
-    const { domain, record, rpc } = Query.parse(c.req.param());
+    const { domain, record } = Params.parse(c.req.param());
+    const { rpc } = Query.parse(c.req.query());
     const connection = getConnection(c, rpc);
     const { registry } = await NameRegistryState.retrieve(
       connection,
@@ -295,7 +303,11 @@ app.get("/favorite-domain/:owner", async (c) => {
       new PublicKey(owner),
     );
     return c.json(
-      response(true, { domain: res.domain.toBase58(), reverse: res.reverse }),
+      response(true, {
+        domain: res.domain.toBase58(),
+        reverse: res.reverse,
+        stale: res.stale,
+      }),
     );
   } catch (err) {
     console.log(err);
@@ -382,7 +394,7 @@ app.get("/records/:domain", async (c) => {
     const rpc = c.req.query("rpc");
 
     const parsedRecords = c.req.query("records")?.split(",");
-    const recordSchema = z.array(z.nativeEnum(Record));
+    const recordSchema = z.array(z.enum(Record));
     const records = recordSchema.parse(parsedRecords);
 
     if (!records || records.length === 0) {
@@ -415,7 +427,7 @@ app.get("/records-v2/:domain", async (c) => {
     const rpc = c.req.query("rpc");
 
     const parsedRecords = c.req.query("records")?.split(",");
-    const recordSchema = z.array(z.nativeEnum(Record));
+    const recordSchema = z.array(z.enum(Record));
     const records = recordSchema.parse(parsedRecords);
 
     if (!records || records.length === 0) {
