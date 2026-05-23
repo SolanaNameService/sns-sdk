@@ -1,4 +1,4 @@
-import { AccountRole, Address, IAccountMeta, IInstruction } from "@solana/kit";
+import { AccountRole, Address, AccountMeta, Instruction } from "@solana/kit";
 import { serialize } from "borsh";
 
 export class createSplitV2Instruction {
@@ -49,9 +49,9 @@ export class createSplitV2Instruction {
     rentSysvar: Address,
     state: Address,
     referrerAccountOpt?: Address
-  ): IInstruction {
+  ): Instruction {
     const data = this.serialize();
-    const accounts: IAccountMeta[] = [
+    const accounts: AccountMeta[] = [
       {
         address: namingServiceProgram,
         role: AccountRole.READONLY,

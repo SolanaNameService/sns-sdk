@@ -1,5 +1,6 @@
 import {
   Address,
+  Base58EncodedBytes,
   GetMultipleAccountsApi,
   GetProgramAccountsApi,
   Rpc,
@@ -42,9 +43,19 @@ const getNftStatesForAddress = async ({
         encoding: "base64",
         filters: [
           {
-            memcmp: { offset: 32n, bytes: address, encoding: "base58" },
+            memcmp: {
+              offset: 32n,
+              bytes: address as string as Base58EncodedBytes,
+              encoding: "base58",
+            },
           },
-          { memcmp: { offset: 64n, bytes: "2", encoding: "base58" } },
+          {
+            memcmp: {
+              offset: 64n,
+              bytes: "2" as Base58EncodedBytes,
+              encoding: "base58",
+            },
+          },
           { dataSize: 165n },
         ],
       })

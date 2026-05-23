@@ -1,4 +1,4 @@
-import { Address, IInstruction } from "@solana/kit";
+import { Address, Instruction } from "@solana/kit";
 
 import {
   CENTRAL_STATE_DOMAIN_RECORDS,
@@ -40,7 +40,7 @@ export const validateRoaEthereum = async ({
   payer,
   signature,
   expectedPubkey,
-}: ValidateRoaEthereumParams): Promise<IInstruction> => {
+}: ValidateRoaEthereumParams): Promise<Instruction> => {
   let { domainAddress, parentAddress, isSub } = await getDomainAddress({
     domain: `${record}.${domain}`,
     record: RecordVersion.V2,

@@ -1,4 +1,4 @@
-import { Address, GetAccountInfoApi, IInstruction, Rpc } from "@solana/kit";
+import { Address, GetAccountInfoApi, Instruction, Rpc } from "@solana/kit";
 
 import { NAME_PROGRAM_ADDRESS } from "../constants/addresses";
 import { getDomainAddress } from "../domain/getDomainAddress";
@@ -35,7 +35,7 @@ export const transferSubdomain = async ({
   newOwner,
   isParentOwnerSigner,
   currentOwner,
-}: TransferSubdomainParams): Promise<IInstruction> => {
+}: TransferSubdomainParams): Promise<Instruction> => {
   const {
     domainAddress,
     isSub,

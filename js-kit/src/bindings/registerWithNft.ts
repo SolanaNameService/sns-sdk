@@ -1,4 +1,4 @@
-import { Address, IInstruction, getProgramDerivedAddress } from "@solana/kit";
+import { Address, Instruction, getProgramDerivedAddress } from "@solana/kit";
 
 import { addressCodec, utf8Codec } from "../codecs";
 import {
@@ -41,7 +41,7 @@ export const registerWithNft = async ({
   buyer,
   nftSource,
   nftMint,
-}: RegisterWithNftParams): Promise<IInstruction> => {
+}: RegisterWithNftParams): Promise<Instruction> => {
   const domainAddress = await deriveAddress(domain, ROOT_DOMAIN_ADDRESS);
   const reverseLookupAccount = await deriveAddress(
     domainAddress,

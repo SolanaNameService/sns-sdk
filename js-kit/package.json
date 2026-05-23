@@ -1,6 +1,6 @@
 {
   "name": "@solana-name-service/sns-sdk-kit",
-  "version": "0.9.5-beta",
+  "version": "0.10.0-beta",
   "license": "MIT",
   "files": [
     "dist"
@@ -78,7 +78,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Bonfida/sns-sdk"
+    "url": "git+https://github.com/SolanaNameService/sns-sdk.git"
   },
   "homepage": "https://sns.guide",
   "scripts": {
@@ -91,15 +91,15 @@
   },
   "dependencies": {
     "@scure/base": "^1.2.4",
-    "@solana-program/token": "^0.5.1",
-    "@solana/kit": "^2.1.0",
+    "@solana-program/token": "^0.13.0",
+    "@solana/kit": "^6.9.0",
     "borsh": "^2.0.0",
     "ipaddr.js": "^2.2.0",
     "punycode": "^2.3.1"
   },
   "peerDependencies": {
-    "@solana-program/token": "^0.5.1",
-    "@solana/kit": "^2.1.0"
+    "@solana-program/token": "^0.13.0",
+    "@solana/kit": "^6.9.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",
@@ -127,6 +127,6 @@
     "typescript-eslint": "^8.26.1"
   },
   "volta": {
-    "node": "20.10.0"
+    "node": "20.18.0"
   }
 }

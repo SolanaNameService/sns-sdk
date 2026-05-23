@@ -1,4 +1,9 @@
-import { Address, GetProgramAccountsApi, Rpc } from "@solana/kit";
+import {
+  Address,
+  Base58EncodedBytes,
+  GetProgramAccountsApi,
+  Rpc,
+} from "@solana/kit";
 
 import { addressCodec, base64Codec } from "../codecs";
 import {
@@ -42,14 +47,14 @@ export const getSubdomains = async ({
         {
           memcmp: {
             offset: 0n,
-            bytes: domainAddress,
+            bytes: domainAddress as string as Base58EncodedBytes,
             encoding: "base58",
           },
         },
         {
           memcmp: {
             offset: 64n,
-            bytes: REVERSE_LOOKUP_CLASS,
+            bytes: REVERSE_LOOKUP_CLASS as string as Base58EncodedBytes,
             encoding: "base58",
           },
         },
@@ -57,14 +62,14 @@ export const getSubdomains = async ({
     })
     .send();
 
-  const getSubsAsync = await rpc
+  const getSubsAsync = rpc
     .getProgramAccounts(NAME_PROGRAM_ADDRESS, {
       encoding: "base64",
       filters: [
         {
           memcmp: {
             offset: 0n,
-            bytes: domainAddress,
+            bytes: domainAddress as string as Base58EncodedBytes,
             encoding: "base58",
           },
         },

@@ -2,7 +2,7 @@ import {
   Address,
   GetAccountInfoApi,
   GetMinimumBalanceForRentExemptionApi,
-  IInstruction,
+  Instruction,
   Rpc,
 } from "@solana/kit";
 
@@ -49,7 +49,7 @@ export const createNameRegistry = async ({
   lamports,
   classAddress,
   parentAddress,
-}: CreateNameRegistryParams): Promise<IInstruction> => {
+}: CreateNameRegistryParams): Promise<Instruction> => {
   const nameHash = await _generateHash(name);
   const domainAddress = await _getAddressFromHash(
     nameHash,

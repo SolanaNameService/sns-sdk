@@ -1,4 +1,4 @@
-import { Address, GetAccountInfoApi, IInstruction, Rpc } from "@solana/kit";
+import { Address, GetAccountInfoApi, Instruction, Rpc } from "@solana/kit";
 
 import {
   NAME_OFFERS_ADDRESS,
@@ -28,7 +28,7 @@ export const setPrimaryDomain = async ({
   rpc,
   domainAddress,
   owner,
-}: SetPrimaryDomainParams): Promise<IInstruction> => {
+}: SetPrimaryDomainParams): Promise<Instruction> => {
   const [registry, primaryAddress] = await Promise.all([
     RegistryState.retrieve(rpc, domainAddress),
     PrimaryDomainState.getAddress(NAME_OFFERS_ADDRESS, owner),

@@ -1,5 +1,5 @@
 import { getCreateAssociatedTokenIdempotentInstructionDataEncoder } from "@solana-program/token";
-import { AccountRole, Address, IAccountMeta, IInstruction } from "@solana/kit";
+import { AccountRole, Address, AccountMeta, Instruction } from "@solana/kit";
 
 export const _createAtaInstruction = (
   programAddress: Address,
@@ -9,23 +9,23 @@ export const _createAtaInstruction = (
   mint: Address,
   systemProgram: Address,
   splTokenProgram: Address
-): IInstruction => {
-  const accounts: IAccountMeta[] = [
+): Instruction => {
+  const accounts: AccountMeta[] = [
     {
       address: payer,
-      role: AccountRole.READONLY,
+      role: AccountRole.WRITABLE_SIGNER,
     },
     {
       address: ata,
-      role: AccountRole.READONLY,
+      role: AccountRole.WRITABLE,
     },
     {
       address: owner,
-      role: AccountRole.WRITABLE,
+      role: AccountRole.READONLY,
     },
     {
       address: mint,
-      role: AccountRole.WRITABLE,
+      role: AccountRole.READONLY,
     },
     {
       address: systemProgram,
