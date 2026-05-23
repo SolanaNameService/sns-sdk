@@ -5,7 +5,7 @@ import {
 import {
   Address,
   GetAccountInfoApi,
-  IInstruction,
+  Instruction,
   Rpc,
   fetchEncodedAccount,
   getProgramDerivedAddress,
@@ -62,7 +62,7 @@ export const registerDomain = async ({
   buyerTokenAccount,
   mint = USDC_MINT,
   referrer,
-}: RegisterDomainParams): Promise<IInstruction[]> => {
+}: RegisterDomainParams): Promise<Instruction[]> => {
   // Basic validation
   if (domain.includes(".") || domain.trim().toLowerCase() !== domain) {
     throw new InvalidDomainError("The domain name is malformed");
@@ -81,7 +81,7 @@ export const registerDomain = async ({
     seeds: [addressCodec.encode(domainAddress)],
   });
 
-  const ixs: IInstruction[] = [];
+  const ixs: Instruction[] = [];
   const referrerIndex = REFERRERS.findIndex((e) => e === referrer);
   const validReferrer = referrer && referrerIndex !== -1;
   let ata: Address | undefined = undefined;

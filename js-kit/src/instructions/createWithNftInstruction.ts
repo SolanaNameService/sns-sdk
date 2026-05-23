@@ -1,4 +1,4 @@
-import { AccountRole, Address, IAccountMeta, IInstruction } from "@solana/kit";
+import { AccountRole, Address, AccountMeta, Instruction } from "@solana/kit";
 import { serialize } from "borsh";
 
 export class createWithNftInstruction {
@@ -42,10 +42,10 @@ export class createWithNftInstruction {
     rentSysvar: Address,
     state: Address,
     mplTokenMetadata: Address
-  ): IInstruction {
+  ): Instruction {
     const data = this.serialize();
 
-    const accounts: IAccountMeta[] = [
+    const accounts: AccountMeta[] = [
       {
         address: namingServiceProgram,
         role: AccountRole.READONLY,

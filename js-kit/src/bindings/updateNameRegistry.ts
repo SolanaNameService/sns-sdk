@@ -1,4 +1,4 @@
-import { Address, GetAccountInfoApi, IInstruction, Rpc } from "@solana/kit";
+import { Address, GetAccountInfoApi, Instruction, Rpc } from "@solana/kit";
 
 import { NAME_PROGRAM_ADDRESS } from "../constants/addresses";
 import { UpdateNameRegistryInstruction } from "../instructions/updateNameRegistryInstruction";
@@ -33,7 +33,7 @@ export async function updateNameRegistry({
   data,
   classAddress,
   parentAddress,
-}: UpdateNameRegistryParams): Promise<IInstruction> {
+}: UpdateNameRegistryParams): Promise<Instruction> {
   const domainAddress = await deriveAddress(
     domain,
     parentAddress,

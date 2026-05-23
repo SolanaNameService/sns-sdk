@@ -1,4 +1,4 @@
-import { AccountRole, Address, IAccountMeta, IInstruction } from "@solana/kit";
+import { AccountRole, Address, AccountMeta, Instruction } from "@solana/kit";
 import { serialize } from "borsh";
 
 export class ReallocInstruction {
@@ -27,10 +27,10 @@ export class ReallocInstruction {
     payerKey: Address,
     nameAccountKey: Address,
     nameOwnerKey: Address
-  ): IInstruction {
+  ): Instruction {
     const data = this.serialize();
 
-    const accounts: IAccountMeta[] = [
+    const accounts: AccountMeta[] = [
       {
         address: systemProgramId,
         role: AccountRole.READONLY,

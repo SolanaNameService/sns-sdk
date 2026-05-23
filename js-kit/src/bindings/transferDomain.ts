@@ -1,4 +1,4 @@
-import { Address, GetAccountInfoApi, IInstruction, Rpc } from "@solana/kit";
+import { Address, GetAccountInfoApi, Instruction, Rpc } from "@solana/kit";
 
 import { NAME_PROGRAM_ADDRESS } from "../constants/addresses";
 import { TransferInstruction } from "../instructions/transferInstruction";
@@ -33,7 +33,7 @@ export const transferDomain = async ({
   classAddress,
   parentAddress,
   parentOwner,
-}: TransferDomainParams): Promise<IInstruction> => {
+}: TransferDomainParams): Promise<Instruction> => {
   const domainAddress = await deriveAddress(
     domain,
     parentAddress,

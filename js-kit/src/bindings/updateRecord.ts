@@ -1,4 +1,4 @@
-import { Address, IInstruction } from "@solana/kit";
+import { Address, Instruction } from "@solana/kit";
 
 import {
   CENTRAL_STATE_DOMAIN_RECORDS,
@@ -37,7 +37,7 @@ export const updateRecord = async ({
   content,
   owner,
   payer,
-}: UpdateRecordParams): Promise<IInstruction> => {
+}: UpdateRecordParams): Promise<Instruction> => {
   let { domainAddress, isSub, parentAddress } = await getDomainAddress({
     domain: `${record}.${domain}`,
     record: RecordVersion.V2,

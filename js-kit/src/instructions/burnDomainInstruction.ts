@@ -1,4 +1,4 @@
-import { AccountRole, Address, IAccountMeta, IInstruction } from "@solana/kit";
+import { AccountRole, Address, AccountMeta, Instruction } from "@solana/kit";
 import { serialize } from "borsh";
 
 export class burnDomainInstruction {
@@ -29,10 +29,10 @@ export class burnDomainInstruction {
     centralState: Address,
     owner: Address,
     target: Address
-  ): IInstruction {
+  ): Instruction {
     const data = this.serialize();
 
-    const accounts: IAccountMeta[] = [
+    const accounts: AccountMeta[] = [
       {
         address: nameServiceId,
         role: AccountRole.READONLY,

@@ -1,5 +1,6 @@
 import {
   Address,
+  Base58EncodedBytes,
   GetMultipleAccountsApi,
   GetProgramAccountsApi,
   Rpc,
@@ -40,14 +41,14 @@ export const getDomainsForAddress = async ({
         {
           memcmp: {
             offset: 32n,
-            bytes: address,
+            bytes: address as string as Base58EncodedBytes,
             encoding: "base58",
           },
         },
         {
           memcmp: {
             offset: 0n,
-            bytes: ROOT_DOMAIN_ADDRESS,
+            bytes: ROOT_DOMAIN_ADDRESS as string as Base58EncodedBytes,
             encoding: "base58",
           },
         },

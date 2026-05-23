@@ -1,4 +1,4 @@
-import { Address, IInstruction, getProgramDerivedAddress } from "@solana/kit";
+import { Address, Instruction, getProgramDerivedAddress } from "@solana/kit";
 
 import { addressCodec } from "../codecs";
 import {
@@ -30,7 +30,7 @@ export const burnDomain = async ({
   domain,
   owner,
   refundAddress,
-}: BurnDomainParams): Promise<IInstruction> => {
+}: BurnDomainParams): Promise<Instruction> => {
   const { domainAddress } = await getDomainAddress({ domain });
   const encoded = addressCodec.encode(domainAddress);
 

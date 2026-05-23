@@ -1,8 +1,8 @@
 import {
   AccountRole,
   Address,
-  IAccountMeta,
-  IInstruction,
+  AccountMeta,
+  Instruction,
   ReadonlyUint8Array,
 } from "@solana/kit";
 import { serialize } from "borsh";
@@ -37,10 +37,10 @@ export class TransferInstruction {
     classAddress?: Address,
     parentAddress?: Address,
     parentOwner?: Address
-  ): IInstruction {
+  ): Instruction {
     const data = this.serialize();
 
-    const accounts: IAccountMeta[] = [
+    const accounts: AccountMeta[] = [
       {
         address: domainAddress,
         role: AccountRole.WRITABLE,

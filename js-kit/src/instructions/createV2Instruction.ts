@@ -1,4 +1,4 @@
-import { AccountRole, Address, IAccountMeta, IInstruction } from "@solana/kit";
+import { AccountRole, Address, AccountMeta, Instruction } from "@solana/kit";
 import { serialize } from "borsh";
 
 import {
@@ -41,10 +41,10 @@ export class createV2Instruction {
     buyerTokenAccount: Address,
     usdcVault: Address,
     state: Address
-  ): IInstruction {
+  ): Instruction {
     const data = this.serialize();
 
-    const accounts: IAccountMeta[] = [
+    const accounts: AccountMeta[] = [
       {
         address: rentSysvarAccount,
         role: AccountRole.READONLY,

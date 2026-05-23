@@ -1,8 +1,8 @@
 import {
   AccountRole,
   Address,
-  IAccountMeta,
-  IInstruction,
+  AccountMeta,
+  Instruction,
   ReadonlyUint8Array,
 } from "@solana/kit";
 import { serialize } from "borsh";
@@ -46,10 +46,10 @@ export class validateRoaEthereumInstruction {
     domain: Address,
     domainOwner: Address,
     centralState: Address
-  ): IInstruction {
+  ): Instruction {
     const data = this.serialize();
 
-    const accounts: IAccountMeta[] = [
+    const accounts: AccountMeta[] = [
       {
         address: systemProgram,
         role: AccountRole.READONLY,

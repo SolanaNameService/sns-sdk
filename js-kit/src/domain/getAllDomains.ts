@@ -1,4 +1,4 @@
-import { GetProgramAccountsApi, Rpc } from "@solana/kit";
+import { Base58EncodedBytes, GetProgramAccountsApi, Rpc } from "@solana/kit";
 
 import { addressCodec, base64Codec } from "../codecs";
 import {
@@ -25,7 +25,7 @@ export const getAllDomains = async ({ rpc }: GetAllDomainsParams) => {
         {
           memcmp: {
             offset: 0n,
-            bytes: ROOT_DOMAIN_ADDRESS,
+            bytes: ROOT_DOMAIN_ADDRESS as string as Base58EncodedBytes,
             encoding: "base58",
           },
         },

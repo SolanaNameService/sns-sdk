@@ -2,7 +2,7 @@ import {
   Address,
   GetAccountInfoApi,
   GetMinimumBalanceForRentExemptionApi,
-  IInstruction,
+  Instruction,
   Rpc,
   fetchEncodedAccount,
 } from "@solana/kit";
@@ -41,8 +41,8 @@ export const createSubdomain = async ({
   owner,
   space = 2_000,
   feePayer,
-}: CreateSubdomainParams): Promise<IInstruction[]> => {
-  const ixs: IInstruction[] = [];
+}: CreateSubdomainParams): Promise<Instruction[]> => {
+  const ixs: Instruction[] = [];
   const sub = subdomain.split(".")[0];
 
   if (!sub) {

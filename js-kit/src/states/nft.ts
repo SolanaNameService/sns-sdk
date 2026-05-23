@@ -1,5 +1,6 @@
 import {
   Address,
+  Base58EncodedBytes,
   GetAccountInfoApi,
   GetProgramAccountsApi,
   Rpc,
@@ -91,14 +92,14 @@ export class NftState {
           {
             memcmp: {
               offset: BigInt(0),
-              bytes: "3",
+              bytes: "3" as Base58EncodedBytes,
               encoding: "base58",
             },
           },
           {
             memcmp: {
               offset: BigInt(1 + 1 + 32 + 32),
-              bytes: mint,
+              bytes: mint as string as Base58EncodedBytes,
               encoding: "base58",
             },
           },

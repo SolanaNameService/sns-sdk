@@ -1,4 +1,4 @@
-import { Address, IInstruction } from "@solana/kit";
+import { Address, Instruction } from "@solana/kit";
 
 import {
   CENTRAL_STATE,
@@ -36,7 +36,7 @@ export const createReverse = async ({
   payer,
   parentAddress,
   parentOwner,
-}: CreateReverseParams): Promise<IInstruction> => {
+}: CreateReverseParams): Promise<Instruction> => {
   const reverseLookupAccount = await deriveAddress(
     domainAddress,
     parentAddress,

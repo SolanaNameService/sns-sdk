@@ -5,7 +5,7 @@ import {
 } from "@solana-program/token";
 import {
   Address,
-  IInstruction,
+  Instruction,
   appendTransactionMessageInstructions,
   compileTransaction,
   createTransactionMessage,
@@ -34,7 +34,6 @@ import { validateRoa } from "../src/bindings/validateRoa";
 import { validateRoaEthereum } from "../src/bindings/validateRoaEthereum";
 import { writeRoa } from "../src/bindings/writeRoa";
 import {
-  FIDA_MINT,
   REFERRERS,
   ROOT_DOMAIN_ADDRESS,
   USDC_MINT,
@@ -43,11 +42,11 @@ import {
 import { getDomainAddress } from "../src/domain/getDomainAddress";
 import { RegistryState } from "../src/states/registry";
 import { Record } from "../src/types/record";
-import { TEST_RPC } from "./constants";
+import { TEST_RPC, USDT_MINT } from "./constants";
 
 jest.setTimeout(30_000);
 
-const testInstructions = async (ixs: IInstruction[], payer: Address) => {
+const testInstructions = async (ixs: Instruction[], payer: Address) => {
   const { value: latestBlockhash } = await TEST_RPC.getLatestBlockhash().send();
 
   const encodedWireTransaction = pipe(
@@ -74,7 +73,7 @@ describe("Bindings", () => {
       const refundAddress =
         "3Wnd5Df69KitZfUoPYZU438eFRNwGHkhLnSAWL65PxJX" as Address;
 
-      const ixs: IInstruction[] = [];
+      const ixs: Instruction[] = [];
       ixs.push(
         await burnDomain({
           domain: "wallet-guide-9",
@@ -91,12 +90,12 @@ describe("Bindings", () => {
     const domain = randomBytes(10).toString("hex");
     test(domain, async () => {
       const space = 2000;
-      const owner = "HKKp49qGWXd639QsuH7JiLijfVW5UtCVY4s1n2HANwEA" as Address;
+      const owner = "Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8" as Address;
       const lamports = await TEST_RPC.getMinimumBalanceForRentExemption(
         BigInt(space + RegistryState.HEADER_LEN)
       ).send();
 
-      const ixs: IInstruction[] = [];
+      const ixs: Instruction[] = [];
       ixs.push(
         await createNameRegistry({
           rpc: TEST_RPC,
@@ -116,7 +115,7 @@ describe("Bindings", () => {
       const domain = "wallet-guide-9";
       const owner = "Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8" as Address;
 
-      const ixs: IInstruction[] = [];
+      const ixs: Instruction[] = [];
       ixs.push(
         await createRecord({
           domain,
@@ -134,7 +133,7 @@ describe("Bindings", () => {
       const domain = "sub-0.wallet-guide-9";
       const owner = "Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8" as Address;
 
-      const ixs: IInstruction[] = [];
+      const ixs: Instruction[] = [];
       ixs.push(
         await createRecord({
           domain,
@@ -153,9 +152,9 @@ describe("Bindings", () => {
     const domain = randomBytes(10).toString("hex");
     test(domain, async () => {
       const { domainAddress } = await getDomainAddress({ domain });
-      const owner = "HKKp49qGWXd639QsuH7JiLijfVW5UtCVY4s1n2HANwEA" as Address;
+      const owner = "Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8" as Address;
 
-      const ixs: IInstruction[] = [];
+      const ixs: Instruction[] = [];
       ixs.push(await createReverse({ domainAddress, domain, payer: owner }));
 
       await testInstructions(ixs, owner);
@@ -166,7 +165,7 @@ describe("Bindings", () => {
     test("wallet-guide-9", async () => {
       const owner = "Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8" as Address;
 
-      const ixs: IInstruction[] = [];
+      const ixs: Instruction[] = [];
       ixs.push(
         ...(await createSubdomain({
           rpc: TEST_RPC,
@@ -183,7 +182,7 @@ describe("Bindings", () => {
     test("wallet-guide-9", async () => {
       const owner = "Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8" as Address;
 
-      const ixs: IInstruction[] = [];
+      const ixs: Instruction[] = [];
       ixs.push(
         await deleteNameRegistry({
           rpc: TEST_RPC,
@@ -210,7 +209,7 @@ describe("Bindings", () => {
         const domain = "wallet-guide-9";
         const owner = "Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8" as Address;
 
-        const ixs: IInstruction[] = [];
+        const ixs: Instruction[] = [];
 
         ixs.push(
           await createRecord({
@@ -267,7 +266,7 @@ describe("Bindings", () => {
         }))
       )("$domain", async ({ domain }) => {
         const [ata] = await findAssociatedTokenPda({
-          mint: FIDA_MINT,
+          mint: USDC_MINT,
           owner: VAULT_OWNER,
           tokenProgram: TOKEN_PROGRAM_ADDRESS,
         });
@@ -278,7 +277,7 @@ describe("Bindings", () => {
           space: 1_000,
           buyer: VAULT_OWNER,
           buyerTokenAccount: ata,
-          mint: FIDA_MINT,
+          mint: USDC_MINT,
           referrer: REFERRERS[0],
         });
 
@@ -286,12 +285,12 @@ describe("Bindings", () => {
       });
       test("Idempotent referrer ATA creation", async () => {
         const [ata] = await findAssociatedTokenPda({
-          mint: FIDA_MINT,
+          mint: USDT_MINT,
           owner: VAULT_OWNER,
           tokenProgram: TOKEN_PROGRAM_ADDRESS,
         });
 
-        const ixs: IInstruction[] = [];
+        const ixs: Instruction[] = [];
 
         for (let i = 0; i < 3; i++) {
           ixs.push(
@@ -301,7 +300,7 @@ describe("Bindings", () => {
               space: 1_000,
               buyer: VAULT_OWNER,
               buyerTokenAccount: ata,
-              mint: FIDA_MINT,
+              mint: USDT_MINT,
               referrer: REFERRERS[0],
             }))
           );
@@ -320,7 +319,7 @@ describe("Bindings", () => {
         "Df9Jz3NrGVd5jjjrXbedwuHbCc1hL131bUXq2143tTfQ" as Address;
       const nftMint = "7cpq5U6ze5PPcTPVxGifXA8xyDp8rgAJQNwBDj8eWd8w" as Address;
 
-      const ixs: IInstruction[] = [];
+      const ixs: Instruction[] = [];
       ixs.push(
         await registerWithNft({
           domain,
@@ -339,7 +338,7 @@ describe("Bindings", () => {
       const domainAddress = (await getDomainAddress({ domain })).domainAddress;
       const owner = "Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8" as Address;
 
-      const ixs: IInstruction[] = [];
+      const ixs: Instruction[] = [];
       ixs.push(await setPrimaryDomain({ rpc: TEST_RPC, domainAddress, owner }));
 
       await testInstructions(ixs, owner);
@@ -349,7 +348,7 @@ describe("Bindings", () => {
       const domainAddress = (await getDomainAddress({ domain })).domainAddress;
       const owner = "Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8" as Address;
 
-      const ixs: IInstruction[] = [];
+      const ixs: Instruction[] = [];
       ixs.push(await setPrimaryDomain({ rpc: TEST_RPC, domainAddress, owner }));
 
       await testInstructions(ixs, owner);
@@ -363,7 +362,7 @@ describe("Bindings", () => {
       const newOwner =
         "ALd1XSrQMCPSRayYUoUZnp6KcP6gERfJhWzkP49CkXKs" as Address;
 
-      const ixs: IInstruction[] = [];
+      const ixs: Instruction[] = [];
       ixs.push(
         await transferDomain({
           rpc: TEST_RPC,
@@ -385,7 +384,7 @@ describe("Bindings", () => {
       const newOwner =
         "ALd1XSrQMCPSRayYUoUZnp6KcP6gERfJhWzkP49CkXKs" as Address;
 
-      const ixs: IInstruction[] = [];
+      const ixs: Instruction[] = [];
       ixs.push(await transferSubdomain({ rpc: TEST_RPC, subdomain, newOwner }));
 
       await testInstructions(ixs, owner);
@@ -397,7 +396,7 @@ describe("Bindings", () => {
       const domain = "wallet-guide-9";
       const owner = "Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8" as Address;
 
-      const ixs: IInstruction[] = [];
+      const ixs: Instruction[] = [];
       ixs.push(
         await createRecord({
           domain,
@@ -424,7 +423,7 @@ describe("Bindings", () => {
       const domain = "sub-0.wallet-guide-9";
       const owner = "Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8" as Address;
 
-      const ixs: IInstruction[] = [];
+      const ixs: Instruction[] = [];
       ixs.push(
         await createRecord({
           domain,
@@ -453,7 +452,7 @@ describe("Bindings", () => {
       const domain = "wallet-guide-9";
       const owner = "Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8" as Address;
 
-      const ixs: IInstruction[] = [];
+      const ixs: Instruction[] = [];
       ixs.push(
         await updateNameRegistry({
           rpc: TEST_RPC,
@@ -474,7 +473,7 @@ describe("Bindings", () => {
       const domain = "wallet-guide-9";
       const owner = "Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8" as Address;
 
-      const ixs: IInstruction[] = [];
+      const ixs: Instruction[] = [];
       ixs.push(
         await createRecord({
           domain,
@@ -522,7 +521,7 @@ describe("Bindings", () => {
       const domain = "wallet-guide-9";
       const owner = "Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8" as Address;
 
-      const ixs: IInstruction[] = [];
+      const ixs: Instruction[] = [];
       ixs.push(
         await createRecord({
           domain,
@@ -552,7 +551,7 @@ describe("Bindings", () => {
       const domain = "wallet-guide-9";
       const owner = "Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8" as Address;
 
-      const ixs: IInstruction[] = [];
+      const ixs: Instruction[] = [];
       ixs.push(
         await createRecord({
           domain,

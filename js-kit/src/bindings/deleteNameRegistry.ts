@@ -1,4 +1,4 @@
-import { Address, GetAccountInfoApi, IInstruction, Rpc } from "@solana/kit";
+import { Address, GetAccountInfoApi, Instruction, Rpc } from "@solana/kit";
 
 import { NAME_PROGRAM_ADDRESS } from "../constants/addresses";
 import { DeleteNameRegistryInstruction } from "../instructions/deleteNameRegistryInstruction";
@@ -30,7 +30,7 @@ export const deleteNameRegistry = async ({
   refundAddress,
   classAddress,
   parentAddress,
-}: DeleteNameRegistryParams): Promise<IInstruction> => {
+}: DeleteNameRegistryParams): Promise<Instruction> => {
   const domainAddress = await deriveAddress(name, parentAddress, classAddress);
 
   const owner =
