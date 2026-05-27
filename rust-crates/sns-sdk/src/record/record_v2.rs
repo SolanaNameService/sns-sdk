@@ -82,21 +82,19 @@ impl<'a> ParsedRecord<'a> {
     }
 }
 
-pub async fn parse_record_v2(
-    record: Record,
-    account_data: &[u8],
-) -> Result<ParsedRecord, SnsError> {
+pub fn parse_record_v2(record: Record, account_data: &[u8]) -> Result<ParsedRecord, SnsError> {
     let record_header = RecordHeader::from_buffer(account_data);
     let mut offset = spl_name_service::state::NameRecordHeader::LEN + RecordHeader::LEN;
     let roa_validation = Validation::try_from(record_header.right_of_association_validation)?;
     let staleness_validation = Validation::try_from(record_header.staleness_validation)?;
-    let mut length = get_validation_length(roa_validation) as usize;
-    let roa_id = account_data
+    // On-chain layout: staleness_id, then roa_id, then content.
+    let mut length = get_validation_length(staleness_validation) as usize;
+    let staleness_id = account_data
         .get(offset..offset + length)
         .ok_or(SnsError::InvalidRecordData)?;
     offset += length;
-    length = get_validation_length(staleness_validation) as usize;
-    let staleness_id = account_data
+    length = get_validation_length(roa_validation) as usize;
+    let roa_id = account_data
         .get(offset..offset + length)
         .ok_or(SnsError::InvalidRecordData)?;
     offset += length;
@@ -312,5 +310,55 @@ mod test {
         let ser = serialize_record_v2_content(content, Record::A).unwrap();
         let des = deserialize_record_v2_content(&ser, Record::A).unwrap();
         assert_eq!(content, des);
+    }
+
+    fn build_v2_record(
+        staleness_validation: Validation,
+        roa_validation: Validation,
+        staleness_id: &[u8],
+        roa_id: &[u8],
+        content: &[u8],
+    ) -> Vec<u8> {
+        let mut buf = vec![0u8; NameRecordHeader::LEN];
+        buf.extend_from_slice(&(staleness_validation as u16).to_le_bytes());
+        buf.extend_from_slice(&(roa_validation as u16).to_le_bytes());
+        buf.extend_from_slice(&(content.len() as u32).to_le_bytes());
+        buf.extend_from_slice(staleness_id);
+        buf.extend_from_slice(roa_id);
+        buf.extend_from_slice(content);
+        buf
+    }
+
+    #[test]
+    fn parse_record_v2_reads_fields_in_order() {
+        let staleness_id = [0x11u8; 32];
+        let roa_id = [0x22u8; 32];
+        let content = [0x33u8; 32];
+        let buf = build_v2_record(
+            Validation::Solana,
+            Validation::Solana,
+            &staleness_id,
+            &roa_id,
+            &content,
+        );
+
+        let parsed = parse_record_v2(Record::Sol, &buf).unwrap();
+        assert_eq!(parsed.staleness_id, &staleness_id);
+        assert_eq!(parsed.roa_id, &roa_id);
+        assert_eq!(parsed.content, Pubkey::new_from_array(content).to_string());
+    }
+
+    #[test]
+    fn parse_record_v2_rejects_truncated_buffer() {
+        // Header claims 32-byte staleness/roa/content but only 16 bytes follow.
+        let buf = build_v2_record(
+            Validation::Solana,
+            Validation::Solana,
+            &[0u8; 16],
+            &[],
+            &[],
+        );
+        let res = parse_record_v2(Record::Sol, &buf);
+        assert!(matches!(res, Err(SnsError::InvalidRecordData)));
     }
 }
