@@ -310,7 +310,8 @@ async fn process_resolve(rpc_client: &RpcClient, domains: Vec<String>) -> CliRes
 
     let pb = progress_bar(domains.len());
     for (idx, domain) in domains.into_iter().enumerate() {
-        let row = match resolve::resolve_owner(rpc_client, &domain).await? {
+        let row = match resolve::resolve_owner(rpc_client, &domain, resolve::AllowPda::Deny).await?
+        {
             Some(owner) => row![
                 format_domain(&domain),
                 owner,

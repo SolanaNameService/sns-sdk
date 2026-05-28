@@ -38,6 +38,10 @@ pub enum SnsError {
     StaleRecord,
     UnverifiedRecord,
     InvalidSubRegistrar,
+    RecordMalformed,
+    WrongValidation,
+    InvalidRoa,
+    PdaOwnerNotAllowed,
 }
 
 impl From<ClientError> for SnsError {

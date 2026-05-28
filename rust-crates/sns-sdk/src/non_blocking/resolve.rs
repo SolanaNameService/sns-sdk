@@ -3,16 +3,19 @@ use {
     name_tokenizer::state::NftRecord,
     solana_account_decoder::UiAccountEncoding,
     solana_client::{
-        client_error::{ClientError, ClientErrorKind},
         nonblocking::rpc_client::RpcClient,
         rpc_config::{RpcAccountInfoConfig, RpcProgramAccountsConfig},
         rpc_filter::{Memcmp, RpcFilterType},
-        rpc_request::RpcError::RpcRequestError,
     },
     solana_program::{program_pack::Pack, pubkey::Pubkey},
     spl_name_service::state::{get_seeds_and_key, NameRecordHeader},
     spl_token::state::Account,
     spl_token::state::Mint,
+};
+
+use sns_records::state::{
+    record_header::RecordHeader,
+    validation::{get_validation_length, Validation},
 };
 
 use crate::{
@@ -22,55 +25,210 @@ use crate::{
     },
     error::SnsError,
     favourite_domain::{derive_favourite_domain_key, FavouriteDomain},
-    record::{get_record_key, record_v1::check_sol_record, Record},
+    record::{get_record_key, record_v1::check_sol_record, Record, RecordVersion},
 };
+
+/// Caller policy for the SNS-IP 5 registry-owner fallback when the owner is a PDA.
+///
+/// Only consulted when none of the override branches (tokenized / V2 SOL / V1 SOL)
+/// resolve and the final fallback would be the registry owner.
+#[derive(Debug, Clone)]
+pub enum AllowPda {
+    /// Throw `PdaOwnerNotAllowed` if the registry owner is a PDA.
+    Deny,
+    /// Allow the PDA if its owning program is in this list; otherwise throw.
+    Allow(Vec<Pubkey>),
+    /// Return the PDA unconditionally. Discouraged.
+    AllowAny,
+}
 
 pub async fn resolve_owner(
     rpc_client: &RpcClient,
     domain: &str,
+    allow_pda: AllowPda,
 ) -> Result<Option<Pubkey>, SnsError> {
-    let key = get_domain_key(domain)?;
+    let domain_key = get_domain_key(domain)?;
+    let sol_v1_key = get_record_key(domain, Record::Sol, RecordVersion::V1)?;
+    let sol_v2_key = get_record_key(domain, Record::Sol, RecordVersion::V2)?;
 
-    let header = match resolve_name_registry(rpc_client, &key).await? {
-        Some((h, _)) => h,
-        _ => return Ok(None),
+    // Single round-trip for registry + both SOL record candidates. Each slot is
+    // `None` when the corresponding account doesn't exist on chain.
+    let accs = rpc_client
+        .get_multiple_accounts(&[domain_key, sol_v1_key, sol_v2_key])
+        .await?;
+    let registry_acc = accs.first().ok_or(SnsError::InvalidDomain)?.as_ref();
+    let sol_v1_acc = accs.get(1).ok_or(SnsError::InvalidDomain)?.as_ref();
+    let sol_v2_acc = accs.get(2).ok_or(SnsError::InvalidDomain)?.as_ref();
+
+    // No registry account = domain was never registered.
+    let registry = match registry_acc {
+        Some(a) => deserialize_name_registry(&a.data)?.0,
+        None => return Ok(None),
     };
 
-    let nft_owner = resolve_nft_owner(rpc_client, &key).await?;
-
-    if let Some(nft_owner) = nft_owner {
+    // SNS-IP 5 step 1: tokenized domain -> NFT holder wins, skip the record chain.
+    if let Some(nft_owner) = resolve_nft_owner(rpc_client, &domain_key).await? {
         return Ok(Some(nft_owner));
     }
 
-    let sol_record_key = get_record_key(domain, Record::Sol, crate::record::RecordVersion::V1)?;
-    match resolve_name_registry(rpc_client, &sol_record_key).await {
-        Ok(Some((_, data))) => {
-            let data = &data[..96];
-            let record = [&data[..32], &sol_record_key.to_bytes()].concat();
-            let sig = &data[32..];
-            let encoded = hex::encode(record);
-            if check_sol_record(encoded.as_bytes(), sig, header.owner)? {
-                let owner = Pubkey::new_from_array(
-                    data[0..32]
-                        .try_into()
-                        .map_err(|_| SnsError::InvalidPubkey)?,
-                );
-                return Ok(Some(owner));
-            }
+    // SNS-IP 5 step 2: V2 SOL record. `Ok(None)` means stale -> fall through to V1.
+    if let Some(acc) = sol_v2_acc {
+        if let Some(owner) = check_sol_record_v2_data(&acc.data, &registry.owner)? {
+            return Ok(Some(owner));
         }
-        Err(SnsError::SolanaClient(ClientError {
-            request: None,
-            kind: ClientErrorKind::RpcError(RpcRequestError(err)),
-        })) => {
-            return Err(SnsError::SolanaClient(ClientError {
-                request: None,
-                kind: ClientErrorKind::RpcError(RpcRequestError(err)),
-            }))
-        }
-        _ => {}
     }
 
-    Ok(Some(header.owner))
+    // SNS-IP 5 step 3: V1 SOL record. `Ok(None)` means bad signature -> fall through.
+    if let Some(acc) = sol_v1_acc {
+        if let Some(owner) = check_sol_record_v1_data(&acc.data, &sol_v1_key, &registry.owner)? {
+            return Ok(Some(owner));
+        }
+    }
+
+    // SNS-IP 5 step 4: no override survived -> registry owner is the resolved owner.
+    // §4.2 PDA gate: if the registry owner is a PDA, the caller must opt in.
+    if registry.owner.is_on_curve() {
+        return Ok(Some(registry.owner));
+    }
+    match allow_pda {
+        AllowPda::Deny => Err(SnsError::PdaOwnerNotAllowed),
+        AllowPda::AllowAny => Ok(Some(registry.owner)),
+        AllowPda::Allow(allowed_programs) => {
+            let owner_program = rpc_client
+                .get_account_with_commitment(&registry.owner, rpc_client.commitment())
+                .await?
+                .value
+                .map(|acc| acc.owner);
+            match owner_program {
+                Some(p) if allowed_programs.contains(&p) => Ok(Some(registry.owner)),
+                _ => Err(SnsError::PdaOwnerNotAllowed),
+            }
+        }
+    }
+}
+
+/// Validate a V2 SOL record against the current registry owner and return the destination pubkey.
+///
+/// - `Ok(Some(_))` – record is fresh, RoA matches content
+/// - `Ok(None)` – record is stale (staleness id != current registry owner) → caller should fall through
+/// - `Err(RecordMalformed)` – content length != 32
+/// - `Err(WrongValidation)` – either validation field != Solana
+/// - `Err(InvalidRoa)` – RoA id != content
+fn check_sol_record_v2_data(
+    account_data: &[u8],
+    registry_owner: &Pubkey,
+) -> Result<Option<Pubkey>, SnsError> {
+    let record_header = RecordHeader::from_buffer(account_data);
+    let staleness_validation = Validation::try_from(record_header.staleness_validation)?;
+    let roa_validation = Validation::try_from(record_header.right_of_association_validation)?;
+
+    // SOL record stores exactly one Solana pubkey (32B). Anything else = malformed.
+    let content_length = record_header.content_length as usize;
+    if content_length != 32 {
+        return Err(SnsError::RecordMalformed);
+    }
+
+    // SNS-IP 5 requires both proofs to be Solana Ed25519 signatures. Other variants
+    // (None / Ethereum / UnverifiedSolana / XChain) cannot authorize SOL resolution.
+    if !matches!(staleness_validation, Validation::Solana)
+        || !matches!(roa_validation, Validation::Solana)
+    {
+        return Err(SnsError::WrongValidation);
+    }
+
+    // Layout after the SPL NameRecordHeader + RecordHeader: staleness_id, roa_id, content.
+    let mut offset = NameRecordHeader::LEN + RecordHeader::LEN;
+    let staleness_len = get_validation_length(staleness_validation) as usize;
+    let staleness_id = account_data
+        .get(offset..offset + staleness_len)
+        .ok_or(SnsError::InvalidRecordData)?;
+    offset += staleness_len;
+    let roa_len = get_validation_length(roa_validation) as usize;
+    let roa_id = account_data
+        .get(offset..offset + roa_len)
+        .ok_or(SnsError::InvalidRecordData)?;
+    offset += roa_len;
+    let content = account_data
+        .get(offset..offset + content_length)
+        .ok_or(SnsError::InvalidRecordData)?;
+
+    // Staleness: the pubkey baked into the record must equal the *current* registry
+    // owner. If the domain has been transferred since the record was signed, the
+    // record is stale - return `None` so the caller falls through to V1 / registry.
+    if staleness_id != registry_owner.as_ref() {
+        return Ok(None);
+    }
+
+    // Right-of-Association: the destination address must have signed off on
+    // receiving funds for this domain. The on-chain program stores `roa_id` only
+    // after a valid signature, so `roa_id == content` proves consent.
+    if roa_id == content {
+        let bytes: [u8; 32] = content.try_into().map_err(|_| SnsError::InvalidPubkey)?;
+        return Ok(Some(Pubkey::new_from_array(bytes)));
+    }
+
+    // Record is fresh but RoA doesn't match content -> can't safely resolve.
+    Err(SnsError::InvalidRoa)
+}
+
+fn check_sol_record_v1_data(
+    account_data: &[u8],
+    record_key: &Pubkey,
+    registry_owner: &Pubkey,
+) -> Result<Option<Pubkey>, SnsError> {
+    // V1 payload after the SPL header = 32B destination pubkey + 64B Ed25519 signature.
+    let payload = account_data
+        .get(NameRecordHeader::LEN..NameRecordHeader::LEN + 96)
+        .ok_or(SnsError::InvalidRecordData)?;
+    // Signer signed hex(destination || record_key) -- rebuild the same bytes to verify.
+    let record = [&payload[..32], &record_key.to_bytes()].concat();
+    let sig = &payload[32..];
+    let encoded = hex::encode(record);
+    // Signature must verify against the *current* registry owner; the destination is
+    // only trusted because that owner explicitly signed off on it.
+    if check_sol_record(encoded.as_bytes(), sig, *registry_owner)? {
+        let bytes: [u8; 32] = payload[0..32]
+            .try_into()
+            .map_err(|_| SnsError::InvalidPubkey)?;
+        return Ok(Some(Pubkey::new_from_array(bytes)));
+    }
+    Ok(None)
+}
+
+/// Resolve only the V1 SOL record for `domain`, validating the signature against `owner`.
+///
+/// Returns `Ok(Some(_))` if the record exists and the signature is valid for `owner`,
+/// `Ok(None)` if the record is missing or the signature does not verify. Errors are
+/// reserved for RPC / decoding failures.
+pub async fn resolve_sol_record_v1(
+    rpc_client: &RpcClient,
+    owner: &Pubkey,
+    domain: &str,
+) -> Result<Option<Pubkey>, SnsError> {
+    let record_key = get_record_key(domain, Record::Sol, RecordVersion::V1)?;
+    let mut accs = rpc_client.get_multiple_accounts(&[record_key]).await?;
+    match accs.swap_remove(0) {
+        Some(acc) => check_sol_record_v1_data(&acc.data, &record_key, owner),
+        None => Ok(None),
+    }
+}
+
+/// Resolve only the V2 SOL record for `domain`, validating staleness + RoA against `owner`.
+///
+/// Returns `Ok(Some(_))` if the record is fresh and the RoA matches the content,
+/// `Ok(None)` if the record is missing or stale. `RecordMalformed`/`WrongValidation`/
+/// `InvalidRoa` errors propagate when the record exists but is structurally invalid.
+pub async fn resolve_sol_record_v2(
+    rpc_client: &RpcClient,
+    owner: &Pubkey,
+    domain: &str,
+) -> Result<Option<Pubkey>, SnsError> {
+    let record_key = get_record_key(domain, Record::Sol, RecordVersion::V2)?;
+    let mut accs = rpc_client.get_multiple_accounts(&[record_key]).await?;
+    match accs.swap_remove(0) {
+        Some(acc) => check_sol_record_v2_data(&acc.data, owner),
+        None => Ok(None),
+    }
 }
 
 pub async fn resolve_record(
@@ -444,29 +602,188 @@ mod tests {
         dotenv().ok();
         let client = RpcClient::new(std::env::var("RPC_URL").unwrap());
 
-        // SOL record
-        let res = resolve_owner(&client, "🇺🇸").await.unwrap();
+        // `🇺🇸`: V1 signature no longer verifies after registry-owner rotation, so the
+        // current registry owner is returned.
+        let res = resolve_owner(&client, "🇺🇸", AllowPda::Deny).await.unwrap();
         assert_eq!(
             res.unwrap(),
-            pubkey!("CnNHzcp7L4jKiA2Rsca3hZyVwSmoqXaT8wGwzS8WvvB2")
+            pubkey!("8fe1EFcmz4BYeX6zGp6HUdoaHjVYhzsv599ub52WJbos")
         );
 
-        // Tokenized
-        let res = resolve_owner(&client, "0xluna").await.unwrap();
+        let res = resolve_owner(&client, "0xluna", AllowPda::Deny)
+            .await
+            .unwrap();
         assert_eq!(
             res.unwrap(),
-            pubkey!("CnNHzcp7L4jKiA2Rsca3hZyVwSmoqXaT8wGwzS8WvvB2")
+            pubkey!("8fe1EFcmz4BYeX6zGp6HUdoaHjVYhzsv599ub52WJbos")
         );
 
-        // Normal case
-        let res = resolve_owner(&client, "bonfida").await.unwrap();
+        let res = resolve_owner(&client, "bonfida", AllowPda::Deny)
+            .await
+            .unwrap();
         assert_eq!(
             res.unwrap(),
-            pubkey!("HKKp49qGWXd639QsuH7JiLijfVW5UtCVY4s1n2HANwEA")
+            pubkey!("Fw1ETanDZafof7xEULsnq9UY6o71Tpds89tNwPkWLb1v")
         );
 
         // Domain does not exist
-        let res = resolve_owner(&client, &generate_random_string(20))
+        let res = resolve_owner(&client, &generate_random_string(20), AllowPda::Deny)
+            .await
+            .unwrap();
+        assert_eq!(res, None);
+    }
+
+    #[tokio::test]
+    async fn resolve_sns_ip_5() {
+        dotenv().ok();
+        let client = RpcClient::new(std::env::var("RPC_URL").unwrap());
+
+        let cases = [
+            // wallet-1: tokenized -> NFT owner.
+            (
+                "sns-ip-5-wallet-1",
+                pubkey!("ALd1XSrQMCPSRayYUoUZnp6KcP6gERfJhWzkP49CkXKs"),
+            ),
+            // wallet-2: V2 fresh + valid RoA -> record content.
+            (
+                "sns-ip-5-wallet-2",
+                pubkey!("AxwzQXhZNJb9zLyiHUQA12L2GL7CxvUNrp6neee6r3cA"),
+            ),
+            // wallet-4: V2 stale, no V1, registry owner not a PDA -> registry owner.
+            (
+                "sns-ip-5-wallet-4",
+                pubkey!("7PLHHJawDoa4PGJUK3mUnusV7SEVwZwEyV5csVzm86J4"),
+            ),
+            // wallet-7: no V2, V1 valid -> record content.
+            (
+                "sns-ip-5-wallet-7",
+                pubkey!("53Ujp7go6CETvC7LTyxBuyopp5ivjKt6VSfixLm1pQrH"),
+            ),
+            // wallet-8: no V2, V1 invalid signature -> registry owner.
+            (
+                "sns-ip-5-wallet-8",
+                pubkey!("ALd1XSrQMCPSRayYUoUZnp6KcP6gERfJhWzkP49CkXKs"),
+            ),
+            // wallet-9: no V2, no V1, registry owner not a PDA -> registry owner.
+            (
+                "sns-ip-5-wallet-9",
+                pubkey!("ALd1XSrQMCPSRayYUoUZnp6KcP6gERfJhWzkP49CkXKs"),
+            ),
+            // V2 SOL backward-compat fixtures.
+            (
+                "wallet-guide-6",
+                pubkey!("Hf4daCT4tC2Vy9RCe9q8avT68yAsNJ1dQe6xiQqyGuqZ"),
+            ),
+            (
+                "wallet-guide-8",
+                pubkey!("36Dn3RWhB8x4c83W6ebQ2C2eH9sh5bQX2nMdkP2cWaA4"),
+            ),
+        ];
+
+        for (domain, expected) in cases {
+            let res = resolve_owner(&client, domain, AllowPda::Deny).await.unwrap();
+            assert_eq!(res, Some(expected), "domain {domain}");
+        }
+    }
+
+    /// SNS-IP 5 §4.2 PDA gate: wallet-5 (V2 stale + PDA owner) and wallet-10 (no V1
+    /// + PDA owner). Both should resolve to the registry owner when the caller
+    /// explicitly allows the program owning the PDA.
+    #[tokio::test]
+    async fn resolve_sns_ip_5_pda_allowed() {
+        dotenv().ok();
+        let client = RpcClient::new(std::env::var("RPC_URL").unwrap());
+        let expected = pubkey!("96GKJgm2W3P8Bae78brPrJf4Yi9AN1wtPJwg2XVQ2rMr");
+        let system_program = solana_program::system_program::ID;
+
+        for domain in ["sns-ip-5-wallet-5", "sns-ip-5-wallet-10"] {
+            let res = resolve_owner(&client, domain, AllowPda::Allow(vec![system_program]))
+                .await
+                .unwrap();
+            assert_eq!(res, Some(expected), "domain {domain} with Allow");
+
+            let res = resolve_owner(&client, domain, AllowPda::AllowAny)
+                .await
+                .unwrap();
+            assert_eq!(res, Some(expected), "domain {domain} with AllowAny");
+        }
+    }
+
+    #[tokio::test]
+    async fn resolve_sns_ip_5_errors() {
+        dotenv().ok();
+        let client = RpcClient::new(std::env::var("RPC_URL").unwrap());
+
+        // wallet-3: V2 fresh, on-chain record uses non-Solana validations.
+        let res = resolve_owner(&client, "sns-ip-5-wallet-3", AllowPda::Deny).await;
+        assert!(matches!(res, Err(SnsError::WrongValidation)), "{res:?}");
+
+        // wallet-12: on-chain `right_of_association_validation = UnverifiedSolana` (the
+        // state `write_roa` leaves behind before `validate_solana_signature` runs), so
+        // the validation check short-circuits before any RoA comparison runs.
+        let res = resolve_owner(&client, "sns-ip-5-wallet-12", AllowPda::Deny).await;
+        assert!(matches!(res, Err(SnsError::WrongValidation)), "{res:?}");
+
+        // wallet-6: V2 stale + PDA owner + Deny -> PdaOwnerNotAllowed.
+        let res = resolve_owner(&client, "sns-ip-5-wallet-6", AllowPda::Deny).await;
+        assert!(matches!(res, Err(SnsError::PdaOwnerNotAllowed)), "{res:?}");
+
+        // wallet-11: no V2, no V1, PDA owner + Deny -> PdaOwnerNotAllowed.
+        let res = resolve_owner(&client, "sns-ip-5-wallet-11", AllowPda::Deny).await;
+        assert!(matches!(res, Err(SnsError::PdaOwnerNotAllowed)), "{res:?}");
+
+        // wallet-6 with an empty allow-list still throws (program not in list).
+        let res = resolve_owner(&client, "sns-ip-5-wallet-6", AllowPda::Allow(vec![])).await;
+        assert!(matches!(res, Err(SnsError::PdaOwnerNotAllowed)), "{res:?}");
+    }
+
+    #[tokio::test]
+    async fn test_resolve_sol_record_v2_standalone() {
+        dotenv().ok();
+        let client = RpcClient::new(std::env::var("RPC_URL").unwrap());
+        // wallet-2 is set up with a fresh V2 SOL record pointing to a distinct address.
+        let domain = "sns-ip-5-wallet-2";
+        let domain_key = get_domain_key(domain).unwrap();
+        let (header, _) = resolve_name_registry(&client, &domain_key)
+            .await
+            .unwrap()
+            .unwrap();
+        let res = resolve_sol_record_v2(&client, &header.owner, domain)
+            .await
+            .unwrap();
+        assert_eq!(
+            res,
+            Some(pubkey!("AxwzQXhZNJb9zLyiHUQA12L2GL7CxvUNrp6neee6r3cA"))
+        );
+
+        // Missing V2 record returns Ok(None).
+        let res = resolve_sol_record_v2(&client, &header.owner, "bonfida")
+            .await
+            .unwrap();
+        assert_eq!(res, None);
+    }
+
+    #[tokio::test]
+    async fn test_resolve_sol_record_v1_standalone() {
+        dotenv().ok();
+        let client = RpcClient::new(std::env::var("RPC_URL").unwrap());
+        // wallet-guide-4 carries a fresh V1 SOL record signed by its current registry owner.
+        let domain = "wallet-guide-4.sol";
+        let domain_key = get_domain_key(domain).unwrap();
+        let (header, _) = resolve_name_registry(&client, &domain_key)
+            .await
+            .unwrap()
+            .unwrap();
+        let res = resolve_sol_record_v1(&client, &header.owner, domain)
+            .await
+            .unwrap();
+        assert_eq!(
+            res,
+            Some(pubkey!("Hf4daCT4tC2Vy9RCe9q8avT68yAsNJ1dQe6xiQqyGuqZ"))
+        );
+
+        // Missing V1 record returns Ok(None).
+        let res = resolve_sol_record_v1(&client, &header.owner, &generate_random_string(20))
             .await
             .unwrap();
         assert_eq!(res, None);
