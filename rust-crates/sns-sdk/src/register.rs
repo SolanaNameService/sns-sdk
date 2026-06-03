@@ -20,9 +20,9 @@ mod constants {
     pub const USDT_MINT: Pubkey = pubkey!("Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB");
     pub const SOL_MINT: Pubkey = pubkey!("So11111111111111111111111111111111111111112");
     pub const FIDA_MINT: Pubkey = pubkey!("EchesyfXePKdLtoiZSL8pBe8Myagyy8ZRqsACNCFGnvp");
-    pub const MSOL_MINT: Pubkey = pubkey!("EchesyfXePKdLtoiZSL8pBe8Myagyy8ZRqsACNCFGnvp");
+    pub const MSOL_MINT: Pubkey = pubkey!("mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So");
     pub const BONK_MINT: Pubkey = pubkey!("6dhTynDkYsVM7cbF7TKfC9DWB636TcEM935fq7JzL2ES");
-    pub const BAT_MINT: Pubkey = pubkey!("EchesyfXePKdLtoiZSL8pBe8Myagyy8ZRqsACNCFGnvp");
+    pub const BAT_MINT: Pubkey = pubkey!("EPeUFDgHRxs9xxEPVaL6kfGQvCon7jmAWKVUHuux1Tpz");
     pub const PYTH_PROGRAM_ID: Pubkey = pubkey!("FsJ3A3u2vn5cTVofAjvy6y5kwABJAqYWpe4975bi2epH");
     pub const PYTH_MAPPING_ACC: Pubkey = pubkey!("AHtgzX45WTKfkPG53L6WYhGEXwQkN1BVknET3sVsLL8J");
     pub const INJ_MINT: Pubkey = pubkey!("6McPRfPV6bY1e9hLxWyG54W9i9Epq75QBvXg2oetBVTB");
@@ -59,7 +59,7 @@ mod constants {
             pubkey!("FerFD54J6RgmQVCR5oNgpzXmz8BW2eBNhhirb1d5oifo"),
         ),
         (
-            BONK_MINT,
+            BAT_MINT,
             pubkey!("AbMTYZ82Xfv9PtTQ5e1fJXemXjzqEEFHP3oDLRTae6yz"),
             pubkey!("8xTEctXKo6Xo3EzNhSNp4TUe8mgfwWFbDUXJhuubvrKx"),
         ),
