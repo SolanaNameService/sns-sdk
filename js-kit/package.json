@@ -1,6 +1,6 @@
 {
   "name": "@solana-name-service/sns-sdk-kit",
-  "version": "0.10.0-beta",
+  "version": "0.10.0",
   "license": "MIT",
   "files": [
     "dist"
