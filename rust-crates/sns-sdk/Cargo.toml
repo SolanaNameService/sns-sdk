@@ -34,14 +34,14 @@ spl-associated-token-account = { version = "7.0.0", features = [
 bech32 = "0.9.1"
 punycode = "0.4.1"
 name-tokenizer = { version = "2.1.0", features = ["no-entrypoint"] }
-sns-records = "0.2.0"
+sns-records = { version = "0.2.0", features = ["no-entrypoint"] }
 
 futures = "0.3.28"
 bytemuck = "1.13.1"
 num-derive = "0.4.0"
 num-traits = "0.2.16"
 sns-warp-common = { version = "0.2.0", features = ["solana"] }
-sub-registrar = { version = "0.1.0", optional = true }
+sub-registrar = { version = "0.1.0", optional = true, features = ["no-entrypoint"] }
 
 [dev-dependencies]
 tokio = { version = "1.26.0", features = ["full"] }

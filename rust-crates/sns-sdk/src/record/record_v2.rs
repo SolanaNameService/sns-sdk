@@ -262,6 +262,11 @@ pub fn serialize_record_v2_content(content: &str, record: Record) -> Result<Vec<
 #[cfg(test)]
 mod test {
 
+    use crate::{
+        derivation::{derive, get_domain_key},
+        record::{get_record_v2_key, CENTRAL_STATE_RECORD_V2},
+    };
+
     use super::*;
     #[test]
     fn test_serialize_record_v2_content() {
@@ -351,14 +356,24 @@ mod test {
     #[test]
     fn parse_record_v2_rejects_truncated_buffer() {
         // Header claims 32-byte staleness/roa/content but only 16 bytes follow.
-        let buf = build_v2_record(
-            Validation::Solana,
-            Validation::Solana,
-            &[0u8; 16],
-            &[],
-            &[],
-        );
+        let buf = build_v2_record(Validation::Solana, Validation::Solana, &[0u8; 16], &[], &[]);
         let res = parse_record_v2(Record::Sol, &buf);
         assert!(matches!(res, Err(SnsError::InvalidRecordData)));
+    }
+
+    #[test]
+    fn v2_record_key_for_subdomain_matches_domain_key_derivation() {
+        let domain = "dex.bonfida";
+        let record = Record::Url;
+        let domain_key = get_domain_key(domain).unwrap();
+        let expected = derive(
+            &format!("\x02{}", record.as_str()),
+            &domain_key,
+            Some(CENTRAL_STATE_RECORD_V2),
+        );
+
+        let actual = get_record_v2_key(domain, record).unwrap();
+
+        assert_eq!(actual, expected);
     }
 }

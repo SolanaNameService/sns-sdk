@@ -170,7 +170,7 @@ pub fn get_record_key(
         }
         2 => {
             let parent = derive(splitted[1], &ROOT_DOMAIN_ACCOUNT, None);
-            let sub_domain = get_prefix(Domain::Sub) + splitted[1];
+            let sub_domain = get_prefix(Domain::Sub) + splitted[0];
             let sub_key = derive(&sub_domain, &parent, None);
 
             let record_prefix = get_prefix(Domain::Record(record_version));
