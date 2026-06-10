@@ -82,33 +82,61 @@ impl<'a> ParsedRecord<'a> {
     }
 }
 
-pub fn parse_record_v2(record: Record, account_data: &[u8]) -> Result<ParsedRecord, SnsError> {
-    let record_header = RecordHeader::from_buffer(account_data);
-    let mut offset = spl_name_service::state::NameRecordHeader::LEN + RecordHeader::LEN;
-    let roa_validation = Validation::try_from(record_header.right_of_association_validation)?;
-    let staleness_validation = Validation::try_from(record_header.staleness_validation)?;
+pub struct RawRecordV2<'a> {
+    pub header: RecordHeader,
+    pub staleness_validation: Validation,
+    pub roa_validation: Validation,
+    pub staleness_id: &'a [u8],
+    pub roa_id: &'a [u8],
+    pub content: &'a [u8],
+}
+
+pub fn parse_raw_record_v2(account_data: &[u8]) -> Result<RawRecordV2, SnsError> {
+    if account_data.len() < NameRecordHeader::LEN + RecordHeader::LEN {
+        return Err(SnsError::InvalidRecordData);
+    }
+
+    let header = RecordHeader::from_buffer(account_data);
+    let staleness_validation = Validation::try_from(header.staleness_validation)?;
+    let roa_validation = Validation::try_from(header.right_of_association_validation)?;
+
     // On-chain layout: staleness_id, then roa_id, then content.
-    let mut length = get_validation_length(staleness_validation) as usize;
+    let mut offset = NameRecordHeader::LEN + RecordHeader::LEN;
+    let staleness_len = get_validation_length(staleness_validation) as usize;
     let staleness_id = account_data
-        .get(offset..offset + length)
+        .get(offset..offset + staleness_len)
         .ok_or(SnsError::InvalidRecordData)?;
-    offset += length;
-    length = get_validation_length(roa_validation) as usize;
+    offset += staleness_len;
+
+    let roa_len = get_validation_length(roa_validation) as usize;
     let roa_id = account_data
-        .get(offset..offset + length)
+        .get(offset..offset + roa_len)
         .ok_or(SnsError::InvalidRecordData)?;
-    offset += length;
-    let content = deserialize_record_v2_content(
-        account_data
-            .get(offset..)
-            .ok_or(SnsError::InvalidRecordData)?,
-        record,
-    )?;
+    offset += roa_len;
+
+    let content_length = header.content_length as usize;
+    let content = account_data
+        .get(offset..offset + content_length)
+        .ok_or(SnsError::InvalidRecordData)?;
+
+    Ok(RawRecordV2 {
+        header,
+        staleness_validation,
+        roa_validation,
+        staleness_id,
+        roa_id,
+        content,
+    })
+}
+
+pub fn parse_record_v2(record: Record, account_data: &[u8]) -> Result<ParsedRecord, SnsError> {
+    let raw = parse_raw_record_v2(account_data)?;
+    let content = deserialize_record_v2_content(raw.content, record)?;
     Ok(ParsedRecord {
         kind: record,
-        header: record_header,
-        roa_id,
-        staleness_id,
+        header: raw.header,
+        roa_id: raw.roa_id,
+        staleness_id: raw.staleness_id,
         content,
     })
 }
@@ -346,6 +374,13 @@ mod test {
             &roa_id,
             &content,
         );
+
+        let raw = parse_raw_record_v2(&buf).unwrap();
+        assert!(matches!(raw.staleness_validation, Validation::Solana));
+        assert!(matches!(raw.roa_validation, Validation::Solana));
+        assert_eq!(raw.staleness_id, &staleness_id);
+        assert_eq!(raw.roa_id, &roa_id);
+        assert_eq!(raw.content, &content);
 
         let parsed = parse_record_v2(Record::Sol, &buf).unwrap();
         assert_eq!(parsed.staleness_id, &staleness_id);

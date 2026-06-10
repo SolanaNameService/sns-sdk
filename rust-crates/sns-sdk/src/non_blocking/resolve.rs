@@ -13,10 +13,7 @@ use {
     spl_token::state::Mint,
 };
 
-use sns_records::state::{
-    record_header::RecordHeader,
-    validation::{get_validation_length, Validation},
-};
+use sns_records::state::validation::Validation;
 
 use crate::{
     derivation::{
@@ -25,7 +22,10 @@ use crate::{
     },
     error::SnsError,
     favourite_domain::{derive_favourite_domain_key, FavouriteDomain},
-    record::{get_record_key, record_v1::check_sol_record, Record, RecordVersion},
+    record::{
+        get_record_key, record_v1::check_sol_record, record_v2::parse_raw_record_v2, Record,
+        RecordVersion,
+    },
 };
 
 /// Caller policy for the SNS-IP 5 registry-owner fallback when the owner is a PDA.
@@ -118,52 +118,36 @@ fn check_sol_record_v2_data(
     account_data: &[u8],
     registry_owner: &Pubkey,
 ) -> Result<Option<Pubkey>, SnsError> {
-    let record_header = RecordHeader::from_buffer(account_data);
-    let staleness_validation = Validation::try_from(record_header.staleness_validation)?;
-    let roa_validation = Validation::try_from(record_header.right_of_association_validation)?;
+    let record = parse_raw_record_v2(account_data)?;
 
     // SOL record stores exactly one Solana pubkey (32B). Anything else = malformed.
-    let content_length = record_header.content_length as usize;
-    if content_length != 32 {
+    if record.content.len() != 32 {
         return Err(SnsError::RecordMalformed);
     }
 
     // SNS-IP 5 requires both proofs to be Solana Ed25519 signatures. Other variants
     // (None / Ethereum / UnverifiedSolana / XChain) cannot authorize SOL resolution.
-    if !matches!(staleness_validation, Validation::Solana)
-        || !matches!(roa_validation, Validation::Solana)
+    if !matches!(record.staleness_validation, Validation::Solana)
+        || !matches!(record.roa_validation, Validation::Solana)
     {
         return Err(SnsError::WrongValidation);
     }
 
-    // Layout after the SPL NameRecordHeader + RecordHeader: staleness_id, roa_id, content.
-    let mut offset = NameRecordHeader::LEN + RecordHeader::LEN;
-    let staleness_len = get_validation_length(staleness_validation) as usize;
-    let staleness_id = account_data
-        .get(offset..offset + staleness_len)
-        .ok_or(SnsError::InvalidRecordData)?;
-    offset += staleness_len;
-    let roa_len = get_validation_length(roa_validation) as usize;
-    let roa_id = account_data
-        .get(offset..offset + roa_len)
-        .ok_or(SnsError::InvalidRecordData)?;
-    offset += roa_len;
-    let content = account_data
-        .get(offset..offset + content_length)
-        .ok_or(SnsError::InvalidRecordData)?;
-
     // Staleness: the pubkey baked into the record must equal the *current* registry
     // owner. If the domain has been transferred since the record was signed, the
     // record is stale - return `None` so the caller falls through to V1 / registry.
-    if staleness_id != registry_owner.as_ref() {
+    if record.staleness_id != registry_owner.as_ref() {
         return Ok(None);
     }
 
     // Right-of-Association: the destination address must have signed off on
     // receiving funds for this domain. The on-chain program stores `roa_id` only
     // after a valid signature, so `roa_id == content` proves consent.
-    if roa_id == content {
-        let bytes: [u8; 32] = content.try_into().map_err(|_| SnsError::InvalidPubkey)?;
+    if record.roa_id == record.content {
+        let bytes: [u8; 32] = record
+            .content
+            .try_into()
+            .map_err(|_| SnsError::InvalidPubkey)?;
         return Ok(Some(Pubkey::new_from_array(bytes)));
     }
 
