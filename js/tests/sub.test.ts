@@ -31,9 +31,9 @@ test("Create sub", async () => {
 
 test("Transfer sub", async () => {
   let tx = new Transaction();
-  const owner = new PublicKey("HKKp49qGWXd639QsuH7JiLijfVW5UtCVY4s1n2HANwEA");
+  const owner = new PublicKey("Fw1ETanDZafof7xEULsnq9UY6o71Tpds89tNwPkWLb1v");
   const parentOwner = new PublicKey(
-    "HKKp49qGWXd639QsuH7JiLijfVW5UtCVY4s1n2HANwEA",
+    "Fw1ETanDZafof7xEULsnq9UY6o71Tpds89tNwPkWLb1v",
   );
   let ix = await transferSubdomain(
     connection,

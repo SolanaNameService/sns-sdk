@@ -1,6 +1,6 @@
 {
   "name": "@bonfida/spl-name-service",
-  "version": "3.0.22",
+  "version": "3.0.23",
   "license": "MIT",
   "files": [
     "dist"
@@ -85,8 +85,13 @@
   "peerDependencies": {
     "@solana/web3.js": "^1.98.2"
   },
+  "overrides": {
+    "rpc-websockets@9.3.9": {
+      "uuid": "11.1.1"
+    }
+  },
   "prettier": "@bonfida/prettier-config",
   "volta": {
-    "node": "20.10.0"
+    "node": "20.18.0"
   }
 }
