@@ -17,4 +17,5 @@ export enum CustomBg {
   ValentineDay2025 = "Valentine'sDay2025",
   Monkedao = "Monkedao",
   LunarNewYear2026 = "LunarNewYear2026",
+  WorldCup2026 = "WorldCup2026",
 }
