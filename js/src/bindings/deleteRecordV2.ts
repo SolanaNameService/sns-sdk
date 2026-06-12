@@ -7,7 +7,7 @@ import { InvalidParentError } from "../error";
 
 /**
  * This function deletes a record v2 and returns the rent to the fee payer
- * @param domain The .sol domain name
+ * @param domain The full domain name including TLD (e.g. `domain.sol`)
  * @param record  The record type enum
  * @param owner The owner of the record to delete
  * @param payer The fee payer of the transaction

@@ -8,7 +8,7 @@ import { InvalidParentError } from "../error";
 
 /**
  * This function can be used be create a record V2, it handles the serialization of the record data following SNS-IP 1 guidelines
- * @param domain The .sol domain name
+ * @param domain The full domain name including TLD (e.g. `domain.sol`)
  * @param record The record enum object
  * @param recordV2 The `RecordV2` object that will be serialized into the record via the update instruction
  * @param owner The owner of the domain

@@ -10,7 +10,7 @@ import { Record, RecordVersion } from "../types/record";
 /**
  * This function can be used to create a SOL record (V1)
  * @param connection The Solana RPC connection object
- * @param domain The .sol domain name
+ * @param domain The full domain name including TLD (e.g. `domain.sol`)
  * @param content The content of the SOL record i.e the public key to store as destination of the domain
  * @param signer The signer of the SOL record i.e the owner of the domain
  * @param signature The signature of the record

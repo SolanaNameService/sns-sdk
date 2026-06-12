@@ -27,7 +27,7 @@ interface RecordResult {
  * association, and optionally deserializes the record content.
  *
  * @param connection The Solana RPC connection object.
- * @param domain The `.sol` domain name that owns the record.
+ * @param domain The full domain name including TLD (e.g. `domain.sol`).
  * @param record The record type to retrieve.
  * @param options Optional retrieval settings.
  * @param options.deserialize When `true`, deserializes the raw record content.

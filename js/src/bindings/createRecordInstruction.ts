@@ -13,7 +13,7 @@ import { UnsupportedRecordError } from "../error";
  * This function can be used be create a record V1, it handles the serialization of the record data
  * To create a SOL record use `createSolRecordInstruction`
  * @param connection The Solana RPC connection object
- * @param domain The .sol domain name
+ * @param domain The full domain name including TLD (e.g. `domain.sol`)
  * @param record The record enum object
  * @param data The data (as a UTF-8 string) to store in the record account
  * @param owner The owner of the domain

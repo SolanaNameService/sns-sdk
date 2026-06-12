@@ -9,7 +9,7 @@ import { InvalidParentError } from "../error";
 /**
  * This function updates the content of a record V2. The data serialization follows the SNS-IP 1 guidelines
  * @param connection The Solana RPC connection object
- * @param domain The .sol domain name
+ * @param domain The full domain name including TLD (e.g. `domain.sol`)
  * @param record The record enum object
  * @param recordV2 The `RecordV2` object to serialize into the record
  * @param owner The owner of the record/domain
