@@ -8,7 +8,7 @@ import {
 import { createSplitV2Instruction } from "../instructions/createSplitV2Instruction";
 import {
   NAME_PROGRAM_ID,
-  ROOT_DOMAIN_ACCOUNT,
+  SNS_ROOT_DOMAIN_ACCOUNT,
   REGISTER_PROGRAM_ID,
   REFERRERS,
   USDC_MINT,
@@ -27,9 +27,9 @@ import {
 import { InvalidDomainError, PythFeedNotFoundError } from "../error";
 
 /**
- * This function can be used to register a .sol domain
+ * This function can be used to register a .sns domain
  * @param connection The Solana RPC connection object
- * @param name The domain name to register e.g sns if you want to register sns.sol
+ * @param name The domain name to register e.g mydomain if you want to register mydomain.sns
  * @param space The domain name account size (max 10kB)
  * @param buyer The public key of the buyer
  * @param buyerTokenAccount The buyer token account (USDC)
@@ -37,7 +37,7 @@ import { InvalidDomainError, PythFeedNotFoundError } from "../error";
  * @param referrerKey Optional referrer key
  * @returns
  */
-export const registerDomainNameV2 = async (
+export const registerSnsDomain = async (
   connection: Connection,
   name: string,
   space: number,
@@ -55,7 +55,7 @@ export const registerDomainNameV2 = async (
   const nameAccount = getNameAccountKeySync(
     hashed,
     undefined,
-    ROOT_DOMAIN_ACCOUNT,
+    SNS_ROOT_DOMAIN_ACCOUNT,
   );
 
   const hashedReverseLookup = getHashedNameSync(nameAccount.toBase58());
@@ -106,7 +106,7 @@ export const registerDomainNameV2 = async (
   }).getInstruction(
     REGISTER_PROGRAM_ID,
     NAME_PROGRAM_ID,
-    ROOT_DOMAIN_ACCOUNT,
+    SNS_ROOT_DOMAIN_ACCOUNT,
     nameAccount,
     reverseLookupAccount,
     SystemProgram.programId,
