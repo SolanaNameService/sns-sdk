@@ -4,10 +4,11 @@ import {
   SystemProgram,
   TransactionInstruction,
 } from "@solana/web3.js";
-import { createInstruction } from "../instructions/createInstruction";
-import { Numberu64, Numberu32 } from "../int";
-import { getNameOwner } from "../deprecated/utils";
+
 import { NAME_PROGRAM_ID } from "../constants";
+import { createInstruction } from "../instructions/createInstruction";
+import { Numberu32, Numberu64 } from "../int";
+import { NameRegistryState } from "../state";
 import { getHashedNameSync } from "../utils/getHashedNameSync";
 import { getNameAccountKeySync } from "../utils/getNameAccountKeySync";
 
@@ -47,7 +48,7 @@ export async function createNameRegistry(
 
   let nameParentOwner: PublicKey | undefined;
   if (parentName) {
-    const { registry: parentAccount } = await getNameOwner(
+    const { registry: parentAccount } = await NameRegistryState.retrieve(
       connection,
       parentName,
     );

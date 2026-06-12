@@ -8,7 +8,6 @@ export * from "./bindings/createSubdomain";
 export * from "./bindings/deleteNameRegistry";
 export * from "./bindings/deleteRecordV2";
 export * from "./bindings/ethValidateRecordV2Content";
-export * from "./bindings/registerDomainName";
 export * from "./bindings/registerDomainNameV2";
 export * from "./bindings/registerFavorite";
 export * from "./bindings/registerWithNft";
@@ -114,10 +113,7 @@ export * from "./types/record";
 export * from "./types/custom-bg";
 
 export * from "./resolve/resolve";
-export * from "./resolve/resolveSolRecordV1";
-export * from "./resolve/resolveSolRecordV2";
 
-export * from "./deprecated/utils";
 export * from "./error";
 export * from "./custom-bg";
 
