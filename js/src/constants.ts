@@ -13,9 +13,9 @@ export const NAME_PROGRAM_ID = new PublicKey(
 export const HASH_PREFIX = "SPL Name Service";
 
 /**
- * The `.sol` TLD
+ * The `.sns` TLD
  */
-export const ROOT_DOMAIN_ACCOUNT = new PublicKey(
+export const SNS_ROOT_DOMAIN_ACCOUNT = new PublicKey(
   "58PwtjSDuFHuUkYjH9BYnnQKHfwo9reZhC2zMJv9JPkx",
 );
 

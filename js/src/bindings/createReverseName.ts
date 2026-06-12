@@ -2,7 +2,7 @@ import { PublicKey, SystemProgram, SYSVAR_RENT_PUBKEY } from "@solana/web3.js";
 import { createReverseInstruction } from "../instructions/createReverseInstruction";
 import {
   NAME_PROGRAM_ID,
-  ROOT_DOMAIN_ACCOUNT,
+  SNS_ROOT_DOMAIN_ACCOUNT,
   REGISTER_PROGRAM_ID,
   CENTRAL_STATE,
 } from "../constants";
@@ -37,7 +37,7 @@ export const createReverseName = async (
   }).getInstruction(
     REGISTER_PROGRAM_ID,
     NAME_PROGRAM_ID,
-    ROOT_DOMAIN_ACCOUNT,
+    SNS_ROOT_DOMAIN_ACCOUNT,
     reverseLookupAccount,
     SystemProgram.programId,
     CENTRAL_STATE,

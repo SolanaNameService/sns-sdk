@@ -2,7 +2,7 @@ import { Connection, PublicKey, SystemProgram } from "@solana/web3.js";
 import { registerFavoriteInstruction } from "../instructions/registerFavoriteInstruction";
 import { FavouriteDomain, NAME_OFFERS_ID } from "../favorite-domain";
 import { NameRegistryState } from "../state";
-import { ROOT_DOMAIN_ACCOUNT } from "../constants";
+import { SNS_ROOT_DOMAIN_ACCOUNT } from "../constants";
 
 /**
  * This function can be used to register a domain name as favorite
@@ -21,7 +21,7 @@ export const registerFavorite = async (
     connection,
     nameAccount,
   );
-  if (!registry.parentName.equals(ROOT_DOMAIN_ACCOUNT)) {
+  if (!registry.parentName.equals(SNS_ROOT_DOMAIN_ACCOUNT)) {
     parent = registry.parentName;
   }
 

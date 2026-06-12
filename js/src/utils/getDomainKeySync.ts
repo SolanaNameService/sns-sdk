@@ -1,16 +1,17 @@
 import { PublicKey } from "@solana/web3.js";
-import { ROOT_DOMAIN_ACCOUNT } from "../constants";
+import { SNS_ROOT_DOMAIN_ACCOUNT } from "../constants";
 import { Buffer } from "buffer";
 import { CENTRAL_STATE_SNS_RECORDS } from "@bonfida/sns-records";
 import { RecordVersion } from "../types/record";
-import { InvalidInputError } from "../error";
+import { InvalidInputError, UnsupportedTldError } from "../error";
+import { SOL_TLD, SNS_TLD, getTld } from "./getTld";
 
 import { getHashedNameSync } from "./getHashedNameSync";
 import { getNameAccountKeySync } from "./getNameAccountKeySync";
 
 const _deriveSync = (
   name: string,
-  parent: PublicKey = ROOT_DOMAIN_ACCOUNT,
+  parent: PublicKey = SNS_ROOT_DOMAIN_ACCOUNT,
   classKey?: PublicKey,
 ) => {
   let hashed = getHashedNameSync(name);
@@ -19,15 +20,11 @@ const _deriveSync = (
 };
 
 /**
- * This function can be used to compute the public key of a domain or subdomain
- * @param domain The domain to compute the public key for (e.g `sns.sol`, `sub.sns.sol`)
- * @param record Optional parameter: If the domain being resolved is a record
- * @returns
+ * Key derivation handler for `.sns` domains.
+ *
+ * Expects the input domain name to already have its TLD trimmed.
  */
-export const getDomainKeySync = (domain: string, record?: RecordVersion) => {
-  if (domain.endsWith(".sol")) {
-    domain = domain.slice(0, -4);
-  }
+const getSnsDomainKeySync = (domain: string, record?: RecordVersion) => {
   const recordClass =
     record === RecordVersion.V2 ? CENTRAL_STATE_SNS_RECORDS : undefined;
   const splitted = domain.split(".");
@@ -53,6 +50,56 @@ export const getDomainKeySync = (domain: string, record?: RecordVersion) => {
   } else if (splitted.length >= 3) {
     throw new InvalidInputError("The domain is malformed");
   }
-  const result = _deriveSync(domain, ROOT_DOMAIN_ACCOUNT);
+  const result = _deriveSync(domain, SNS_ROOT_DOMAIN_ACCOUNT);
   return { ...result, isSub: false, parent: undefined };
+};
+
+/**
+ * Key derivation handler for `.sol` domains.
+ *
+ * Expects the input domain name to already have its TLD trimmed.
+ *
+ * @throws {Error} Always � `.sol`-specific key derivation is not yet implemented.
+ */
+const getSolDomainKeySync = (
+  _domain: string,
+  _record?: RecordVersion,
+): ReturnType<typeof getSnsDomainKeySync> => {
+  throw new Error("getSolDomainKeySync is not yet implemented");
+};
+
+void getSolDomainKeySync;
+
+/**
+ * Computes the public key of a domain or subdomain.
+ *
+ * A TLD suffix is required - the domain must end with `.sol` or `.sns`
+ * (e.g. `sns.sol`, `sub.sns.sol`, `alice.sns`). Bare names without a recognised
+ * suffix will throw {@link UnsupportedTldError}.
+ *
+ * Both `.sol` and `.sns` currently route to the SNS derivation logic, preserving
+ * existing on-chain key derivation. `.sol`-specific derivation is reserved for a
+ * future release.
+ *
+ * @param domain The full domain name including TLD (e.g. `sns.sol`, `sub.sns.sol`)
+ * @param record Optional parameter: If the domain being resolved is a record
+ * @throws {UnsupportedTldError} When the domain is missing a supported TLD suffix
+ */
+export const getDomainKeySync = (domain: string, record?: RecordVersion) => {
+  const tld = getTld(domain);
+  if (!tld) {
+    throw new UnsupportedTldError(
+      `Domain "${domain}" is missing a supported TLD suffix (${SOL_TLD} or ${SNS_TLD})`,
+    );
+  }
+
+  const trimmedDomain = domain.slice(0, -tld.length);
+
+  if (tld === SOL_TLD) {
+    // Both .sol and .sns currently use SNS derivation for compatibility.
+    // Switch this branch to getSolDomainKeySync once implemented.
+    return getSnsDomainKeySync(trimmedDomain, record);
+  }
+
+  return getSnsDomainKeySync(trimmedDomain, record);
 };

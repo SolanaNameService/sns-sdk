@@ -1,5 +1,5 @@
 import { Connection, PublicKey } from "@solana/web3.js";
-import { NAME_PROGRAM_ID, ROOT_DOMAIN_ACCOUNT } from "../constants";
+import { NAME_PROGRAM_ID, SNS_ROOT_DOMAIN_ACCOUNT } from "../constants";
 
 /**
  * This function can be used to retrieve all domain names owned by `wallet`
@@ -21,7 +21,7 @@ export async function getAllDomains(
     {
       memcmp: {
         offset: 0,
-        bytes: ROOT_DOMAIN_ACCOUNT.toBase58(),
+        bytes: SNS_ROOT_DOMAIN_ACCOUNT.toBase58(),
       },
     },
   ];

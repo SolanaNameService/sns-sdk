@@ -3,7 +3,7 @@ import { PublicKey, SystemProgram, SYSVAR_RENT_PUBKEY } from "@solana/web3.js";
 import { createWithNftInstruction } from "../instructions/createWithNftInstruction";
 import {
   NAME_PROGRAM_ID,
-  ROOT_DOMAIN_ACCOUNT,
+  SNS_ROOT_DOMAIN_ACCOUNT,
   REGISTER_PROGRAM_ID,
   REVERSE_LOOKUP_CLASS,
   WOLVES_COLLECTION_METADATA,
@@ -28,7 +28,7 @@ export const registerWithNft = (
   const ix = new createWithNftInstruction({ space, name }).getInstruction(
     REGISTER_PROGRAM_ID,
     NAME_PROGRAM_ID,
-    ROOT_DOMAIN_ACCOUNT,
+    SNS_ROOT_DOMAIN_ACCOUNT,
     nameAccount,
     reverseLookupAccount,
     SystemProgram.programId,

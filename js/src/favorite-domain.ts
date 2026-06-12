@@ -11,7 +11,7 @@ import { reverseLookup } from "./utils/reverseLookup";
 import { FavouriteDomainNotFoundError } from "./error";
 import { getDomainMint } from "./nft/getDomainMint";
 import { NameRegistryState } from "./state";
-import { NAME_PROGRAM_ID, ROOT_DOMAIN_ACCOUNT } from "./constants";
+import { NAME_PROGRAM_ID, SNS_ROOT_DOMAIN_ACCOUNT } from "./constants";
 
 export const NAME_OFFERS_ID = new PublicKey(
   "85iDfUvr3HJyLM2zcq5BXSiDvUWfw6cSE1FfNBo8Ap29",
@@ -110,12 +110,12 @@ export const getFavoriteDomain = async (
   let reverse = await reverseLookup(
     connection,
     favorite.nameAccount,
-    registry.parentName.equals(ROOT_DOMAIN_ACCOUNT)
+    registry.parentName.equals(SNS_ROOT_DOMAIN_ACCOUNT)
       ? undefined
       : registry.parentName,
   );
 
-  if (!registry.parentName.equals(ROOT_DOMAIN_ACCOUNT)) {
+  if (!registry.parentName.equals(SNS_ROOT_DOMAIN_ACCOUNT)) {
     const parentReverse = await reverseLookup(connection, registry.parentName);
     reverse += `.${parentReverse}`;
   }
@@ -160,7 +160,8 @@ export const getMultipleFavoriteDomains = async (
   const revKeys = domainInfos.map((e, idx) => {
     const parent = new PublicKey(e?.data.slice(0, 32) ?? Buffer.alloc(32));
     const isSub =
-      e?.owner.equals(NAME_PROGRAM_ID) && !parent.equals(ROOT_DOMAIN_ACCOUNT);
+      e?.owner.equals(NAME_PROGRAM_ID) &&
+      !parent.equals(SNS_ROOT_DOMAIN_ACCOUNT);
     parentRevKeys.push(
       isSub ? getReverseKeyFromDomainKey(parent) : PublicKey.default,
     );

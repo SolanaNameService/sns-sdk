@@ -38,6 +38,7 @@ export enum ErrorType {
   RecordMalformed = "RecordMalformed",
   CouldNotFindNftOwner = "CouldNotFindNftOwner",
   WrongValidation = "WrongValidation",
+  UnsupportedTld = "UnsupportedTld",
 }
 
 export class SNSError extends Error {
@@ -284,5 +285,11 @@ export class CouldNotFindNftOwner extends SNSError {
 export class WrongValidation extends SNSError {
   constructor(message?: string) {
     super(ErrorType.WrongValidation, message);
+  }
+}
+
+export class UnsupportedTldError extends SNSError {
+  constructor(message?: string) {
+    super(ErrorType.UnsupportedTld, message);
   }
 }

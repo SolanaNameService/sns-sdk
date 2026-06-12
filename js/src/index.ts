@@ -41,6 +41,7 @@ export * from "./utils/findSubdomains";
 export * from "./utils/getAllDomains";
 export * from "./utils/getAllRegisteredDomains";
 export * from "./utils/getDomainKeySync";
+export * from "./utils/getTld";
 export * from "./utils/getDomainKeysWithReverses";
 export * from "./utils/getDomainPriceFromName";
 export * from "./utils/getHashedNameSync";

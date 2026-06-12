@@ -16,11 +16,13 @@ import {
   InvalidRoAError,
   PdaOwnerNotAllowed,
   RecordMalformed,
+  UnsupportedTldError,
   WrongValidation,
 } from "../error";
 import { NameRegistryState } from "../state";
 import { checkSolRecord } from "../record/checkSolRecord";
 import { retrieveNftOwnerV2 } from "../nft/retrieveNftOwnerV2";
+import { getTld, SOL_TLD, SNS_TLD } from "../utils/getTld";
 
 export type AllowPda = "any" | boolean;
 
@@ -35,16 +37,30 @@ type ResolveConfig = AllowPda extends true
     };
 
 /**
- * Resolve function according to SNS-IP 5
- * @param connection
- * @param domain
- * @param config
- * @returns
+ * Internal handler for `.sol` domains.
+ *
+ * @throws {Error} Always — `.sol`-specific resolution is not yet implemented.
  */
-export const resolve = async (
+const resolveSol = async (
+  _connection: Connection,
+  _domain: string,
+  _config: ResolveConfig,
+): Promise<PublicKey> => {
+  throw new Error("resolveSol is not yet implemented");
+};
+
+void resolveSol;
+
+/**
+ * Internal handler that resolves a domain using the SNS-IP 5 logic.
+ *
+ * Accepts a full suffixed domain (e.g. `"sns.sol"`, `"alice.sns"`). Both `.sol`
+ * and `.sns` domains currently route here for backward compatibility.
+ */
+const resolveSns = async (
   connection: Connection,
   domain: string,
-  config: ResolveConfig = { allowPda: false },
+  config: ResolveConfig,
 ): Promise<PublicKey> => {
   const { pubkey } = getDomainKeySync(domain);
   const [nftRecordKey] = NftRecord.findKeySync(pubkey, NAME_TOKENIZER_ID);
@@ -147,8 +163,8 @@ export const resolve = async (
       return registry.owner;
     } else if (config.allowPda) {
       const ownerInfo = await connection.getAccountInfo(registry.owner);
-      const isAllowed = config.programIds?.some(
-        (e) => ownerInfo?.owner?.equals(e),
+      const isAllowed = config.programIds?.some((e) =>
+        ownerInfo?.owner?.equals(e),
       );
 
       if (isAllowed) {
@@ -164,4 +180,35 @@ export const resolve = async (
   }
 
   return registry.owner;
+};
+
+/**
+ * Resolve a domain to its owner public key according to SNS-IP 5.
+ *
+ * A TLD suffix is **required** — the domain must end with `.sol` or `.sns`
+ * (e.g. `"sns.sol"`, `"wallet.sns"`). Bare names without a recognised suffix
+ * will throw {@link UnsupportedTldError}.
+ *
+ * Both `.sol` and `.sns` domains are currently resolved with the same SNS-IP 5
+ * logic. `.sol`-specific behaviour (`resolveSol`) is reserved for a future release.
+ *
+ * @param connection - Solana RPC connection.
+ * @param domain - Full domain name including TLD (e.g. `"sns.sol"`, `"wallet.sns"`).
+ * @param config - Optional PDA allowance config.
+ * @throws {UnsupportedTldError} When the domain has no recognised TLD suffix.
+ */
+export const resolve = async (
+  connection: Connection,
+  domain: string,
+  config: ResolveConfig = { allowPda: false },
+): Promise<PublicKey> => {
+  const tld = getTld(domain);
+  if (!tld) {
+    throw new UnsupportedTldError(
+      `Domain "${domain}" is missing a supported TLD suffix (${SOL_TLD} or ${SNS_TLD})`,
+    );
+  }
+  // Both .sol and .sns currently route to resolveSns (SNS-IP 5 logic).
+  // resolveSol is reserved for future .sol-specific behaviour.
+  return resolveSns(connection, domain, config);
 };
