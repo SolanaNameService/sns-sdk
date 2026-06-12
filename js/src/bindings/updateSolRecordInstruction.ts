@@ -1,14 +1,15 @@
 import { Connection, PublicKey } from "@solana/web3.js";
+
+import { NAME_PROGRAM_ID } from "../constants";
+import { AccountDoesNotExistError } from "../error";
 import { deleteInstruction } from "../instructions/deleteInstruction";
 import { updateInstruction } from "../instructions/updateInstruction";
 import { Numberu32 } from "../int";
-import { NAME_PROGRAM_ID } from "../constants";
-import { check } from "../utils/check";
-import { getDomainKeySync } from "../utils/getDomainKeySync";
 import { serializeSolRecord } from "../record/serializeSolRecord";
 import { Record, RecordVersion } from "../types/record";
-import { AccountDoesNotExistError } from "../error";
-
+import { check } from "../utils/check";
+import { getDomainKeySync } from "../utils/getDomainKeySync";
+import { parseSupportedTld, SNS_TLD } from "../utils/tld";
 import { createSolRecordInstruction } from "./createSolRecordInstruction";
 
 export const updateSolRecordInstruction = async (
@@ -19,6 +20,9 @@ export const updateSolRecordInstruction = async (
   signature: Uint8Array,
   payer: PublicKey,
 ) => {
+  // Only allows .sns domains
+  parseSupportedTld(domain, [SNS_TLD]);
+
   const { pubkey } = getDomainKeySync(
     `${Record.SOL}.${domain}`,
     RecordVersion.V1,

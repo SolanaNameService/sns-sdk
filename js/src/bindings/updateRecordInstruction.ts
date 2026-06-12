@@ -1,13 +1,15 @@
 import { Connection, PublicKey } from "@solana/web3.js";
+
+import { NAME_PROGRAM_ID } from "../constants";
+import { AccountDoesNotExistError, UnsupportedRecordError } from "../error";
 import { deleteInstruction } from "../instructions/deleteInstruction";
 import { updateInstruction } from "../instructions/updateInstruction";
 import { Numberu32 } from "../int";
-import { NAME_PROGRAM_ID } from "../constants";
-import { check } from "../utils/check";
-import { getDomainKeySync } from "../utils/getDomainKeySync";
 import { serializeRecord } from "../record/serializeRecord";
 import { Record, RecordVersion } from "../types/record";
-import { AccountDoesNotExistError, UnsupportedRecordError } from "../error";
+import { check } from "../utils/check";
+import { getDomainKeySync } from "../utils/getDomainKeySync";
+import { parseSupportedTld, SNS_TLD } from "../utils/tld";
 import { createRecordInstruction } from "./createRecordInstruction";
 
 export const updateRecordInstruction = async (
@@ -24,6 +26,10 @@ export const updateRecordInstruction = async (
       "SOL record is not supported for this instruction",
     ),
   );
+
+  // Only allows .sns domains
+  parseSupportedTld(domain, [SNS_TLD]);
+
   const { pubkey } = getDomainKeySync(`${record}.${domain}`, RecordVersion.V1);
 
   const info = await connection.getAccountInfo(pubkey);

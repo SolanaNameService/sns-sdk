@@ -1,30 +1,35 @@
 import { Connection, PublicKey, TransactionInstruction } from "@solana/web3.js";
+
+import { NAME_PROGRAM_ID } from "../constants";
 import { transferInstruction } from "../instructions/transferInstruction";
 import { NameRegistryState } from "../state";
-import { NAME_PROGRAM_ID } from "../constants";
 import { getHashedNameSync } from "../utils/getHashedNameSync";
 import { getNameAccountKeySync } from "../utils/getNameAccountKeySync";
+import { SNS_TLD, parseSupportedTld } from "../utils/tld";
 
 /**
  * Change the owner of a given name account.
  *
  * @param connection The solana connection object to the RPC node
- * @param name The name of the name account
+ * @param domain The domain to transfer, must include the TLD suffix (e.g. `mydomain.sns`).
  * @param newOwner The new owner to be set
  * @param nameClass The class of this name, if it exsists
  * @param nameParent The parent name of this name, if it exists
  * @param parentOwner Parent name owner
  * @returns
  */
-export async function transferNameOwnership(
+export async function transferDomain(
   connection: Connection,
-  name: string,
+  domain: string,
   newOwner: PublicKey,
   nameClass?: PublicKey,
   nameParent?: PublicKey,
   parentOwner?: PublicKey,
 ): Promise<TransactionInstruction> {
-  const hashed_name = getHashedNameSync(name);
+  // Only allows .sns domains
+  const [trimmedDomain] = parseSupportedTld(domain, [SNS_TLD]);
+
+  const hashed_name = getHashedNameSync(trimmedDomain);
   const nameAccountKey = getNameAccountKeySync(
     hashed_name,
     nameClass,

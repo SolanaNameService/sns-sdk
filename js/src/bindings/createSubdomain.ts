@@ -1,16 +1,17 @@
 import { Connection, PublicKey, TransactionInstruction } from "@solana/web3.js";
+
+import { InvalidDomainError, UnsupportedTldError } from "../error";
 import { NameRegistryState } from "../state";
 import { getDomainKeySync } from "../utils/getDomainKeySync";
 import { getReverseKeySync } from "../utils/getReverseKeySync";
-import { InvalidDomainError } from "../error";
-
+import { SNS_TLD } from "../utils/tld";
 import { createNameRegistry } from "./createNameRegistry";
 import { createReverseName } from "./createReverseName";
 
 /**
  * This function can be used to create a subdomain
  * @param connection The Solana RPC connection object
- * @param subdomain The subdomain to create, must include the TLD suffix (e.g. `something.sns.sol`)
+ * @param subdomain The subdomain to create, must include the TLD suffix (e.g. `sub.parent.sns`)
  * @param owner The owner of the parent domain creating the subdomain
  * @param space The space to allocate to the subdomain (defaults to 2kb)
  * @param feePayer Optional: Specifies a fee payer different from the parent owner
@@ -23,8 +24,15 @@ export const createSubdomain = async (
   feePayer?: PublicKey,
 ) => {
   const ixs: TransactionInstruction[] = [];
-  const sub = subdomain.split(".")[0];
-  if (!sub) {
+  const labels = subdomain.split(".");
+  const [sub, parentName, tld] = labels;
+
+  if ("." + tld !== SNS_TLD) {
+    throw new UnsupportedTldError(
+      `Subdomain "${subdomain}" must have a .sns TLD`,
+    );
+  }
+  if (!(labels.length === 3 && sub && parentName)) {
     throw new InvalidDomainError("The subdomain name is malformed");
   }
 

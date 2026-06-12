@@ -1,35 +1,37 @@
 import {
+  createAssociatedTokenAccountIdempotentInstruction,
+  getAssociatedTokenAddressSync,
+  TOKEN_PROGRAM_ID,
+} from "@solana/spl-token";
+import {
   Connection,
   PublicKey,
   SystemProgram,
-  TransactionInstruction,
   SYSVAR_RENT_PUBKEY,
+  TransactionInstruction,
 } from "@solana/web3.js";
-import { createSplitV2Instruction } from "../instructions/createSplitV2Instruction";
+
 import {
+  CENTRAL_STATE,
   NAME_PROGRAM_ID,
-  SNS_ROOT_DOMAIN_ACCOUNT,
-  REGISTER_PROGRAM_ID,
+  PYTH_PULL_FEEDS,
   REFERRERS,
+  REGISTER_PROGRAM_ID,
+  SNS_ROOT_DOMAIN_ACCOUNT,
   USDC_MINT,
   VAULT_OWNER,
-  PYTH_PULL_FEEDS,
-  CENTRAL_STATE,
 } from "../constants";
+import { InvalidDomainError, PythFeedNotFoundError } from "../error";
+import { createSplitV2Instruction } from "../instructions/createSplitV2Instruction";
 import { getHashedNameSync } from "../utils/getHashedNameSync";
 import { getNameAccountKeySync } from "../utils/getNameAccountKeySync";
 import { getPythFeedAccountKey } from "../utils/getPythFeedAccountKey";
-import {
-  TOKEN_PROGRAM_ID,
-  getAssociatedTokenAddressSync,
-  createAssociatedTokenAccountIdempotentInstruction,
-} from "@solana/spl-token";
-import { InvalidDomainError, PythFeedNotFoundError } from "../error";
+import { parseSupportedTld, SNS_TLD } from "../utils/tld";
 
 /**
  * This function can be used to register a .sns domain
  * @param connection The Solana RPC connection object
- * @param name The domain name to register e.g mydomain if you want to register mydomain.sns
+ * @param domain The full domain name including TLD (e.g. `"mydomain.sns"`)
  * @param space The domain name account size (max 10kB)
  * @param buyer The public key of the buyer
  * @param buyerTokenAccount The buyer token account (USDC)
@@ -37,21 +39,27 @@ import { InvalidDomainError, PythFeedNotFoundError } from "../error";
  * @param referrerKey Optional referrer key
  * @returns
  */
-export const registerSnsDomain = async (
+export const registerDomain = async (
   connection: Connection,
-  name: string,
+  domain: string,
   space: number,
   buyer: PublicKey,
   buyerTokenAccount: PublicKey,
   mint = USDC_MINT,
   referrerKey?: PublicKey,
 ) => {
+  // Only allows .sns domains
+  const [trimmedDomain] = parseSupportedTld(domain, [SNS_TLD]);
+
   // Basic validation
-  if (name.includes(".") || name.trim().toLowerCase() !== name) {
+  if (
+    trimmedDomain.includes(".") ||
+    trimmedDomain.trim().toLowerCase() !== trimmedDomain
+  ) {
     throw new InvalidDomainError("The domain name is malformed");
   }
 
-  const hashed = getHashedNameSync(name);
+  const hashed = getHashedNameSync(trimmedDomain);
   const nameAccount = getNameAccountKeySync(
     hashed,
     undefined,
@@ -100,7 +108,7 @@ export const registerSnsDomain = async (
   const [pythFeedAccount] = getPythFeedAccountKey(0, pythFeed);
 
   const ix = new createSplitV2Instruction({
-    name,
+    name: trimmedDomain,
     space,
     referrerIdxOpt: refIdx != -1 ? refIdx : null,
   }).getInstruction(

@@ -3,8 +3,8 @@ import { SNS_ROOT_DOMAIN_ACCOUNT } from "../constants";
 import { Buffer } from "buffer";
 import { CENTRAL_STATE_SNS_RECORDS } from "@bonfida/sns-records";
 import { RecordVersion } from "../types/record";
-import { InvalidInputError, UnsupportedTldError } from "../error";
-import { SOL_TLD, SNS_TLD, getTld } from "./getTld";
+import { InvalidInputError } from "../error";
+import { SOL_TLD, parseSupportedTld } from "./tld";
 
 import { getHashedNameSync } from "./getHashedNameSync";
 import { getNameAccountKeySync } from "./getNameAccountKeySync";
@@ -59,7 +59,7 @@ const getSnsDomainKeySync = (domain: string, record?: RecordVersion) => {
  *
  * Expects the input domain name to already have its TLD trimmed.
  *
- * @throws {Error} Always � `.sol`-specific key derivation is not yet implemented.
+ * @throws {Error} Always - `.sol`-specific key derivation is not yet implemented.
  */
 const getSolDomainKeySync = (
   _domain: string,
@@ -73,30 +73,23 @@ void getSolDomainKeySync;
 /**
  * Computes the public key of a domain or subdomain.
  *
- * A TLD suffix is required - the domain must end with `.sol` or `.sns`
- * (e.g. `sns.sol`, `sub.sns.sol`, `alice.sns`). Bare names without a recognised
+ * A TLD suffix is required - the domain must end with `.sns` or `.sol`
+ * (e.g. `mydomain.sns`, `sub.parent.sns`, `alice.sol`). Bare names without a recognised
  * suffix will throw {@link UnsupportedTldError}.
  *
- * Both `.sol` and `.sns` currently route to the SNS derivation logic, preserving
+ * Both `.sns` and `.sol` currently route to the SNS derivation logic, preserving
  * existing on-chain key derivation. `.sol`-specific derivation is reserved for a
  * future release.
  *
- * @param domain The full domain name including TLD (e.g. `sns.sol`, `sub.sns.sol`)
+ * @param domain The full domain name including TLD (e.g. `mydomain.sns`, `sub.parent.sns`)
  * @param record Optional parameter: If the domain being resolved is a record
  * @throws {UnsupportedTldError} When the domain is missing a supported TLD suffix
  */
 export const getDomainKeySync = (domain: string, record?: RecordVersion) => {
-  const tld = getTld(domain);
-  if (!tld) {
-    throw new UnsupportedTldError(
-      `Domain "${domain}" is missing a supported TLD suffix (${SOL_TLD} or ${SNS_TLD})`,
-    );
-  }
-
-  const trimmedDomain = domain.slice(0, -tld.length);
+  const [trimmedDomain, tld] = parseSupportedTld(domain);
 
   if (tld === SOL_TLD) {
-    // Both .sol and .sns currently use SNS derivation for compatibility.
+    // Both .sns and .sol currently use SNS derivation for compatibility.
     // Switch this branch to getSolDomainKeySync once implemented.
     return getSnsDomainKeySync(trimmedDomain, record);
   }

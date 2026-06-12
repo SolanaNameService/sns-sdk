@@ -1,19 +1,21 @@
 import { Connection, PublicKey, SystemProgram } from "@solana/web3.js";
-import { createInstruction } from "../instructions/createInstruction";
-import { NameRegistryState } from "../state";
-import { Numberu64, Numberu32 } from "../int";
+
 import { NAME_PROGRAM_ID } from "../constants";
+import { UnsupportedRecordError } from "../error";
+import { createInstruction } from "../instructions/createInstruction";
+import { Numberu32, Numberu64 } from "../int";
+import { serializeRecord } from "../record/serializeRecord";
+import { NameRegistryState } from "../state";
+import { Record, RecordVersion } from "../types/record";
 import { check } from "../utils/check";
 import { getDomainKeySync } from "../utils/getDomainKeySync";
-import { serializeRecord } from "../record/serializeRecord";
-import { Record, RecordVersion } from "../types/record";
-import { UnsupportedRecordError } from "../error";
+import { parseSupportedTld, SNS_TLD } from "../utils/tld";
 
 /**
  * This function can be used be create a record V1, it handles the serialization of the record data
  * To create a SOL record use `createSolRecordInstruction`
  * @param connection The Solana RPC connection object
- * @param domain The full domain name including TLD (e.g. `domain.sol`)
+ * @param domain The full domain name including TLD (e.g. `domain.sns`)
  * @param record The record enum object
  * @param data The data (as a UTF-8 string) to store in the record account
  * @param owner The owner of the domain
@@ -34,6 +36,10 @@ export const createRecordInstruction = async (
       "SOL record is not supported for this instruction",
     ),
   );
+
+  // Only allows .sns domains
+  parseSupportedTld(domain, [SNS_TLD]);
+
   const { pubkey, hashed, parent } = getDomainKeySync(
     `${record}.${domain}`,
     RecordVersion.V1,

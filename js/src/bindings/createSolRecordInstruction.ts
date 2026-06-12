@@ -1,16 +1,18 @@
 import { Connection, PublicKey, SystemProgram } from "@solana/web3.js";
-import { createInstruction } from "../instructions/createInstruction";
-import { NameRegistryState } from "../state";
-import { Numberu64, Numberu32 } from "../int";
+
 import { NAME_PROGRAM_ID } from "../constants";
-import { getDomainKeySync } from "../utils/getDomainKeySync";
+import { createInstruction } from "../instructions/createInstruction";
+import { Numberu32, Numberu64 } from "../int";
 import { serializeSolRecord } from "../record/serializeSolRecord";
+import { NameRegistryState } from "../state";
 import { Record, RecordVersion } from "../types/record";
+import { getDomainKeySync } from "../utils/getDomainKeySync";
+import { parseSupportedTld, SNS_TLD } from "../utils/tld";
 
 /**
  * This function can be used to create a SOL record (V1)
  * @param connection The Solana RPC connection object
- * @param domain The full domain name including TLD (e.g. `domain.sol`)
+ * @param domain The full domain name including TLD (e.g. `domain.sns`)
  * @param content The content of the SOL record i.e the public key to store as destination of the domain
  * @param signer The signer of the SOL record i.e the owner of the domain
  * @param signature The signature of the record
@@ -25,6 +27,9 @@ export const createSolRecordInstruction = async (
   signature: Uint8Array,
   payer: PublicKey,
 ) => {
+  // Only allows .sns domains
+  parseSupportedTld(domain, [SNS_TLD]);
+
   const { pubkey, hashed, parent } = getDomainKeySync(
     `${Record.SOL}.${domain}`,
     RecordVersion.V1,

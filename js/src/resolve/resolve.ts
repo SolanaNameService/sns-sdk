@@ -22,7 +22,7 @@ import {
 import { NameRegistryState } from "../state";
 import { checkSolRecord } from "../record/checkSolRecord";
 import { retrieveNftOwnerV2 } from "../nft/retrieveNftOwnerV2";
-import { getTld, SOL_TLD, SNS_TLD } from "../utils/getTld";
+import { getTld, SOL_TLD, SNS_TLD } from "../utils/tld";
 
 export type AllowPda = "any" | boolean;
 
@@ -52,10 +52,9 @@ const resolveSol = async (
 void resolveSol;
 
 /**
- * Internal handler that resolves a domain using the SNS-IP 5 logic.
+ * Internal handler that resolves a .sns domain using the SNS-IP 5 logic.
  *
- * Accepts a full suffixed domain (e.g. `"sns.sol"`, `"alice.sns"`). Both `.sol`
- * and `.sns` domains currently route here for backward compatibility.
+ * Accepts a .sns domain without TLD suffix (e.g. `"mydomain").
  */
 const resolveSns = async (
   connection: Connection,
@@ -185,15 +184,15 @@ const resolveSns = async (
 /**
  * Resolve a domain to its owner public key according to SNS-IP 5.
  *
- * A TLD suffix is **required** — the domain must end with `.sol` or `.sns`
- * (e.g. `"sns.sol"`, `"wallet.sns"`). Bare names without a recognised suffix
+ * A TLD suffix is **required** — the domain must end with `.sns` or `.sol`
+ * (e.g. `"mydomain.sns"`, `"mydomain.sol"`). Bare names without a recognised suffix
  * will throw {@link UnsupportedTldError}.
  *
- * Both `.sol` and `.sns` domains are currently resolved with the same SNS-IP 5
+ * Both `.sns` and `.sol` domains are currently resolved with the same SNS-IP 5
  * logic. `.sol`-specific behaviour (`resolveSol`) is reserved for a future release.
  *
  * @param connection - Solana RPC connection.
- * @param domain - Full domain name including TLD (e.g. `"sns.sol"`, `"wallet.sns"`).
+ * @param domain - Full domain name including TLD (e.g. `"mydomain.sns"`, `"mydomain.sol"`).
  * @param config - Optional PDA allowance config.
  * @throws {UnsupportedTldError} When the domain has no recognised TLD suffix.
  */
@@ -208,7 +207,7 @@ export const resolve = async (
       `Domain "${domain}" is missing a supported TLD suffix (${SOL_TLD} or ${SNS_TLD})`,
     );
   }
-  // Both .sol and .sns currently route to resolveSns (SNS-IP 5 logic).
+  // Both .sns and .sol currently route to resolveSns (SNS-IP 5 logic).
   // resolveSol is reserved for future .sol-specific behaviour.
   return resolveSns(connection, domain, config);
 };
