@@ -9,7 +9,7 @@ import { getDomainKeySync } from "../utils/getDomainKeySync";
  * This function verifies the staleness of a record.
  * @param {Connection} connection - The Solana RPC connection object
  * @param {Record} record - The record to be verified.
- * @param {string} domain - The full domain name including TLD (e.g. `domain.sol`).
+ * @param {string} domain - The full domain name including TLD (e.g. `mydomain.sns`).
  * @returns {Promise<boolean>} - Returns a promise that resolves to a boolean indicating whether the record is stale.
  */
 export const verifyStaleness = async (

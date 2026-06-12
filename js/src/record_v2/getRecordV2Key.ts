@@ -7,7 +7,7 @@ import { getNameAccountKeySync } from "../utils/getNameAccountKeySync";
 
 /**
  * This function derives a record v2 key
- * @param domain The full domain name including TLD (e.g. `sns.sol`, `sub.sns.sol`)
+ * @param domain The full domain name including TLD (e.g. `mydomain.sns`, `sub.parent.sns`)
  * @param record The record to derive the key for
  * @returns Public key of the record
  */

@@ -3,7 +3,7 @@ import { getDomainKeySync } from "../utils/getDomainKeySync";
 
 /**
  * This function can be used to derive a record key
- * @param domain The full domain name including TLD (e.g. `sns.sol`, `sub.sns.sol`)
+ * @param domain The full domain name including TLD (e.g. `mydomain.sns`, `sub.parent.sns`)
  * @param record The record to derive the key for
  * @returns
  */

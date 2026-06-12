@@ -6,7 +6,7 @@ import { getDomainKeySync } from "./getDomainKeySync";
 
 /**
  * This function can be used to get the key of the reverse account
- * @param domain The full domain name including TLD (e.g. `sns.sol`, `sub.sns.sol`)
+ * @param domain The full domain name including TLD (e.g. `mydomain.sns`, `sub.parent.sns`)
  * @param isSub Whether the domain is a subdomain or not
  * @returns The public key of the reverse account
  */

@@ -2,7 +2,7 @@ import { Connection } from "@solana/web3.js";
 import { NAME_PROGRAM_ID, SNS_ROOT_DOMAIN_ACCOUNT } from "../constants";
 
 /**
- * This function can be used to retrieve all the registered `.sol` domains.
+ * This function can be used to retrieve all the registered `.sns` domains.
  * The account data is sliced to avoid enormous payload and only the owner is returned
  * @param connection The Solana RPC connection object
  * @returns

@@ -5,7 +5,7 @@ import { getRecord } from "../getRecord";
 /**
  * This function can be used to retrieve the Telegram record of a domain name
  * @param connection The Solana RPC connection object
- * @param domain The .sol domain name
+ * @param domain The .sns domain name
  * @returns
  */
 export const getTelegramRecord = (connection: Connection, domain: string) => {
