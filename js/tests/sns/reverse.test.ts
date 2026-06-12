@@ -1,9 +1,9 @@
 require("dotenv").config();
 import { test, jest, expect } from "@jest/globals";
 import { Connection, Transaction } from "@solana/web3.js";
-import { createSubdomain } from "../src/bindings/createSubdomain";
-import { VAULT_OWNER } from "../src/constants";
-import { resolve } from "../src/resolve/resolve";
+import { createSubdomain } from "../../src/bindings/createSubdomain";
+import { VAULT_OWNER } from "../../src/constants";
+import { resolve } from "../../src/resolve/resolve";
 
 jest.setTimeout(50_000);
 
@@ -11,7 +11,7 @@ const connection = new Connection(process.env.RPC_URL!);
 
 test("Create sub", async () => {
   const sub = "gvbhnjklmjnhb";
-  const parent = "bonfida.sol";
+  const parent = "bonfida.sns";
 
   const parentOwner = await resolve(connection, parent);
   const ix = await createSubdomain(
@@ -23,7 +23,6 @@ test("Create sub", async () => {
   const tx = new Transaction();
   tx.add(...ix);
   const { blockhash } = await connection.getLatestBlockhash();
-
   tx.recentBlockhash = blockhash;
   tx.feePayer = VAULT_OWNER;
   const res = await connection.simulateTransaction(tx);

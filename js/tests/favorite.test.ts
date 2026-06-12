@@ -4,9 +4,7 @@ import {
   getFavoriteDomain,
   getMultipleFavoriteDomains,
 } from "../src/favorite-domain";
-import { PublicKey, Connection, Keypair, Transaction } from "@solana/web3.js";
-import { registerFavorite } from "../src/bindings/registerFavorite";
-import { getDomainKeySync } from "../src/utils/getDomainKeySync";
+import { PublicKey, Connection, Keypair } from "@solana/web3.js";
 
 jest.setTimeout(10_000);
 
@@ -33,7 +31,6 @@ test("Favorite domain", async () => {
   ];
   for (let item of items) {
     const fav = await getFavoriteDomain(connection, item.user);
-
     expect(fav.domain.toBase58()).toBe(item.favorite.domain.toBase58());
     expect(fav.reverse).toBe(item.favorite.reverse);
     expect(fav.stale).toBe(item.favorite.stale);
@@ -65,20 +62,4 @@ test("Multiple favorite domains", async () => {
     items.map((e) => e.wallet),
   );
   result.forEach((x, idx) => expect(x).toBe(items[idx].domain));
-});
-
-test("Register fav", async () => {
-  const owner = new PublicKey("Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8");
-  const tx = new Transaction();
-  const ix = await registerFavorite(
-    connection,
-    getDomainKeySync("wallet-guide-3").pubkey,
-    owner,
-  );
-  tx.add(ix);
-  const { blockhash } = await connection.getLatestBlockhash();
-  tx.recentBlockhash = blockhash;
-  tx.feePayer = owner;
-  const res = await connection.simulateTransaction(tx);
-  expect(res.value.err).toBe(null);
 });

@@ -1,8 +1,8 @@
 require("dotenv").config();
 import { test, jest, expect } from "@jest/globals";
 import { Connection, PublicKey, Transaction } from "@solana/web3.js";
-import { registerDomainNameV2 } from "../src/bindings/registerDomainNameV2";
-import { registerWithNft } from "../src/bindings/registerWithNft";
+import { registerDomain } from "../src/bindings/registerDomain";
+import { registerDomainWithNft } from "../src/bindings/registerDomainWithNft";
 import { randomBytes } from "crypto";
 import { REFERRERS } from "../src/constants";
 import { getAssociatedTokenAddressSync } from "@solana/spl-token";
@@ -23,7 +23,7 @@ const VAULT_OWNER = new PublicKey(
 
 test("Register with NFT", async () => {
   const tx = new Transaction();
-  const domain = randomBytes(10).toString("hex");
+  const domain = randomBytes(10).toString("hex") + ".sns";
   const { pubkey } = getDomainKeySync(domain);
   const reverse = getReverseKeySync(domain);
   // https://solscan.io/collection/3c138f8640f62b62016f8020f0532ff888bb0866363c26fb2241bcf28c0776ad#holders
@@ -34,7 +34,7 @@ test("Register with NFT", async () => {
   const nftMint = new PublicKey("7cpq5U6ze5PPcTPVxGifXA8xyDp8rgAJQNwBDj8eWd8w");
   const nftMetadata = metaplex.nfts().pdas().metadata({ mint: nftMint });
   const masterEdition = metaplex.nfts().pdas().masterEdition({ mint: nftMint });
-  const ix = registerWithNft(
+  const ix = registerDomainWithNft(
     domain,
     1_000,
     pubkey,
@@ -56,9 +56,10 @@ test("Register with NFT", async () => {
 test("Indempotent ATA creation ref", async () => {
   const tx = new Transaction();
   for (let i = 0; i < 3; i++) {
-    const ix = await registerDomainNameV2(
+    const domain = randomBytes(10).toString("hex") + ".sns";
+    const ix = await registerDomain(
       connection,
-      randomBytes(10).toString("hex"),
+      domain,
       1_000,
       VAULT_OWNER,
       getAssociatedTokenAddressSync(PYTH_MINT, VAULT_OWNER, true),
@@ -76,9 +77,10 @@ test("Indempotent ATA creation ref", async () => {
 
 test("Register V2", async () => {
   const tx = new Transaction();
-  const ix = await registerDomainNameV2(
+  const domain = randomBytes(10).toString("hex") + ".sns";
+  const ix = await registerDomain(
     connection,
-    randomBytes(10).toString("hex"),
+    domain,
     1_000,
     VAULT_OWNER,
     getAssociatedTokenAddressSync(USDC_MINT, VAULT_OWNER, true),
@@ -95,9 +97,10 @@ test("Register V2", async () => {
 
 test("Registration V2 with ref", async () => {
   const tx = new Transaction();
-  const ix = await registerDomainNameV2(
+  const domain = randomBytes(10).toString("hex") + ".sns";
+  const ix = await registerDomain(
     connection,
-    randomBytes(10).toString("hex"),
+    domain,
     1_000,
     VAULT_OWNER,
     getAssociatedTokenAddressSync(USDC_MINT, VAULT_OWNER, true),

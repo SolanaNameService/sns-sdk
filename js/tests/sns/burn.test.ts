@@ -1,7 +1,7 @@
 require("dotenv").config();
 import { test, jest, expect } from "@jest/globals";
 import { Connection, PublicKey, Transaction } from "@solana/web3.js";
-import { burnDomain } from "../src/bindings/burnDomain";
+import { burnDomain } from "../../src/bindings/burnDomain";
 
 jest.setTimeout(20_000);
 
@@ -11,9 +11,9 @@ const OWNER = new PublicKey("Fw1ETanDZafof7xEULsnq9UY6o71Tpds89tNwPkWLb1v");
 
 const BURN_DST = new PublicKey("3Wnd5Df69KitZfUoPYZU438eFRNwGHkhLnSAWL65PxJX");
 
-test("Burn", async () => {
+test("Burn .sns domain", async () => {
   const tx = new Transaction();
-  const ix = burnDomain("bonfida", OWNER, BURN_DST);
+  const ix = burnDomain("bonfida.sns", OWNER, BURN_DST);
   tx.add(ix);
   const { blockhash } = await connection.getLatestBlockhash();
   tx.recentBlockhash = blockhash;

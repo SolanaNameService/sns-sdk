@@ -1,13 +1,13 @@
 require("dotenv").config();
 import { test, jest, expect } from "@jest/globals";
 import { Connection, PublicKey, Transaction } from "@solana/web3.js";
-import { createSubdomain } from "../src/bindings/createSubdomain";
-import { transferSubdomain } from "../src/bindings/transferSubdomain";
+import { createSubdomain } from "../../src/bindings/createSubdomain";
+import { transferSubdomain } from "../../src/bindings/transferSubdomain";
 import { randomBytes } from "crypto";
-import { VAULT_OWNER } from "../src/constants";
-import { findSubdomains } from "../src/utils/findSubdomains";
-import { getDomainKeySync } from "../src/utils/getDomainKeySync";
-import { resolve } from "../src/resolve/resolve";
+import { VAULT_OWNER } from "../../src/constants";
+import { findSubdomains } from "../../src/utils/findSubdomains";
+import { getDomainKeySync } from "../../src/utils/getDomainKeySync";
+import { resolve } from "../../src/resolve/resolve";
 
 jest.setTimeout(20_000);
 
@@ -17,7 +17,7 @@ test("Create sub", async () => {
   const tx = new Transaction();
   const ix = await createSubdomain(
     connection,
-    randomBytes(10).toString("hex") + ".bonfida",
+    randomBytes(10).toString("hex") + ".bonfida.sns",
     new PublicKey("Fw1ETanDZafof7xEULsnq9UY6o71Tpds89tNwPkWLb1v"),
     2_000,
   );
@@ -37,7 +37,7 @@ test("Transfer sub", async () => {
   );
   let ix = await transferSubdomain(
     connection,
-    "test.bonfida.sol",
+    "test.bonfida.sns",
     PublicKey.default,
     false,
   );
@@ -51,7 +51,7 @@ test("Transfer sub", async () => {
   tx = new Transaction();
   ix = await transferSubdomain(
     connection,
-    "test.0x33.sol",
+    "test.0x33.sns",
     PublicKey.default,
     true,
   );
@@ -66,15 +66,15 @@ test("Transfer sub", async () => {
 test("Find sub domain", async () => {
   const subs = await findSubdomains(
     connection,
-    getDomainKeySync("67679").pubkey,
+    getDomainKeySync("67679.sns").pubkey,
   );
   const expectedSub = ["bullish", "hollaaa", "testing"];
   subs.sort().forEach((e, idx) => expect(e).toBe(expectedSub[idx]));
 });
 
-test("Create sub - Fee payer ", async () => {
+test("Create sub - Fee payer", async () => {
   const sub = "gvbhnjklmjnhb";
-  const parent = "bonfida.sol";
+  const parent = "bonfida.sns";
   const feePayer = VAULT_OWNER;
 
   const parentOwner = await resolve(connection, parent);
@@ -88,7 +88,6 @@ test("Create sub - Fee payer ", async () => {
   const tx = new Transaction();
   tx.add(...ix);
   const { blockhash } = await connection.getLatestBlockhash();
-
   tx.recentBlockhash = blockhash;
   tx.feePayer = VAULT_OWNER;
   const res = await connection.simulateTransaction(tx);

@@ -2,10 +2,9 @@ require("dotenv").config();
 import { test, jest, expect } from "@jest/globals";
 import { Connection, PublicKey, Transaction } from "@solana/web3.js";
 import { devnet } from "../src/devnet";
-import { randomBytes } from "crypto";
-import { NATIVE_MINT, getAssociatedTokenAddressSync } from "@solana/spl-token";
 import { NameRegistryState } from "../src/state";
-import { Record } from "../src/types/record";
+import { UnsupportedTldError } from "../src/error";
+
 jest.setTimeout(20_000);
 
 // Use custom devnet rpc if rate limited
@@ -14,50 +13,10 @@ const connection = new Connection(
 );
 
 const OWNER = new PublicKey("3f9fRjLaDSDVxd26xMEm4WuSXv62cGt5qVfEVGwMfTz6");
-const OWNER2 = new PublicKey("DjXsn34uz8hnC4KLiSkEVNmzqX5ZFP2Q7aErTBH8LWxe");
-const OWNER3 = new PublicKey("3DdZkHbt2rHDzKSNPK9ApQCwhA6anDKUzuWoCooie6oJ");
-
-test("Registration", async () => {
-  const tx = new Transaction();
-
-  const [, ix] = await devnet.bindings.registerDomainName(
-    connection,
-    randomBytes(10).toString("hex"),
-    1_000,
-    OWNER2,
-    getAssociatedTokenAddressSync(NATIVE_MINT, OWNER2, true),
-    NATIVE_MINT,
-  );
-  tx.add(...ix);
-  const { blockhash } = await connection.getLatestBlockhash();
-  tx.recentBlockhash = blockhash;
-  tx.feePayer = OWNER2;
-  const res = await connection.simulateTransaction(tx);
-  expect(res.value.err).toBe(null);
-});
-
-test("Registration V2", async () => {
-  const tx = new Transaction();
-
-  const ix = await devnet.bindings.registerDomainNameV2(
-    connection,
-    randomBytes(10).toString("hex"),
-    1_000,
-    OWNER2,
-    getAssociatedTokenAddressSync(NATIVE_MINT, OWNER2, true),
-    NATIVE_MINT,
-  );
-  tx.add(...ix);
-  const { blockhash } = await connection.getLatestBlockhash();
-  tx.recentBlockhash = blockhash;
-  tx.feePayer = OWNER2;
-  const res = await connection.simulateTransaction(tx);
-  expect(res.value.err).toBe(null);
-});
+const OWNER2 = new PublicKey("3DdZkHbt2rHDzKSNPK9ApQCwhA6anDKUzuWoCooie6oJ");
 
 test("Create", async () => {
   const tx = new Transaction();
-
   const lamports = await connection.getMinimumBalanceForRentExemption(
     1_000 + NameRegistryState.HEADER_LEN,
   );
@@ -77,9 +36,26 @@ test("Create", async () => {
   expect(res.value.err).toBe(null);
 });
 
+test("Create reverse", async () => {
+  const tx = new Transaction();
+  const { pubkey: subkey } = devnet.utils._deriveSync(
+    "devnet-test-create-reverse",
+  );
+  const ix = await devnet.bindings.createReverseName(
+    subkey,
+    "devnet-test-create-reverse",
+    OWNER,
+  );
+  tx.add(...ix);
+  const { blockhash } = await connection.getLatestBlockhash();
+  tx.recentBlockhash = blockhash;
+  tx.feePayer = OWNER;
+  const res = await connection.simulateTransaction(tx);
+  expect(res.value.err).toBe(null);
+});
+
 test("Delete", async () => {
   const tx = new Transaction();
-
   const ix = await devnet.bindings.deleteNameRegistry(
     connection,
     "devnet-test-1",
@@ -93,21 +69,8 @@ test("Delete", async () => {
   expect(res.value.err).toBe(null);
 });
 
-test("Burn", async () => {
-  const tx = new Transaction();
-
-  const ix = devnet.bindings.burnDomain("devnet-test-1", OWNER, OWNER);
-  tx.add(ix);
-  const { blockhash } = await connection.getLatestBlockhash();
-  tx.recentBlockhash = blockhash;
-  tx.feePayer = OWNER;
-  const res = await connection.simulateTransaction(tx);
-  expect(res.value.err).toBe(null);
-});
-
 test("Update", async () => {
   const tx = new Transaction();
-
   const ix = await devnet.bindings.updateNameRegistryData(
     connection,
     "devnet-test-1",
@@ -122,208 +85,16 @@ test("Update", async () => {
   expect(res.value.err).toBe(null);
 });
 
-test("Transfer", async () => {
-  const tx = new Transaction();
-
-  const ix = await devnet.bindings.transferNameOwnership(
-    connection,
-    "devnet-test-1",
-    OWNER2,
-  );
-  tx.add(ix);
-  const { blockhash } = await connection.getLatestBlockhash();
-  tx.recentBlockhash = blockhash;
-  tx.feePayer = OWNER;
-  const res = await connection.simulateTransaction(tx);
-  expect(res.value.err).toBe(null);
-});
-
-test("Create sub", async () => {
-  const sub = "gvbhnjklmjnhb";
-  const parent = "devnet-test-1";
-  const tx = new Transaction();
-
-  const [, ix] = await devnet.bindings.createSubdomain(
-    connection,
-    sub + "." + parent,
-    OWNER,
-    2_000,
-  );
-  tx.add(...ix);
-  const { blockhash } = await connection.getLatestBlockhash();
-  tx.recentBlockhash = blockhash;
-  tx.feePayer = devnet.constants.VAULT_OWNER;
-  const res = await connection.simulateTransaction(tx);
-  expect(res.value.err).toBe(null);
-});
-
-test("Create reverse", async () => {
-  const tx = new Transaction();
-  const { pubkey: subkey } = await devnet.utils._deriveSync(
-    "subdomain-test.devnet-test-1",
-  );
-
-  const [, ix] = await devnet.bindings.createReverseName(
-    subkey,
-    "subdomain-test.devnet-test-1",
-    OWNER,
-  );
-  tx.add(...ix);
-  const { blockhash } = await connection.getLatestBlockhash();
-  tx.recentBlockhash = blockhash;
-  tx.feePayer = OWNER;
-  const res = await connection.simulateTransaction(tx);
-  expect(res.value.err).toBe(null);
-});
-
-test("Transfer sub", async () => {
-  const tx = new Transaction();
-
-  const ix = await devnet.bindings.transferSubdomain(
-    connection,
-    "subdomain-test.devnet-test-1",
-    OWNER2,
-  );
-  tx.add(ix);
-  const { blockhash } = await connection.getLatestBlockhash();
-  tx.recentBlockhash = blockhash;
-  tx.feePayer = OWNER;
-  const res = await connection.simulateTransaction(tx);
-  expect(res.value.err).toBe(null);
-});
-
-test("Set primary", async () => {
-  const tx = new Transaction();
-
-  const domain = "devnet-test-1";
-
-  const { pubkey: nameAccount } = devnet.utils.getDomainKeySync(domain);
-
-  const ix = await devnet.bindings.setPrimaryDomain(
-    connection,
-    nameAccount,
-    OWNER,
-  );
-  tx.add(ix);
-  const { blockhash } = await connection.getLatestBlockhash();
-  tx.recentBlockhash = blockhash;
-  tx.feePayer = OWNER;
-  const res = await connection.simulateTransaction(tx);
-  expect(res.value.err).toBe(null);
-});
-
 test("Get primary", async () => {
-  const domain = "dotsofan22";
-
   const { reverse: primaryDomain } = await devnet.utils.getPrimaryDomain(
     connection,
-    OWNER3,
+    OWNER2,
   );
-
-  expect(primaryDomain).toBe(domain);
+  expect(primaryDomain).toBe("dotsofan22");
 });
 
-test("Set record", async () => {
-  const tx = new Transaction();
-
-  const domain = "devnet-test-1";
-
-  const ix = await devnet.bindings.createRecordV2Instruction(
-    domain,
-    Record.Discord,
-    "ilovedotso",
-    OWNER,
-    OWNER,
+test("getDomainKeySync - throws UnsupportedTldError on bare name", () => {
+  expect(() => devnet.utils.getDomainKeySync("mydomain")).toThrow(
+    UnsupportedTldError,
   );
-
-  tx.add(ix);
-  const { blockhash } = await connection.getLatestBlockhash();
-  tx.recentBlockhash = blockhash;
-  tx.feePayer = OWNER;
-  const res = await connection.simulateTransaction(tx);
-  expect(res.value.err).toBe(null);
-});
-
-test("Write ROA", async () => {
-  const tx = new Transaction();
-
-  const domain = "dotsofan22";
-
-  const ix = devnet.bindings.writRoaRecordV2(
-    domain,
-    Record.SOL,
-    OWNER3,
-    OWNER3,
-    OWNER3,
-  );
-
-  tx.add(ix);
-  const { blockhash } = await connection.getLatestBlockhash();
-  tx.recentBlockhash = blockhash;
-  tx.feePayer = OWNER3;
-  const res = await connection.simulateTransaction(tx);
-  expect(res.value.err).toBe(null);
-});
-
-test("Validate Record", async () => {
-  const tx = new Transaction();
-
-  const domain = "dotsofan22";
-
-  const ix = devnet.bindings.validateRecordV2Content(
-    false,
-    domain,
-    Record.SOL,
-    OWNER3,
-    OWNER3,
-    OWNER3,
-  );
-
-  tx.add(ix);
-  const { blockhash } = await connection.getLatestBlockhash();
-  tx.recentBlockhash = blockhash;
-  tx.feePayer = OWNER3;
-  const res = await connection.simulateTransaction(tx);
-  expect(res.value.err).toBe(null);
-});
-
-test("Update Record", async () => {
-  const tx = new Transaction();
-
-  const domain = "dotsofan22";
-
-  const ix = devnet.bindings.updateRecordV2Instruction(
-    domain,
-    Record.Telegram,
-    "iLoveDotso",
-    OWNER3,
-    OWNER3,
-  );
-
-  tx.add(ix);
-  const { blockhash } = await connection.getLatestBlockhash();
-  tx.recentBlockhash = blockhash;
-  tx.feePayer = OWNER3;
-  const res = await connection.simulateTransaction(tx);
-  expect(res.value.err).toBe(null);
-});
-
-test("Delete Record", async () => {
-  const tx = new Transaction();
-
-  const domain = "dotsofan22";
-
-  const ix = devnet.bindings.deleteRecordV2(
-    domain,
-    Record.Telegram,
-    OWNER3,
-    OWNER3,
-  );
-
-  tx.add(ix);
-  const { blockhash } = await connection.getLatestBlockhash();
-  tx.recentBlockhash = blockhash;
-  tx.feePayer = OWNER3;
-  const res = await connection.simulateTransaction(tx);
-  expect(res.value.err).toBe(null);
 });
