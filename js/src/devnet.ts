@@ -376,14 +376,12 @@ async function updateNameRegistryData(
  * @param connection The solana connection object to the RPC node
  * @param domain The domain to transfer, must include the TLD suffix (e.g. `mydomain.sns`).
  * @param newOwner The new owner to be set
- * @param parentOwner Parent name owner
  * @returns
  */
 async function transferDomain(
   connection: Connection,
   domain: string,
   newOwner: PublicKey,
-  parentOwner?: PublicKey,
 ): Promise<TransactionInstruction> {
   // Only allows .sns domains
   const [trimmedDomain] = parseSupportedTld(domain, [SNS_TLD]);
@@ -411,9 +409,6 @@ async function transferDomain(
     nameAccountKey,
     newOwner,
     curentNameOwner,
-    undefined,
-    constants.SNS_ROOT_DOMAIN_ACCOUNT,
-    parentOwner,
   );
 
   return transferInstr;
