@@ -19,7 +19,7 @@ import { parseSupportedTld, SNS_TLD } from "../utils/tld";
  * @returns A {@link TransactionInstruction} that writes the RoA
  * @throws {InvalidParentError} When the parent domain account cannot be resolved
  */
-export const writRoaRecordV2 = (
+export const writeRoaRecordV2 = (
   domain: string,
   record: Record,
   owner: PublicKey,

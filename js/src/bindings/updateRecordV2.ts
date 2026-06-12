@@ -18,7 +18,7 @@ import { parseSupportedTld, SNS_TLD } from "../utils/tld";
  * @param payer The fee payer of the transaction
  * @returns The update record instructions
  */
-export const updateRecordV2Instruction = (
+export const updateRecordV2 = (
   domain: string,
   record: Record,
   content: string,

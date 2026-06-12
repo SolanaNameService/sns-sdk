@@ -19,7 +19,7 @@ import { parseSupportedTld, SNS_TLD } from "../utils/tld";
  * @param payer The fee payer of the transaction
  * @returns
  */
-export const createSolRecordInstruction = async (
+export const createSolRecord = async (
   connection: Connection,
   domain: string,
   content: PublicKey,

@@ -1,32 +1,36 @@
 import { Connection, PublicKey } from "@solana/web3.js";
 
 import { NAME_PROGRAM_ID } from "../constants";
-import { AccountDoesNotExistError } from "../error";
+import { AccountDoesNotExistError, UnsupportedRecordError } from "../error";
 import { deleteInstruction } from "../instructions/deleteInstruction";
 import { updateInstruction } from "../instructions/updateInstruction";
 import { Numberu32 } from "../int";
-import { serializeSolRecord } from "../record/serializeSolRecord";
+import { serializeRecord } from "../record/serializeRecord";
 import { Record, RecordVersion } from "../types/record";
 import { check } from "../utils/check";
 import { getDomainKeySync } from "../utils/getDomainKeySync";
 import { parseSupportedTld, SNS_TLD } from "../utils/tld";
-import { createSolRecordInstruction } from "./createSolRecordInstruction";
+import { createRecord } from "./createRecord";
 
-export const updateSolRecordInstruction = async (
+export const updateRecord = async (
   connection: Connection,
   domain: string,
-  content: PublicKey,
-  signer: PublicKey,
-  signature: Uint8Array,
+  record: Record,
+  data: string,
+  owner: PublicKey,
   payer: PublicKey,
 ) => {
+  check(
+    record !== Record.SOL,
+    new UnsupportedRecordError(
+      "SOL record is not supported for this instruction",
+    ),
+  );
+
   // Only allows .sns domains
   parseSupportedTld(domain, [SNS_TLD]);
 
-  const { pubkey } = getDomainKeySync(
-    `${Record.SOL}.${domain}`,
-    RecordVersion.V1,
-  );
+  const { pubkey } = getDomainKeySync(`${record}.${domain}`, RecordVersion.V1);
 
   const info = await connection.getAccountInfo(pubkey);
   check(
@@ -34,27 +38,21 @@ export const updateSolRecordInstruction = async (
     new AccountDoesNotExistError("The record account does not exist"),
   );
 
-  if (info?.data.length !== 96) {
+  const serialized = serializeRecord(data, record);
+  if (info?.data.slice(96).length !== serialized.length) {
+    // Delete + create until we can realloc accounts
     return [
-      deleteInstruction(NAME_PROGRAM_ID, pubkey, payer, signer),
-      await createSolRecordInstruction(
-        connection,
-        domain,
-        content,
-        signer,
-        signature,
-        payer,
-      ),
+      deleteInstruction(NAME_PROGRAM_ID, pubkey, payer, owner),
+      await createRecord(connection, domain, record, data, owner, payer),
     ];
   }
 
-  const serialized = serializeSolRecord(content, pubkey, signer, signature);
   const ix = updateInstruction(
     NAME_PROGRAM_ID,
     pubkey,
     new Numberu32(0),
     serialized,
-    signer,
+    owner,
   );
 
   return ix;

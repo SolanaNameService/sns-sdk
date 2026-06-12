@@ -1,9 +1,9 @@
 export * from "./bindings/burnDomain";
 export * from "./bindings/createNameRegistry";
-export * from "./bindings/createRecordInstruction";
-export * from "./bindings/createRecordV2Instruction";
+export * from "./bindings/createRecord";
+export * from "./bindings/createRecordV2";
 export * from "./bindings/createReverseName";
-export * from "./bindings/createSolRecordInstruction";
+export * from "./bindings/createSolRecord";
 export * from "./bindings/createSubdomain";
 export * from "./bindings/deleteNameRegistry";
 export * from "./bindings/deleteRecordV2";
@@ -14,11 +14,11 @@ export * from "./bindings/registerDomainWithNft";
 export * from "./bindings/transferDomain";
 export * from "./bindings/transferSubdomain";
 export * from "./bindings/updateNameRegistryData";
-export * from "./bindings/updateRecordInstruction";
-export * from "./bindings/updateRecordV2Instruction";
-export * from "./bindings/updateSolRecordInstruction";
+export * from "./bindings/updateRecord";
+export * from "./bindings/updateRecordV2";
+export * from "./bindings/updateSolRecord";
 export * from "./bindings/validateRecordV2Content";
-export * from "./bindings/writRoaRecordV2";
+export * from "./bindings/writeRoaRecordV2";
 
 export * from "./state";
 

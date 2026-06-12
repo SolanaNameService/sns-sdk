@@ -22,7 +22,7 @@ import { parseSupportedTld, SNS_TLD } from "../utils/tld";
  * @param payer The fee payer of the transaction
  * @returns
  */
-export const createRecordInstruction = async (
+export const createRecord = async (
   connection: Connection,
   domain: string,
   record: Record,
