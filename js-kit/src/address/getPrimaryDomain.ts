@@ -7,7 +7,7 @@ import {
 
 import {
   NAME_OFFERS_ADDRESS,
-  ROOT_DOMAIN_ADDRESS,
+  SNS_ROOT_DOMAIN_ACCOUNT,
 } from "../constants/addresses";
 import { getNftOwner } from "../nft/getNftOwner";
 import { PrimaryDomainState } from "../states/primaryDomain";
@@ -48,7 +48,7 @@ export const getPrimaryDomain = async ({
     getNftOwner({ rpc, domainAddress: primary.nameAccount }),
   ]);
   const domainOwner = nftOwner || registry.owner;
-  const isSub = registry.parentName !== ROOT_DOMAIN_ADDRESS;
+  const isSub = registry.parentName !== SNS_ROOT_DOMAIN_ACCOUNT;
 
   const lookups = [
     reverseLookup({

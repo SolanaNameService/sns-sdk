@@ -9,11 +9,13 @@ import { getDomainRecords } from "../src/domain/getDomainRecords";
 import { getSubdomains } from "../src/domain/getSubdomains";
 import { AllowPda, resolveDomain } from "../src/domain/resolveDomain";
 import {
+  InvalidInputError,
   InvalidRoAError,
   InvalidValidationError,
   MissingVerifierError,
   NoRecordDataError,
   PdaOwnerNotAllowedError,
+  UnsupportedTldError,
 } from "../src/errors";
 import { Record } from "../src/types/record";
 import { TEST_RPC } from "./constants";
@@ -24,19 +26,19 @@ describe("Domain methods", () => {
   describe("getDomainAddress", () => {
     test.each([
       {
-        domain: "sns-ip-5-wallet-1",
-        address: "6qJtQdAJvAiSfGXWAuHDteAes6vnFcxtHmLzw1TStCrd",
-      },
-      {
         domain: "sns-ip-5-wallet-1.sol",
         address: "6qJtQdAJvAiSfGXWAuHDteAes6vnFcxtHmLzw1TStCrd",
       },
       {
-        domain: "test.sns-ip-5-wallet-1",
-        address: "EzQAeEBXpZWpsZXcZRwV63RRr2RkwBVqdYN53tcbTDEm",
+        domain: "sns-ip-5-wallet-1.sns",
+        address: "6qJtQdAJvAiSfGXWAuHDteAes6vnFcxtHmLzw1TStCrd",
       },
       {
         domain: "test.sns-ip-5-wallet-1.sol",
+        address: "EzQAeEBXpZWpsZXcZRwV63RRr2RkwBVqdYN53tcbTDEm",
+      },
+      {
+        domain: "test.sns-ip-5-wallet-1.sns",
         address: "EzQAeEBXpZWpsZXcZRwV63RRr2RkwBVqdYN53tcbTDEm",
       },
     ])("$domain", async (item) => {
@@ -45,56 +47,71 @@ describe("Domain methods", () => {
       });
       expect(domainAddress).toBe(item.address);
     });
+
+    test.each(["sns-ip-5-wallet-1", "sns-ip-5-wallet-1.com"])(
+      "%s throws UnsupportedTldError",
+      async (domain) => {
+        await expect(getDomainAddress({ domain })).rejects.toThrow(
+          UnsupportedTldError
+        );
+      }
+    );
+
+    test("malformed supported domain throws InvalidInputError", async () => {
+      await expect(getDomainAddress({ domain: "a.b.c.sns" })).rejects.toThrow(
+        InvalidInputError
+      );
+    });
   });
 
   describe("getDomainOwner", () => {
     test.each([
       {
-        domain: "sns-ip-5-wallet-1",
+        domain: "sns-ip-5-wallet-1.sns",
         owner: "ALd1XSrQMCPSRayYUoUZnp6KcP6gERfJhWzkP49CkXKs",
       },
       {
-        domain: "sns-ip-5-wallet-2",
+        domain: "sns-ip-5-wallet-2.sns",
         owner: "ALd1XSrQMCPSRayYUoUZnp6KcP6gERfJhWzkP49CkXKs",
       },
       {
-        domain: "sns-ip-5-wallet-3",
+        domain: "sns-ip-5-wallet-3.sns",
         owner: "ALd1XSrQMCPSRayYUoUZnp6KcP6gERfJhWzkP49CkXKs",
       },
       {
-        domain: "sns-ip-5-wallet-4",
+        domain: "sns-ip-5-wallet-4.sns",
         owner: "7PLHHJawDoa4PGJUK3mUnusV7SEVwZwEyV5csVzm86J4",
       },
       {
-        domain: "sns-ip-5-wallet-5",
+        domain: "sns-ip-5-wallet-5.sns",
         owner: "96GKJgm2W3P8Bae78brPrJf4Yi9AN1wtPJwg2XVQ2rMr",
       },
       {
-        domain: "sns-ip-5-wallet-6",
+        domain: "sns-ip-5-wallet-6.sns",
         owner: "96GKJgm2W3P8Bae78brPrJf4Yi9AN1wtPJwg2XVQ2rMr",
       },
       {
-        domain: "sns-ip-5-wallet-7",
+        domain: "sns-ip-5-wallet-7.sns",
         owner: "ALd1XSrQMCPSRayYUoUZnp6KcP6gERfJhWzkP49CkXKs",
       },
       {
-        domain: "sns-ip-5-wallet-8",
+        domain: "sns-ip-5-wallet-8.sns",
         owner: "ALd1XSrQMCPSRayYUoUZnp6KcP6gERfJhWzkP49CkXKs",
       },
       {
-        domain: "sns-ip-5-wallet-9",
+        domain: "sns-ip-5-wallet-9.sns",
         owner: "ALd1XSrQMCPSRayYUoUZnp6KcP6gERfJhWzkP49CkXKs",
       },
       {
-        domain: "sns-ip-5-wallet-10",
+        domain: "sns-ip-5-wallet-10.sns",
         owner: "96GKJgm2W3P8Bae78brPrJf4Yi9AN1wtPJwg2XVQ2rMr",
       },
       {
-        domain: "sns-ip-5-wallet-11",
+        domain: "sns-ip-5-wallet-11.sns",
         owner: "96GKJgm2W3P8Bae78brPrJf4Yi9AN1wtPJwg2XVQ2rMr",
       },
       {
-        domain: "sns-ip-5-wallet-12",
+        domain: "sns-ip-5-wallet-12.sns",
         owner: "ALd1XSrQMCPSRayYUoUZnp6KcP6gERfJhWzkP49CkXKs",
       },
     ])("$domain", async (item) => {
@@ -106,7 +123,7 @@ describe("Domain methods", () => {
   describe("getDomainRecord", () => {
     test.each([
       {
-        domain: "wallet-guide-9.sol",
+        domain: "wallet-guide-9.sns",
         record: Record.IPFS,
         value: "ipfs://test",
         verified: { staleness: true },
@@ -161,8 +178,8 @@ describe("Domain methods", () => {
   });
 
   describe("getDomainRecords", () => {
-    test("wallet-guide-9.sol [5 records]", async () => {
-      const domain = "wallet-guide-9.sol";
+    test("wallet-guide-9.sns [5 records]", async () => {
+      const domain = "wallet-guide-9.sns";
       const records = [
         {
           record: Record.IPFS,
@@ -224,8 +241,8 @@ describe("Domain methods", () => {
   });
 
   describe("getSubdomains", () => {
-    test("wallet-guide-9.sol", async () => {
-      const domain = "wallet-guide-9.sol";
+    test("wallet-guide-9.sns", async () => {
+      const domain = "wallet-guide-9.sns";
       const subs = await getSubdomains({ rpc: TEST_RPC, domain });
       expect(subs).toStrictEqual([
         {
@@ -239,48 +256,48 @@ describe("Domain methods", () => {
   describe("resolveDomain", () => {
     test.each([
       {
-        domain: "sns-ip-5-wallet-1",
+        domain: "sns-ip-5-wallet-1.sns",
         result: "ALd1XSrQMCPSRayYUoUZnp6KcP6gERfJhWzkP49CkXKs",
       },
       {
-        domain: "sns-ip-5-wallet-2",
+        domain: "sns-ip-5-wallet-2.sns",
         result: "AxwzQXhZNJb9zLyiHUQA12L2GL7CxvUNrp6neee6r3cA",
       },
       {
-        domain: "sns-ip-5-wallet-4",
+        domain: "sns-ip-5-wallet-4.sns",
         result: "7PLHHJawDoa4PGJUK3mUnusV7SEVwZwEyV5csVzm86J4",
       },
       {
-        domain: "sns-ip-5-wallet-5",
+        domain: "sns-ip-5-wallet-5.sns",
         result: "96GKJgm2W3P8Bae78brPrJf4Yi9AN1wtPJwg2XVQ2rMr",
         options: { allowPda: true, programIds: [SYSTEM_PROGRAM_ADDRESS] },
       },
       {
-        domain: "sns-ip-5-wallet-5",
+        domain: "sns-ip-5-wallet-5.sns",
         result: "96GKJgm2W3P8Bae78brPrJf4Yi9AN1wtPJwg2XVQ2rMr",
         options: { allowPda: "any" as AllowPda },
       },
       {
-        domain: "sns-ip-5-wallet-7",
+        domain: "sns-ip-5-wallet-7.sns",
         result: "53Ujp7go6CETvC7LTyxBuyopp5ivjKt6VSfixLm1pQrH",
         options: undefined,
       },
       {
-        domain: "sns-ip-5-wallet-8",
+        domain: "sns-ip-5-wallet-8.sns",
         result: "ALd1XSrQMCPSRayYUoUZnp6KcP6gERfJhWzkP49CkXKs",
         options: undefined,
       },
       {
-        domain: "sns-ip-5-wallet-9",
+        domain: "sns-ip-5-wallet-9.sns",
         result: "ALd1XSrQMCPSRayYUoUZnp6KcP6gERfJhWzkP49CkXKs",
       },
       {
-        domain: "sns-ip-5-wallet-10",
+        domain: "sns-ip-5-wallet-10.sns",
         result: "96GKJgm2W3P8Bae78brPrJf4Yi9AN1wtPJwg2XVQ2rMr",
         options: { allowPda: true, programIds: [SYSTEM_PROGRAM_ADDRESS] },
       },
       {
-        domain: "sns-ip-5-wallet-10",
+        domain: "sns-ip-5-wallet-10.sns",
         result: "96GKJgm2W3P8Bae78brPrJf4Yi9AN1wtPJwg2XVQ2rMr",
         options: { allowPda: "any" as AllowPda },
       },
@@ -295,19 +312,19 @@ describe("Domain methods", () => {
 
     test.each([
       {
-        domain: "sns-ip-5-wallet-3",
+        domain: "sns-ip-5-wallet-3.sns",
         error: new InvalidValidationError(),
       },
       {
-        domain: "sns-ip-5-wallet-6",
+        domain: "sns-ip-5-wallet-6.sns",
         error: new PdaOwnerNotAllowedError(),
       },
       {
-        domain: "sns-ip-5-wallet-11",
+        domain: "sns-ip-5-wallet-11.sns",
         error: new PdaOwnerNotAllowedError(),
       },
       {
-        domain: "sns-ip-5-wallet-12",
+        domain: "sns-ip-5-wallet-12.sns",
         error: new InvalidRoAError(),
       },
     ])("$domain throws correctly", async (e) => {
@@ -352,20 +369,29 @@ describe("Domain methods", () => {
 
       // Record V2
       {
-        domain: "wallet-guide-6",
+        domain: "wallet-guide-6.sol",
         owner: "Hf4daCT4tC2Vy9RCe9q8avT68yAsNJ1dQe6xiQqyGuqZ",
       },
       {
-        domain: "wallet-guide-8",
+        domain: "wallet-guide-8.sol",
         owner: "36Dn3RWhB8x4c83W6ebQ2C2eH9sh5bQX2nMdkP2cWaA4",
       },
-    ])("$domain resolves correctly (backward compatibility)", async (e) => {
+    ])("$domain resolves correctly (.sol read alias)", async (e) => {
       const resolvedValue = await resolveDomain({
         rpc: TEST_RPC,
         domain: e.domain,
       });
       expect(resolvedValue.toString()).toBe(e.owner);
     });
+
+    test.each(["sns-ip-5-wallet-1", "sns-ip-5-wallet-1.com"])(
+      "%s throws UnsupportedTldError",
+      async (domain) => {
+        await expect(resolveDomain({ rpc: TEST_RPC, domain })).rejects.toThrow(
+          UnsupportedTldError
+        );
+      }
+    );
   });
 
   describe("getAllDomains", () => {

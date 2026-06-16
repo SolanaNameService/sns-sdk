@@ -1,10 +1,11 @@
 import {
   CENTRAL_STATE_DOMAIN_RECORDS,
-  ROOT_DOMAIN_ADDRESS,
+  SNS_ROOT_DOMAIN_ACCOUNT,
 } from "../constants/addresses";
 import { InvalidInputError } from "../errors";
 import { RecordVersion } from "../types/record";
 import { deriveAddress } from "../utils/deriveAddress";
+import { parseSupportedTld } from "../utils/tld";
 
 interface GetDomainAddressParams {
   domain: string;
@@ -15,7 +16,7 @@ interface GetDomainAddressParams {
  * Derives the address of a domain, a subdomain, or a record.
  *
  * @param params - An object containing the following properties:
- *   - `domain`: The (sub)domain to process, with or without the .sol suffix.
+ *   - `domain`: The full domain name to process, including a .sns or .sol suffix.
  *   - `record`: (Optional) The record version. Only provide if the domain being resolved is a record.
  * @returns A promise that resolves to an object containing the derived address and additional metadata.
  */
@@ -23,9 +24,7 @@ export const getDomainAddress = async ({
   domain,
   record,
 }: GetDomainAddressParams) => {
-  if (domain.endsWith(".sol")) {
-    domain = domain.slice(0, -4);
-  }
+  [domain] = parseSupportedTld(domain);
 
   const recordClass =
     record === RecordVersion.V2 ? CENTRAL_STATE_DOMAIN_RECORDS : undefined;
@@ -37,7 +36,10 @@ export const getDomainAddress = async ({
   const splitted = domain.split(".");
 
   if (splitted.length === 2) {
-    const parentAddress = await deriveAddress(splitted[1], ROOT_DOMAIN_ADDRESS);
+    const parentAddress = await deriveAddress(
+      splitted[1],
+      SNS_ROOT_DOMAIN_ACCOUNT
+    );
     const domainAddress = await deriveAddress(
       recordPrefix + splitted[0],
       parentAddress,
@@ -47,7 +49,10 @@ export const getDomainAddress = async ({
     return { domainAddress, parentAddress, isSub: true };
   } else if (splitted.length === 3 && !!record) {
     // Parent domain
-    const parentAddress = await deriveAddress(splitted[2], ROOT_DOMAIN_ADDRESS);
+    const parentAddress = await deriveAddress(
+      splitted[2],
+      SNS_ROOT_DOMAIN_ACCOUNT
+    );
 
     // Sub domain
     const subAddress = await deriveAddress("\0" + splitted[1], parentAddress);
@@ -64,7 +69,7 @@ export const getDomainAddress = async ({
     throw new InvalidInputError("The domain is malformed");
   }
 
-  const domainAddress = await deriveAddress(domain, ROOT_DOMAIN_ADDRESS);
+  const domainAddress = await deriveAddress(domain, SNS_ROOT_DOMAIN_ACCOUNT);
 
   return { domainAddress, isSub: false };
 };

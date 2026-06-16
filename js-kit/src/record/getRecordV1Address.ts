@@ -10,7 +10,7 @@ interface GetRecordV1AddressParams {
  * Derives the address of a version 1 record.
  *
  * @param params - An object containing the following properties:
- *   - `domain`: The domain under which the record resides.
+ *   - `domain`: The full domain name under which the record resides, including a .sns or .sol suffix.
  *   - `record`: The type of record to derive the address for.
  * @returns A promise that resolves to the derived record address.
  */

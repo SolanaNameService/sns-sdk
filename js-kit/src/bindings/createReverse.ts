@@ -4,7 +4,7 @@ import {
   CENTRAL_STATE,
   NAME_PROGRAM_ADDRESS,
   REGISTRY_PROGRAM_ADDRESS,
-  ROOT_DOMAIN_ADDRESS,
+  SNS_ROOT_DOMAIN_ACCOUNT,
   SYSTEM_PROGRAM_ADDRESS,
   SYSVAR_RENT_ADDRESS,
 } from "../constants/addresses";
@@ -48,7 +48,7 @@ export const createReverse = async ({
   }).getInstruction(
     REGISTRY_PROGRAM_ADDRESS,
     NAME_PROGRAM_ADDRESS,
-    ROOT_DOMAIN_ADDRESS,
+    SNS_ROOT_DOMAIN_ACCOUNT,
     reverseLookupAccount,
     SYSTEM_PROGRAM_ADDRESS,
     CENTRAL_STATE,

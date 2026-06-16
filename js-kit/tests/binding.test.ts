@@ -35,7 +35,7 @@ import { validateRoaEthereum } from "../src/bindings/validateRoaEthereum";
 import { writeRoa } from "../src/bindings/writeRoa";
 import {
   REFERRERS,
-  ROOT_DOMAIN_ADDRESS,
+  SNS_ROOT_DOMAIN_ACCOUNT,
   USDC_MINT,
   VAULT_OWNER,
 } from "../src/constants/addresses";
@@ -189,7 +189,7 @@ describe("Bindings", () => {
           name: "wallet-guide-9",
           refundAddress: owner,
           classAddress: undefined,
-          parentAddress: ROOT_DOMAIN_ADDRESS,
+          parentAddress: SNS_ROOT_DOMAIN_ACCOUNT,
         })
       );
 
@@ -369,7 +369,7 @@ describe("Bindings", () => {
           domain,
           newOwner,
           classAddress: undefined,
-          parentAddress: ROOT_DOMAIN_ADDRESS,
+          parentAddress: SNS_ROOT_DOMAIN_ACCOUNT,
         })
       );
 
@@ -460,7 +460,7 @@ describe("Bindings", () => {
           offset: 0,
           data: Uint8Array.from("test data"),
           classAddress: undefined,
-          parentAddress: ROOT_DOMAIN_ADDRESS,
+          parentAddress: SNS_ROOT_DOMAIN_ACCOUNT,
         })
       );
 

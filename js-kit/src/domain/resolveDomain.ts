@@ -86,11 +86,11 @@ const verifySolRecordV1Signature = async ({
 };
 
 /**
- * Resolves domain according to SNS-IP 5.
+ * Resolves a .sns or .sol domain according to SNS-IP 5.
  *
  * @param params - An object containing the following properties:
  *   - `rpc`: An RPC interface implementing GetAccountInfoApi, GetMultipleAccountsApi, and GetTokenLargestAccountsApi.
- *   - `domain`: The domain to resolve.
+ *   - `domain`: The full domain name to resolve, including a .sns or .sol suffix.
  *   - `config`: (Optional) Configuration for resolving the domain, including whether to allow PDA owners
  *     and permissible program IDs.
  * @returns A promise that resolves to the target address.

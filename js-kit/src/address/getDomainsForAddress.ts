@@ -8,7 +8,7 @@ import {
 
 import {
   NAME_PROGRAM_ADDRESS,
-  ROOT_DOMAIN_ADDRESS,
+  SNS_ROOT_DOMAIN_ACCOUNT,
 } from "../constants/addresses";
 import { reverseLookupBatch } from "../utils/reverseLookupBatch";
 
@@ -48,7 +48,7 @@ export const getDomainsForAddress = async ({
         {
           memcmp: {
             offset: 0n,
-            bytes: ROOT_DOMAIN_ADDRESS as string as Base58EncodedBytes,
+            bytes: SNS_ROOT_DOMAIN_ACCOUNT as string as Base58EncodedBytes,
             encoding: "base58",
           },
         },

@@ -19,9 +19,9 @@ export const NAME_PROGRAM_ADDRESS =
   "namesLPneVptA9Z5rqUDD9tMTWEJwofgaYwp8cawRkX" as Address;
 
 /**
- * The `.sol` TLD
+ * The `.sns` TLD
  */
-export const ROOT_DOMAIN_ADDRESS =
+export const SNS_ROOT_DOMAIN_ACCOUNT =
   "58PwtjSDuFHuUkYjH9BYnnQKHfwo9reZhC2zMJv9JPkx" as Address;
 
 /**
