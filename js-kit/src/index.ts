@@ -83,3 +83,4 @@ export * from "./utils/getReverseAddressFromDomainAddress";
 export * from "./utils/reverseLookup";
 export * from "./utils/reverseLookupBatch";
 export * from "./utils/serializers/serializeRecordContent";
+export * from "./utils/tld";

@@ -8,3 +8,4 @@ export * from "./getReverseAddressFromDomainAddress";
 export * from "./reverseLookup";
 export * from "./reverseLookupBatch";
 export * from "./serializers/serializeRecordContent";
+export * from "./tld";

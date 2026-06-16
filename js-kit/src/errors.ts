@@ -39,6 +39,7 @@ export enum ErrorType {
   CouldNotFindNftOwner = "CouldNotFindNftOwner",
   InvalidValidation = "InvalidValidation",
   InvalidSerializedData = "InvalidSerializedData",
+  UnsupportedTld = "UnsupportedTld",
 }
 
 export class SNSError extends Error {
@@ -291,5 +292,11 @@ export class InvalidValidationError extends SNSError {
 export class InvalidSerializedDataError extends SNSError {
   constructor(message?: string) {
     super(ErrorType.InvalidSerializedData, message);
+  }
+}
+
+export class UnsupportedTldError extends SNSError {
+  constructor(message?: string) {
+    super(ErrorType.UnsupportedTld, message);
   }
 }
