@@ -28,7 +28,7 @@ import { PYTH_FEEDS } from "../constants/pythFeeds";
 import { InvalidDomainError, PythFeedNotFoundError } from "../errors";
 import { _createAtaInstruction } from "../instructions/createAtaInstruction";
 import { createSplitV2Instruction } from "../instructions/createSplitV2Instruction";
-import { deriveAddress } from "../utils/deriveAddress";
+import { _deriveAddress } from "../utils/deriveAddress";
 import { getPythFeedAddress } from "../utils/getPythFeedAddress";
 
 interface RegisterDomainParams {
@@ -68,9 +68,9 @@ export const registerDomain = async ({
     throw new InvalidDomainError("The domain name is malformed");
   }
 
-  const domainAddress = await deriveAddress(domain, SNS_ROOT_DOMAIN_ACCOUNT);
+  const domainAddress = await _deriveAddress(domain, SNS_ROOT_DOMAIN_ACCOUNT);
 
-  const reverseLookupAccount = await deriveAddress(
+  const reverseLookupAccount = await _deriveAddress(
     domainAddress,
     undefined,
     CENTRAL_STATE

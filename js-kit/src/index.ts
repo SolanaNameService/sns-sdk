@@ -74,7 +74,6 @@ export * from "./types/record";
 export * from "./types/validation";
 
 export * from "./utils/checkAddressOnCurve/";
-export * from "./utils/deriveAddress";
 export * from "./utils/deserializers/deserializeRecordContent";
 export * from "./utils/deserializers/deserializeReverse";
 export * from "./utils/getPythFeedAddress";

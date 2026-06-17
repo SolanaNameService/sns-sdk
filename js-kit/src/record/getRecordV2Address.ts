@@ -3,7 +3,7 @@ import { Address } from "@solana/kit";
 import { CENTRAL_STATE_DOMAIN_RECORDS } from "../constants/addresses";
 import { getDomainAddress } from "../domain/getDomainAddress";
 import { Record } from "../types/record";
-import { deriveAddress } from "../utils/deriveAddress";
+import { _deriveAddress } from "../utils/deriveAddress";
 
 interface GetRecordV2AddressParams {
   domain: string;
@@ -24,7 +24,7 @@ export const getRecordV2Address = async ({
 }: GetRecordV2AddressParams): Promise<Address> => {
   const { domainAddress } = await getDomainAddress({ domain });
 
-  return await deriveAddress(
+  return await _deriveAddress(
     `\x02${record}`,
     domainAddress,
     CENTRAL_STATE_DOMAIN_RECORDS

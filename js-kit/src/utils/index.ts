@@ -1,5 +1,4 @@
 export * from "./checkAddressOnCurve/";
-export * from "./deriveAddress";
 export * from "./deserializers/deserializeRecordContent";
 export * from "./deserializers/deserializeReverse";
 export * from "./getPythFeedAddress";

@@ -61,7 +61,7 @@ export const _getAddressFromHash = async (
  * @param {Address} [classAddress] - The optional class address.
  * @returns {Promise<Address>} A promise that resolves to the derived address.
  */
-export const deriveAddress = async (
+export const _deriveAddress = async (
   str: string,
   parentAddress?: Address,
   classAddress?: Address

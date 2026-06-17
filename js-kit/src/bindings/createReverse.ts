@@ -9,7 +9,7 @@ import {
   SYSVAR_RENT_ADDRESS,
 } from "../constants/addresses";
 import { createReverseInstruction } from "../instructions/createReverseInstruction";
-import { deriveAddress } from "../utils/deriveAddress";
+import { _deriveAddress } from "../utils/deriveAddress";
 
 interface CreateReverseParams {
   domainAddress: Address;
@@ -37,7 +37,7 @@ export const createReverse = async ({
   parentAddress,
   parentOwner,
 }: CreateReverseParams): Promise<Instruction> => {
-  const reverseLookupAccount = await deriveAddress(
+  const reverseLookupAccount = await _deriveAddress(
     domainAddress,
     parentAddress,
     CENTRAL_STATE

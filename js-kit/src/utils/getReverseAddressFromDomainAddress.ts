@@ -1,7 +1,7 @@
 import { Address } from "@solana/kit";
 
 import { REVERSE_LOOKUP_CLASS } from "../constants/addresses";
-import { deriveAddress } from "./deriveAddress";
+import { _deriveAddress } from "./deriveAddress";
 
 interface GetReverseAddressFromDomainAddressParams {
   domainAddress: Address;
@@ -20,7 +20,7 @@ export const getReverseAddressFromDomainAddress = async ({
   domainAddress,
   parentAddress,
 }: GetReverseAddressFromDomainAddressParams): Promise<Address> => {
-  return await deriveAddress(
+  return await _deriveAddress(
     domainAddress,
     parentAddress,
     REVERSE_LOOKUP_CLASS

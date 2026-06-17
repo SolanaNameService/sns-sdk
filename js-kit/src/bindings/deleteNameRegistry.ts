@@ -3,7 +3,7 @@ import { Address, GetAccountInfoApi, Instruction, Rpc } from "@solana/kit";
 import { NAME_PROGRAM_ADDRESS } from "../constants/addresses";
 import { DeleteNameRegistryInstruction } from "../instructions/deleteNameRegistryInstruction";
 import { RegistryState } from "../states/registry";
-import { deriveAddress } from "../utils/deriveAddress";
+import { _deriveAddress } from "../utils/deriveAddress";
 
 interface DeleteNameRegistryParams {
   rpc: Rpc<GetAccountInfoApi>;
@@ -31,7 +31,7 @@ export const deleteNameRegistry = async ({
   classAddress,
   parentAddress,
 }: DeleteNameRegistryParams): Promise<Instruction> => {
-  const domainAddress = await deriveAddress(name, parentAddress, classAddress);
+  const domainAddress = await _deriveAddress(name, parentAddress, classAddress);
 
   const owner =
     classAddress || (await RegistryState.retrieve(rpc, domainAddress)).owner;

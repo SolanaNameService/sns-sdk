@@ -14,7 +14,7 @@ import {
   WOLVES_COLLECTION_METADATA,
 } from "../constants/addresses";
 import { createWithNftInstruction } from "../instructions/createWithNftInstruction";
-import { deriveAddress } from "../utils/deriveAddress";
+import { _deriveAddress } from "../utils/deriveAddress";
 
 interface RegisterWithNftParams {
   domain: string;
@@ -42,8 +42,8 @@ export const registerWithNft = async ({
   nftSource,
   nftMint,
 }: RegisterWithNftParams): Promise<Instruction> => {
-  const domainAddress = await deriveAddress(domain, SNS_ROOT_DOMAIN_ACCOUNT);
-  const reverseLookupAccount = await deriveAddress(
+  const domainAddress = await _deriveAddress(domain, SNS_ROOT_DOMAIN_ACCOUNT);
+  const reverseLookupAccount = await _deriveAddress(
     domainAddress,
     undefined,
     CENTRAL_STATE

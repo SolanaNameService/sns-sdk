@@ -3,7 +3,7 @@ import { Address, GetAccountInfoApi, Instruction, Rpc } from "@solana/kit";
 import { NAME_PROGRAM_ADDRESS } from "../constants/addresses";
 import { TransferInstruction } from "../instructions/transferInstruction";
 import { RegistryState } from "../states/registry";
-import { deriveAddress } from "../utils/deriveAddress";
+import { _deriveAddress } from "../utils/deriveAddress";
 
 interface TransferDomainParams {
   rpc: Rpc<GetAccountInfoApi>;
@@ -34,7 +34,7 @@ export const transferDomain = async ({
   parentAddress,
   parentOwner,
 }: TransferDomainParams): Promise<Instruction> => {
-  const domainAddress = await deriveAddress(
+  const domainAddress = await _deriveAddress(
     domain,
     parentAddress,
     classAddress
