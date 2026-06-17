@@ -10,6 +10,7 @@ import { getDomainAddress } from "../domain/getDomainAddress";
 import { InvalidParentError } from "../errors";
 import { allocateAndPostRecordInstruction } from "../instructions/allocateAndPostRecordInstruction";
 import { Record, RecordVersion } from "../types/record";
+import { _parseSnsDomain } from "../utils/parseSnsDomain";
 import { serializeRecordContent } from "../utils/serializers/serializeRecordContent";
 
 interface CreateRecordParams {
@@ -25,7 +26,7 @@ interface CreateRecordParams {
  * in compliance with the SNS-IP 1 guidelines.
  *
  * @param params - An object containing the following properties:
- *   - `domain`: The domain under which the record will be created.
+ *   - `domain`: The full .sns domain under which the record will be created.
  *   - `record`: A record enum representing the type of record to be created.
  *   - `content`: The record content.
  *   - `owner`: The address of the domain's owner.
@@ -39,6 +40,8 @@ export const createRecord = async ({
   owner,
   payer,
 }: CreateRecordParams): Promise<Instruction> => {
+  _parseSnsDomain(domain);
+
   let { domainAddress, parentAddress, isSub } = await getDomainAddress({
     domain: `${record}.${domain}`,
     record: RecordVersion.V2,

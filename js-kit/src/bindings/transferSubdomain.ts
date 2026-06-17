@@ -5,6 +5,7 @@ import { getDomainAddress } from "../domain/getDomainAddress";
 import { InvalidSubdomainError } from "../errors";
 import { TransferInstruction } from "../instructions/transferInstruction";
 import { RegistryState } from "../states/registry";
+import { _parseSnsSubdomain } from "../utils/parseSnsDomain";
 
 interface TransferSubdomainParams {
   rpc: Rpc<GetAccountInfoApi>;
@@ -19,8 +20,7 @@ interface TransferSubdomainParams {
  *
  * @param params - An object containing the following properties:
  *   - `rpc`: An RPC interface implementing GetAccountInfoApi.
- *   - `subdomain`: The subdomain to transfer. This can include or omit the .sol suffix
- *     (e.g., 'something.sns.sol' or 'something.sns').
+ *   - `subdomain`: The full .sns subdomain to transfer, e.g. something.parent.sns.
  *   - `newOwner`: The address of the new owner.
  *   - `isParentOwnerSigner`: (Optional) Specifies if the parent domain owner is a signer
  *     for this transaction.
@@ -36,6 +36,8 @@ export const transferSubdomain = async ({
   isParentOwnerSigner,
   currentOwner,
 }: TransferSubdomainParams): Promise<Instruction> => {
+  _parseSnsSubdomain(subdomain, InvalidSubdomainError);
+
   const {
     domainAddress,
     isSub,

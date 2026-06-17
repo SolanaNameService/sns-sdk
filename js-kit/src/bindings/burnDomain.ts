@@ -10,6 +10,7 @@ import {
 import { getDomainAddress } from "../domain/getDomainAddress";
 import { burnDomainInstruction } from "../instructions/burnDomainInstruction";
 import { getReverseAddress } from "../utils/getReverseAddress";
+import { _parseSnsTopLevelDomain } from "../utils/parseSnsDomain";
 
 interface BurnDomainParams {
   domain: string;
@@ -21,7 +22,7 @@ interface BurnDomainParams {
  * Generates an instruction to burn a domain.
  *
  * @param params - An object containing the following properties:
- *   - `domain`: The domain name to be burned.
+ *   - `domain`: The full .sns domain name to be burned.
  *   - `owner`: The address of the current owner of the domain.
  *   - `refundAddress`: The address to which rent will be refunded.
  * @returns A promise which resolves to the burn domain instruction.
@@ -31,6 +32,8 @@ export const burnDomain = async ({
   owner,
   refundAddress,
 }: BurnDomainParams): Promise<Instruction> => {
+  _parseSnsTopLevelDomain(domain);
+
   const { domainAddress } = await getDomainAddress({ domain });
   const encoded = addressCodec.encode(domainAddress);
 

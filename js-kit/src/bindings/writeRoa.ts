@@ -10,6 +10,7 @@ import { getDomainAddress } from "../domain/getDomainAddress";
 import { InvalidParentError } from "../errors";
 import { writeRoaInstruction } from "../instructions/writeRoaInstruction";
 import { Record, RecordVersion } from "../types/record";
+import { _parseSnsDomain } from "../utils/parseSnsDomain";
 
 interface WriteRoaParams {
   domain: string;
@@ -23,7 +24,7 @@ interface WriteRoaParams {
  * Writes a ROA (Right of association) in a record.
  *
  * @param params - An object containing the following properties:
- *   - `domain`: The domain under which the record will be written.
+ *   - `domain`: The full .sns domain under which the record will be written.
  *   - `record`: An enumeration representing the type of record to be written.
  *   - `owner`: The address of the domain's owner.
  *   - `payer`: The address funding the operation.
@@ -37,6 +38,8 @@ export const writeRoa = async ({
   payer,
   roaId,
 }: WriteRoaParams): Promise<Instruction> => {
+  _parseSnsDomain(domain);
+
   let { domainAddress, isSub, parentAddress } = await getDomainAddress({
     domain: `${record}.${domain}`,
     record: RecordVersion.V2,

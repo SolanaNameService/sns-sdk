@@ -11,6 +11,7 @@ import { InvalidParentError } from "../errors";
 import { validateRoaEthereumInstruction } from "../instructions/validateRoaEthereumInstruction";
 import { Record, RecordVersion } from "../types/record";
 import { Validation } from "../types/validation";
+import { _parseSnsDomain } from "../utils/parseSnsDomain";
 
 interface ValidateRoaEthereumParams {
   domain: string;
@@ -25,7 +26,7 @@ interface ValidateRoaEthereumParams {
  * Validates the right of association of a record using an Ethereum signature.
  *
  * @param params - An object containing the following properties:
- *   - `domain`: The domain under which the record resides.
+ *   - `domain`: The full .sns domain under which the record resides.
  *   - `record`: An enumeration representing the type of record to validate.
  *   - `owner`: The address of the domain's owner.
  *   - `payer`: The address funding the validation process.
@@ -41,6 +42,8 @@ export const validateRoaEthereum = async ({
   signature,
   expectedPubkey,
 }: ValidateRoaEthereumParams): Promise<Instruction> => {
+  _parseSnsDomain(domain);
+
   let { domainAddress, parentAddress, isSub } = await getDomainAddress({
     domain: `${record}.${domain}`,
     record: RecordVersion.V2,

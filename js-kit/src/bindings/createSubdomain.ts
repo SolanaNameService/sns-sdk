@@ -8,9 +8,9 @@ import {
 } from "@solana/kit";
 
 import { getDomainAddress } from "../domain/getDomainAddress";
-import { InvalidDomainError } from "../errors";
 import { RegistryState } from "../states/registry";
 import { getReverseAddress } from "../utils/getReverseAddress";
+import { _parseSnsSubdomain } from "../utils/parseSnsDomain";
 import { createNameRegistry } from "./createNameRegistry";
 import { createReverse } from "./createReverse";
 
@@ -28,7 +28,7 @@ interface CreateSubdomainParams {
  *
  * @param params - An object containing the following properties:
  *   - `rpc`: An RPC interface implementing GetAccountInfoApi and GetMinimumBalanceForRentExemptionApi.
- *   - `subdomain`: The subdomain to create, with or without .sol (e.g., something.sns.sol or something.sns).
+ *   - `subdomain`: The full .sns subdomain to create, e.g. something.parent.sns.
  *   - `owner`: The address of the owner of the parent domain.
  *   - `space`: (Optional) The space in bytes allocated to the subdomain account (default: 2,000).
  *   - `feePayer`: (Optional) The address funding the subdomain creation (default: owner address).
@@ -43,11 +43,7 @@ export const createSubdomain = async ({
   feePayer,
 }: CreateSubdomainParams): Promise<Instruction[]> => {
   const ixs: Instruction[] = [];
-  const sub = subdomain.split(".")[0];
-
-  if (!sub) {
-    throw new InvalidDomainError("The subdomain name is malformed");
-  }
+  const [sub] = _parseSnsSubdomain(subdomain);
 
   const [{ domainAddress, parentAddress }, lamports] = await Promise.all([
     getDomainAddress({ domain: subdomain }),

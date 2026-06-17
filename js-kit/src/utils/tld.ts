@@ -31,3 +31,10 @@ export const parseSupportedTld = (
   }
   return [domain.slice(0, -tld.length), tld];
 };
+
+/**
+ * Validates that `domain` ends with `.sns`, strips that suffix, and returns a
+ * `[trimmedDomain, SNS_TLD]` tuple.
+ */
+export const parseSnsTld = (domain: string): [string, string] =>
+  parseSupportedTld(domain, [SNS_TLD]);

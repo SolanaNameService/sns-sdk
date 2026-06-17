@@ -10,6 +10,7 @@ import { getDomainAddress } from "../domain/getDomainAddress";
 import { InvalidParentError } from "../errors";
 import { updateRecordInstruction } from "../instructions/updateRecordInstruction";
 import { Record, RecordVersion } from "../types/record";
+import { _parseSnsDomain } from "../utils/parseSnsDomain";
 import { serializeRecordContent } from "../utils/serializers/serializeRecordContent";
 
 interface UpdateRecordParams {
@@ -24,7 +25,7 @@ interface UpdateRecordParams {
  * Updates an existing record under the specified domain.
  *
  * @param params - An object containing the following properties:
- *   - `domain`: The domain under which the record resides.
+ *   - `domain`: The full .sns domain under which the record resides.
  *   - `record`: An enumeration representing the type of record to be updated.
  *   - `content`: The updated content to be associated with the record.
  *   - `owner`: The address of the domain's owner.
@@ -38,6 +39,8 @@ export const updateRecord = async ({
   owner,
   payer,
 }: UpdateRecordParams): Promise<Instruction> => {
+  _parseSnsDomain(domain);
+
   let { domainAddress, isSub, parentAddress } = await getDomainAddress({
     domain: `${record}.${domain}`,
     record: RecordVersion.V2,

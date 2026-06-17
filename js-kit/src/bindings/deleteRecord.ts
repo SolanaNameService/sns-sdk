@@ -10,6 +10,7 @@ import { getDomainAddress } from "../domain/getDomainAddress";
 import { InvalidParentError } from "../errors";
 import { deleteRecordInstruction } from "../instructions/deleteRecordInstruction";
 import { Record, RecordVersion } from "../types/record";
+import { _parseSnsDomain } from "../utils/parseSnsDomain";
 
 interface DeleteRecordParams {
   domain: string;
@@ -22,7 +23,7 @@ interface DeleteRecordParams {
  * Deletes a record under the specified domain and refunds the rent to the payer.
  *
  * @param params - An object containing the following properties:
- *   - `domain`: The domain under which the record resides.
+ *   - `domain`: The full .sns domain under which the record resides.
  *   - `record`: An enumeration representing the type of record to be deleted.
  *   - `owner`: The address of the domain's owner.
  *   - `payer`: The address funding the record deletion.
@@ -34,6 +35,8 @@ export const deleteRecord = async ({
   owner,
   payer,
 }: DeleteRecordParams): Promise<Instruction> => {
+  _parseSnsDomain(domain);
+
   let { domainAddress, parentAddress, isSub } = await getDomainAddress({
     domain: `${record}.${domain}`,
     record: RecordVersion.V2,

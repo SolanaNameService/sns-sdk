@@ -40,6 +40,11 @@ import {
   VAULT_OWNER,
 } from "../src/constants/addresses";
 import { getDomainAddress } from "../src/domain/getDomainAddress";
+import {
+  InvalidDomainError,
+  InvalidSubdomainError,
+  UnsupportedTldError,
+} from "../src/errors";
 import { RegistryState } from "../src/states/registry";
 import { Record } from "../src/types/record";
 import { TEST_RPC, USDT_MINT } from "./constants";
@@ -68,7 +73,7 @@ const testInstructions = async (ixs: Instruction[], payer: Address) => {
 
 describe("Bindings", () => {
   describe("burnDomain", () => {
-    test("wallet-guide-9", async () => {
+    test("wallet-guide-9.sns", async () => {
       const owner = "Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8" as Address;
       const refundAddress =
         "3Wnd5Df69KitZfUoPYZU438eFRNwGHkhLnSAWL65PxJX" as Address;
@@ -76,7 +81,7 @@ describe("Bindings", () => {
       const ixs: Instruction[] = [];
       ixs.push(
         await burnDomain({
-          domain: "wallet-guide-9",
+          domain: "wallet-guide-9.sns",
           owner,
           refundAddress,
         })
@@ -111,8 +116,8 @@ describe("Bindings", () => {
   });
 
   describe("createRecord", () => {
-    test("domain [wallet-guide-9]", async () => {
-      const domain = "wallet-guide-9";
+    test("domain [wallet-guide-9.sns]", async () => {
+      const domain = "wallet-guide-9.sns";
       const owner = "Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8" as Address;
 
       const ixs: Instruction[] = [];
@@ -129,8 +134,8 @@ describe("Bindings", () => {
       await testInstructions(ixs, owner);
     });
 
-    test("subdomain [sub-0.wallet-guide-9]", async () => {
-      const domain = "sub-0.wallet-guide-9";
+    test("subdomain [sub-0.wallet-guide-9.sns]", async () => {
+      const domain = "sub-0.wallet-guide-9.sns";
       const owner = "Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8" as Address;
 
       const ixs: Instruction[] = [];
@@ -151,7 +156,9 @@ describe("Bindings", () => {
   describe("createReverse", () => {
     const domain = randomBytes(10).toString("hex");
     test(domain, async () => {
-      const { domainAddress } = await getDomainAddress({ domain });
+      const { domainAddress } = await getDomainAddress({
+        domain: `${domain}.sns`,
+      });
       const owner = "Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8" as Address;
 
       const ixs: Instruction[] = [];
@@ -162,14 +169,14 @@ describe("Bindings", () => {
   });
 
   describe("createSubdomain", () => {
-    test("wallet-guide-9", async () => {
+    test("wallet-guide-9.sns", async () => {
       const owner = "Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8" as Address;
 
       const ixs: Instruction[] = [];
       ixs.push(
         ...(await createSubdomain({
           rpc: TEST_RPC,
-          subdomain: "sub-test.wallet-guide-9",
+          subdomain: "sub-test.wallet-guide-9.sns",
           owner,
         }))
       );
@@ -198,7 +205,7 @@ describe("Bindings", () => {
   });
 
   describe("deleteRecord", () => {
-    describe("domain [wallet-guide-9]", () => {
+    describe("domain [wallet-guide-9.sns]", () => {
       test.each([
         {
           record: Record.SOL,
@@ -206,7 +213,7 @@ describe("Bindings", () => {
         },
         { record: Record.Twitter, content: "@test" },
       ])("$record", async (item) => {
-        const domain = "wallet-guide-9";
+        const domain = "wallet-guide-9.sns";
         const owner = "Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8" as Address;
 
         const ixs: Instruction[] = [];
@@ -238,7 +245,7 @@ describe("Bindings", () => {
     describe("without referrer", () => {
       test.each(
         Array.from({ length: 3 }, () => ({
-          domain: randomBytes(10).toString("hex"),
+          domain: `${randomBytes(10).toString("hex")}.sns`,
         }))
       )("$domain", async ({ domain }) => {
         const [ata] = await findAssociatedTokenPda({
@@ -262,7 +269,7 @@ describe("Bindings", () => {
     describe("with referrer", () => {
       test.each(
         Array.from({ length: 3 }, () => ({
-          domain: randomBytes(10).toString("hex"),
+          domain: `${randomBytes(10).toString("hex")}.sns`,
         }))
       )("$domain", async ({ domain }) => {
         const [ata] = await findAssociatedTokenPda({
@@ -296,7 +303,7 @@ describe("Bindings", () => {
           ixs.push(
             ...(await registerDomain({
               rpc: TEST_RPC,
-              domain: randomBytes(10).toString("hex"),
+              domain: `${randomBytes(10).toString("hex")}.sns`,
               space: 1_000,
               buyer: VAULT_OWNER,
               buyerTokenAccount: ata,
@@ -312,7 +319,7 @@ describe("Bindings", () => {
   });
 
   describe("registerWithNft", () => {
-    const domain = randomBytes(10).toString("hex");
+    const domain = `${randomBytes(10).toString("hex")}.sns`;
     test(domain, async () => {
       const buyer = "FiUYY19eXuVcEAHSJ87KEzYjYnfKZm6KbHoVtdQBNGfk" as Address;
       const nftSource =
@@ -333,8 +340,8 @@ describe("Bindings", () => {
   });
 
   describe("setPrimaryDomain", () => {
-    test("domain [wallet-guide-9]", async () => {
-      const domain = "wallet-guide-9";
+    test("domain [wallet-guide-9.sns]", async () => {
+      const domain = "wallet-guide-9.sns";
       const domainAddress = (await getDomainAddress({ domain })).domainAddress;
       const owner = "Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8" as Address;
 
@@ -343,8 +350,8 @@ describe("Bindings", () => {
 
       await testInstructions(ixs, owner);
     });
-    test("subdomain [sub-0.wallet-guide-9]", async () => {
-      const domain = "sub-0.wallet-guide-9";
+    test("subdomain [sub-0.wallet-guide-9.sns]", async () => {
+      const domain = "sub-0.wallet-guide-9.sns";
       const domainAddress = (await getDomainAddress({ domain })).domainAddress;
       const owner = "Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8" as Address;
 
@@ -356,8 +363,8 @@ describe("Bindings", () => {
   });
 
   describe("transferDomain", () => {
-    test("wallet-guide-9", async () => {
-      const domain = "wallet-guide-9";
+    test("wallet-guide-9.sns", async () => {
+      const domain = "wallet-guide-9.sns";
       const owner = "Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8" as Address;
       const newOwner =
         "ALd1XSrQMCPSRayYUoUZnp6KcP6gERfJhWzkP49CkXKs" as Address;
@@ -368,8 +375,6 @@ describe("Bindings", () => {
           rpc: TEST_RPC,
           domain,
           newOwner,
-          classAddress: undefined,
-          parentAddress: SNS_ROOT_DOMAIN_ACCOUNT,
         })
       );
 
@@ -378,8 +383,8 @@ describe("Bindings", () => {
   });
 
   describe("transferSubdomain", () => {
-    test("sub-0.wallet-guide-3", async () => {
-      const subdomain = "sub-0.wallet-guide-3";
+    test("sub-0.wallet-guide-3.sns", async () => {
+      const subdomain = "sub-0.wallet-guide-3.sns";
       const owner = "Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8" as Address;
       const newOwner =
         "ALd1XSrQMCPSRayYUoUZnp6KcP6gERfJhWzkP49CkXKs" as Address;
@@ -392,8 +397,8 @@ describe("Bindings", () => {
   });
 
   describe("updateRecord", () => {
-    test("domain [wallet-guide-9]", async () => {
-      const domain = "wallet-guide-9";
+    test("domain [wallet-guide-9.sns]", async () => {
+      const domain = "wallet-guide-9.sns";
       const owner = "Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8" as Address;
 
       const ixs: Instruction[] = [];
@@ -419,8 +424,8 @@ describe("Bindings", () => {
       await testInstructions(ixs, owner);
     });
 
-    test("subdomain [sub-0.wallet-guide-9]", async () => {
-      const domain = "sub-0.wallet-guide-9";
+    test("subdomain [sub-0.wallet-guide-9.sns]", async () => {
+      const domain = "sub-0.wallet-guide-9.sns";
       const owner = "Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8" as Address;
 
       const ixs: Instruction[] = [];
@@ -469,8 +474,8 @@ describe("Bindings", () => {
   });
 
   describe("validateRoaEthereum", () => {
-    test("wallet-guide-9", async () => {
-      const domain = "wallet-guide-9";
+    test("wallet-guide-9.sns", async () => {
+      const domain = "wallet-guide-9.sns";
       const owner = "Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8" as Address;
 
       const ixs: Instruction[] = [];
@@ -517,8 +522,8 @@ describe("Bindings", () => {
   });
 
   describe("validateRoa", () => {
-    test("wallet-guide-9", async () => {
-      const domain = "wallet-guide-9";
+    test("wallet-guide-9.sns", async () => {
+      const domain = "wallet-guide-9.sns";
       const owner = "Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8" as Address;
 
       const ixs: Instruction[] = [];
@@ -547,8 +552,8 @@ describe("Bindings", () => {
   });
 
   describe("writeRoa", () => {
-    test("wallet-guide-9", async () => {
-      const domain = "wallet-guide-9";
+    test("wallet-guide-9.sns", async () => {
+      const domain = "wallet-guide-9.sns";
       const owner = "Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8" as Address;
 
       const ixs: Instruction[] = [];
@@ -573,5 +578,152 @@ describe("Bindings", () => {
 
       await testInstructions(ixs, owner);
     });
+  });
+
+  describe("write input policy", () => {
+    const owner = "Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8" as Address;
+    const newOwner = "ALd1XSrQMCPSRayYUoUZnp6KcP6gERfJhWzkP49CkXKs" as Address;
+
+    test.each(["wallet-guide-9.sol", "wallet-guide-9", "wallet-guide-9.com"])(
+      "registerDomain rejects %s",
+      async (domain) => {
+        await expect(
+          registerDomain({
+            rpc: TEST_RPC,
+            domain,
+            space: 1_000,
+            buyer: VAULT_OWNER,
+            buyerTokenAccount: VAULT_OWNER,
+            mint: USDC_MINT,
+          })
+        ).rejects.toThrow(UnsupportedTldError);
+      }
+    );
+
+    test.each(["sub.wallet-guide-9.sns", ".sns", "Wallet.sns"])(
+      "registerDomain rejects malformed domain %s",
+      async (domain) => {
+        await expect(
+          registerDomain({
+            rpc: TEST_RPC,
+            domain,
+            space: 1_000,
+            buyer: VAULT_OWNER,
+            buyerTokenAccount: VAULT_OWNER,
+            mint: USDC_MINT,
+          })
+        ).rejects.toThrow(InvalidDomainError);
+      }
+    );
+
+    test("registerWithNft rejects malformed .sns", async () => {
+      await expect(
+        registerWithNft({
+          domain: ".sns",
+          space: 1_000,
+          buyer: owner,
+          nftSource: owner,
+          nftMint: owner,
+        })
+      ).rejects.toThrow(InvalidDomainError);
+    });
+
+    test.each(["wallet-guide-9.sol", "wallet-guide-9", "wallet-guide-9.com"])(
+      "transferDomain rejects %s",
+      async (domain) => {
+        await expect(
+          transferDomain({ rpc: TEST_RPC, domain, newOwner })
+        ).rejects.toThrow(UnsupportedTldError);
+      }
+    );
+
+    test.each(["sub.wallet-guide-9.sns", ".sns", "Wallet.sns"])(
+      "transferDomain rejects malformed domain %s",
+      async (domain) => {
+        await expect(
+          transferDomain({
+            rpc: TEST_RPC,
+            domain,
+            newOwner,
+          })
+        ).rejects.toThrow(InvalidDomainError);
+      }
+    );
+
+    test.each([".sns", ".wallet-guide-9.sns", "sub..sns", "Sub.wallet.sns"])(
+      "createSubdomain rejects malformed domain %s",
+      async (subdomain) => {
+        await expect(
+          createSubdomain({
+            rpc: TEST_RPC,
+            subdomain,
+            owner,
+          })
+        ).rejects.toThrow(InvalidDomainError);
+      }
+    );
+
+    test.each(["a.b.c.sns", "Sub.wallet.sns"])(
+      "transferSubdomain rejects malformed domain %s",
+      async (subdomain) => {
+        await expect(
+          transferSubdomain({
+            rpc: TEST_RPC,
+            subdomain,
+            newOwner,
+          })
+        ).rejects.toThrow(InvalidSubdomainError);
+      }
+    );
+
+    test.each([".sns", "wallet..sns", "a.b.c.sns", "Wallet.sns"])(
+      "createRecord rejects malformed domain %s",
+      async (domain) => {
+        await expect(
+          createRecord({
+            domain,
+            record: Record.Twitter,
+            content: "@sns",
+            owner,
+            payer: owner,
+          })
+        ).rejects.toThrow(InvalidDomainError);
+      }
+    );
+
+    test("burnDomain rejects malformed .sns", async () => {
+      await expect(
+        burnDomain({
+          domain: ".sns",
+          owner,
+          refundAddress: owner,
+        })
+      ).rejects.toThrow(InvalidDomainError);
+    });
+
+    test.each(["sub.wallet-guide-9.sol", "sub.wallet-guide-9", "sub.wallet-guide-9.com"])(
+      "createSubdomain rejects %s",
+      async (subdomain) => {
+        await expect(
+          createSubdomain({ rpc: TEST_RPC, subdomain, owner })
+        ).rejects.toThrow(UnsupportedTldError);
+      }
+    );
+
+    test.each(["wallet-guide-9.sol", "wallet-guide-9", "wallet-guide-9.com"])(
+      "createRecord rejects %s",
+      async (domain) => {
+        await expect(
+          createRecord({
+            domain,
+            record: Record.Twitter,
+            content: "@sns",
+            owner,
+            payer: owner,
+          })
+        ).rejects.toThrow(UnsupportedTldError);
+      }
+    );
+
   });
 });

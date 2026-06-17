@@ -25,11 +25,12 @@ import {
   VAULT_OWNER,
 } from "../constants/addresses";
 import { PYTH_FEEDS } from "../constants/pythFeeds";
-import { InvalidDomainError, PythFeedNotFoundError } from "../errors";
+import { PythFeedNotFoundError } from "../errors";
 import { _createAtaInstruction } from "../instructions/createAtaInstruction";
 import { createSplitV2Instruction } from "../instructions/createSplitV2Instruction";
 import { _deriveAddress } from "../utils/deriveAddress";
 import { getPythFeedAddress } from "../utils/getPythFeedAddress";
+import { _parseSnsTopLevelDomain } from "../utils/parseSnsDomain";
 
 interface RegisterDomainParams {
   rpc: Rpc<GetAccountInfoApi>;
@@ -42,11 +43,11 @@ interface RegisterDomainParams {
 }
 
 /**
- * Registers a .sol domain.
+ * Registers a .sns domain.
  *
  * @param params - An object containing the following properties:
  *   - `rpc`: An RPC interface implementing GetAccountInfoApi.
- *   - `domain`: The domain name to be registered in lowercase.
+ *   - `domain`: The full .sns domain name to be registered in lowercase.
  *   - `space`: The space in bytes to be allocated for the domain registry (max: 10,000).
  *   - `buyer`: The address of the buyer registering the domain.
  *   - `buyerTokenAccount`: The associated token account of the buyer.
@@ -63,10 +64,7 @@ export const registerDomain = async ({
   mint = USDC_MINT,
   referrer,
 }: RegisterDomainParams): Promise<Instruction[]> => {
-  // Basic validation
-  if (domain.includes(".") || domain.trim().toLowerCase() !== domain) {
-    throw new InvalidDomainError("The domain name is malformed");
-  }
+  domain = _parseSnsTopLevelDomain(domain);
 
   const domainAddress = await _deriveAddress(domain, SNS_ROOT_DOMAIN_ACCOUNT);
 

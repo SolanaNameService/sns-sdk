@@ -15,6 +15,7 @@ import {
 } from "../constants/addresses";
 import { createWithNftInstruction } from "../instructions/createWithNftInstruction";
 import { _deriveAddress } from "../utils/deriveAddress";
+import { _parseSnsTopLevelDomain } from "../utils/parseSnsDomain";
 
 interface RegisterWithNftParams {
   domain: string;
@@ -25,10 +26,10 @@ interface RegisterWithNftParams {
 }
 
 /**
- * Registers a .sol domain using a Bonfida Wolves NFT.
+ * Registers a .sns domain using a Bonfida Wolves NFT.
  *
  * @param params - An object containing the following properties:
- *   - `domain`: The domain name to be registered.
+ *   - `domain`: The full .sns domain name to be registered.
  *   - `space`: The space in bytes to be allocated for the domain registry.
  *   - `buyer`: The address of the buyer registering the domain.
  *   - `nftSource`: The address of the NFT source account.
@@ -42,6 +43,8 @@ export const registerWithNft = async ({
   nftSource,
   nftMint,
 }: RegisterWithNftParams): Promise<Instruction> => {
+  domain = _parseSnsTopLevelDomain(domain);
+
   const domainAddress = await _deriveAddress(domain, SNS_ROOT_DOMAIN_ACCOUNT);
   const reverseLookupAccount = await _deriveAddress(
     domainAddress,

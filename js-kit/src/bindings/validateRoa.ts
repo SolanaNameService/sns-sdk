@@ -10,6 +10,7 @@ import { getDomainAddress } from "../domain/getDomainAddress";
 import { InvalidParentError } from "../errors";
 import { validateRoaInstruction } from "../instructions/validateRoaInstruction";
 import { Record, RecordVersion } from "../types/record";
+import { _parseSnsDomain } from "../utils/parseSnsDomain";
 
 interface ValidateRoaParams {
   staleness: boolean;
@@ -25,7 +26,7 @@ interface ValidateRoaParams {
  *
  * @param params - An object containing the following properties:
  *   - `staleness`: Indicates whether the record validation is stale.
- *   - `domain`: The domain under which the record resides.
+ *   - `domain`: The full .sns domain under which the record resides.
  *   - `record`: An enumeration representing the type of record to validate.
  *   - `owner`: The address of the domain's owner.
  *   - `payer`: The address funding the validation process.
@@ -40,6 +41,8 @@ export const validateRoa = async ({
   payer,
   verifier,
 }: ValidateRoaParams): Promise<Instruction> => {
+  _parseSnsDomain(domain);
+
   let { domainAddress, isSub, parentAddress } = await getDomainAddress({
     domain: `${record}.${domain}`,
     record: RecordVersion.V2,
