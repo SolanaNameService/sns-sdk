@@ -15,7 +15,7 @@ import {
   SNS_ROOT_DOMAIN_ACCOUNT,
   TOKEN_PROGRAM_ADDRESS,
 } from "../constants/addresses";
-import { getNftMint } from "../nft/getNftMint";
+import { getSnsNftMint } from "../nft/getSnsNftMint";
 import { PrimaryDomainState } from "../states/primaryDomain";
 import { RegistryState } from "../states/registry";
 import { deserializeReverse } from "../utils/deserializers/deserializeReverse";
@@ -92,7 +92,7 @@ export const getPrimaryDomainsBatch = async ({
       })
     );
     atasPromises.push(
-      getNftMint({ domainAddress })
+      getSnsNftMint({ domainAddress })
         .then((mint) =>
           findAssociatedTokenPda({
             mint,

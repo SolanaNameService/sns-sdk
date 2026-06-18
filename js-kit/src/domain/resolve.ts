@@ -19,7 +19,7 @@ import {
   RecordMalformedError,
   UnsupportedTldError,
 } from "../errors";
-import { getNftOwner } from "../nft/getNftOwner";
+import { getSnsNftOwner } from "../nft/getSnsNftOwner";
 import { getRecordV1Address } from "../record/getRecordV1Address";
 import { getRecordV2Address } from "../record/getRecordV2Address";
 import { NftState, NftTag } from "../states/nft";
@@ -127,7 +127,7 @@ const resolveSns = async ({
   if (nftAccount.exists) {
     const nftRecord = NftState.deserialize(nftAccount.data);
     if (nftRecord.tag === NftTag.ActiveRecord) {
-      const nftOwner = await getNftOwner({ rpc, domainAddress });
+      const nftOwner = await getSnsNftOwner({ rpc, domainAddress });
       if (!nftOwner) {
         throw new CouldNotFindNftOwnerError();
       }

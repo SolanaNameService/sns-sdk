@@ -4,7 +4,7 @@ import {
   Rpc,
 } from "@solana/kit";
 
-import { getNftOwner } from "../nft/getNftOwner";
+import { getSnsNftOwner } from "../nft/getSnsNftOwner";
 import { RegistryState } from "../states/registry";
 import { getDomainAddress } from "./getDomainAddress";
 
@@ -26,7 +26,7 @@ export const getDomainOwner = async ({ rpc, domain }: GetDomainOwnerParams) => {
   const { domainAddress } = await getDomainAddress({ domain });
   const [registry, nftOwner] = await Promise.all([
     RegistryState.retrieve(rpc, domainAddress),
-    getNftOwner({ rpc, domainAddress }),
+    getSnsNftOwner({ rpc, domainAddress }),
   ]);
   return nftOwner || registry.owner;
 };

@@ -9,27 +9,27 @@ import {
 } from "@solana/kit";
 
 import { tokenCodec } from "../codecs";
-import { getNftMint } from "./getNftMint";
+import { getSnsNftMint } from "./getSnsNftMint";
 
-interface GetNftOwnerParams {
+interface GetSnsNftOwnerParams {
   rpc: Rpc<GetAccountInfoApi & GetTokenLargestAccountsApi>;
   domainAddress: Address;
 }
 
 /**
- * Retrieves the owner of a tokenized domain.
+ * Retrieves the owner of a tokenized SNS domain.
  *
  * @param params - An object containing the following properties:
  *   - `rpc`: An RPC interface implementing GetAccountInfoApi and GetTokenLargestAccountsApi.
  *   - `domainAddress`: The address of the domain whose owner is to be retrieved.
- * @returns A promise that resolves to the NFT owner's address, or null if no owner is found.
+ * @returns A promise that resolves to the SNS domain NFT owner's address, or null if no owner is found.
  */
-export const getNftOwner = async ({
+export const getSnsNftOwner = async ({
   rpc,
   domainAddress,
-}: GetNftOwnerParams): Promise<Address | null> => {
+}: GetSnsNftOwnerParams): Promise<Address | null> => {
   try {
-    const mint = await getNftMint({ domainAddress });
+    const mint = await getSnsNftMint({ domainAddress });
     const largestAccounts = await rpc.getTokenLargestAccounts(mint).send();
 
     if (largestAccounts.value.length === 0) {

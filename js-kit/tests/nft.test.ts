@@ -1,14 +1,14 @@
 import { describe, expect, jest, test } from "@jest/globals";
 import { Address } from "@solana/kit";
 
-import { getNftMint } from "../src/nft/getNftMint";
-import { getNftOwner } from "../src/nft/getNftOwner";
+import { getSnsNftMint } from "../src/nft/getSnsNftMint";
+import { getSnsNftOwner } from "../src/nft/getSnsNftOwner";
 import { TEST_RPC } from "./constants";
 
 jest.setTimeout(5_000);
 
 describe("Nft methods", () => {
-  describe("getNftMint", () => {
+  describe("getSnsNftMint", () => {
     test.each([
       {
         // sns-ip-5-wallet-1.sol
@@ -21,12 +21,12 @@ describe("Nft methods", () => {
         mint: "CmThLmf7ndEbyPs2MyL3XXzLvCrmXtdNCrRcuNPHvkKL",
       },
     ])("$address", async (item) => {
-      const res = await getNftMint({ domainAddress: item.address });
+      const res = await getSnsNftMint({ domainAddress: item.address });
       expect(res).toBe(item.mint);
     });
   });
 
-  describe("getNftOwner", () => {
+  describe("getSnsNftOwner", () => {
     test.each([
       {
         // sns-ip-5-wallet-1.sol
@@ -39,7 +39,7 @@ describe("Nft methods", () => {
         owner: null,
       },
     ])("$address", async (item) => {
-      const res = await getNftOwner({
+      const res = await getSnsNftOwner({
         rpc: TEST_RPC,
         domainAddress: item.address,
       });

@@ -55,8 +55,8 @@ export * from "./instructions/validateRoaEthereumInstruction";
 export * from "./instructions/validateRoaInstruction";
 export * from "./instructions/writeRoaInstruction";
 
-export * from "./nft/getNftMint";
-export * from "./nft/getNftOwner";
+export * from "./nft/getSnsNftMint";
+export * from "./nft/getSnsNftOwner";
 
 export * from "./record/getRecordV1Address";
 export * from "./record/getRecordV2Address";
