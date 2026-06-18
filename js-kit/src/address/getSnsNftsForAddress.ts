@@ -11,7 +11,7 @@ import { TOKEN_PROGRAM_ADDRESS } from "../constants/addresses";
 import { NftState } from "../states/nft";
 import { reverseLookupBatch } from "../utils/reverseLookupBatch";
 
-interface GetNftsForAddressParams {
+interface GetSnsNftsForAddressParams {
   rpc: Rpc<GetMultipleAccountsApi & GetProgramAccountsApi>;
   address: Address;
 }
@@ -76,17 +76,17 @@ const getNftStatesForAddress = async ({
 };
 
 /**
- * Retrieves NFTs owned by a given address.
+ * Retrieves SNS domain NFTs owned by a given address.
  *
  * @param params - An object containing the following properties:
  *   - `rpc`: An RPC interface implementing GetMultipleAccountsApi and GetProgramAccountsApi.
- *   - `address`: The address for which NFTs are to be fetched.
- * @returns A promise resolving to an array of Result objects containing domain, domainAddress, and mint.
+ *   - `address`: The address for which SNS domain NFTs are to be fetched.
+ * @returns A promise resolving to an array of Result objects containing stored reverse name, domainAddress, and mint.
  */
-export const getNftsForAddress = async ({
+export const getSnsNftsForAddress = async ({
   rpc,
   address,
-}: GetNftsForAddressParams): Promise<Result[]> => {
+}: GetSnsNftsForAddressParams): Promise<Result[]> => {
   const nftStates = await getNftStatesForAddress({ rpc, address });
   const nftNameAccounts = nftStates.map((state) => state.nameAccount);
   const domains = await reverseLookupBatch({

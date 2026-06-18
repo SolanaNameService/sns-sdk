@@ -1,5 +1,5 @@
 export * from "./address/getSnsDomainsForAddress";
-export * from "./address/getNftsForAddress";
+export * from "./address/getSnsNftsForAddress";
 export * from "./address/getPrimaryDomain";
 export * from "./address/getPrimaryDomainsBatch";
 
