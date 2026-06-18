@@ -33,7 +33,7 @@ export * from "./domain/getDomainOwner";
 export * from "./domain/getDomainRecord";
 export * from "./domain/getDomainRecords";
 export * from "./domain/getSubdomains";
-export * from "./domain/resolveDomain";
+export * from "./domain/resolve";
 
 export * from "./errors";
 

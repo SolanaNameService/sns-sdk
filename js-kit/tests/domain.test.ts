@@ -2,7 +2,7 @@ import { describe, expect, jest, test } from "@jest/globals";
 
 import { getAllSnsDomains } from "../src/domain/getAllSnsDomains";
 import { getDomainAddress } from "../src/domain/getDomainAddress";
-import { resolveDomain } from "../src/domain/resolveDomain";
+import { resolve } from "../src/domain/resolve";
 import { InvalidInputError, UnsupportedTldError } from "../src/errors";
 import { TEST_RPC } from "./constants";
 
@@ -26,11 +26,11 @@ describe("Domain input policy", () => {
     });
   });
 
-  describe("resolveDomain", () => {
+  describe("resolve", () => {
     test.each(["sns-ip-5-wallet-1", "sns-ip-5-wallet-1.com"])(
       "%s throws UnsupportedTldError",
       async (domain) => {
-        await expect(resolveDomain({ rpc: TEST_RPC, domain })).rejects.toThrow(
+        await expect(resolve({ rpc: TEST_RPC, domain })).rejects.toThrow(
           UnsupportedTldError
         );
       }

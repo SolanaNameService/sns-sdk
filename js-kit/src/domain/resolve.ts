@@ -17,6 +17,7 @@ import {
   InvalidValidationError,
   PdaOwnerNotAllowedError,
   RecordMalformedError,
+  UnsupportedTldError,
 } from "../errors";
 import { getNftOwner } from "../nft/getNftOwner";
 import { getRecordV1Address } from "../record/getRecordV1Address";
@@ -27,17 +28,22 @@ import { RegistryState } from "../states/registry";
 import { Record } from "../types/record";
 import { Validation } from "../types/validation";
 import { checkAddressOnCurve } from "../utils/checkAddressOnCurve";
+import { SNS_TLD, SOL_TLD, getTld } from "../utils/tld";
 import { uint8ArrayToHex } from "../utils/uint8Array/uint8ArrayToHex";
 import { uint8ArraysEqual } from "../utils/uint8Array/uint8ArraysEqual";
 import { getDomainAddress } from "./getDomainAddress";
 
-interface ResolveDomainParams {
+interface ResolveParams {
   rpc: Rpc<
     GetAccountInfoApi & GetMultipleAccountsApi & GetTokenLargestAccountsApi
   >;
   domain: string;
   options?: ResolveOptions;
 }
+
+type ResolveParamsWithOptions = Omit<ResolveParams, "options"> & {
+  options: ResolveOptions;
+};
 
 export type AllowPda = "any" | boolean;
 
@@ -65,7 +71,7 @@ const verifySolRecordV1Signature = async ({
   address,
 }: {
   data: Uint8Array;
-  signature: Uint8Array;
+  signature: Uint8Array<ArrayBuffer>;
   address: Address;
 }) => {
   const publicKey = await getPublicKeyFromAddress(address);
@@ -86,20 +92,13 @@ const verifySolRecordV1Signature = async ({
 };
 
 /**
- * Resolves a .sns or .sol domain according to SNS-IP 5.
- *
- * @param params - An object containing the following properties:
- *   - `rpc`: An RPC interface implementing GetAccountInfoApi, GetMultipleAccountsApi, and GetTokenLargestAccountsApi.
- *   - `domain`: The full domain name to resolve, including a .sns or .sol suffix.
- *   - `config`: (Optional) Configuration for resolving the domain, including whether to allow PDA owners
- *     and permissible program IDs.
- * @returns A promise that resolves to the target address.
+ * Internal handler for `.sns` domains using SNS-IP 5 logic.
  */
-export const resolveDomain = async ({
+const resolveSns = async ({
   rpc,
   domain,
-  options = { allowPda: false },
-}: ResolveDomainParams): Promise<Address> => {
+  options,
+}: ResolveParamsWithOptions): Promise<Address> => {
   const { domainAddress } = await getDomainAddress({ domain });
   const nftAddress = await NftState.getAddress(domainAddress);
   const solRecordV1Address = await getRecordV1Address({
@@ -228,4 +227,51 @@ export const resolveDomain = async ({
   }
 
   return registry.owner;
+};
+
+/**
+ * Internal handler for `.sol` domains.
+ *
+ * During migration, `.sol` remains an alias for `.sns` and routes through the
+ * same SNS-IP 5 logic. This separate handler is kept so `.sol` resolution can
+ * diverge later without changing the public API.
+ */
+const resolveSol = async (params: ResolveParamsWithOptions): Promise<Address> =>
+  resolveSns(params);
+
+/**
+ * Resolves a .sns or .sol domain to its target address according to SNS-IP 5.
+ *
+ * @param params - An object containing the following properties:
+ *   - `rpc`: An RPC interface implementing GetAccountInfoApi, GetMultipleAccountsApi, and GetTokenLargestAccountsApi.
+ *   - `domain`: The full domain name to resolve, including a .sns or .sol suffix.
+ *   - `config`: (Optional) Configuration for resolving the domain, including whether to allow PDA owners
+ *     and permissible program IDs.
+ * @returns A promise that resolves to the target address.
+ */
+export const resolve = async ({
+  rpc,
+  domain,
+  options = { allowPda: false },
+}: ResolveParams): Promise<Address> => {
+  const tld = getTld(domain);
+
+  if (!tld) {
+    throw new UnsupportedTldError(
+      `Domain "${domain}" is missing a supported TLD suffix (${SOL_TLD} or ${SNS_TLD})`
+    );
+  }
+
+  const params = { rpc, domain, options };
+
+  switch (tld) {
+    case SNS_TLD:
+      return resolveSns(params);
+    case SOL_TLD:
+      return resolveSol(params);
+    default:
+      throw new UnsupportedTldError(
+        `Domain "${domain}" is missing a supported TLD suffix (${SOL_TLD} or ${SNS_TLD})`
+      );
+  }
 };

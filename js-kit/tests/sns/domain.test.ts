@@ -6,7 +6,7 @@ import { getDomainOwner } from "../../src/domain/getDomainOwner";
 import { getDomainRecord } from "../../src/domain/getDomainRecord";
 import { getDomainRecords } from "../../src/domain/getDomainRecords";
 import { getSubdomains } from "../../src/domain/getSubdomains";
-import { AllowPda, resolveDomain } from "../../src/domain/resolveDomain";
+import { AllowPda, resolve } from "../../src/domain/resolve";
 import {
   InvalidRoAError,
   InvalidValidationError,
@@ -231,7 +231,7 @@ describe("SNS domain reads", () => {
     });
   });
 
-  describe("resolveDomain", () => {
+  describe("resolve", () => {
     test.each([
       {
         domain: "sns-ip-5-wallet-1.sns",
@@ -318,7 +318,7 @@ describe("SNS domain reads", () => {
         result: "36Dn3RWhB8x4c83W6ebQ2C2eH9sh5bQX2nMdkP2cWaA4",
       },
     ])("$domain resolves correctly", async (e) => {
-      const resolvedValue = await resolveDomain({
+      const resolvedValue = await resolve({
         rpc: TEST_RPC,
         domain: e.domain,
         options: e.options,
@@ -336,7 +336,7 @@ describe("SNS domain reads", () => {
       { domain: "sns-ip-5-wallet-12.sns", error: new InvalidRoAError() },
     ])("$domain throws correctly", async (e) => {
       await expect(
-        resolveDomain({ rpc: TEST_RPC, domain: e.domain })
+        resolve({ rpc: TEST_RPC, domain: e.domain })
       ).rejects.toThrow(e.error);
     });
   });
