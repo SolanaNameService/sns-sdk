@@ -15,11 +15,14 @@ export interface UpdateNameRegistryParams {
 }
 
 /**
- * Update the data of the given name registry.
+ * Updates the data of a raw SPL Name Registry account.
+ *
+ * This low-level helper accepts a raw registry seed/name as `domain` and does
+ * not parse `.sns` or `.sol` suffixes.
  *
  * @param params - An object containing the following properties:
  *   - `rpc`: An RPC interface implementing GetAccountInfoApi.
- *   - `domain`: The name of the domain whose registry will be updated.
+ *   - `domain`: The raw registry seed/name whose account will be updated.
  *   - `offset`: The offset in bytes where the update should begin.
  *   - `data`: The data to be written to the registry.
  *   - `classAddress`: (Optional) The address of the class associated with the registry.

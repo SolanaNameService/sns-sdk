@@ -44,7 +44,7 @@ interface Result {
  *
  * @param params - An object containing the following properties:
  *   - `rpc`: An RPC interface implementing GetAccountInfoApi, GetMultipleAccountsApi, and GetTokenLargestAccountsApi.
- *   - `domain`: The domain whose record is to be retrieved.
+ *   - `domain`: The full domain name whose record is to be retrieved, including a `.sns` or `.sol` suffix.
  *   - `record`: The type of record to retrieve.
  *   - `options`: (Optional) Additional options for processing:
  *       - `deserialize`: Whether to deserialize the record content.

@@ -14,12 +14,16 @@ interface DeleteNameRegistryParams {
 }
 
 /**
- * Deletes a name registry and refunds the associated rent balance to the specified target.
+ * Deletes a raw SPL Name Registry account and refunds the associated rent
+ * balance to the specified target.
+ *
+ * This low-level helper accepts a raw registry seed/name and does not parse
+ * `.sns` or `.sol` suffixes.
  *
  * @param params - An object containing the following properties:
  *   - `rpc`: An RPC interface implementing GetAccountInfoApi.
- *   - `name`: The name of the registry to be deleted.
- *   - `refundTarget`: The address to which the refunded rent balance will be sent.
+ *   - `name`: The raw registry seed/name whose account will be deleted.
+ *   - `refundAddress`: The address to which the refunded rent balance will be sent.
  *   - `classAddress`: (Optional) The address of the class associated with the registry.
  *   - `parentAddress`: (Optional) The address of the parent registry.
  * @returns A promise which resolves to the delete name registry instruction.

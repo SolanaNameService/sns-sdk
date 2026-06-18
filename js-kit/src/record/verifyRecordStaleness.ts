@@ -47,7 +47,7 @@ interface VerifyRecordStalenessParams {
  *
  * @param params - An object containing the following properties:
  *   - `rpc`: The RPC interface implementing GetAccountInfoApi and GetTokenLargestAccountsApi.
- *   - `domain`: The domain under which the record resides.
+ *   - `domain`: The full domain name under which the record resides, including a `.sns` or `.sol` suffix.
  *   - `record`: The record to verify.
  * @returns A promise that resolves to true if the record is stale, false otherwise.
  */

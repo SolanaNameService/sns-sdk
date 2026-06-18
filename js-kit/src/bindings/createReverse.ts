@@ -20,7 +20,10 @@ interface CreateReverseParams {
 }
 
 /**
- * Creates a reverse lookup record for the specified domain.
+ * Creates a raw reverse lookup record for the specified domain account.
+ *
+ * This low-level helper accepts the stored reverse payload as `domain` and
+ * does not parse `.sns` or `.sol` suffixes.
  *
  * @param params - An object containing the following properties:
  *   - `domainAddress`: The address of the domain for which the reverse lookup record is created.

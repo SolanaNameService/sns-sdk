@@ -78,7 +78,7 @@ export const _verifyRoaSync = ({
  * Verifies the right of association for a record asynchronously.
  *
  * @param rpc - The RPC interface implementing GetAccountInfoApi and GetTokenLargestAccountsApi.
- * @param domain - The domain under which the record resides.
+ * @param domain - The full domain name under which the record resides, including a `.sns` or `.sol` suffix.
  * @param record - The record to verify.
  * @param verifier - (Optional) The verifier for the record. If not specified, a default verifier is derived.
  * @returns A promise that resolves to true if the association is valid, false otherwise.

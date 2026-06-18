@@ -26,11 +26,15 @@ interface CreateNameRegistryParams {
 }
 
 /**
- * Creates a name registry with the given rent budget, allocated space, owner, and class.
+ * Creates a raw SPL Name Registry account with the given rent budget,
+ * allocated space, owner, and class.
+ *
+ * This low-level helper accepts a raw registry seed/name and does not parse
+ * `.sns` or `.sol` suffixes.
  *
  * @param params - An object containing the following properties:
  *   - `rpc`: An RPC interface implementing GetAccountInfoApi and GetMinimumBalanceForRentExemptionApi.
- *   - `name`: The name of the new account.
+ *   - `name`: The raw registry seed/name for the new account.
  *   - `space`: The space in bytes allocated to the account.
  *   - `payer`: The allocation cost payer.
  *   - `owner`: The address to be set as the owner of the new name account.

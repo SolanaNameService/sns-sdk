@@ -33,13 +33,13 @@ interface ValidPrimary {
 }
 
 /**
- * Batch retrieves the primary domains associated with a list of wallet addresses.
+ * Batch retrieves the primary SNS domains associated with a list of wallet addresses.
  *
  * @param params - An object containing the following properties:
  *   - `rpc`: An RPC interface implementing GetMultipleAccountsApi and GetTokenLargestAccountsApi.
  *   - `walletAddresses`: An array of wallet addresses for which primary domains are to be fetched.
  * @returns A promise resolving to an array of strings or undefined values, where each string represents
- *          the primary domain name if available and non-stale.
+ *          the primary domain name (without .sns suffix) if available and non-stale.
  */
 export const getPrimaryDomainsBatch = async ({
   rpc,

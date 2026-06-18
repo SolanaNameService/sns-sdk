@@ -76,12 +76,13 @@ const getNftStatesForAddress = async ({
 };
 
 /**
- * Retrieves SNS domain NFTs owned by a given address.
+ * Retrieves the SNS domain NFTs owned by a given address.
+
  *
  * @param params - An object containing the following properties:
  *   - `rpc`: An RPC interface implementing GetMultipleAccountsApi and GetProgramAccountsApi.
  *   - `address`: The address for which SNS domain NFTs are to be fetched.
- * @returns A promise resolving to an array of Result objects containing stored reverse name, domainAddress, and mint.
+ * @returns A promise resolving to an array of Result objects containing domain (without .sns suffix), domainAddress, and mint.
  */
 export const getSnsNftsForAddress = async ({
   rpc,

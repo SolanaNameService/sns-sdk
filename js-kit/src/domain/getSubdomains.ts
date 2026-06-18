@@ -29,7 +29,7 @@ interface Result {
  *
  * @param params - An object containing the following properties:
  *   - `rpc`: An RPC interface implementing GetProgramAccountsApi.
- *   - `domain`: The domain whose subdomains are to be retrieved.
+ *   - `domain`: The full parent domain name whose subdomains are to be retrieved, including a `.sns` or `.sol` suffix.
  * @returns A promise that resolves to an array of subdomain objects, each containing the subdomain name and owner address.
  */
 export const getSubdomains = async ({

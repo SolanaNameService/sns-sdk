@@ -19,7 +19,7 @@ interface GetDomainOwnerParams {
  *
  * @param params - An object containing the following properties:
  *   - `rpc`: An RPC interface implementing GetAccountInfoApi and GetTokenLargestAccountsApi.
- *   - `domain`: The domain whose owner is to be retrieved.
+ *   - `domain`: The full domain name whose owner is to be retrieved, including a `.sns` or `.sol` suffix.
  * @returns A promise that resolves to the owner of the domain.
  */
 export const getDomainOwner = async ({ rpc, domain }: GetDomainOwnerParams) => {
