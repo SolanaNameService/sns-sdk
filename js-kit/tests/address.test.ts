@@ -1,7 +1,7 @@
 import { describe, expect, jest, test } from "@jest/globals";
 import { Address } from "@solana/kit";
 
-import { getDomainsForAddress } from "../src/address/getDomainsForAddress";
+import { getSnsDomainsForAddress } from "../src/address/getSnsDomainsForAddress";
 import { getNftsForAddress } from "../src/address/getNftsForAddress";
 import { getPrimaryDomain } from "../src/address/getPrimaryDomain";
 import { getPrimaryDomainsBatch } from "../src/address/getPrimaryDomainsBatch";
@@ -73,7 +73,7 @@ describe("Address methods", () => {
     });
   });
 
-  describe("getDomainsForAddress", () => {
+  describe("getSnsDomainsForAddress", () => {
     test.each([
       {
         address: RANDOM_ADDRESS,
@@ -109,7 +109,7 @@ describe("Address methods", () => {
         ],
       },
     ])("$address", async (item) => {
-      const result = await getDomainsForAddress({
+      const result = await getSnsDomainsForAddress({
         rpc: TEST_RPC,
         address: item.address,
       });

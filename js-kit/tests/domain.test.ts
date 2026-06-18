@@ -1,6 +1,6 @@
 import { describe, expect, jest, test } from "@jest/globals";
 
-import { getAllDomains } from "../src/domain/getAllDomains";
+import { getAllSnsDomains } from "../src/domain/getAllSnsDomains";
 import { getDomainAddress } from "../src/domain/getDomainAddress";
 import { resolveDomain } from "../src/domain/resolveDomain";
 import { InvalidInputError, UnsupportedTldError } from "../src/errors";
@@ -39,8 +39,8 @@ describe("Domain input policy", () => {
 });
 
 describe("Registered domain listing", () => {
-  test("getAllDomains returns registered SNS root domains", async () => {
-    const registered = await getAllDomains({ rpc: TEST_RPC });
+  test("getAllSnsDomains returns registered SNS root domains", async () => {
+    const registered = await getAllSnsDomains({ rpc: TEST_RPC });
     expect(registered.length).toBeGreaterThan(250_000);
   });
 });

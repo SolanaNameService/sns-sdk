@@ -20,7 +20,7 @@ import { createSubdomain } from "../src/bindings/createSubdomain";
 import { deleteNameRegistry } from "../src/bindings/deleteNameRegistry";
 import { deleteRecord } from "../src/bindings/deleteRecord";
 import { registerDomain } from "../src/bindings/registerDomain";
-import { registerWithNft } from "../src/bindings/registerWithNft";
+import { registerDomainWithNft } from "../src/bindings/registerDomainWithNft";
 import { setPrimaryDomain } from "../src/bindings/setPrimaryDomain";
 import { transferDomain } from "../src/bindings/transferDomain";
 import { transferSubdomain } from "../src/bindings/transferSubdomain";
@@ -213,9 +213,9 @@ describe("Bindings", () => {
       }
     );
 
-    test("registerWithNft rejects malformed domain", async () => {
+    test("registerDomainWithNft rejects malformed domain", async () => {
       await expect(
-        registerWithNft({
+        registerDomainWithNft({
           domain: ".sns",
           space: 1_000,
           buyer: owner,

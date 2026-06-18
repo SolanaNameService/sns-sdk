@@ -6,18 +6,18 @@ import {
   SNS_ROOT_DOMAIN_ACCOUNT,
 } from "../constants/addresses";
 
-interface GetAllDomainsParams {
+interface GetAllSnsDomainsParams {
   rpc: Rpc<GetProgramAccountsApi>;
 }
 
 /**
- * Retrieves the addresses of all .sol domains.
+ * Retrieves the addresses of all .sns domains.
  *
  * @param params - An object containing the following properties:
  *   - `rpc`: An RPC interface implementing GetProgramAccountsApi.
  * @returns A promise that resolves to an array of objects representing domain addresses and owners.
  */
-export const getAllDomains = async ({ rpc }: GetAllDomainsParams) => {
+export const getAllSnsDomains = async ({ rpc }: GetAllSnsDomainsParams) => {
   const accounts = await rpc
     .getProgramAccounts(NAME_PROGRAM_ADDRESS, {
       encoding: "base64",

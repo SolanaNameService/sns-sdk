@@ -1,4 +1,4 @@
-export * from "./address/getDomainsForAddress";
+export * from "./address/getSnsDomainsForAddress";
 export * from "./address/getNftsForAddress";
 export * from "./address/getPrimaryDomain";
 export * from "./address/getPrimaryDomainsBatch";
@@ -11,7 +11,7 @@ export * from "./bindings/createSubdomain";
 export * from "./bindings/deleteNameRegistry";
 export * from "./bindings/deleteRecord";
 export * from "./bindings/registerDomain";
-export * from "./bindings/registerWithNft";
+export * from "./bindings/registerDomainWithNft";
 export * from "./bindings/setPrimaryDomain";
 export * from "./bindings/transferDomain";
 export * from "./bindings/transferSubdomain";
@@ -27,7 +27,7 @@ export * from "./constants/addresses";
 export * from "./constants/pythFeeds";
 export * from "./constants/records";
 
-export * from "./domain/getAllDomains";
+export * from "./domain/getAllSnsDomains";
 export * from "./domain/getDomainAddress";
 export * from "./domain/getDomainOwner";
 export * from "./domain/getDomainRecord";

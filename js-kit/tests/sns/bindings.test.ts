@@ -21,7 +21,7 @@ import { createRecord } from "../../src/bindings/createRecord";
 import { createSubdomain } from "../../src/bindings/createSubdomain";
 import { deleteRecord } from "../../src/bindings/deleteRecord";
 import { registerDomain } from "../../src/bindings/registerDomain";
-import { registerWithNft } from "../../src/bindings/registerWithNft";
+import { registerDomainWithNft } from "../../src/bindings/registerDomainWithNft";
 import { transferDomain } from "../../src/bindings/transferDomain";
 import { transferSubdomain } from "../../src/bindings/transferSubdomain";
 import { updateRecord } from "../../src/bindings/updateRecord";
@@ -138,7 +138,7 @@ describe("SNS write bindings", () => {
     });
   });
 
-  describe("registerWithNft", () => {
+  describe("registerDomainWithNft", () => {
     const domain = `${randomBytes(10).toString("hex")}.sns`;
     test(domain, async () => {
       const buyer = "FiUYY19eXuVcEAHSJ87KEzYjYnfKZm6KbHoVtdQBNGfk" as Address;
@@ -148,7 +148,7 @@ describe("SNS write bindings", () => {
 
       const ixs: Instruction[] = [];
       ixs.push(
-        await registerWithNft({
+        await registerDomainWithNft({
           domain,
           space: 1_000,
           buyer,

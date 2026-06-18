@@ -1,4 +1,4 @@
-export * from "./getAllDomains";
+export * from "./getAllSnsDomains";
 export * from "./getDomainAddress";
 export * from "./getDomainOwner";
 export * from "./getDomainRecord";

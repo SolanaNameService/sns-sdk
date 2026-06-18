@@ -249,7 +249,7 @@ describe("SOL domain reads", () => {
       },
       {
         domain: "sns-ip-5-wallet-5.sol",
-        oresult: "96GKJgm2W3P8Bae78brPrJf4Yi9AN1wtPJwg2XVQ2rMr",
+        result: "96GKJgm2W3P8Bae78brPrJf4Yi9AN1wtPJwg2XVQ2rMr",
         options: { allowPda: true, programIds: [SYSTEM_PROGRAM_ADDRESS] },
       },
       {

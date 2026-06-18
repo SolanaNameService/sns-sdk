@@ -17,7 +17,7 @@ import { createWithNftInstruction } from "../instructions/createWithNftInstructi
 import { _deriveAddress } from "../utils/deriveAddress";
 import { _parseSnsTopLevelDomain } from "../utils/parseSnsDomain";
 
-interface RegisterWithNftParams {
+interface RegisterDomainWithNftParams {
   domain: string;
   space: number;
   buyer: Address;
@@ -34,15 +34,15 @@ interface RegisterWithNftParams {
  *   - `buyer`: The address of the buyer registering the domain.
  *   - `nftSource`: The address of the NFT source account.
  *   - `nftMint`: The mint address of the NFT used for registration.
- * @returns A promise which resolves to the register with NFT instruction.
+ * @returns A promise which resolves to the register domain with NFT instruction.
  */
-export const registerWithNft = async ({
+export const registerDomainWithNft = async ({
   domain,
   space,
   buyer,
   nftSource,
   nftMint,
-}: RegisterWithNftParams): Promise<Instruction> => {
+}: RegisterDomainWithNftParams): Promise<Instruction> => {
   domain = _parseSnsTopLevelDomain(domain);
 
   const domainAddress = await _deriveAddress(domain, SNS_ROOT_DOMAIN_ACCOUNT);
