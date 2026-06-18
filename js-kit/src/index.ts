@@ -13,13 +13,15 @@ export * from "./bindings/deleteRecord";
 export * from "./bindings/registerDomain";
 export * from "./bindings/registerDomainWithNft";
 export * from "./bindings/setPrimaryDomain";
+export * from "./bindings/setRecordRoaVerifier";
+export * from "./bindings/setRecordStalenessVerifier";
 export * from "./bindings/transferDomain";
 export * from "./bindings/transferSubdomain";
 export * from "./bindings/updateNameRegistry";
 export * from "./bindings/updateRecord";
-export * from "./bindings/validateRoa";
-export * from "./bindings/validateRoaEthereum";
-export * from "./bindings/writeRoa";
+export * from "./bindings/validateRecordRoa";
+export * from "./bindings/validateRecordRoaEthereum";
+export type { RecordVerificationParams } from "./bindings/recordValidation";
 
 export * from "./codecs";
 
@@ -51,9 +53,9 @@ export * from "./instructions/registerFavoriteInstruction";
 export * from "./instructions/transferInstruction";
 export * from "./instructions/updateNameRegistryInstruction";
 export * from "./instructions/updateRecordInstruction";
-export * from "./instructions/validateRoaEthereumInstruction";
-export * from "./instructions/validateRoaInstruction";
-export * from "./instructions/writeRoaInstruction";
+export * from "./instructions/validateEthereumSignatureInstruction";
+export * from "./instructions/validateSolanaSignatureInstruction";
+export * from "./instructions/setRecordRoaVerifierInstruction";
 
 export * from "./nft/getSnsNftMint";
 export * from "./nft/getSnsNftOwner";

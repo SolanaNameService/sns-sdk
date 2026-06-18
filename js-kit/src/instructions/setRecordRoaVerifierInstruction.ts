@@ -9,7 +9,7 @@ import { serialize } from "borsh";
 
 import { addressCodec } from "../codecs";
 
-export class writeRoaInstruction {
+export class SetRecordRoaVerifierInstruction {
   tag: number;
   roaId: ReadonlyUint8Array;
 
@@ -20,13 +20,13 @@ export class writeRoaInstruction {
     },
   };
 
-  constructor(obj: { roaId: Address }) {
+  constructor(obj: { verifier: Address }) {
     this.tag = 6;
-    this.roaId = addressCodec.encode(obj.roaId);
+    this.roaId = addressCodec.encode(obj.verifier);
   }
 
   serialize(): Uint8Array {
-    return serialize(writeRoaInstruction.schema, this);
+    return serialize(SetRecordRoaVerifierInstruction.schema, this);
   }
 
   getInstruction(

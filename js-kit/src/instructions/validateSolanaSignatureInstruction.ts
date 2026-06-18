@@ -1,40 +1,23 @@
-import {
-  AccountRole,
-  Address,
-  AccountMeta,
-  Instruction,
-  ReadonlyUint8Array,
-} from "@solana/kit";
+import { AccountRole, Address, AccountMeta, Instruction } from "@solana/kit";
 import { serialize } from "borsh";
 
-export class validateRoaEthereumInstruction {
+export class ValidateSolanaSignatureInstruction {
   tag: number;
-  validation: number;
-  signature: ReadonlyUint8Array;
-  expectedPubkey: ReadonlyUint8Array;
-
+  staleness: boolean;
   static schema = {
     struct: {
       tag: "u8",
-      validation: "u8",
-      signature: { array: { type: "u8" } },
-      expectedPubkey: { array: { type: "u8" } },
+      staleness: "bool",
     },
   };
 
-  constructor(obj: {
-    validation: number;
-    signature: ReadonlyUint8Array;
-    expectedPubkey: ReadonlyUint8Array;
-  }) {
-    this.tag = 4;
-    this.validation = obj.validation;
-    this.signature = obj.signature;
-    this.expectedPubkey = obj.expectedPubkey;
+  constructor(obj: { staleness: boolean }) {
+    this.tag = 3;
+    this.staleness = obj.staleness;
   }
 
   serialize(): Uint8Array {
-    return serialize(validateRoaEthereumInstruction.schema, this);
+    return serialize(ValidateSolanaSignatureInstruction.schema, this);
   }
 
   getInstruction(
@@ -45,7 +28,8 @@ export class validateRoaEthereumInstruction {
     record: Address,
     domain: Address,
     domainOwner: Address,
-    centralState: Address
+    centralState: Address,
+    verifier: Address
   ): Instruction {
     const data = this.serialize();
 
@@ -72,11 +56,15 @@ export class validateRoaEthereumInstruction {
       },
       {
         address: domainOwner,
-        role: AccountRole.WRITABLE_SIGNER,
+        role: AccountRole.WRITABLE,
       },
       {
         address: centralState,
         role: AccountRole.READONLY,
+      },
+      {
+        address: verifier,
+        role: AccountRole.WRITABLE_SIGNER,
       },
     ];
 

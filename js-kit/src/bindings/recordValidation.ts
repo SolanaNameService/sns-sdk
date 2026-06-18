@@ -8,38 +8,25 @@ import {
 } from "../constants/addresses";
 import { getDomainAddress } from "../domain/getDomainAddress";
 import { InvalidParentError } from "../errors";
-import { writeRoaInstruction } from "../instructions/writeRoaInstruction";
+import { ValidateSolanaSignatureInstruction } from "../instructions/validateSolanaSignatureInstruction";
 import { Record, RecordVersion } from "../types/record";
 import { _parseSnsDomain } from "../utils/parseSnsDomain";
 
-interface WriteRoaParams {
+export interface RecordVerificationParams {
   domain: string;
   record: Record;
   owner: Address;
   payer: Address;
-  roaId: Address;
+  verifier: Address;
 }
 
-/**
- * Writes a ROA (Right of association) in a record.
- *
- * @param params - An object containing the following properties:
- *   - `domain`: The full .sns domain under which the record will be written.
- *   - `record`: An enumeration representing the type of record to be written.
- *   - `owner`: The address of the domain's owner.
- *   - `payer`: The address funding the operation.
- *   - `roaId`: The identifier for the ROA.
- * @returns A promise that resolves to the write ROA instruction.
- */
-export const writeRoa = async ({
+export const _getRecordAndParentAddress = async ({
   domain,
   record,
-  owner,
-  payer,
-  roaId,
-}: WriteRoaParams): Promise<Instruction> => {
-  _parseSnsDomain(domain);
-
+}: {
+  domain: string;
+  record: Record;
+}) => {
   let { domainAddress, isSub, parentAddress } = await getDomainAddress({
     domain: `${record}.${domain}`,
     record: RecordVersion.V2,
@@ -53,8 +40,28 @@ export const writeRoa = async ({
     throw new InvalidParentError("Parent could not be found");
   }
 
-  const ix = new writeRoaInstruction({
-    roaId,
+  return { domainAddress, parentAddress };
+};
+
+export const _buildValidateSolanaSignatureInstruction = async ({
+  staleness,
+  domain,
+  record,
+  owner,
+  payer,
+  verifier,
+}: RecordVerificationParams & {
+  staleness: boolean;
+}): Promise<Instruction> => {
+  _parseSnsDomain(domain);
+
+  const { domainAddress, parentAddress } = await _getRecordAndParentAddress({
+    domain,
+    record,
+  });
+
+  return new ValidateSolanaSignatureInstruction({
+    staleness,
   }).getInstruction(
     RECORDS_PROGRAM_ADDRESS,
     SYSTEM_PROGRAM_ADDRESS,
@@ -63,8 +70,7 @@ export const writeRoa = async ({
     domainAddress,
     parentAddress,
     owner,
-    CENTRAL_STATE_DOMAIN_RECORDS
+    CENTRAL_STATE_DOMAIN_RECORDS,
+    verifier
   );
-
-  return ix;
 };

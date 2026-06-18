@@ -22,12 +22,12 @@ import { createSubdomain } from "../../src/bindings/createSubdomain";
 import { deleteRecord } from "../../src/bindings/deleteRecord";
 import { registerDomain } from "../../src/bindings/registerDomain";
 import { registerDomainWithNft } from "../../src/bindings/registerDomainWithNft";
+import { setRecordRoaVerifier } from "../../src/bindings/setRecordRoaVerifier";
+import { setRecordStalenessVerifier } from "../../src/bindings/setRecordStalenessVerifier";
 import { transferDomain } from "../../src/bindings/transferDomain";
 import { transferSubdomain } from "../../src/bindings/transferSubdomain";
 import { updateRecord } from "../../src/bindings/updateRecord";
-import { validateRoa } from "../../src/bindings/validateRoa";
-import { validateRoaEthereum } from "../../src/bindings/validateRoaEthereum";
-import { writeRoa } from "../../src/bindings/writeRoa";
+import { validateRecordRoaEthereum } from "../../src/bindings/validateRecordRoaEthereum";
 import {
   REFERRERS,
   USDC_MINT,
@@ -362,7 +362,7 @@ describe("SNS write bindings", () => {
     });
   });
 
-  describe("validateRoa", () => {
+  describe("setRecordStalenessVerifier", () => {
     test("wallet-guide-9.sns", async () => {
       const domain = "wallet-guide-9.sns";
       const owner = "Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8" as Address;
@@ -378,8 +378,7 @@ describe("SNS write bindings", () => {
         })
       );
       ixs.push(
-        await validateRoa({
-          staleness: true,
+        await setRecordStalenessVerifier({
           domain,
           record: Record.Twitter,
           owner,
@@ -392,7 +391,7 @@ describe("SNS write bindings", () => {
     });
   });
 
-  describe("validateRoaEthereum", () => {
+  describe("validateRecordRoaEthereum", () => {
     test("wallet-guide-9.sns", async () => {
       const domain = "wallet-guide-9.sns";
       const owner = "Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8" as Address;
@@ -408,8 +407,7 @@ describe("SNS write bindings", () => {
         })
       );
       ixs.push(
-        await validateRoa({
-          staleness: true,
+        await setRecordStalenessVerifier({
           domain,
           record: Record.ETH,
           owner,
@@ -418,7 +416,7 @@ describe("SNS write bindings", () => {
         })
       );
       ixs.push(
-        await validateRoaEthereum({
+        await validateRecordRoaEthereum({
           domain,
           record: Record.ETH,
           owner,
@@ -441,7 +439,7 @@ describe("SNS write bindings", () => {
     });
   });
 
-  describe("writeRoa", () => {
+  describe("setRecordRoaVerifier", () => {
     test("wallet-guide-9.sns", async () => {
       const domain = "wallet-guide-9.sns";
       const owner = "Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8" as Address;
@@ -457,12 +455,12 @@ describe("SNS write bindings", () => {
         })
       );
       ixs.push(
-        await writeRoa({
+        await setRecordRoaVerifier({
           domain,
           record: Record.Twitter,
           owner,
           payer: owner,
-          roaId: owner,
+          verifier: owner,
         })
       );
 
