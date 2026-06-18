@@ -8,7 +8,7 @@ import {
 } from "../constants/addresses";
 import { getDomainAddress } from "../domain/getDomainAddress";
 import { InvalidParentError } from "../errors";
-import { updateRecordInstruction } from "../instructions/updateRecordInstruction";
+import { UpdateRecordInstruction } from "../instructions/updateRecordInstruction";
 import { Record, RecordVersion } from "../types/record";
 import { _parseSnsDomain } from "../utils/parseSnsDomain";
 import { serializeRecordContent } from "../utils/serializers/serializeRecordContent";
@@ -54,7 +54,7 @@ export const updateRecord = async ({
     throw new InvalidParentError("Parent could not be found");
   }
 
-  const ix = new updateRecordInstruction({
+  const ix = new UpdateRecordInstruction({
     record: `\x02${record}`,
     content: serializeRecordContent({ content, record }),
   }).getInstruction(

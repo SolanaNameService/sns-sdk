@@ -1,7 +1,7 @@
 import { AccountRole, Address, AccountMeta, Instruction } from "@solana/kit";
 import { serialize } from "borsh";
 
-export class registerFavoriteInstruction {
+export class RegisterFavoriteInstruction {
   tag: number;
   static schema = {
     struct: {
@@ -14,7 +14,7 @@ export class registerFavoriteInstruction {
   }
 
   serialize(): Uint8Array {
-    return serialize(registerFavoriteInstruction.schema, this);
+    return serialize(RegisterFavoriteInstruction.schema, this);
   }
 
   getInstruction(

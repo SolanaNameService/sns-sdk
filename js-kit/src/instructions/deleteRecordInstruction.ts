@@ -1,7 +1,7 @@
 import { AccountRole, Address, AccountMeta, Instruction } from "@solana/kit";
 import { serialize } from "borsh";
 
-export class deleteRecordInstruction {
+export class DeleteRecordInstruction {
   tag: number;
 
   static schema = {
@@ -15,7 +15,7 @@ export class deleteRecordInstruction {
   }
 
   serialize(): Uint8Array {
-    return serialize(deleteRecordInstruction.schema, this);
+    return serialize(DeleteRecordInstruction.schema, this);
   }
 
   getInstruction(

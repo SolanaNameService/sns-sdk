@@ -1,7 +1,7 @@
 import { AccountRole, Address, AccountMeta, Instruction } from "@solana/kit";
 import { serialize } from "borsh";
 
-export class createSplitV2Instruction {
+export class CreateSplitV2Instruction {
   tag: number;
   name: string;
   space: number;
@@ -28,7 +28,7 @@ export class createSplitV2Instruction {
   }
 
   serialize(): Uint8Array {
-    return serialize(createSplitV2Instruction.schema, this);
+    return serialize(CreateSplitV2Instruction.schema, this);
   }
 
   getInstruction(

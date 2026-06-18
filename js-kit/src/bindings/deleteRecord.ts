@@ -8,7 +8,7 @@ import {
 } from "../constants/addresses";
 import { getDomainAddress } from "../domain/getDomainAddress";
 import { InvalidParentError } from "../errors";
-import { deleteRecordInstruction } from "../instructions/deleteRecordInstruction";
+import { DeleteRecordInstruction } from "../instructions/deleteRecordInstruction";
 import { Record, RecordVersion } from "../types/record";
 import { _parseSnsDomain } from "../utils/parseSnsDomain";
 
@@ -50,7 +50,7 @@ export const deleteRecord = async ({
     throw new InvalidParentError("Parent could not be found");
   }
 
-  const ix = new deleteRecordInstruction().getInstruction(
+  const ix = new DeleteRecordInstruction().getInstruction(
     RECORDS_PROGRAM_ADDRESS,
     SYSTEM_PROGRAM_ADDRESS,
     NAME_PROGRAM_ADDRESS,

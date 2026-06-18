@@ -8,7 +8,7 @@ import {
   SYSTEM_PROGRAM_ADDRESS,
   SYSVAR_RENT_ADDRESS,
 } from "../constants/addresses";
-import { createReverseInstruction } from "../instructions/createReverseInstruction";
+import { CreateReverseInstruction } from "../instructions/createReverseInstruction";
 import { _deriveAddress } from "../utils/deriveAddress";
 
 interface CreateReverseParams {
@@ -43,7 +43,7 @@ export const createReverse = async ({
     CENTRAL_STATE
   );
 
-  let ix = new createReverseInstruction({
+  let ix = new CreateReverseInstruction({
     domain: domain,
   }).getInstruction(
     REGISTRY_PROGRAM_ADDRESS,

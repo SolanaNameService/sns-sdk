@@ -13,7 +13,7 @@ import {
   TOKEN_PROGRAM_ADDRESS,
   WOLVES_COLLECTION_METADATA,
 } from "../constants/addresses";
-import { createWithNftInstruction } from "../instructions/createWithNftInstruction";
+import { CreateWithNftInstruction } from "../instructions/createWithNftInstruction";
 import { _deriveAddress } from "../utils/deriveAddress";
 import { _parseSnsTopLevelDomain } from "../utils/parseSnsDomain";
 
@@ -74,7 +74,7 @@ export const registerDomainWithNft = async ({
     ],
   });
 
-  const ix = new createWithNftInstruction({
+  const ix = new CreateWithNftInstruction({
     space,
     name: domain,
   }).getInstruction(

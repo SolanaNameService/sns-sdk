@@ -10,7 +10,7 @@ import {
   NAME_PROGRAM_ADDRESS,
   SYSTEM_PROGRAM_ADDRESS,
 } from "../constants/addresses";
-import { createNameRegistryInstruction } from "../instructions/createNameRegistryInstruction";
+import { CreateNameRegistryInstruction } from "../instructions/createNameRegistryInstruction";
 import { RegistryState } from "../states/registry";
 import { _generateHash, _getAddressFromHash } from "../utils/deriveAddress";
 
@@ -67,7 +67,7 @@ export const createNameRegistry = async ({
     parentOwner = parentAccount.owner;
   }
 
-  const ix = new createNameRegistryInstruction({
+  const ix = new CreateNameRegistryInstruction({
     nameHash,
     lamports,
     space,

@@ -1,7 +1,7 @@
 import { AccountRole, Address, AccountMeta, Instruction } from "@solana/kit";
 import { serialize } from "borsh";
 
-export class createWithNftInstruction {
+export class CreateWithNftInstruction {
   tag: number;
   name: string;
   space: number;
@@ -21,7 +21,7 @@ export class createWithNftInstruction {
   }
 
   serialize(): Uint8Array {
-    return serialize(createWithNftInstruction.schema, this);
+    return serialize(CreateWithNftInstruction.schema, this);
   }
 
   getInstruction(

@@ -8,7 +8,7 @@ import {
 } from "../constants/addresses";
 import { getDomainAddress } from "../domain/getDomainAddress";
 import { InvalidParentError } from "../errors";
-import { allocateAndPostRecordInstruction } from "../instructions/allocateAndPostRecordInstruction";
+import { AllocateAndPostRecordInstruction } from "../instructions/allocateAndPostRecordInstruction";
 import { Record, RecordVersion } from "../types/record";
 import { _parseSnsDomain } from "../utils/parseSnsDomain";
 import { serializeRecordContent } from "../utils/serializers/serializeRecordContent";
@@ -55,7 +55,7 @@ export const createRecord = async ({
     throw new InvalidParentError("Parent could not be found");
   }
 
-  const ix = new allocateAndPostRecordInstruction({
+  const ix = new AllocateAndPostRecordInstruction({
     record: `\x02${record}`,
     content: serializeRecordContent({ content, record }),
   }).getInstruction(

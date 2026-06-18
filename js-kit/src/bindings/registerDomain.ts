@@ -27,7 +27,7 @@ import {
 import { PYTH_FEEDS } from "../constants/pythFeeds";
 import { PythFeedNotFoundError } from "../errors";
 import { _createAtaInstruction } from "../instructions/createAtaInstruction";
-import { createSplitV2Instruction } from "../instructions/createSplitV2Instruction";
+import { CreateSplitV2Instruction } from "../instructions/createSplitV2Instruction";
 import { _deriveAddress } from "../utils/deriveAddress";
 import { getPythFeedAddress } from "../utils/getPythFeedAddress";
 import { _parseSnsTopLevelDomain } from "../utils/parseSnsDomain";
@@ -125,7 +125,7 @@ export const registerDomain = async ({
     priceFeed,
   });
 
-  const ix = new createSplitV2Instruction({
+  const ix = new CreateSplitV2Instruction({
     name: domain,
     space,
     referrerIdxOpt: validReferrer ? referrerIndex : null,

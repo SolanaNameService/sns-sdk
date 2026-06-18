@@ -5,7 +5,7 @@ import {
   SNS_ROOT_DOMAIN_ACCOUNT,
   SYSTEM_PROGRAM_ADDRESS,
 } from "../constants/addresses";
-import { registerFavoriteInstruction } from "../instructions/registerFavoriteInstruction";
+import { RegisterFavoriteInstruction } from "../instructions/registerFavoriteInstruction";
 import { PrimaryDomainState } from "../states/primaryDomain";
 import { RegistryState } from "../states/registry";
 
@@ -39,7 +39,7 @@ export const setPrimaryDomain = async ({
       ? registry.parentName
       : undefined;
 
-  const ix = new registerFavoriteInstruction().getInstruction(
+  const ix = new RegisterFavoriteInstruction().getInstruction(
     NAME_OFFERS_ADDRESS,
     domainAddress,
     primaryAddress,

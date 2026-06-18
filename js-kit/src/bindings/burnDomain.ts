@@ -8,7 +8,7 @@ import {
   SYSTEM_PROGRAM_ADDRESS,
 } from "../constants/addresses";
 import { getDomainAddress } from "../domain/getDomainAddress";
-import { burnDomainInstruction } from "../instructions/burnDomainInstruction";
+import { BurnDomainInstruction } from "../instructions/burnDomainInstruction";
 import { getReverseAddress } from "../utils/getReverseAddress";
 import { _parseSnsTopLevelDomain } from "../utils/parseSnsDomain";
 
@@ -49,7 +49,7 @@ export const burnDomain = async ({
 
   const reverseAddress = await getReverseAddress(domain);
 
-  const ix = new burnDomainInstruction().getInstruction(
+  const ix = new BurnDomainInstruction().getInstruction(
     REGISTRY_PROGRAM_ADDRESS,
     NAME_PROGRAM_ADDRESS,
     SYSTEM_PROGRAM_ADDRESS,

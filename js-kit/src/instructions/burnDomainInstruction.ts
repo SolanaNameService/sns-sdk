@@ -1,7 +1,7 @@
 import { AccountRole, Address, AccountMeta, Instruction } from "@solana/kit";
 import { serialize } from "borsh";
 
-export class burnDomainInstruction {
+export class BurnDomainInstruction {
   tag: number;
 
   static schema = {
@@ -15,7 +15,7 @@ export class burnDomainInstruction {
   }
 
   serialize(): Uint8Array {
-    return serialize(burnDomainInstruction.schema, this);
+    return serialize(BurnDomainInstruction.schema, this);
   }
 
   getInstruction(
