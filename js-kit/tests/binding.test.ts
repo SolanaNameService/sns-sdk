@@ -266,7 +266,7 @@ describe("Bindings", () => {
             subdomain,
             owner,
           })
-        ).rejects.toThrow(InvalidDomainError);
+        ).rejects.toThrow(InvalidSubdomainError);
       }
     );
 

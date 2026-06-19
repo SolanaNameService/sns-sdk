@@ -77,7 +77,10 @@ const getNftStatesForAddress = async ({
 
 /**
  * Retrieves the SNS domain NFTs owned by a given address.
-
+ *
+ * Returned `domain` values do not include a `.sns` or `.sol` suffix.
+ * If NFT records cannot be retrieved or decoded, this function returns an empty
+ * array instead of throwing.
  *
  * @param params - An object containing the following properties:
  *   - `rpc`: An RPC interface implementing GetMultipleAccountsApi and GetProgramAccountsApi.

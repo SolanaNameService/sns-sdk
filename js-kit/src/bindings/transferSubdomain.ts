@@ -36,7 +36,7 @@ export const transferSubdomain = async ({
   isParentOwnerSigner,
   currentOwner,
 }: TransferSubdomainParams): Promise<Instruction> => {
-  _parseSnsSubdomain(subdomain, InvalidSubdomainError);
+  _parseSnsSubdomain(subdomain);
 
   const {
     domainAddress,
