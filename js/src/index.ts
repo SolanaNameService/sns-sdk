@@ -37,7 +37,7 @@ export * from "./twitter/getTwitterRegistryKey";
 export * from "./utils/check";
 export * from "./utils/deserializeReverse";
 export * from "./utils/findSubdomains";
-export * from "./utils/getAllDomains";
+export * from "./utils/getSnsDomainsForOwner";
 export * from "./utils/getAllSnsDomains";
 export * from "./utils/getDomainKeySync";
 export * from "./utils/tld";

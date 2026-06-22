@@ -7,7 +7,7 @@ import { NAME_PROGRAM_ID, SNS_ROOT_DOMAIN_ACCOUNT } from "../constants";
  * @param wallet The wallet you want to search domain names for
  * @returns
  */
-export async function getAllDomains(
+export async function getSnsDomainsForOwner(
   connection: Connection,
   wallet: PublicKey,
 ): Promise<PublicKey[]> {
