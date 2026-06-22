@@ -1,7 +1,7 @@
 require("dotenv").config();
 import { test, jest, expect } from "@jest/globals";
 import { PublicKey, Connection } from "@solana/web3.js";
-import { getTokenizedDomains } from "../src/utils/getTokenizedDomains";
+import { getSnsNftsForOwner } from "../src/utils/getSnsNftsForOwner";
 
 jest.setTimeout(10_000);
 
@@ -27,7 +27,7 @@ const items = [
 
 test("Get tokenized domains", async () => {
   const domains = (
-    await getTokenizedDomains(
+    await getSnsNftsForOwner(
       connection,
       new PublicKey("Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8"),
     )

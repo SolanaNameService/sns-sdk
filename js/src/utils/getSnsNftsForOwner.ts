@@ -8,7 +8,7 @@ import { reverseLookupBatch } from "./reverseLookupBatch";
  * @param owner The owner of the tokenized domains
  * @returns
  */
-export const getTokenizedDomains = async (
+export const getSnsNftsForOwner = async (
   connection: Connection,
   owner: PublicKey,
 ) => {
