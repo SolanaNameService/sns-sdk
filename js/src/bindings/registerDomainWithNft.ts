@@ -9,7 +9,7 @@ import {
   SNS_ROOT_DOMAIN_ACCOUNT,
   WOLVES_COLLECTION_METADATA,
 } from "../constants";
-import { createWithNftInstruction } from "../instructions/createWithNftInstruction";
+import { CreateWithNftInstruction } from "../instructions/createWithNftInstruction";
 import { parseSupportedTld, SNS_TLD } from "../utils/tld";
 
 /**
@@ -49,7 +49,7 @@ export const registerDomainWithNft = (
     [nameAccount.toBuffer()],
     REGISTER_PROGRAM_ID,
   );
-  const ix = new createWithNftInstruction({
+  const ix = new CreateWithNftInstruction({
     space,
     name: trimmedDomain,
   }).getInstruction(

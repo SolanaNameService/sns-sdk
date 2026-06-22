@@ -5,7 +5,7 @@ import {
   REGISTER_PROGRAM_ID,
   REVERSE_LOOKUP_CLASS,
 } from "../constants";
-import { burnInstruction } from "../instructions/burnInstruction";
+import { BurnInstruction } from "../instructions/burnInstruction";
 import { getDomainKeySync } from "../utils/getDomainKeySync";
 import { getReverseKeySync } from "../utils/getReverseKeySync";
 import { parseSupportedTld, SNS_TLD } from "../utils/tld";
@@ -37,7 +37,7 @@ export const burnDomain = (
     REGISTER_PROGRAM_ID,
   );
 
-  const ix = new burnInstruction().getInstruction(
+  const ix = new BurnInstruction().getInstruction(
     REGISTER_PROGRAM_ID,
     NAME_PROGRAM_ID,
     SystemProgram.programId,

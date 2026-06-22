@@ -3,7 +3,7 @@ import { PublicKey, TransactionInstruction } from "@solana/web3.js";
 import { serialize } from "borsh";
 import type { AccountKey } from "./types";
 
-export class setPrimaryInstruction {
+export class SetPrimaryInstruction {
   tag: number;
   static schema = {
     struct: {
@@ -14,7 +14,7 @@ export class setPrimaryInstruction {
     this.tag = 6;
   }
   serialize(): Uint8Array {
-    return serialize(setPrimaryInstruction.schema, this);
+    return serialize(SetPrimaryInstruction.schema, this);
   }
   getInstruction(
     programId: PublicKey,

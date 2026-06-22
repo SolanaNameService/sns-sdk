@@ -3,7 +3,7 @@ import { PublicKey, TransactionInstruction } from "@solana/web3.js";
 import { serialize } from "borsh";
 import type { AccountKey } from "./types";
 
-export class createReverseInstruction {
+export class CreateReverseInstruction {
   tag: number;
   name: string;
   static schema = {
@@ -18,7 +18,7 @@ export class createReverseInstruction {
     this.name = obj.name;
   }
   serialize(): Uint8Array {
-    return serialize(createReverseInstruction.schema, this);
+    return serialize(CreateReverseInstruction.schema, this);
   }
   getInstruction(
     programId: PublicKey,

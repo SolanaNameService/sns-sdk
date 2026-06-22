@@ -1,5 +1,5 @@
 import { PublicKey, SystemProgram, SYSVAR_RENT_PUBKEY } from "@solana/web3.js";
-import { createReverseInstruction } from "../instructions/createReverseInstruction";
+import { CreateReverseInstruction } from "../instructions/createReverseInstruction";
 import {
   NAME_PROGRAM_ID,
   SNS_ROOT_DOMAIN_ACCOUNT,
@@ -41,7 +41,7 @@ export const createReverse = async (
     parentName,
   );
 
-  let initCentralStateInstruction = new createReverseInstruction({
+  let initCentralStateInstruction = new CreateReverseInstruction({
     name,
   }).getInstruction(
     REGISTER_PROGRAM_ID,

@@ -3,7 +3,7 @@ import { PublicKey, TransactionInstruction } from "@solana/web3.js";
 import { serialize } from "borsh";
 import type { AccountKey } from "./types";
 
-export class burnInstruction {
+export class BurnInstruction {
   tag: number;
   static schema = {
     struct: {
@@ -15,7 +15,7 @@ export class burnInstruction {
     this.tag = 16;
   }
   serialize(): Uint8Array {
-    return serialize(burnInstruction.schema, this);
+    return serialize(BurnInstruction.schema, this);
   }
   getInstruction(
     programId: PublicKey,

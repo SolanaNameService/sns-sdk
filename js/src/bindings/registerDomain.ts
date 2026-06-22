@@ -22,7 +22,7 @@ import {
   VAULT_OWNER,
 } from "../constants";
 import { InvalidDomainError, PythFeedNotFoundError } from "../error";
-import { createSplitV2Instruction } from "../instructions/createSplitV2Instruction";
+import { CreateSplitV2Instruction } from "../instructions/createSplitV2Instruction";
 import { getHashedNameSync } from "../utils/getHashedNameSync";
 import { getNameAccountKeySync } from "../utils/getNameAccountKeySync";
 import { getPythFeedAccountKey } from "../utils/getPythFeedAccountKey";
@@ -107,7 +107,7 @@ export const registerDomain = async (
 
   const [pythFeedAccount] = getPythFeedAccountKey(0, pythFeed);
 
-  const ix = new createSplitV2Instruction({
+  const ix = new CreateSplitV2Instruction({
     name: trimmedDomain,
     space,
     referrerIdxOpt: refIdx != -1 ? refIdx : null,

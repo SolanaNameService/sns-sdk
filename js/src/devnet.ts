@@ -31,12 +31,12 @@ import {
   UnsupportedTldError,
 } from "./error";
 import { PrimaryDomain } from "./primary-domain";
-import { burnInstruction } from "./instructions/burnInstruction";
+import { BurnInstruction } from "./instructions/burnInstruction";
 import { createInstruction } from "./instructions/createInstruction";
-import { createReverseInstruction } from "./instructions/createReverseInstruction";
-import { createSplitV2Instruction } from "./instructions/createSplitV2Instruction";
+import { CreateReverseInstruction } from "./instructions/createReverseInstruction";
+import { CreateSplitV2Instruction } from "./instructions/createSplitV2Instruction";
 import { deleteInstruction } from "./instructions/deleteInstruction";
-import { setPrimaryInstruction } from "./instructions/setPrimaryInstruction";
+import { SetPrimaryInstruction } from "./instructions/setPrimaryInstruction";
 import { transferInstruction } from "./instructions/transferInstruction";
 import { updateInstruction } from "./instructions/updateInstruction";
 import { Numberu32, Numberu64 } from "./int";
@@ -484,7 +484,7 @@ const createReverse = async (
     parentName,
   );
 
-  let initCentralStateInstruction = new createReverseInstruction({
+  let initCentralStateInstruction = new CreateReverseInstruction({
     name,
   }).getInstruction(
     constants.REGISTER_PROGRAM_ID,
@@ -581,7 +581,7 @@ const burnDomain = (domain: string, owner: PublicKey, target: PublicKey) => {
     constants.REGISTER_PROGRAM_ID,
   );
 
-  const ix = new burnInstruction().getInstruction(
+  const ix = new BurnInstruction().getInstruction(
     constants.REGISTER_PROGRAM_ID,
     constants.NAME_PROGRAM_ID,
     SystemProgram.programId,
@@ -734,7 +734,7 @@ const registerDomain = async (
 
   const [pythFeedAccount] = getPythFeedAccountKey(0, pythFeed);
 
-  const ix = new createSplitV2Instruction({
+  const ix = new CreateSplitV2Instruction({
     name: trimmedDomain,
     space,
     referrerIdxOpt: refIdx != -1 ? refIdx : null,
@@ -784,7 +784,7 @@ const setPrimaryDomain = async (
   }
 
   const [favKey] = await PrimaryDomain.getKey(constants.NAME_OFFERS_ID, owner);
-  const ix = new setPrimaryInstruction().getInstruction(
+  const ix = new SetPrimaryInstruction().getInstruction(
     constants.NAME_OFFERS_ID,
     nameAccount,
     favKey,

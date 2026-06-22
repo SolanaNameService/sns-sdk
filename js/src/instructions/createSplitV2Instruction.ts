@@ -3,7 +3,7 @@ import { PublicKey, TransactionInstruction } from "@solana/web3.js";
 import { serialize } from "borsh";
 import type { AccountKey } from "./types";
 
-export class createSplitV2Instruction {
+export class CreateSplitV2Instruction {
   tag: number;
   name: string;
   space: number;
@@ -27,7 +27,7 @@ export class createSplitV2Instruction {
     this.referrerIdxOpt = obj.referrerIdxOpt;
   }
   serialize(): Uint8Array {
-    return serialize(createSplitV2Instruction.schema, this);
+    return serialize(CreateSplitV2Instruction.schema, this);
   }
   getInstruction(
     programId: PublicKey,

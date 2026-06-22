@@ -1,5 +1,5 @@
 import { Connection, PublicKey, SystemProgram } from "@solana/web3.js";
-import { setPrimaryInstruction } from "../instructions/setPrimaryInstruction";
+import { SetPrimaryInstruction } from "../instructions/setPrimaryInstruction";
 import { PrimaryDomain, NAME_OFFERS_ID } from "../primary-domain";
 import { NameRegistryState } from "../state";
 import { SNS_ROOT_DOMAIN_ACCOUNT } from "../constants";
@@ -26,7 +26,7 @@ export const setPrimaryDomain = async (
   }
 
   const [favKey] = await PrimaryDomain.getKey(NAME_OFFERS_ID, owner);
-  const ix = new setPrimaryInstruction().getInstruction(
+  const ix = new SetPrimaryInstruction().getInstruction(
     NAME_OFFERS_ID,
     nameAccount,
     favKey,

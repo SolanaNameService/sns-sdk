@@ -3,7 +3,7 @@ import { PublicKey, TransactionInstruction } from "@solana/web3.js";
 import { serialize } from "borsh";
 import type { AccountKey } from "./types";
 
-export class createWithNftInstruction {
+export class CreateWithNftInstruction {
   tag: number;
   name: string;
   space: number;
@@ -21,7 +21,7 @@ export class createWithNftInstruction {
     this.space = obj.space;
   }
   serialize(): Uint8Array {
-    return serialize(createWithNftInstruction.schema, this);
+    return serialize(CreateWithNftInstruction.schema, this);
   }
   getInstruction(
     programId: PublicKey,
