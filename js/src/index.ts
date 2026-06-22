@@ -38,7 +38,7 @@ export * from "./utils/check";
 export * from "./utils/deserializeReverse";
 export * from "./utils/findSubdomains";
 export * from "./utils/getAllDomains";
-export * from "./utils/getAllRegisteredSnsDomains";
+export * from "./utils/getAllSnsDomains";
 export * from "./utils/getDomainKeySync";
 export * from "./utils/tld";
 export * from "./utils/getDomainKeysWithReverses";

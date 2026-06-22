@@ -7,7 +7,7 @@ import { NAME_PROGRAM_ID, SNS_ROOT_DOMAIN_ACCOUNT } from "../constants";
  * @param connection The Solana RPC connection object
  * @returns
  */
-export const getAllRegisteredSnsDomains = async (connection: Connection) => {
+export const getAllSnsDomains = async (connection: Connection) => {
   const filters = [
     {
       memcmp: {
