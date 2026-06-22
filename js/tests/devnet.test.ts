@@ -41,7 +41,7 @@ test("Create reverse", async () => {
   const { pubkey: subkey } = devnet.utils._deriveSync(
     "devnet-test-create-reverse",
   );
-  const ix = await devnet.bindings.createReverseName(
+  const ix = await devnet.bindings.createReverse(
     subkey,
     "devnet-test-create-reverse",
     OWNER,

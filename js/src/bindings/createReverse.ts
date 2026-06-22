@@ -27,7 +27,7 @@ import { getNameAccountKeySync } from "../utils/getNameAccountKeySync";
  * @param parentNameOwner Optional parent name owner, required when `parentName` is provided
  * @returns An array containing the reverse lookup creation instruction
  */
-export const createReverseName = async (
+export const createReverse = async (
   nameAccount: PublicKey,
   name: string,
   feePayer: PublicKey,

@@ -6,7 +6,7 @@ import { getDomainKeySync } from "../utils/getDomainKeySync";
 import { getReverseKeySync } from "../utils/getReverseKeySync";
 import { SNS_TLD } from "../utils/tld";
 import { createNameRegistry } from "./createNameRegistry";
-import { createReverseName } from "./createReverseName";
+import { createReverse } from "./createReverse";
 
 /**
  * This function can be used to create a subdomain
@@ -59,7 +59,7 @@ export const createSubdomain = async (
   const reverseKey = getReverseKeySync(subdomain, true);
   const info = await connection.getAccountInfo(reverseKey);
   if (!info?.data) {
-    const ix_reverse = await createReverseName(
+    const ix_reverse = await createReverse(
       pubkey,
       "\0".concat(sub),
       feePayer || owner,

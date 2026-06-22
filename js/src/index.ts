@@ -2,7 +2,7 @@ export * from "./bindings/burnDomain";
 export * from "./bindings/createNameRegistry";
 export * from "./bindings/createRecord";
 export * from "./bindings/createRecordV2";
-export * from "./bindings/createReverseName";
+export * from "./bindings/createReverse";
 export * from "./bindings/createSolRecord";
 export * from "./bindings/createSubdomain";
 export * from "./bindings/deleteNameRegistry";
