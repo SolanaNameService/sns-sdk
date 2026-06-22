@@ -1,6 +1,6 @@
 import { Connection, PublicKey, SystemProgram } from "@solana/web3.js";
-import { registerFavoriteInstruction } from "../instructions/registerFavoriteInstruction";
-import { FavouriteDomain, NAME_OFFERS_ID } from "../favorite-domain";
+import { setPrimaryInstruction } from "../instructions/setPrimaryInstruction";
+import { PrimaryDomain, NAME_OFFERS_ID } from "../primary-domain";
 import { NameRegistryState } from "../state";
 import { SNS_ROOT_DOMAIN_ACCOUNT } from "../constants";
 
@@ -11,7 +11,7 @@ import { SNS_ROOT_DOMAIN_ACCOUNT } from "../constants";
  * @param programId The name offer program ID
  * @returns
  */
-export const registerFavorite = async (
+export const setPrimaryDomain = async (
   connection: Connection,
   nameAccount: PublicKey,
   owner: PublicKey,
@@ -25,8 +25,8 @@ export const registerFavorite = async (
     parent = registry.parentName;
   }
 
-  const [favKey] = await FavouriteDomain.getKey(NAME_OFFERS_ID, owner);
-  const ix = new registerFavoriteInstruction().getInstruction(
+  const [favKey] = await PrimaryDomain.getKey(NAME_OFFERS_ID, owner);
+  const ix = new setPrimaryInstruction().getInstruction(
     NAME_OFFERS_ID,
     nameAccount,
     favKey,
@@ -36,5 +36,3 @@ export const registerFavorite = async (
   );
   return ix;
 };
-
-export { registerFavorite as setPrimaryDomain };

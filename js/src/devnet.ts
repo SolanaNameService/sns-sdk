@@ -30,13 +30,13 @@ import {
   PythFeedNotFoundError,
   UnsupportedTldError,
 } from "./error";
-import { FavouriteDomain } from "./favorite-domain";
+import { PrimaryDomain } from "./primary-domain";
 import { burnInstruction } from "./instructions/burnInstruction";
 import { createInstruction } from "./instructions/createInstruction";
 import { createReverseInstruction } from "./instructions/createReverseInstruction";
 import { createSplitV2Instruction } from "./instructions/createSplitV2Instruction";
 import { deleteInstruction } from "./instructions/deleteInstruction";
-import { registerFavoriteInstruction } from "./instructions/registerFavoriteInstruction";
+import { setPrimaryInstruction } from "./instructions/setPrimaryInstruction";
 import { transferInstruction } from "./instructions/transferInstruction";
 import { updateInstruction } from "./instructions/updateInstruction";
 import { Numberu32, Numberu64 } from "./int";
@@ -783,11 +783,8 @@ const setPrimaryDomain = async (
     parent = registry.parentName;
   }
 
-  const [favKey] = await FavouriteDomain.getKey(
-    constants.NAME_OFFERS_ID,
-    owner,
-  );
-  const ix = new registerFavoriteInstruction().getInstruction(
+  const [favKey] = await PrimaryDomain.getKey(constants.NAME_OFFERS_ID, owner);
+  const ix = new setPrimaryInstruction().getInstruction(
     constants.NAME_OFFERS_ID,
     nameAccount,
     favKey,
@@ -806,11 +803,11 @@ const setPrimaryDomain = async (
  * @returns
  */
 const getPrimaryDomain = async (connection: Connection, owner: PublicKey) => {
-  const [favKey] = FavouriteDomain.getKeySync(
+  const [favKey] = PrimaryDomain.getKeySync(
     constants.NAME_OFFERS_ID,
     new PublicKey(owner),
   );
-  const favorite = await FavouriteDomain.retrieve(connection, favKey);
+  const favorite = await PrimaryDomain.retrieve(connection, favKey);
   const { registry, nftOwner } = await NameRegistryState.retrieve(
     connection,
     favorite.nameAccount,

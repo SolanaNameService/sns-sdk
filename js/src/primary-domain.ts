@@ -17,7 +17,7 @@ export const NAME_OFFERS_ID = new PublicKey(
   "85iDfUvr3HJyLM2zcq5BXSiDvUWfw6cSE1FfNBo8Ap29",
 );
 
-export class FavouriteDomain {
+export class PrimaryDomain {
   tag: number;
   nameAccount: PublicKey;
   static schema = {
@@ -38,7 +38,7 @@ export class FavouriteDomain {
    * @returns
    */
   static deserialize(data: Buffer) {
-    return new FavouriteDomain(deserialize(this.schema, data) as any);
+    return new PrimaryDomain(deserialize(this.schema, data) as any);
   }
 
   /**
@@ -84,23 +84,21 @@ export class FavouriteDomain {
   }
 }
 
-export { FavouriteDomain as PrimaryDomain };
-
 /**
  * This function can be used to retrieve the favorite domain of a user
  * @param connection The Solana RPC connection object
  * @param owner The owner you want to retrieve the favorite domain for
  * @returns
  */
-export const getFavoriteDomain = async (
+export const getPrimaryDomain = async (
   connection: Connection,
   owner: PublicKey,
 ) => {
-  const [favKey] = FavouriteDomain.getKeySync(
+  const [favKey] = PrimaryDomain.getKeySync(
     NAME_OFFERS_ID,
     new PublicKey(owner),
   );
-  const favorite = await FavouriteDomain.retrieve(connection, favKey);
+  const favorite = await PrimaryDomain.retrieve(connection, favKey);
   const { registry, nftOwner } = await NameRegistryState.retrieve(
     connection,
     favorite.nameAccount,
@@ -127,8 +125,6 @@ export const getFavoriteDomain = async (
   };
 };
 
-export { getFavoriteDomain as getPrimaryDomain };
-
 /**
  * This function can be used to retrieve the favorite domains for multiple wallets, up to a maximum of 100.
  * If a wallet does not have a favorite domain, the result will be 'undefined' instead of the human readable domain as a string.
@@ -137,19 +133,19 @@ export { getFavoriteDomain as getPrimaryDomain };
  * @param wallets An array of PublicKeys representing the wallets
  * @returns A promise that resolves to an array of strings or undefined, representing the favorite domains or lack thereof for each wallet
  */
-export const getMultipleFavoriteDomains = async (
+export const getMultiplePrimaryDomains = async (
   connection: Connection,
   wallets: PublicKey[],
 ): Promise<(string | undefined)[]> => {
   const result: (string | undefined)[] = [];
 
   const favKeys = wallets.map(
-    (e) => FavouriteDomain.getKeySync(NAME_OFFERS_ID, e)[0],
+    (e) => PrimaryDomain.getKeySync(NAME_OFFERS_ID, e)[0],
   );
   const favDomains = (await connection.getMultipleAccountsInfo(favKeys)).map(
     (e) => {
       if (!!e?.data) {
-        return FavouriteDomain.deserialize(e?.data).nameAccount;
+        return PrimaryDomain.deserialize(e?.data).nameAccount;
       }
       return PublicKey.default;
     },
@@ -224,5 +220,3 @@ export const getMultipleFavoriteDomains = async (
 
   return result;
 };
-
-export { getMultipleFavoriteDomains as getMultiplePrimaryDomains };

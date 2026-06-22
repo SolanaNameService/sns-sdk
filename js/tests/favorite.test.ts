@@ -1,9 +1,9 @@
 require("dotenv").config();
 import { test, expect, jest } from "@jest/globals";
 import {
-  getFavoriteDomain,
-  getMultipleFavoriteDomains,
-} from "../src/favorite-domain";
+  getPrimaryDomain,
+  getMultiplePrimaryDomains,
+} from "../src/primary-domain";
 import { PublicKey, Connection, Keypair } from "@solana/web3.js";
 
 jest.setTimeout(10_000);
@@ -30,7 +30,7 @@ test("Favorite domain", async () => {
     },
   ];
   for (let item of items) {
-    const fav = await getFavoriteDomain(connection, item.user);
+    const fav = await getPrimaryDomain(connection, item.user);
     expect(fav.domain.toBase58()).toBe(item.favorite.domain.toBase58());
     expect(fav.reverse).toBe(item.favorite.reverse);
     expect(fav.stale).toBe(item.favorite.stale);
@@ -57,7 +57,7 @@ test("Multiple favorite domains", async () => {
       domain: "fav-tokenized",
     },
   ];
-  const result = await getMultipleFavoriteDomains(
+  const result = await getMultiplePrimaryDomains(
     connection,
     items.map((e) => e.wallet),
   );
