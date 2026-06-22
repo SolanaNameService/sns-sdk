@@ -56,7 +56,6 @@ export * from "./instructions/burnInstruction";
 export * from "./instructions/createInstruction";
 export * from "./instructions/createReverseInstruction";
 export * from "./instructions/createSplitV2Instruction";
-export * from "./instructions/createV2Instruction";
 export * from "./instructions/createWithNftInstruction";
 export * from "./instructions/deleteInstruction";
 export * from "./instructions/reallocInstruction";
