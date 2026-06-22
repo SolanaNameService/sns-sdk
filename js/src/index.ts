@@ -7,9 +7,10 @@ export * from "./bindings/createSolRecord";
 export * from "./bindings/createSubdomain";
 export * from "./bindings/deleteNameRegistry";
 export * from "./bindings/deleteRecordV2";
-export * from "./bindings/ethValidateRecordV2Content";
 export * from "./bindings/registerDomain";
 export * from "./bindings/setPrimaryDomain";
+export * from "./bindings/setRecordRoaVerifier";
+export * from "./bindings/setRecordStalenessVerifier";
 export * from "./bindings/registerDomainWithNft";
 export * from "./bindings/transferDomain";
 export * from "./bindings/transferSubdomain";
@@ -17,8 +18,8 @@ export * from "./bindings/updateNameRegistry";
 export * from "./bindings/updateRecord";
 export * from "./bindings/updateRecordV2";
 export * from "./bindings/updateSolRecord";
-export * from "./bindings/validateRecordV2Content";
-export * from "./bindings/writeRoaRecordV2";
+export * from "./bindings/validateRecordRoa";
+export * from "./bindings/validateRecordRoaEthereum";
 
 export * from "./state";
 

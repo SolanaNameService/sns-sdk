@@ -8,25 +8,22 @@ import {
 import { PublicKey } from "@solana/web3.js";
 
 import { NAME_PROGRAM_ID } from "../constants";
-import { InvalidParentError } from "../error";
-import { Record, RecordVersion } from "../types/record";
-import { getDomainKeySync } from "../utils/getDomainKeySync";
+import { Record } from "../types/record";
 import { parseSupportedTld, SNS_TLD } from "../utils/tld";
+import { _getRecordAndParentKey } from "./recordValidation";
 
 /**
- * Builds the instruction to validate a V2 record's content using an Ethereum
- * signature, proving that the Ethereum address stored in the record is
- * controlled by the domain owner.
+ * Validates the Right of Association of a .sns V2 record using an Ethereum signature.
  *
  * @param domain The full domain name including TLD (e.g. `"mydomain.sns"`)
  * @param record The record type to validate
  * @param owner The owner of the domain
  * @param payer The fee payer of the transaction
- * @param signature The 64-byte Ethereum signature over the record content
+ * @param signature The 64-byte Ethereum signature used for validation
  * @param expectedPubkey The 20-byte Ethereum public key expected to match the signature
- * @returns A {@link TransactionInstruction} that validates the Ethereum signature
+ * @returns A transaction instruction that validates the Ethereum signature
  */
-export const ethValidateRecordV2Content = (
+export const validateRecordRoaEthereum = (
   domain: string,
   record: Record,
   owner: PublicKey,
@@ -34,23 +31,11 @@ export const ethValidateRecordV2Content = (
   signature: Buffer,
   expectedPubkey: Buffer,
 ) => {
-  // Only allows .sns domains
   parseSupportedTld(domain, [SNS_TLD]);
 
-  let { pubkey, parent, isSub } = getDomainKeySync(
-    `${record}.${domain}`,
-    RecordVersion.V2,
-  );
+  const { pubkey, parent } = _getRecordAndParentKey({ domain, record });
 
-  if (isSub) {
-    parent = getDomainKeySync(domain).pubkey;
-  }
-
-  if (!parent) {
-    throw new InvalidParentError("Parent could not be found");
-  }
-
-  const ix = validateEthSignature(
+  return validateEthSignature(
     payer,
     pubkey,
     parent,
@@ -61,5 +46,4 @@ export const ethValidateRecordV2Content = (
     expectedPubkey,
     SNS_RECORDS_ID,
   );
-  return ix;
 };

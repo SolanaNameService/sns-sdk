@@ -266,6 +266,29 @@ const getReverseKeySync = (domain: string, isSub?: boolean) => {
   return reverseLookupAccount;
 };
 
+const getRecordAndParentKey = ({
+  domain,
+  record,
+}: {
+  domain: string;
+  record: Record;
+}) => {
+  let { pubkey, parent, isSub } = getDomainKeySync(
+    `${record}.${domain}`,
+    RecordVersion.V2,
+  );
+
+  if (isSub) {
+    parent = getDomainKeySync(domain).pubkey;
+  }
+
+  if (!parent) {
+    throw new InvalidParentError("Parent could not be found");
+  }
+
+  return { pubkey, parent };
+};
+
 /**
  * Creates a name account with the given rent budget, allocated space, owner and class.
  *
@@ -978,8 +1001,9 @@ const deleteRecordV2 = (
 };
 
 /**
- * This function validates record v2 content
- * @param staleness Boolean indicating if a record is stale or not
+ * This function builds a Solana signature validation instruction for record v2
+ * content.
+ * @param staleness Boolean selecting staleness verifier setup or RoA validation
  * @param domain  The .sns domain name
  * @param record The record type enum
  * @param owner The owner of the record/domain
@@ -987,7 +1011,7 @@ const deleteRecordV2 = (
  * @param verifier The Public Key of verifier used to validate record content
  * @returns The validate record v2 content transaction instruction
  */
-const validateRecordV2Content = (
+const buildValidateSolanaRecordInstruction = (
   staleness: boolean,
   domain: string,
   record: Record,
@@ -998,18 +1022,7 @@ const validateRecordV2Content = (
   // Only allows .sns domains
   parseSupportedTld(domain, [SNS_TLD]);
 
-  let { pubkey, parent, isSub } = getDomainKeySync(
-    `${record}.${domain}`,
-    RecordVersion.V2,
-  );
-
-  if (isSub) {
-    parent = getDomainKeySync(domain).pubkey;
-  }
-
-  if (!parent) {
-    throw new InvalidParentError("Parent could not be found");
-  }
+  const { pubkey, parent } = getRecordAndParentKey({ domain, record });
 
   const ix = new validateSolanaSignatureInstruction({
     staleness,
@@ -1029,39 +1042,78 @@ const validateRecordV2Content = (
 };
 
 /**
- * This function writes a Right of Association on a record v2
+ * This function writes or refreshes the staleness verifier metadata for a record v2
  * @param domain  The .sns domain name
  * @param record The record type enum
  * @param owner The owner of the record/domain
  * @param payer The fee payer of the transaction
- * @param roaId The authority written to verify the ROA
- * @returns The write ROA record v2 transaction instruction
+ * @param verifier The Public Key of verifier used for staleness checks
+ * @returns The set record staleness verifier transaction instruction
  */
-const writeRoaRecordV2 = (
+const setRecordStalenessVerifier = (
   domain: string,
   record: Record,
   owner: PublicKey,
   payer: PublicKey,
-  roaId: PublicKey,
+  verifier: PublicKey,
+) =>
+  buildValidateSolanaRecordInstruction(
+    true,
+    domain,
+    record,
+    owner,
+    payer,
+    verifier,
+  );
+
+/**
+ * This function validates the Right of Association of a record v2
+ * @param domain  The .sns domain name
+ * @param record The record type enum
+ * @param owner The owner of the record/domain
+ * @param payer The fee payer of the transaction
+ * @param verifier The Public Key of verifier used to validate the RoA
+ * @returns The validate record RoA transaction instruction
+ */
+const validateRecordRoa = (
+  domain: string,
+  record: Record,
+  owner: PublicKey,
+  payer: PublicKey,
+  verifier: PublicKey,
+) =>
+  buildValidateSolanaRecordInstruction(
+    false,
+    domain,
+    record,
+    owner,
+    payer,
+    verifier,
+  );
+
+/**
+ * This function stores the expected Right of Association verifier on a record v2
+ * @param domain  The .sns domain name
+ * @param record The record type enum
+ * @param owner The owner of the record/domain
+ * @param payer The fee payer of the transaction
+ * @param verifier The authority written to verify the RoA
+ * @returns The set record RoA verifier transaction instruction
+ */
+const setRecordRoaVerifier = (
+  domain: string,
+  record: Record,
+  owner: PublicKey,
+  payer: PublicKey,
+  verifier: PublicKey,
 ) => {
   // Only allows .sns domains
   parseSupportedTld(domain, [SNS_TLD]);
 
-  let { pubkey, parent, isSub } = getDomainKeySync(
-    `${record}.${domain}`,
-    RecordVersion.V2,
-  );
-
-  if (isSub) {
-    parent = getDomainKeySync(domain).pubkey;
-  }
-
-  if (!parent) {
-    throw new InvalidParentError("Parent could not be found");
-  }
+  const { pubkey, parent } = getRecordAndParentKey({ domain, record });
 
   const ix = new writeRoaInstruction({
-    roaId: Array.from(roaId.toBuffer()),
+    roaId: Array.from(verifier.toBuffer()),
   }).getInstruction(
     constants.SNS_RECORDS_ID,
     SystemProgram.programId,
@@ -1100,7 +1152,8 @@ export const devnet = {
     createRecordV2,
     updateRecordV2,
     deleteRecordV2,
-    validateRecordV2Content,
-    writeRoaRecordV2,
+    setRecordStalenessVerifier,
+    setRecordRoaVerifier,
+    validateRecordRoa,
   },
 };

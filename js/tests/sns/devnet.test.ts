@@ -129,10 +129,10 @@ test("Set record", async () => {
   expect(res.value.err).toBe(null);
 });
 
-test("Write ROA", async () => {
+test("Set RoA verifier", async () => {
   const domain = "dotsofan22.sns";
   const tx = new Transaction();
-  const ix = devnet.bindings.writeRoaRecordV2(
+  const ix = devnet.bindings.setRecordRoaVerifier(
     domain,
     Record.SOL,
     OWNER3,
@@ -147,11 +147,10 @@ test("Write ROA", async () => {
   expect(res.value.err).toBe(null);
 });
 
-test("Validate Record", async () => {
+test("Validate Record RoA", async () => {
   const domain = "dotsofan22.sns";
   const tx = new Transaction();
-  const ix = devnet.bindings.validateRecordV2Content(
-    false,
+  const ix = devnet.bindings.validateRecordRoa(
     domain,
     Record.SOL,
     OWNER3,

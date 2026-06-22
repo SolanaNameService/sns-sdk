@@ -7,10 +7,10 @@ import { Record } from "../../src/types/record";
 import { Connection, PublicKey, Transaction } from "@solana/web3.js";
 import { createRecordV2 } from "../../src/bindings/createRecordV2";
 import { deleteRecordV2 } from "../../src/bindings/deleteRecordV2";
-import { ethValidateRecordV2Content } from "../../src/bindings/ethValidateRecordV2Content";
+import { setRecordRoaVerifier } from "../../src/bindings/setRecordRoaVerifier";
+import { setRecordStalenessVerifier } from "../../src/bindings/setRecordStalenessVerifier";
 import { updateRecordV2 } from "../../src/bindings/updateRecordV2";
-import { validateRecordV2Content } from "../../src/bindings/validateRecordV2Content";
-import { writeRoaRecordV2 } from "../../src/bindings/writeRoaRecordV2";
+import { validateRecordRoaEthereum } from "../../src/bindings/validateRecordRoaEthereum";
 
 jest.setTimeout(50_000);
 
@@ -79,7 +79,7 @@ test("Delete record", async () => {
   expect(value.err).toBe(null);
 });
 
-test("Solana Verify", async () => {
+test("Set record staleness verifier", async () => {
   const domain = "wallet-guide-9.sns";
   const owner = new PublicKey("Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8");
   const tx = new Transaction();
@@ -91,8 +91,7 @@ test("Solana Verify", async () => {
     owner,
   );
   tx.add(ix_1);
-  const ix_2 = validateRecordV2Content(
-    true,
+  const ix_2 = setRecordStalenessVerifier(
     domain,
     Record.Github,
     owner,
@@ -119,8 +118,7 @@ test("ETH Verify", async () => {
     owner,
   );
   tx.add(ix_1);
-  const ix_2 = validateRecordV2Content(
-    true,
+  const ix_2 = setRecordStalenessVerifier(
     domain,
     Record.ETH,
     owner,
@@ -128,7 +126,7 @@ test("ETH Verify", async () => {
     owner,
   );
   tx.add(ix_2);
-  const ix_3 = ethValidateRecordV2Content(
+  const ix_3 = validateRecordRoaEthereum(
     domain,
     Record.ETH,
     owner,
@@ -151,7 +149,7 @@ test("ETH Verify", async () => {
   expect(value.err).toBe(null);
 });
 
-test("RoA record", async () => {
+test("Set RoA verifier", async () => {
   const domain = "wallet-guide-9.sns";
   const owner = new PublicKey("Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8");
   const tx = new Transaction();
@@ -163,7 +161,7 @@ test("RoA record", async () => {
     owner,
   );
   tx.add(ix_1);
-  const ix_2 = writeRoaRecordV2(domain, Record.Github, owner, owner, owner);
+  const ix_2 = setRecordRoaVerifier(domain, Record.Github, owner, owner, owner);
   tx.add(ix_2);
   tx.feePayer = owner;
   tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
@@ -205,7 +203,7 @@ test("Create record for sub & update & verify staleness & delete", async () => {
     ),
   );
   tx.add(
-    validateRecordV2Content(true, domain, Record.Github, owner, owner, owner),
+    setRecordStalenessVerifier(domain, Record.Github, owner, owner, owner),
   );
   tx.add(deleteRecordV2(domain, Record.Github, owner, owner));
   tx.feePayer = owner;
