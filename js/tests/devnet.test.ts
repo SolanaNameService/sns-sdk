@@ -71,7 +71,7 @@ test("Delete", async () => {
 
 test("Update", async () => {
   const tx = new Transaction();
-  const ix = await devnet.bindings.updateNameRegistryData(
+  const ix = await devnet.bindings.updateNameRegistry(
     connection,
     "devnet-test-1",
     0,

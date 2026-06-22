@@ -336,7 +336,7 @@ async function createNameRegistry(
  * @param nameClass The class of this name, if it exsists
  * @param nameParent The parent name of this name, if it exists
  */
-async function updateNameRegistryData(
+async function updateNameRegistry(
   connection: Connection,
   name: string,
   offset: number,
@@ -1088,7 +1088,7 @@ export const devnet = {
   constants,
   bindings: {
     createNameRegistry,
-    updateNameRegistryData,
+    updateNameRegistry,
     transferDomain,
     deleteNameRegistry,
     createReverse,

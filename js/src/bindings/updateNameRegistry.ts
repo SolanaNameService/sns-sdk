@@ -17,7 +17,7 @@ import { getNameAccountKeySync } from "../utils/getNameAccountKeySync";
  * @param nameClass The class of this name, if it exsists
  * @param nameParent The parent name of this name, if it exists
  */
-export async function updateNameRegistryData(
+export async function updateNameRegistry(
   connection: Connection,
   name: string,
   offset: number,
