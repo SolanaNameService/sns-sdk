@@ -5,7 +5,7 @@ import { NAME_PROGRAM_ID } from "../constants";
 import { InvalidParentError } from "../error";
 import { Record, RecordVersion } from "../types/record";
 import { getDomainKeySync } from "../utils/getDomainKeySync";
-import { parseSupportedTld, SNS_TLD } from "../utils/tld";
+import { _parseSnsDomain } from "../utils/parseSnsDomain";
 
 /**
  * This function deletes a record v2 and returns the rent to the fee payer
@@ -21,8 +21,7 @@ export const deleteRecordV2 = (
   owner: PublicKey,
   payer: PublicKey,
 ) => {
-  // Only allows .sns domains
-  parseSupportedTld(domain, [SNS_TLD]);
+  _parseSnsDomain(domain);
   let { pubkey, parent, isSub } = getDomainKeySync(
     `${record}.${domain}`,
     RecordVersion.V2,

@@ -9,7 +9,7 @@ import { serializeRecord } from "../record/serializeRecord";
 import { Record, RecordVersion } from "../types/record";
 import { check } from "../utils/check";
 import { getDomainKeySync } from "../utils/getDomainKeySync";
-import { parseSupportedTld, SNS_TLD } from "../utils/tld";
+import { _parseSnsDomain } from "../utils/parseSnsDomain";
 import { createRecord } from "./createRecord";
 
 export const updateRecord = async (
@@ -27,8 +27,7 @@ export const updateRecord = async (
     ),
   );
 
-  // Only allows .sns domains
-  parseSupportedTld(domain, [SNS_TLD]);
+  _parseSnsDomain(domain);
 
   const { pubkey } = getDomainKeySync(`${record}.${domain}`, RecordVersion.V1);
 

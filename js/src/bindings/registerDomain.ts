@@ -21,12 +21,12 @@ import {
   USDC_MINT,
   VAULT_OWNER,
 } from "../constants";
-import { InvalidDomainError, PythFeedNotFoundError } from "../error";
+import { PythFeedNotFoundError } from "../error";
 import { CreateSplitV2Instruction } from "../instructions/createSplitV2Instruction";
 import { getHashedNameSync } from "../utils/getHashedNameSync";
 import { getNameAccountKeySync } from "../utils/getNameAccountKeySync";
 import { getPythFeedAccountKey } from "../utils/getPythFeedAccountKey";
-import { parseSupportedTld, SNS_TLD } from "../utils/tld";
+import { _parseSnsTopLevelDomain } from "../utils/parseSnsDomain";
 
 /**
  * This function can be used to register a .sns domain
@@ -48,16 +48,7 @@ export const registerDomain = async (
   mint = USDC_MINT,
   referrerKey?: PublicKey,
 ) => {
-  // Only allows .sns domains
-  const [trimmedDomain] = parseSupportedTld(domain, [SNS_TLD]);
-
-  // Basic validation
-  if (
-    trimmedDomain.includes(".") ||
-    trimmedDomain.trim().toLowerCase() !== trimmedDomain
-  ) {
-    throw new InvalidDomainError("The domain name is malformed");
-  }
+  const trimmedDomain = _parseSnsTopLevelDomain(domain);
 
   const hashed = getHashedNameSync(trimmedDomain);
   const nameAccount = getNameAccountKeySync(

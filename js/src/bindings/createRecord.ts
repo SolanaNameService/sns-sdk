@@ -9,7 +9,7 @@ import { NameRegistryState } from "../state";
 import { Record, RecordVersion } from "../types/record";
 import { check } from "../utils/check";
 import { getDomainKeySync } from "../utils/getDomainKeySync";
-import { parseSupportedTld, SNS_TLD } from "../utils/tld";
+import { _parseSnsDomain } from "../utils/parseSnsDomain";
 
 /**
  * This function can be used be create a record V1, it handles the serialization of the record data
@@ -37,8 +37,7 @@ export const createRecord = async (
     ),
   );
 
-  // Only allows .sns domains
-  parseSupportedTld(domain, [SNS_TLD]);
+  _parseSnsDomain(domain);
 
   const { pubkey, hashed, parent } = getDomainKeySync(
     `${record}.${domain}`,

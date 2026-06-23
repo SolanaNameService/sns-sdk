@@ -5,7 +5,7 @@ import { NAME_PROGRAM_ID } from "../constants";
 import { InvalidParentError } from "../error";
 import { Record, RecordVersion } from "../types/record";
 import { getDomainKeySync } from "../utils/getDomainKeySync";
-import { parseSupportedTld, SNS_TLD } from "../utils/tld";
+import { _parseSnsDomain } from "../utils/parseSnsDomain";
 
 interface RecordVerificationParams {
   domain: string;
@@ -76,7 +76,7 @@ export const _buildValidateSolanaSignatureInstruction = ({
 }: RecordVerificationParams & {
   staleness: boolean;
 }) => {
-  parseSupportedTld(domain, [SNS_TLD]);
+  _parseSnsDomain(domain);
 
   const { pubkey, parent } = _getRecordAndParentKey({ domain, record });
 

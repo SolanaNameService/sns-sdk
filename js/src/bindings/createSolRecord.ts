@@ -7,7 +7,7 @@ import { serializeSolRecord } from "../record/serializeSolRecord";
 import { NameRegistryState } from "../state";
 import { Record, RecordVersion } from "../types/record";
 import { getDomainKeySync } from "../utils/getDomainKeySync";
-import { parseSupportedTld, SNS_TLD } from "../utils/tld";
+import { _parseSnsDomain } from "../utils/parseSnsDomain";
 
 /**
  * This function can be used to create a SOL record (V1)
@@ -27,8 +27,7 @@ export const createSolRecord = async (
   signature: Uint8Array,
   payer: PublicKey,
 ) => {
-  // Only allows .sns domains
-  parseSupportedTld(domain, [SNS_TLD]);
+  _parseSnsDomain(domain);
 
   const { pubkey, hashed, parent } = getDomainKeySync(
     `${Record.SOL}.${domain}`,

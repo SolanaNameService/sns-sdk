@@ -9,7 +9,7 @@ import { serializeSolRecord } from "../record/serializeSolRecord";
 import { Record, RecordVersion } from "../types/record";
 import { check } from "../utils/check";
 import { getDomainKeySync } from "../utils/getDomainKeySync";
-import { parseSupportedTld, SNS_TLD } from "../utils/tld";
+import { _parseSnsDomain } from "../utils/parseSnsDomain";
 import { createSolRecord } from "./createSolRecord";
 
 export const updateSolRecord = async (
@@ -20,8 +20,7 @@ export const updateSolRecord = async (
   signature: Uint8Array,
   payer: PublicKey,
 ) => {
-  // Only allows .sns domains
-  parseSupportedTld(domain, [SNS_TLD]);
+  _parseSnsDomain(domain);
 
   const { pubkey } = getDomainKeySync(
     `${Record.SOL}.${domain}`,

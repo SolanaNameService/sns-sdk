@@ -6,7 +6,7 @@ import { InvalidParentError } from "../error";
 import { serializeRecordV2Content } from "../record_v2/serializeRecordV2Content";
 import { Record, RecordVersion } from "../types/record";
 import { getDomainKeySync } from "../utils/getDomainKeySync";
-import { parseSupportedTld, SNS_TLD } from "../utils/tld";
+import { _parseSnsDomain } from "../utils/parseSnsDomain";
 
 /**
  * This function updates the content of a record V2. The data serialization follows the SNS-IP 1 guidelines
@@ -25,8 +25,7 @@ export const updateRecordV2 = (
   owner: PublicKey,
   payer: PublicKey,
 ) => {
-  // Only allows .sns domains
-  parseSupportedTld(domain, [SNS_TLD]);
+  _parseSnsDomain(domain);
 
   let { pubkey, parent, isSub } = getDomainKeySync(
     `${record}.${domain}`,

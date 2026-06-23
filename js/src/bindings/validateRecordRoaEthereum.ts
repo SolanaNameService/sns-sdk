@@ -9,7 +9,7 @@ import { PublicKey } from "@solana/web3.js";
 
 import { NAME_PROGRAM_ID } from "../constants";
 import { Record } from "../types/record";
-import { parseSupportedTld, SNS_TLD } from "../utils/tld";
+import { _parseSnsDomain } from "../utils/parseSnsDomain";
 import { _getRecordAndParentKey } from "./recordValidation";
 
 /**
@@ -31,7 +31,7 @@ export const validateRecordRoaEthereum = (
   signature: Buffer,
   expectedPubkey: Buffer,
 ) => {
-  parseSupportedTld(domain, [SNS_TLD]);
+  _parseSnsDomain(domain);
 
   const { pubkey, parent } = _getRecordAndParentKey({ domain, record });
 

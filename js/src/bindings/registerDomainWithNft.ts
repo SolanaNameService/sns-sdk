@@ -10,7 +10,7 @@ import {
   WOLVES_COLLECTION_METADATA,
 } from "../constants";
 import { CreateWithNftInstruction } from "../instructions/createWithNftInstruction";
-import { parseSupportedTld, SNS_TLD } from "../utils/tld";
+import { _parseSnsTopLevelDomain } from "../utils/parseSnsDomain";
 
 /**
  * Builds the instruction to register a `.sns` domain name using a Wolves
@@ -42,8 +42,7 @@ export const registerDomainWithNft = (
   nftMint: PublicKey,
   masterEdition: PublicKey,
 ) => {
-  // Only allows .sns domains
-  const [trimmedDomain] = parseSupportedTld(domain, [SNS_TLD]);
+  const trimmedDomain = _parseSnsTopLevelDomain(domain);
 
   const [state] = PublicKey.findProgramAddressSync(
     [nameAccount.toBuffer()],

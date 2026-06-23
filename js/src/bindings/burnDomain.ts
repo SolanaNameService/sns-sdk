@@ -8,7 +8,7 @@ import {
 import { BurnInstruction } from "../instructions/burnInstruction";
 import { getDomainKeySync } from "../utils/getDomainKeySync";
 import { getReverseKeySync } from "../utils/getReverseKeySync";
-import { parseSupportedTld, SNS_TLD } from "../utils/tld";
+import { _parseSnsTopLevelDomain } from "../utils/parseSnsDomain";
 
 /**
  * Builds the instruction to burn (permanently delete) a domain name and its
@@ -24,8 +24,7 @@ export const burnDomain = (
   owner: PublicKey,
   target: PublicKey,
 ) => {
-  // Only allows .sns domains
-  parseSupportedTld(domain, [SNS_TLD]);
+  _parseSnsTopLevelDomain(domain);
 
   const { pubkey } = getDomainKeySync(domain);
   const [state] = PublicKey.findProgramAddressSync(

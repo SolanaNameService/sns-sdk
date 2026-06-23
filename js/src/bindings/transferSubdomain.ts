@@ -3,9 +3,7 @@ import { transferInstruction } from "../instructions/transferInstruction";
 import { NameRegistryState } from "../state";
 import { NAME_PROGRAM_ID } from "../constants";
 import { getDomainKeySync } from "../utils/getDomainKeySync";
-import { InvalidSubdomainError } from "../error";
-import { SNS_TLD } from "../utils/tld";
-import { parseSupportedTld } from "../utils/tld";
+import { _parseSnsSubdomain } from "../utils/parseSnsDomain";
 
 /**
  * This function is used to transfer the ownership of a subdomain in the Solana Name Service.
@@ -25,14 +23,9 @@ export const transferSubdomain = async (
   isParentOwnerSigner?: boolean,
   owner?: PublicKey,
 ): Promise<TransactionInstruction> => {
-  // Only allows .sns subdomains
-  parseSupportedTld(subdomain, [SNS_TLD]);
+  _parseSnsSubdomain(subdomain);
 
-  const { pubkey, isSub, parent } = getDomainKeySync(subdomain);
-
-  if (!parent || !isSub) {
-    throw new InvalidSubdomainError("The subdomain is not valid");
-  }
+  const { pubkey, parent } = getDomainKeySync(subdomain);
 
   if (!owner) {
     const { registry } = await NameRegistryState.retrieve(connection, pubkey);
@@ -43,8 +36,8 @@ export const transferSubdomain = async (
   let nameParentOwner: PublicKey | undefined = undefined;
 
   if (isParentOwnerSigner) {
-    nameParent = parent;
-    nameParentOwner = (await NameRegistryState.retrieve(connection, parent))
+    nameParent = parent!;
+    nameParentOwner = (await NameRegistryState.retrieve(connection, parent!))
       .registry.owner;
   }
 

@@ -1,10 +1,9 @@
 import { Connection, PublicKey, TransactionInstruction } from "@solana/web3.js";
 
-import { InvalidDomainError, UnsupportedTldError } from "../error";
 import { NameRegistryState } from "../state";
 import { getDomainKeySync } from "../utils/getDomainKeySync";
+import { _parseSnsSubdomain } from "../utils/parseSnsDomain";
 import { getReverseKeySync } from "../utils/getReverseKeySync";
-import { SNS_TLD } from "../utils/tld";
 import { createNameRegistry } from "./createNameRegistry";
 import { createReverse } from "./createReverse";
 
@@ -24,17 +23,7 @@ export const createSubdomain = async (
   feePayer?: PublicKey,
 ) => {
   const ixs: TransactionInstruction[] = [];
-  const labels = subdomain.split(".");
-  const [sub, parentName, tld] = labels;
-
-  if ("." + tld !== SNS_TLD) {
-    throw new UnsupportedTldError(
-      `Subdomain "${subdomain}" must have a .sns TLD`,
-    );
-  }
-  if (!(labels.length === 3 && sub && parentName)) {
-    throw new InvalidDomainError("The subdomain name is malformed");
-  }
+  const [sub] = _parseSnsSubdomain(subdomain);
 
   const { parent, pubkey } = getDomainKeySync(subdomain);
 

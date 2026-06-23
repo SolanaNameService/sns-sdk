@@ -22,13 +22,10 @@ import {
 
 import { PYTH_PULL_FEEDS } from "./constants";
 import {
-  InvalidDomainError,
   InvalidInputError,
   InvalidParentError,
-  InvalidSubdomainError,
   NoAccountDataError,
   PythFeedNotFoundError,
-  UnsupportedTldError,
 } from "./error";
 import { PrimaryDomain } from "./primary-domain";
 import { BurnInstruction } from "./instructions/burnInstruction";
@@ -43,10 +40,15 @@ import { Numberu32, Numberu64 } from "./int";
 import { serializeRecordV2Content } from "./record_v2/serializeRecordV2Content";
 import { NameRegistryState } from "./state";
 import { Record, RecordVersion } from "./types/record";
+import {
+  _parseSnsDomain,
+  _parseSnsSubdomain,
+  _parseSnsTopLevelDomain,
+} from "./utils/parseSnsDomain";
 import { deserializeReverse } from "./utils/deserializeReverse";
 import { getHashedNameSync } from "./utils/getHashedNameSync";
 import { getPythFeedAccountKey } from "./utils/getPythFeedAccountKey";
-import { parseSupportedTld, SNS_TLD, SOL_TLD } from "./utils/tld";
+import { parseSupportedTld, SOL_TLD } from "./utils/tld";
 
 const constants = {
   /**
@@ -406,16 +408,7 @@ async function transferDomain(
   domain: string,
   newOwner: PublicKey,
 ): Promise<TransactionInstruction> {
-  // Only allows .sns domains
-  const [trimmedDomain] = parseSupportedTld(domain, [SNS_TLD]);
-
-  // Basic validation
-  if (
-    trimmedDomain.includes(".") ||
-    trimmedDomain.trim().toLowerCase() !== trimmedDomain
-  ) {
-    throw new InvalidDomainError("The domain name is malformed");
-  }
+  const trimmedDomain = _parseSnsTopLevelDomain(domain);
 
   const hashed_name = getHashedNameSync(trimmedDomain);
   const nameAccountKey = getNameAccountKeySync(
@@ -542,17 +535,7 @@ const createSubdomain = async (
   feePayer?: PublicKey,
 ) => {
   const ixs: TransactionInstruction[] = [];
-  const labels = subdomain.split(".");
-  const [sub, parentName, tld] = labels;
-
-  if ("." + tld !== SNS_TLD) {
-    throw new UnsupportedTldError(
-      `Subdomain "${subdomain}" must have a .sns TLD`,
-    );
-  }
-  if (!(labels.length === 3 && sub && parentName)) {
-    throw new InvalidDomainError("The subdomain name is malformed");
-  }
+  const [sub] = _parseSnsSubdomain(subdomain);
 
   const { parent, pubkey } = getDomainKeySync(subdomain);
 
@@ -591,8 +574,7 @@ const createSubdomain = async (
 };
 
 const burnDomain = (domain: string, owner: PublicKey, target: PublicKey) => {
-  // Only allows .sns domains
-  parseSupportedTld(domain, [SNS_TLD]);
+  _parseSnsTopLevelDomain(domain);
 
   const { pubkey } = getDomainKeySync(domain);
   const [state] = PublicKey.findProgramAddressSync(
@@ -637,14 +619,9 @@ const transferSubdomain = async (
   isParentOwnerSigner?: boolean,
   owner?: PublicKey,
 ): Promise<TransactionInstruction> => {
-  // Only allows .sns subdomains
-  parseSupportedTld(subdomain, [SNS_TLD]);
+  _parseSnsSubdomain(subdomain);
 
-  const { pubkey, isSub, parent } = getDomainKeySync(subdomain);
-
-  if (!parent || !isSub) {
-    throw new InvalidSubdomainError("The subdomain is not valid");
-  }
+  const { pubkey, parent } = getDomainKeySync(subdomain);
 
   if (!owner) {
     const { registry } = await NameRegistryState.retrieve(connection, pubkey);
@@ -655,8 +632,8 @@ const transferSubdomain = async (
   let nameParentOwner: PublicKey | undefined = undefined;
 
   if (isParentOwnerSigner) {
-    nameParent = parent;
-    nameParentOwner = (await NameRegistryState.retrieve(connection, parent))
+    nameParent = parent!;
+    nameParentOwner = (await NameRegistryState.retrieve(connection, parent!))
       .registry.owner;
   }
 
@@ -693,16 +670,7 @@ const registerDomain = async (
   mint = constants.USDC_MINT,
   referrerKey?: PublicKey,
 ) => {
-  // Only allows .sns domains
-  const [trimmedDomain] = parseSupportedTld(domain, [SNS_TLD]);
-
-  // Basic validation
-  if (
-    trimmedDomain.includes(".") ||
-    trimmedDomain.trim().toLowerCase() !== trimmedDomain
-  ) {
-    throw new InvalidDomainError("The domain name is malformed");
-  }
+  const trimmedDomain = _parseSnsTopLevelDomain(domain);
   const [cs] = PublicKey.findProgramAddressSync(
     [constants.REGISTER_PROGRAM_ID.toBuffer()],
     constants.REGISTER_PROGRAM_ID,
@@ -873,8 +841,7 @@ const createRecordV2 = (
   owner: PublicKey,
   payer: PublicKey,
 ) => {
-  // Only allows .sns domains
-  parseSupportedTld(domain, [SNS_TLD]);
+  _parseSnsDomain(domain);
 
   let { pubkey, parent, isSub } = getDomainKeySync(
     `${record}.${domain}`,
@@ -923,8 +890,7 @@ const updateRecordV2 = (
   owner: PublicKey,
   payer: PublicKey,
 ) => {
-  // Only allows .sns domains
-  parseSupportedTld(domain, [SNS_TLD]);
+  _parseSnsDomain(domain);
 
   let { pubkey, parent, isSub } = getDomainKeySync(
     `${record}.${domain}`,
@@ -970,8 +936,7 @@ const deleteRecordV2 = (
   owner: PublicKey,
   payer: PublicKey,
 ) => {
-  // Only allows .sns domains
-  parseSupportedTld(domain, [SNS_TLD]);
+  _parseSnsDomain(domain);
 
   let { pubkey, parent, isSub } = getDomainKeySync(
     `${record}.${domain}`,
@@ -1019,8 +984,7 @@ const buildValidateSolanaRecordInstruction = (
   payer: PublicKey,
   verifier: PublicKey,
 ) => {
-  // Only allows .sns domains
-  parseSupportedTld(domain, [SNS_TLD]);
+  _parseSnsDomain(domain);
 
   const { pubkey, parent } = getRecordAndParentKey({ domain, record });
 
@@ -1107,8 +1071,7 @@ const setRecordRoaVerifier = (
   payer: PublicKey,
   verifier: PublicKey,
 ) => {
-  // Only allows .sns domains
-  parseSupportedTld(domain, [SNS_TLD]);
+  _parseSnsDomain(domain);
 
   const { pubkey, parent } = getRecordAndParentKey({ domain, record });
 
