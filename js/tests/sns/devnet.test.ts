@@ -114,7 +114,7 @@ test("Set primary", async () => {
 test("Set record", async () => {
   const domain = "devnet-test-1.sns";
   const tx = new Transaction();
-  const ix = await devnet.bindings.createRecordV2(
+  const ix = await devnet.bindings.createRecord(
     domain,
     Record.Discord,
     "ilovedotso",
@@ -168,7 +168,7 @@ test("Validate Record RoA", async () => {
 test("Update Record", async () => {
   const domain = "dotsofan22.sns";
   const tx = new Transaction();
-  const ix = devnet.bindings.updateRecordV2(
+  const ix = devnet.bindings.updateRecord(
     domain,
     Record.Telegram,
     "iLoveDotso",
@@ -186,7 +186,7 @@ test("Update Record", async () => {
 test("Delete Record", async () => {
   const domain = "dotsofan22.sns";
   const tx = new Transaction();
-  const ix = devnet.bindings.deleteRecordV2(
+  const ix = devnet.bindings.deleteRecord(
     domain,
     Record.Telegram,
     OWNER3,

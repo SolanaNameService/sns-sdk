@@ -4,7 +4,7 @@ import { Record } from "../types/record";
 import { _buildValidateSolanaSignatureInstruction } from "./recordValidation";
 
 /**
- * Validates the Right of Association of a .sns V2 record using a Solana verifier.
+ * Validates the Right of Association of a .sns record using a Solana verifier.
  *
  * @param domain The full domain name including TLD (e.g. `"mydomain.sns"`)
  * @param record The record type to validate

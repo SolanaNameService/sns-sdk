@@ -15,7 +15,6 @@ import inject from "@rollup/plugin-inject";
 export default {
   input: [
     "src/index.ts",
-    "src/record_v2/**/*.ts",
     "src/utils/**/*.ts",
     "src/twitter/**/*.ts",
     "src/resolve/**/*.ts",

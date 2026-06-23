@@ -6,7 +6,11 @@ import { getHashedNameSync } from "../utils/getHashedNameSync";
 import { getNameAccountKeySync } from "../utils/getNameAccountKeySync";
 
 /**
- * This function derives a record v2 key
+ * Derives the V2 record account key.
+ *
+ * Most consumers should use the high-level record APIs (`getRecord`,
+ * `createRecord`, `updateRecord`, etc.). This helper is exposed for callers
+ * that need deterministic account derivation.
  * @param domain The full domain name including TLD (e.g. `mydomain.sns`, `sub.parent.sns`)
  * @param record The record to derive the key for
  * @returns Public key of the record

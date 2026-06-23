@@ -21,7 +21,7 @@ import { UTF8_ENCODED, EVM_RECORDS } from "./const";
  * @param record The type of record
  * @returns The serialized content as a buffer
  */
-export const serializeRecordV2Content = (
+export const serializeRecordContent = (
   content: string,
   record: Record,
 ): Buffer => {

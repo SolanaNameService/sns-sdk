@@ -1,15 +1,11 @@
+import { Record as RecordV2, Validation } from "@bonfida/sns-records";
+import { ed25519 } from "@noble/curves/ed25519";
 import {
   Connection,
   PublicKey,
   SIGNATURE_LENGTH_IN_BYTES,
 } from "@solana/web3.js";
-import { getDomainKeySync } from "../utils/getDomainKeySync";
-import { NftRecord, Tag } from "../nft/state";
-import { NAME_TOKENIZER_ID } from "../nft/const";
-import { getRecordKeySync } from "../record/getRecordKeySync";
-import { Record } from "../types/record";
-import { getRecordV2Key } from "../record_v2/getRecordV2Key";
-import { Record as RecordV2, Validation } from "@bonfida/sns-records";
+
 import {
   CouldNotFindNftOwner,
   DomainDoesNotExist,
@@ -19,10 +15,15 @@ import {
   UnsupportedTldError,
   WrongValidation,
 } from "../error";
-import { NameRegistryState } from "../state";
-import { checkSolRecord } from "../record/checkSolRecord";
+import { NAME_TOKENIZER_ID } from "../nft/const";
 import { retrieveNftOwnerV2 } from "../nft/retrieveNftOwnerV2";
-import { getTld, SOL_TLD, SNS_TLD } from "../utils/tld";
+import { NftRecord, Tag } from "../nft/state";
+import { getRecordV1Key } from "../record/getRecordV1Key";
+import { getRecordV2Key } from "../record/getRecordV2Key";
+import { NameRegistryState } from "../state";
+import { Record } from "../types/record";
+import { getDomainKeySync } from "../utils/getDomainKeySync";
+import { getTld, SNS_TLD, SOL_TLD } from "../utils/tld";
 
 export type AllowPda = "any" | boolean;
 
@@ -35,6 +36,21 @@ type ResolveConfig = AllowPda extends true
       allowPda: AllowPda;
       programIds?: PublicKey[];
     };
+
+/**
+ * This function can be used to verify the validity of a SOL record
+ * @param record The record data to verify
+ * @param signedRecord The signed data
+ * @param pubkey The public key of the signer
+ * @returns
+ */
+const verifySolRecordV1Signature = (
+  record: Uint8Array,
+  signedRecord: Uint8Array,
+  pubkey: PublicKey,
+) => {
+  return ed25519.verify(signedRecord, record, pubkey.toBytes());
+};
 
 /**
  * Internal handler for `.sol` domains.
@@ -63,7 +79,7 @@ const resolveSns = async (
 ): Promise<PublicKey> => {
   const { pubkey } = getDomainKeySync(domain);
   const [nftRecordKey] = NftRecord.findKeySync(pubkey, NAME_TOKENIZER_ID);
-  const solRecordV1Key = getRecordKeySync(domain, Record.SOL);
+  const solRecordV1Key = getRecordV1Key(domain, Record.SOL);
   const solRecordV2Key = getRecordV2Key(domain, Record.SOL);
   const [nftRecordInfo, solRecordV1Info, solRecordV2Info, registryInfo] =
     await connection.getMultipleAccountsInfo([
@@ -136,7 +152,7 @@ const resolveSns = async (
     ]);
 
     const expected = encoder.encode(expectedBuffer.toString("hex"));
-    const valid = checkSolRecord(
+    const valid = verifySolRecordV1Signature(
       expected,
       solRecordV1Info.data.slice(
         NameRegistryState.HEADER_LEN + 32,

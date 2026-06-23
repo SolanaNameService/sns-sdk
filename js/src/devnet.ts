@@ -37,7 +37,7 @@ import { SetPrimaryInstruction } from "./instructions/setPrimaryInstruction";
 import { transferInstruction } from "./instructions/transferInstruction";
 import { updateInstruction } from "./instructions/updateInstruction";
 import { Numberu32, Numberu64 } from "./int";
-import { serializeRecordV2Content } from "./record_v2/serializeRecordV2Content";
+import { serializeRecordContent } from "./record/serializeRecordContent";
 import { NameRegistryState } from "./state";
 import { Record, RecordVersion } from "./types/record";
 import {
@@ -268,7 +268,18 @@ const getReverseKeySync = (domain: string, isSub?: boolean) => {
   return reverseLookupAccount;
 };
 
-const getRecordAndParentKey = ({
+/**
+ * Derives the V2 record account and the owning domain or subdomain account.
+ *
+ * Callers are responsible for applying any public API TLD restrictions before
+ * invoking this helper. The key derivation itself follows `getDomainKeySync`.
+ *
+ * @param domain The full domain name including TLD (e.g. `"mydomain.sns"`)
+ * @param record The record type whose V2 account should be derived
+ * @returns The derived record account as `pubkey` and its owning parent account
+ * @throws {InvalidParentError} When the owning domain account cannot be resolved
+ */
+const _getRecordAndParentKey = ({
   domain,
   record,
 }: {
@@ -826,15 +837,16 @@ const getPrimaryDomain = async (connection: Connection, owner: PublicKey) => {
 };
 
 /**
- * This function can be used be create a record V2, it handles the serialization of the record data following SNS-IP 1 guidelines
- * @param domain The .sns domain name
- * @param record The record enum object
- * @param recordV2 The `RecordV2` object that will be serialized into the record via the update instruction
+ * Creates a record account and serializes its content according to SNS-IP 1.
+ *
+ * @param domain The full domain name including TLD (e.g. `mydomain.sns`)
+ * @param record The record type enum
+ * @param content The record content to serialize and store
  * @param owner The owner of the domain
  * @param payer The fee payer of the transaction
- * @returns
+ * @returns The create record transaction instruction
  */
-const createRecordV2 = (
+const createRecord = (
   domain: string,
   record: Record,
   content: string,
@@ -858,7 +870,7 @@ const createRecordV2 = (
 
   const ix = new allocateAndPostRecordInstruction({
     record: `\x02`.concat(record as string),
-    content: Array.from(serializeRecordV2Content(content, record)),
+    content: Array.from(serializeRecordContent(content, record)),
   }).getInstruction(
     constants.SNS_RECORDS_ID,
     SystemProgram.programId,
@@ -874,16 +886,16 @@ const createRecordV2 = (
 };
 
 /**
- * This function updates the content of a record V2. The data serialization follows the SNS-IP 1 guidelines
- * @param connection The Solana RPC connection object
- * @param domain The .sns domain name
- * @param record The record enum object
- * @param recordV2 The `RecordV2` object to serialize into the record
+ * Updates a record account and serializes its content according to SNS-IP 1.
+ *
+ * @param domain The full domain name including TLD (e.g. `mydomain.sns`)
+ * @param record The record type enum
+ * @param content The record content to serialize and store
  * @param owner The owner of the record/domain
  * @param payer The fee payer of the transaction
- * @returns The update record instructions
+ * @returns The update record transaction instruction
  */
-const updateRecordV2 = (
+const updateRecord = (
   domain: string,
   record: Record,
   content: string,
@@ -907,7 +919,7 @@ const updateRecordV2 = (
 
   const ix = new editRecordInstruction({
     record: `\x02`.concat(record as string),
-    content: Array.from(serializeRecordV2Content(content, record)),
+    content: Array.from(serializeRecordContent(content, record)),
   }).getInstruction(
     constants.SNS_RECORDS_ID,
     SystemProgram.programId,
@@ -923,14 +935,15 @@ const updateRecordV2 = (
 };
 
 /**
- * This function deletes a record v2 and returns the rent to the fee payer
- * @param domain The .sns domain name
- * @param record  The record type enum
- * @param owner The owner of the record to delete
+ * Deletes a record account and returns the rent to the fee payer.
+ *
+ * @param domain The full domain name including TLD (e.g. `mydomain.sns`)
+ * @param record The record type enum
+ * @param owner The owner of the record/domain
  * @param payer The fee payer of the transaction
- * @returns The delete transaction instruction
+ * @returns The delete record transaction instruction
  */
-const deleteRecordV2 = (
+const deleteRecord = (
   domain: string,
   record: Record,
   owner: PublicKey,
@@ -966,17 +979,23 @@ const deleteRecordV2 = (
 };
 
 /**
- * This function builds a Solana signature validation instruction for record v2
- * content.
- * @param staleness Boolean selecting staleness verifier setup or RoA validation
- * @param domain  The .sns domain name
- * @param record The record type enum
- * @param owner The owner of the record/domain
+ * Builds the SNS records program's Solana-signature validation instruction.
+ *
+ * The `staleness` flag selects the low-level program mode: `true` writes or
+ * refreshes staleness verifier metadata, while `false` validates Right of
+ * Association using the provided Solana verifier.
+ *
+ * @param staleness Whether to build the staleness verifier instruction mode
+ * @param domain The full `.sns` domain or subdomain whose record is validated
+ * @param record The record type whose V2 account is validated
+ * @param owner The owner of the domain
  * @param payer The fee payer of the transaction
- * @param verifier The Public Key of verifier used to validate record content
- * @returns The validate record v2 content transaction instruction
+ * @param verifier The Solana verifier account used by the selected mode
+ * @returns A transaction instruction for the SNS records program
+ * @throws {UnsupportedTldError} When `domain` is not a `.sns` domain
+ * @throws {InvalidParentError} When the owning domain account cannot be resolved
  */
-const buildValidateSolanaRecordInstruction = (
+const _buildValidateSolanaSignatureInstruction = (
   staleness: boolean,
   domain: string,
   record: Record,
@@ -986,7 +1005,7 @@ const buildValidateSolanaRecordInstruction = (
 ) => {
   _parseSnsDomain(domain);
 
-  const { pubkey, parent } = getRecordAndParentKey({ domain, record });
+  const { pubkey, parent } = _getRecordAndParentKey({ domain, record });
 
   const ix = new validateSolanaSignatureInstruction({
     staleness,
@@ -1006,13 +1025,14 @@ const buildValidateSolanaRecordInstruction = (
 };
 
 /**
- * This function writes or refreshes the staleness verifier metadata for a record v2
- * @param domain  The .sns domain name
- * @param record The record type enum
- * @param owner The owner of the record/domain
+ * Writes or refreshes the staleness verifier metadata for a .sns record.
+ *
+ * @param domain The full domain name including TLD (e.g. `"mydomain.sns"`)
+ * @param record The record type to validate
+ * @param owner The owner of the domain
  * @param payer The fee payer of the transaction
- * @param verifier The Public Key of verifier used for staleness checks
- * @returns The set record staleness verifier transaction instruction
+ * @param verifier The verifier to store for staleness checks
+ * @returns A transaction instruction that sets the staleness verifier
  */
 const setRecordStalenessVerifier = (
   domain: string,
@@ -1021,7 +1041,7 @@ const setRecordStalenessVerifier = (
   payer: PublicKey,
   verifier: PublicKey,
 ) =>
-  buildValidateSolanaRecordInstruction(
+  _buildValidateSolanaSignatureInstruction(
     true,
     domain,
     record,
@@ -1031,13 +1051,14 @@ const setRecordStalenessVerifier = (
   );
 
 /**
- * This function validates the Right of Association of a record v2
- * @param domain  The .sns domain name
- * @param record The record type enum
- * @param owner The owner of the record/domain
+ * Validates the Right of Association of a .sns record using a Solana verifier.
+ *
+ * @param domain The full domain name including TLD (e.g. `"mydomain.sns"`)
+ * @param record The record type to validate
+ * @param owner The owner of the domain
  * @param payer The fee payer of the transaction
- * @param verifier The Public Key of verifier used to validate the RoA
- * @returns The validate record RoA transaction instruction
+ * @param verifier The expected RoA verifier that signs the validation
+ * @returns A transaction instruction that validates the record RoA
  */
 const validateRecordRoa = (
   domain: string,
@@ -1046,7 +1067,7 @@ const validateRecordRoa = (
   payer: PublicKey,
   verifier: PublicKey,
 ) =>
-  buildValidateSolanaRecordInstruction(
+  _buildValidateSolanaSignatureInstruction(
     false,
     domain,
     record,
@@ -1056,13 +1077,14 @@ const validateRecordRoa = (
   );
 
 /**
- * This function stores the expected Right of Association verifier on a record v2
- * @param domain  The .sns domain name
- * @param record The record type enum
- * @param owner The owner of the record/domain
+ * Stores the expected Right of Association verifier for a .sns record.
+ *
+ * @param domain The full domain name including TLD (e.g. `"mydomain.sns"`)
+ * @param record The record type to set the RoA verifier for
+ * @param owner The owner of the domain
  * @param payer The fee payer of the transaction
- * @param verifier The authority written to verify the RoA
- * @returns The set record RoA verifier transaction instruction
+ * @param verifier The expected RoA verifier to store in the record
+ * @returns A transaction instruction that sets the RoA verifier
  */
 const setRecordRoaVerifier = (
   domain: string,
@@ -1073,7 +1095,7 @@ const setRecordRoaVerifier = (
 ) => {
   _parseSnsDomain(domain);
 
-  const { pubkey, parent } = getRecordAndParentKey({ domain, record });
+  const { pubkey, parent } = _getRecordAndParentKey({ domain, record });
 
   const ix = new writeRoaInstruction({
     roaId: Array.from(verifier.toBuffer()),
@@ -1112,9 +1134,9 @@ export const devnet = {
     transferSubdomain,
     registerDomain,
     setPrimaryDomain,
-    createRecordV2,
-    updateRecordV2,
-    deleteRecordV2,
+    createRecord,
+    updateRecord,
+    deleteRecord,
     setRecordStalenessVerifier,
     setRecordRoaVerifier,
     validateRecordRoa,

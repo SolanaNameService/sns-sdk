@@ -1,15 +1,15 @@
 require("dotenv").config();
 import { test, expect, jest, describe } from "@jest/globals";
-import { getMultipleRecordsV2 } from "../../src/record_v2/getMultipleRecordsV2";
-import { getRecordV2 } from "../../src/record_v2/getRecordV2";
-import { getRecordV2Key } from "../../src/record_v2/getRecordV2Key";
+import { getMultipleRecords } from "../../src/record/getMultipleRecords";
+import { getRecord } from "../../src/record/getRecord";
+import { getRecordV2Key } from "../../src/record/getRecordV2Key";
 import { Record } from "../../src/types/record";
 import { Connection, PublicKey, Transaction } from "@solana/web3.js";
-import { createRecordV2 } from "../../src/bindings/createRecordV2";
-import { deleteRecordV2 } from "../../src/bindings/deleteRecordV2";
+import { createRecord } from "../../src/bindings/createRecord";
+import { deleteRecord } from "../../src/bindings/deleteRecord";
 import { setRecordRoaVerifier } from "../../src/bindings/setRecordRoaVerifier";
 import { setRecordStalenessVerifier } from "../../src/bindings/setRecordStalenessVerifier";
-import { updateRecordV2 } from "../../src/bindings/updateRecordV2";
+import { updateRecord } from "../../src/bindings/updateRecord";
 import { validateRecordRoaEthereum } from "../../src/bindings/validateRecordRoaEthereum";
 
 jest.setTimeout(50_000);
@@ -19,13 +19,7 @@ const connection = new Connection(process.env.RPC_URL!);
 test("Create record", async () => {
   const domain = "wallet-guide-9.sns";
   const owner = new PublicKey("Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8");
-  const ix = createRecordV2(
-    domain,
-    Record.Github,
-    "bonfida",
-    owner,
-    owner,
-  );
+  const ix = createRecord(domain, Record.Github, "bonfida", owner, owner);
   const tx = new Transaction().add(ix);
   tx.feePayer = owner;
   tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
@@ -37,21 +31,9 @@ test("Update record", async () => {
   const domain = "wallet-guide-9.sns";
   const owner = new PublicKey("Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8");
   const tx = new Transaction();
-  const ix_1 = createRecordV2(
-    domain,
-    Record.Github,
-    "bonfida",
-    owner,
-    owner,
-  );
+  const ix_1 = createRecord(domain, Record.Github, "bonfida", owner, owner);
   tx.add(ix_1);
-  const ix_2 = updateRecordV2(
-    domain,
-    Record.Github,
-    "some text",
-    owner,
-    owner,
-  );
+  const ix_2 = updateRecord(domain, Record.Github, "some text", owner, owner);
   tx.add(ix_2);
   tx.feePayer = owner;
   tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
@@ -63,15 +45,9 @@ test("Delete record", async () => {
   const domain = "wallet-guide-9.sns";
   const owner = new PublicKey("Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8");
   const tx = new Transaction();
-  const ix_1 = createRecordV2(
-    domain,
-    Record.Github,
-    "bonfida",
-    owner,
-    owner,
-  );
+  const ix_1 = createRecord(domain, Record.Github, "bonfida", owner, owner);
   tx.add(ix_1);
-  const ix_2 = deleteRecordV2(domain, Record.Github, owner, owner);
+  const ix_2 = deleteRecord(domain, Record.Github, owner, owner);
   tx.add(ix_2);
   tx.feePayer = owner;
   tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
@@ -83,13 +59,7 @@ test("Set record staleness verifier", async () => {
   const domain = "wallet-guide-9.sns";
   const owner = new PublicKey("Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8");
   const tx = new Transaction();
-  const ix_1 = createRecordV2(
-    domain,
-    Record.Github,
-    "bonfida",
-    owner,
-    owner,
-  );
+  const ix_1 = createRecord(domain, Record.Github, "bonfida", owner, owner);
   tx.add(ix_1);
   const ix_2 = setRecordStalenessVerifier(
     domain,
@@ -110,7 +80,7 @@ test("ETH Verify", async () => {
   const owner = new PublicKey("Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8");
   // Record key: E4MZzSfkf59UVFYVux5WEufghvWxUktf6e5EaUuDExAc
   const tx = new Transaction();
-  const ix_1 = createRecordV2(
+  const ix_1 = createRecord(
     domain,
     Record.ETH,
     "0x4bfbfd1e018f9f27eeb788160579daf7e2cd7da7",
@@ -153,13 +123,7 @@ test("Set RoA verifier", async () => {
   const domain = "wallet-guide-9.sns";
   const owner = new PublicKey("Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8");
   const tx = new Transaction();
-  const ix_1 = createRecordV2(
-    domain,
-    Record.Github,
-    "bonfida",
-    owner,
-    owner,
-  );
+  const ix_1 = createRecord(domain, Record.Github, "bonfida", owner, owner);
   tx.add(ix_1);
   const ix_2 = setRecordRoaVerifier(domain, Record.Github, owner, owner, owner);
   tx.add(ix_2);
@@ -172,13 +136,7 @@ test("Set RoA verifier", async () => {
 test("Create record for sub", async () => {
   const domain = "sub-0.wallet-guide-9.sns";
   const owner = new PublicKey("Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8");
-  const ix = createRecordV2(
-    domain,
-    Record.Github,
-    "bonfida",
-    owner,
-    owner,
-  );
+  const ix = createRecord(domain, Record.Github, "bonfida", owner, owner);
   const tx = new Transaction().add(ix);
   tx.feePayer = owner;
   tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
@@ -190,29 +148,19 @@ test("Create record for sub & update & verify staleness & delete", async () => {
   const domain = "sub-0.wallet-guide-9.sns";
   const owner = new PublicKey("Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8");
   const tx = new Transaction();
-  tx.add(
-    createRecordV2(domain, Record.Github, "bonfida", owner, owner),
-  );
-  tx.add(
-    updateRecordV2(
-      domain,
-      Record.Github,
-      "somethingelse",
-      owner,
-      owner,
-    ),
-  );
+  tx.add(createRecord(domain, Record.Github, "bonfida", owner, owner));
+  tx.add(updateRecord(domain, Record.Github, "somethingelse", owner, owner));
   tx.add(
     setRecordStalenessVerifier(domain, Record.Github, owner, owner, owner),
   );
-  tx.add(deleteRecordV2(domain, Record.Github, owner, owner));
+  tx.add(deleteRecord(domain, Record.Github, owner, owner));
   tx.feePayer = owner;
   tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
   const { value } = await connection.simulateTransaction(tx);
   expect(value.err).toBe(null);
 });
 
-test("getRecordV2", async () => {
+test("getRecord", async () => {
   const domain = "wallet-guide-9.sns";
   const items = [
     {
@@ -232,7 +180,7 @@ test("getRecordV2", async () => {
     },
   ];
   for (let item of items) {
-    const res = await getRecordV2(connection, domain, item.record, {
+    const res = await getRecord(connection, domain, item.record, {
       deserialize: true,
     });
     expect(res.deserializedContent).toBe(item.value);
@@ -240,7 +188,7 @@ test("getRecordV2", async () => {
   }
 });
 
-test("getMultipleRecordsV2", async () => {
+test("getMultipleRecords", async () => {
   const domain = "wallet-guide-9.sns";
   const items = [
     {
@@ -259,7 +207,7 @@ test("getMultipleRecordsV2", async () => {
       verified: { staleness: false },
     },
   ];
-  const res = await getMultipleRecordsV2(
+  const res = await getMultipleRecords(
     connection,
     domain,
     items.map((e) => e.record),

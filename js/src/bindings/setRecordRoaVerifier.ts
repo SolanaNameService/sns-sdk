@@ -7,7 +7,7 @@ import { _parseSnsDomain } from "../utils/parseSnsDomain";
 import { _getRecordAndParentKey } from "./recordValidation";
 
 /**
- * Stores the expected Right of Association verifier for a .sns V2 record.
+ * Stores the expected Right of Association verifier for a .sns record.
  *
  * @param domain The full domain name including TLD (e.g. `"mydomain.sns"`)
  * @param record The record type to set the RoA verifier for

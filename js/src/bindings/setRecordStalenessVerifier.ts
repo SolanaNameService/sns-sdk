@@ -4,7 +4,7 @@ import { Record } from "../types/record";
 import { _buildValidateSolanaSignatureInstruction } from "./recordValidation";
 
 /**
- * Writes or refreshes the staleness verifier metadata for a .sns V2 record.
+ * Writes or refreshes the staleness verifier metadata for a .sns record.
  *
  * @param domain The full domain name including TLD (e.g. `"mydomain.sns"`)
  * @param record The record type to validate

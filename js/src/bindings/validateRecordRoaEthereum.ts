@@ -13,7 +13,7 @@ import { _parseSnsDomain } from "../utils/parseSnsDomain";
 import { _getRecordAndParentKey } from "./recordValidation";
 
 /**
- * Validates the Right of Association of a .sns V2 record using an Ethereum signature.
+ * Validates the Right of Association of a .sns record using an Ethereum signature.
  *
  * @param domain The full domain name including TLD (e.g. `"mydomain.sns"`)
  * @param record The record type to validate

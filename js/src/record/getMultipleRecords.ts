@@ -1,29 +1,21 @@
-import { Record } from "../types/record";
-import { Connection, PublicKey } from "@solana/web3.js";
 import { Record as SnsRecord, Validation } from "@bonfida/sns-records";
+import { Connection, PublicKey } from "@solana/web3.js";
 
-import { getRecordV2Key } from "./getRecordV2Key";
-import { deserializeRecordV2Content } from "./deserializeRecordV2Content";
 import { NameRegistryState } from "../state";
+import { Record } from "../types/record";
 import { getDomainKeySync } from "../utils/getDomainKeySync";
 import { ETH_ROA_RECORDS, GUARDIANS, SELF_SIGNED } from "./const";
+import { deserializeRecordContent } from "./deserializeRecordContent";
+import { getRecordV2Key } from "./getRecordV2Key";
 
-interface GetRecordV2Options {
+import type { RecordResult } from "./getRecord";
+
+interface GetMultipleRecordsOptions {
   deserialize?: boolean;
 }
 
-export interface RecordResult {
-  retrievedRecord: SnsRecord;
-  record: Record;
-  verified: {
-    staleness: boolean;
-    roa?: boolean;
-  };
-  deserializedContent?: string;
-}
-
 /**
- * Retrieves multiple records V2 for a domain, verifies the staleness and right
+ * Retrieves multiple records for a domain, verifies the staleness and right
  * of association of each, and optionally deserializes their content.
  *
  * @param connection The Solana RPC connection object.
@@ -36,11 +28,11 @@ export interface RecordResult {
  * right-of-association verification results, and optionally the deserialized
  * content. Entries are `undefined` for records that do not exist on-chain.
  */
-export async function getMultipleRecordsV2(
+export async function getMultipleRecords(
   connection: Connection,
   domain: string,
   records: Record[],
-  options: GetRecordV2Options = {},
+  options: GetMultipleRecordsOptions = {},
 ): Promise<(RecordResult | undefined)[]> {
   const pubkeys = records.map((record) => getRecordV2Key(domain, record));
 
@@ -81,7 +73,7 @@ export async function getMultipleRecordsV2(
       retrievedRecord,
       verified,
       ...(options.deserialize && {
-        deserializedContent: deserializeRecordV2Content(
+        deserializedContent: deserializeRecordContent(
           retrievedRecord.getContent(),
           record,
         ),

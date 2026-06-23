@@ -1,4 +1,7 @@
-import { deleteRecord, SNS_RECORDS_ID } from "@bonfida/sns-records";
+import {
+  deleteRecord as deleteSnsRecord,
+  SNS_RECORDS_ID,
+} from "@bonfida/sns-records";
 import { PublicKey } from "@solana/web3.js";
 
 import { NAME_PROGRAM_ID } from "../constants";
@@ -8,14 +11,15 @@ import { getDomainKeySync } from "../utils/getDomainKeySync";
 import { _parseSnsDomain } from "../utils/parseSnsDomain";
 
 /**
- * This function deletes a record v2 and returns the rent to the fee payer
- * @param domain The full domain name including TLD (e.g. `domain.sns`)
- * @param record  The record type enum
- * @param owner The owner of the record to delete
+ * Deletes a record account and returns the rent to the fee payer.
+ *
+ * @param domain The full domain name including TLD (e.g. `mydomain.sns`)
+ * @param record The record type enum
+ * @param owner The owner of the record/domain
  * @param payer The fee payer of the transaction
- * @returns The delete transaction instruction
+ * @returns The delete record transaction instruction
  */
-export const deleteRecordV2 = (
+export const deleteRecord = (
   domain: string,
   record: Record,
   owner: PublicKey,
@@ -35,7 +39,7 @@ export const deleteRecordV2 = (
     throw new InvalidParentError("Parent could not be found");
   }
 
-  const ix = deleteRecord(
+  const ix = deleteSnsRecord(
     payer,
     parent,
     owner,

@@ -1,57 +1,54 @@
-import { Connection, PublicKey } from "@solana/web3.js";
+import { editRecord, SNS_RECORDS_ID } from "@bonfida/sns-records";
+import { PublicKey } from "@solana/web3.js";
 
 import { NAME_PROGRAM_ID } from "../constants";
-import { AccountDoesNotExistError, UnsupportedRecordError } from "../error";
-import { deleteInstruction } from "../instructions/deleteInstruction";
-import { updateInstruction } from "../instructions/updateInstruction";
-import { Numberu32 } from "../int";
-import { serializeRecord } from "../record/serializeRecord";
+import { InvalidParentError } from "../error";
+import { serializeRecordContent } from "../record/serializeRecordContent";
 import { Record, RecordVersion } from "../types/record";
-import { check } from "../utils/check";
 import { getDomainKeySync } from "../utils/getDomainKeySync";
 import { _parseSnsDomain } from "../utils/parseSnsDomain";
-import { createRecord } from "./createRecord";
 
-export const updateRecord = async (
-  connection: Connection,
+/**
+ * Updates a record account and serializes its content according to SNS-IP 1.
+ *
+ * @param domain The full domain name including TLD (e.g. `mydomain.sns`)
+ * @param record The record type enum
+ * @param content The record content to serialize and store
+ * @param owner The owner of the record/domain
+ * @param payer The fee payer of the transaction
+ * @returns The update record transaction instruction
+ */
+export const updateRecord = (
   domain: string,
   record: Record,
-  data: string,
+  content: string,
   owner: PublicKey,
   payer: PublicKey,
 ) => {
-  check(
-    record !== Record.SOL,
-    new UnsupportedRecordError(
-      "SOL record is not supported for this instruction",
-    ),
-  );
-
   _parseSnsDomain(domain);
 
-  const { pubkey } = getDomainKeySync(`${record}.${domain}`, RecordVersion.V1);
-
-  const info = await connection.getAccountInfo(pubkey);
-  check(
-    !!info?.data,
-    new AccountDoesNotExistError("The record account does not exist"),
+  let { pubkey, parent, isSub } = getDomainKeySync(
+    `${record}.${domain}`,
+    RecordVersion.V2,
   );
 
-  const serialized = serializeRecord(data, record);
-  if (info?.data.slice(96).length !== serialized.length) {
-    // Delete + create until we can realloc accounts
-    return [
-      deleteInstruction(NAME_PROGRAM_ID, pubkey, payer, owner),
-      await createRecord(connection, domain, record, data, owner, payer),
-    ];
+  if (isSub) {
+    parent = getDomainKeySync(domain).pubkey;
   }
 
-  const ix = updateInstruction(
-    NAME_PROGRAM_ID,
+  if (!parent) {
+    throw new InvalidParentError("Parent could not be found");
+  }
+
+  const ix = editRecord(
+    payer,
     pubkey,
-    new Numberu32(0),
-    serialized,
+    parent,
     owner,
+    NAME_PROGRAM_ID,
+    `\x02`.concat(record as string),
+    serializeRecordContent(content, record),
+    SNS_RECORDS_ID,
   );
 
   return ix;

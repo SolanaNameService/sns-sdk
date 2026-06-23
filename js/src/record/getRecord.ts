@@ -1,52 +1,83 @@
-import { Connection } from "@solana/web3.js";
-import { RECORD_V1_SIZE, Record } from "../types/record";
+import { Record as SnsRecord, Validation } from "@bonfida/sns-records";
+import { Connection, PublicKey } from "@solana/web3.js";
+
 import { NameRegistryState } from "../state";
-import { NoRecordDataError } from "../error";
+import { Record } from "../types/record";
+import { getDomainKeySync } from "../utils/getDomainKeySync";
+import { ETH_ROA_RECORDS, GUARDIANS, SELF_SIGNED } from "./const";
+import { deserializeRecordContent } from "./deserializeRecordContent";
+import { getRecordV2Key } from "./getRecordV2Key";
 
-import { getRecordKeySync } from "./getRecordKeySync";
-import { deserializeRecord } from "./deserializeRecord";
+interface GetRecordOptions {
+  deserialize?: boolean;
+}
 
-// Overload signature for the case where deserialize is true.
-export async function getRecord(
-  connection: Connection,
-  domain: string,
-  record: Record,
-  deserialize: true,
-): Promise<string | undefined>;
-
-// Overload signature for the case where deserialize is false or undefined.
-export async function getRecord(
-  connection: Connection,
-  domain: string,
-  record: Record,
-  deserialize?: false,
-): Promise<NameRegistryState | undefined>;
+export interface RecordResult {
+  record: Record;
+  retrievedRecord: SnsRecord;
+  verified: {
+    staleness: boolean;
+    roa?: boolean;
+  };
+  deserializedContent?: string;
+}
 
 /**
- * This function can be used to retrieve a specified record for the given domain name
- * @param connection The Solana RPC connection object
- * @param domain The .sns domain name
- * @param record The record to search for
- * @returns
+ * Retrieves a record for a domain, verifies its staleness and right of
+ * association, and optionally deserializes the record content.
+ *
+ * @param connection The Solana RPC connection object.
+ * @param domain The full domain name including TLD (e.g. `mydomain.sns`).
+ * @param record The record type to retrieve.
+ * @param options Optional retrieval settings.
+ * @param options.deserialize When `true`, deserializes the raw record content.
+ * @returns The requested record, the raw SNS record account, verification
+ * results, and optionally the deserialized content.
  */
 export async function getRecord(
   connection: Connection,
   domain: string,
   record: Record,
-  deserialize?: boolean,
-) {
-  const pubkey = getRecordKeySync(domain, record);
-  let { registry } = await NameRegistryState.retrieve(connection, pubkey);
+  options: GetRecordOptions = {},
+): Promise<RecordResult> {
+  const pubkey = getRecordV2Key(domain, record);
 
-  if (!registry.data) {
-    throw new NoRecordDataError(`The record data is empty`);
-  }
+  const [{ registry, nftOwner }, retrievedRecord] = await Promise.all([
+    NameRegistryState.retrieve(connection, getDomainKeySync(domain).pubkey),
+    SnsRecord.retrieve(connection, pubkey),
+  ]);
 
-  if (deserialize) {
-    return deserializeRecord(registry, record, pubkey);
-  }
-  const recordSize = RECORD_V1_SIZE.get(record);
-  registry.data = registry.data.slice(0, recordSize);
+  const owner = nftOwner || registry.owner;
+  const stalenessId = retrievedRecord.getStalenessId();
+  const roaId = retrievedRecord.getRoAId();
 
-  return registry;
+  const validation = ETH_ROA_RECORDS.has(record)
+    ? Validation.Ethereum
+    : Validation.Solana;
+  const verifier = SELF_SIGNED.has(record)
+    ? retrievedRecord.getContent()
+    : GUARDIANS.get(record)?.toBuffer();
+
+  const verified = {
+    staleness:
+      owner.equals(new PublicKey(stalenessId)) &&
+      retrievedRecord.header.stalenessValidation === Validation.Solana,
+    ...(verifier !== undefined && {
+      roa:
+        verifier.compare(roaId) === 0 &&
+        retrievedRecord.header.rightOfAssociationValidation === validation,
+    }),
+  };
+
+  return {
+    record,
+    retrievedRecord,
+    verified,
+    ...(options.deserialize && {
+      deserializedContent: deserializeRecordContent(
+        retrievedRecord.getContent(),
+        record,
+      ),
+    }),
+  };
 }

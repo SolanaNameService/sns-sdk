@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@jest/globals";
-import { getRecordV2Key } from "../../src/record_v2/getRecordV2Key";
+import { getRecordV2Key } from "../../src/record/getRecordV2Key";
 import { Record } from "../../src/types/record";
 
 describe("getRecordV2Key", () => {
