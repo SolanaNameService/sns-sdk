@@ -1,6 +1,6 @@
 export enum ErrorType {
   InvalidSubdomain = "InvalidSubdomain",
-  FavouriteDomainNotFound = "FavouriteDomainNotFound",
+  PrimaryDomainNotFound = "PrimaryDomainNotFound",
   InvalidBufferLength = "InvalidBufferLength",
   U64Overflow = "U64Overflow",
   InvalidRecordData = "InvalidRecordData",
@@ -49,9 +49,9 @@ export class InvalidSubdomainError extends SNSError {
   }
 }
 
-export class FavouriteDomainNotFoundError extends SNSError {
+export class PrimaryDomainNotFoundError extends SNSError {
   constructor(message?: string) {
-    super(ErrorType.FavouriteDomainNotFound, message);
+    super(ErrorType.PrimaryDomainNotFound, message);
   }
 }
 

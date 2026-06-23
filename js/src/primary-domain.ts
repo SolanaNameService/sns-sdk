@@ -8,7 +8,7 @@ import {
 import { deserializeReverse } from "./utils/deserializeReverse";
 import { getReverseKeyFromDomainKey } from "./utils/getReverseKeyFromDomainKey";
 import { reverseLookup } from "./utils/reverseLookup";
-import { FavouriteDomainNotFoundError } from "./error";
+import { PrimaryDomainNotFoundError } from "./error";
 import { getDomainMint } from "./nft/getDomainMint";
 import { NameRegistryState } from "./state";
 import { NAME_PROGRAM_ID, SNS_ROOT_DOMAIN_ACCOUNT } from "./constants";
@@ -33,7 +33,7 @@ export class PrimaryDomain {
   }
 
   /**
-   * This function can be used to deserialize a Buffer into a FavouriteDomain object
+   * This function can be used to deserialize a Buffer into a PrimaryDomain object
    * @param data The buffer to deserialize
    * @returns
    */
@@ -42,25 +42,25 @@ export class PrimaryDomain {
   }
 
   /**
-   * This function can be used to retrieve and deserialize a favorite domain
+   * This function can be used to retrieve and deserialize a primary domain
    * @param connection The Solana RPC connection object
-   * @param key The favorite account key
+   * @param key The primary account key
    * @returns
    */
   static async retrieve(connection: Connection, key: PublicKey) {
     const accountInfo = await connection.getAccountInfo(key);
     if (!accountInfo || !accountInfo.data) {
-      throw new FavouriteDomainNotFoundError(
-        "The favourite account does not exist",
+      throw new PrimaryDomainNotFoundError(
+        "The primary account does not exist",
       );
     }
     return this.deserialize(accountInfo.data);
   }
 
   /**
-   * This function can be used to derive the key of a favorite domain
+   * This function can be used to derive the key of a primary domain
    * @param programId The name offer program ID
-   * @param owner The owner to retrieve the favorite domain for
+   * @param owner The owner to retrieve the primary domain for
    * @returns
    */
   static async getKey(programId: PublicKey, owner: PublicKey) {
@@ -71,9 +71,9 @@ export class PrimaryDomain {
   }
 
   /**
-   * This function can be used to derive the key of a favorite domain
+   * This function can be used to derive the key of a primary domain
    * @param programId The name offer program ID
-   * @param owner The owner to retrieve the favorite domain for
+   * @param owner The owner to retrieve the primary domain for
    * @returns
    */
   static getKeySync(programId: PublicKey, owner: PublicKey) {
@@ -85,29 +85,29 @@ export class PrimaryDomain {
 }
 
 /**
- * This function can be used to retrieve the favorite domain of a user
+ * This function can be used to retrieve the primary domain of a user
  * @param connection The Solana RPC connection object
- * @param owner The owner you want to retrieve the favorite domain for
+ * @param owner The owner you want to retrieve the primary domain for
  * @returns
  */
 export const getPrimaryDomain = async (
   connection: Connection,
   owner: PublicKey,
 ) => {
-  const [favKey] = PrimaryDomain.getKeySync(
+  const [primaryKey] = PrimaryDomain.getKeySync(
     NAME_OFFERS_ID,
     new PublicKey(owner),
   );
-  const favorite = await PrimaryDomain.retrieve(connection, favKey);
+  const primary = await PrimaryDomain.retrieve(connection, primaryKey);
   const { registry, nftOwner } = await NameRegistryState.retrieve(
     connection,
-    favorite.nameAccount,
+    primary.nameAccount,
   );
   const domainOwner = nftOwner || registry.owner;
 
   let reverse = await reverseLookup(
     connection,
-    favorite.nameAccount,
+    primary.nameAccount,
     registry.parentName.equals(SNS_ROOT_DOMAIN_ACCOUNT)
       ? undefined
       : registry.parentName,
@@ -119,19 +119,19 @@ export const getPrimaryDomain = async (
   }
 
   return {
-    domain: favorite.nameAccount,
+    domain: primary.nameAccount,
     reverse,
     stale: !owner.equals(domainOwner),
   };
 };
 
 /**
- * This function can be used to retrieve the favorite domains for multiple wallets, up to a maximum of 100.
- * If a wallet does not have a favorite domain, the result will be 'undefined' instead of the human readable domain as a string.
+ * This function can be used to retrieve the primary domains for multiple wallets, up to a maximum of 100.
+ * If a wallet does not have a primary domain, the result will be 'undefined' instead of the human readable domain as a string.
  * This function is optimized for network efficiency, making only four RPC calls, three of which are executed in parallel using Promise.all, thereby reducing the overall execution time.
  * @param connection The Solana RPC connection object
  * @param wallets An array of PublicKeys representing the wallets
- * @returns A promise that resolves to an array of strings or undefined, representing the favorite domains or lack thereof for each wallet
+ * @returns A promise that resolves to an array of strings or undefined, representing the primary domains or lack thereof for each wallet
  */
 export const getMultiplePrimaryDomains = async (
   connection: Connection,
@@ -139,19 +139,19 @@ export const getMultiplePrimaryDomains = async (
 ): Promise<(string | undefined)[]> => {
   const result: (string | undefined)[] = [];
 
-  const favKeys = wallets.map(
+  const primaryKeys = wallets.map(
     (e) => PrimaryDomain.getKeySync(NAME_OFFERS_ID, e)[0],
   );
-  const favDomains = (await connection.getMultipleAccountsInfo(favKeys)).map(
-    (e) => {
-      if (!!e?.data) {
-        return PrimaryDomain.deserialize(e?.data).nameAccount;
-      }
-      return PublicKey.default;
-    },
-  );
+  const primaryDomains = (
+    await connection.getMultipleAccountsInfo(primaryKeys)
+  ).map((e) => {
+    if (!!e?.data) {
+      return PrimaryDomain.deserialize(e?.data).nameAccount;
+    }
+    return PublicKey.default;
+  });
 
-  const domainInfos = await connection.getMultipleAccountsInfo(favDomains);
+  const domainInfos = await connection.getMultipleAccountsInfo(primaryDomains);
   const parentRevKeys: PublicKey[] = [];
   const revKeys = domainInfos.map((e, idx) => {
     const parent = new PublicKey(e?.data.slice(0, 32) ?? Buffer.alloc(32));
@@ -162,11 +162,11 @@ export const getMultiplePrimaryDomains = async (
       isSub ? getReverseKeyFromDomainKey(parent) : PublicKey.default,
     );
     return getReverseKeyFromDomainKey(
-      favDomains[idx],
+      primaryDomains[idx],
       isSub ? parent : undefined,
     );
   });
-  const atas = favDomains.map((e, idx) => {
+  const atas = primaryDomains.map((e, idx) => {
     const mint = getDomainMint(e);
     const ata = getAssociatedTokenAddressSync(mint, wallets[idx], true);
     return ata;

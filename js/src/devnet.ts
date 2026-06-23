@@ -765,8 +765,8 @@ const registerDomain = async (
 };
 
 /**
- * This function can be used to register a domain name as favorite
- * @param nameAccount The name account being registered as favorite
+ * This function can be used to set a primary domain
+ * @param nameAccount The name account being set as primary
  * @param owner The owner of the name account
  * @param programId The name offer program ID
  * @returns
@@ -785,11 +785,14 @@ const setPrimaryDomain = async (
     parent = registry.parentName;
   }
 
-  const [favKey] = await PrimaryDomain.getKey(constants.NAME_OFFERS_ID, owner);
+  const [primaryKey] = await PrimaryDomain.getKey(
+    constants.NAME_OFFERS_ID,
+    owner,
+  );
   const ix = new SetPrimaryInstruction().getInstruction(
     constants.NAME_OFFERS_ID,
     nameAccount,
-    favKey,
+    primaryKey,
     owner,
     SystemProgram.programId,
     parent,
@@ -799,26 +802,26 @@ const setPrimaryDomain = async (
 };
 
 /**
- * This function can be used to retrieve the favorite domain of a user
+ * This function can be used to retrieve the primary domain of a user
  * @param connection The Solana RPC connection object
- * @param owner The owner you want to retrieve the favorite domain for
+ * @param owner The owner you want to retrieve the primary domain for
  * @returns
  */
 const getPrimaryDomain = async (connection: Connection, owner: PublicKey) => {
-  const [favKey] = PrimaryDomain.getKeySync(
+  const [primaryKey] = PrimaryDomain.getKeySync(
     constants.NAME_OFFERS_ID,
     new PublicKey(owner),
   );
-  const favorite = await PrimaryDomain.retrieve(connection, favKey);
+  const primary = await PrimaryDomain.retrieve(connection, primaryKey);
   const { registry, nftOwner } = await NameRegistryState.retrieve(
     connection,
-    favorite.nameAccount,
+    primary.nameAccount,
   );
   const domainOwner = nftOwner || registry.owner;
 
   let reverse = await reverseLookup(
     connection,
-    favorite.nameAccount,
+    primary.nameAccount,
     registry.parentName.equals(constants.SNS_ROOT_DOMAIN_ACCOUNT)
       ? undefined
       : registry.parentName,
@@ -830,7 +833,7 @@ const getPrimaryDomain = async (connection: Connection, owner: PublicKey) => {
   }
 
   return {
-    domain: favorite.nameAccount,
+    domain: primary.nameAccount,
     reverse,
     stale: !owner.equals(domainOwner),
   };

@@ -5,8 +5,8 @@ import { NameRegistryState } from "../state";
 import { SNS_ROOT_DOMAIN_ACCOUNT } from "../constants";
 
 /**
- * This function can be used to register a domain name as favorite
- * @param nameAccount The name account being registered as favorite
+ * This function can be used to set a primary domain
+ * @param nameAccount The name account being set as primary
  * @param owner The owner of the name account
  * @param programId The name offer program ID
  * @returns
@@ -25,11 +25,11 @@ export const setPrimaryDomain = async (
     parent = registry.parentName;
   }
 
-  const [favKey] = await PrimaryDomain.getKey(NAME_OFFERS_ID, owner);
+  const [primaryKey] = await PrimaryDomain.getKey(NAME_OFFERS_ID, owner);
   const ix = new SetPrimaryInstruction().getInstruction(
     NAME_OFFERS_ID,
     nameAccount,
-    favKey,
+    primaryKey,
     owner,
     SystemProgram.programId,
     parent,

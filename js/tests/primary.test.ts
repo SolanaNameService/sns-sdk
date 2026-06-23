@@ -10,11 +10,11 @@ jest.setTimeout(10_000);
 
 const connection = new Connection(process.env.RPC_URL!);
 
-test("Favorite domain", async () => {
+test("Primary domain", async () => {
   const items = [
     {
       user: new PublicKey("FidaeBkZkvDqi1GXNEwB8uWmj9Ngx2HXSS5nyGRuVFcZ"),
-      favorite: {
+      primary: {
         domain: new PublicKey("Crf8hzfthWGbGbLTVCiqRqV5MVnbpHB1L9KQMd6gsinb"),
         reverse: "bonfida",
         stale: true,
@@ -22,7 +22,7 @@ test("Favorite domain", async () => {
     },
     {
       user: new PublicKey("Fw1ETanDZafof7xEULsnq9UY6o71Tpds89tNwPkWLb1v"),
-      favorite: {
+      primary: {
         domain: new PublicKey("AgJujvNQgYESUwBPitq2VUrfTaT2bvueHbgvsxqZ2sHg"),
         reverse: "couponvault",
         stale: false,
@@ -30,14 +30,14 @@ test("Favorite domain", async () => {
     },
   ];
   for (let item of items) {
-    const fav = await getPrimaryDomain(connection, item.user);
-    expect(fav.domain.toBase58()).toBe(item.favorite.domain.toBase58());
-    expect(fav.reverse).toBe(item.favorite.reverse);
-    expect(fav.stale).toBe(item.favorite.stale);
+    const primary = await getPrimaryDomain(connection, item.user);
+    expect(primary.domain.toBase58()).toBe(item.primary.domain.toBase58());
+    expect(primary.reverse).toBe(item.primary.reverse);
+    expect(primary.stale).toBe(item.primary.stale);
   }
 });
 
-test("Multiple favorite domains", async () => {
+test("Multiple primary domains", async () => {
   const items = [
     // Non tokenized
     {

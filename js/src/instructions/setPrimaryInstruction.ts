@@ -19,7 +19,7 @@ export class SetPrimaryInstruction {
   getInstruction(
     programId: PublicKey,
     nameAccount: PublicKey,
-    favouriteAccount: PublicKey,
+    primaryAccount: PublicKey,
     owner: PublicKey,
     systemProgram: PublicKey,
     optParent?: PublicKey,
@@ -32,7 +32,7 @@ export class SetPrimaryInstruction {
       isWritable: false,
     });
     keys.push({
-      pubkey: favouriteAccount,
+      pubkey: primaryAccount,
       isSigner: false,
       isWritable: true,
     });
