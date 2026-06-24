@@ -1,10 +1,25 @@
 import { describe, expect, test } from "@jest/globals";
 import { deserializeRecordContent } from "../src/record/deserializeRecordContent";
 import { serializeRecordContent } from "../src/record/serializeRecordContent";
+import { getRecordV1Key } from "../src/record/getRecordV1Key";
 import { getRecordV2Key } from "../src/record/getRecordV2Key";
 import { Record } from "../src/types/record";
-import { Keypair } from "@solana/web3.js";
+import { Keypair, PublicKey } from "@solana/web3.js";
 import { UnsupportedTldError } from "../src/error";
+import { verifyStaleness } from "../src/record/verifyStaleness";
+import { verifyRightOfAssociation } from "../src/record/verifyRightOfAssociation";
+import { createRecord } from "../src/bindings/createRecord";
+import { updateRecord } from "../src/bindings/updateRecord";
+import { deleteRecord } from "../src/bindings/deleteRecord";
+import { setRecordStalenessVerifier } from "../src/bindings/setRecordStalenessVerifier";
+import { setRecordRoaVerifier } from "../src/bindings/setRecordRoaVerifier";
+import { validateRecordRoa } from "../src/bindings/validateRecordRoa";
+import { validateRecordRoaEthereum } from "../src/bindings/validateRecordRoaEthereum";
+import { getRecord } from "../src/record/getRecord";
+import { getMultipleRecords } from "../src/record/getMultipleRecords";
+
+const key = PublicKey.default;
+const connection = {} as any;
 
 test("Record content serialization/deserialization", () => {
   const items = [
@@ -62,10 +77,94 @@ test("Record content serialization/deserialization", () => {
   });
 });
 
-describe("getRecordV2Key - input validation", () => {
-  test("throws UnsupportedTldError on bare name", () => {
-    expect(() => getRecordV2Key("bonfida", Record.SOL)).toThrow(
+describe("record APIs - bare domain rejection", () => {
+  test("getRecordV1Key rejects bare name", () => {
+    expect(() => getRecordV1Key("mydomain", Record.SOL)).toThrow(
       UnsupportedTldError,
     );
+  });
+
+  test("getRecordV2Key rejects bare name", () => {
+    expect(() => getRecordV2Key("mydomain", Record.SOL)).toThrow(
+      UnsupportedTldError,
+    );
+  });
+
+  test("verifyStaleness rejects bare domain", async () => {
+    await expect(
+      verifyStaleness(connection, Record.Github, "mydomain"),
+    ).rejects.toThrow(UnsupportedTldError);
+  });
+
+  test("verifyRightOfAssociation rejects bare domain", async () => {
+    await expect(
+      verifyRightOfAssociation(
+        connection,
+        Record.Github,
+        "mydomain",
+        Buffer.alloc(32),
+      ),
+    ).rejects.toThrow(UnsupportedTldError);
+  });
+
+  test("getRecord rejects bare domain", async () => {
+    await expect(
+      getRecord(connection, "mydomain", Record.Github),
+    ).rejects.toThrow(UnsupportedTldError);
+  });
+
+  test("getMultipleRecords rejects bare domain", async () => {
+    await expect(
+      getMultipleRecords(connection, "mydomain", [Record.Github]),
+    ).rejects.toThrow(UnsupportedTldError);
+  });
+
+  test("createRecord rejects bare domain", () => {
+    expect(() =>
+      createRecord("mydomain", Record.Github, "value", key, key),
+    ).toThrow(UnsupportedTldError);
+  });
+
+  test("updateRecord rejects bare domain", () => {
+    expect(() =>
+      updateRecord("mydomain", Record.Github, "value", key, key),
+    ).toThrow(UnsupportedTldError);
+  });
+
+  test("deleteRecord rejects bare domain", () => {
+    expect(() => deleteRecord("mydomain", Record.Github, key, key)).toThrow(
+      UnsupportedTldError,
+    );
+  });
+
+  test("setRecordStalenessVerifier rejects bare domain", () => {
+    expect(() =>
+      setRecordStalenessVerifier("mydomain", Record.Github, key, key, key),
+    ).toThrow(UnsupportedTldError);
+  });
+
+  test("setRecordRoaVerifier rejects bare domain", () => {
+    expect(() =>
+      setRecordRoaVerifier("mydomain", Record.Github, key, key, key),
+    ).toThrow(UnsupportedTldError);
+  });
+
+  test("validateRecordRoa rejects bare domain", () => {
+    expect(() =>
+      validateRecordRoa("mydomain", Record.Github, key, key, key),
+    ).toThrow(UnsupportedTldError);
+  });
+
+  test("validateRecordRoaEthereum rejects bare domain", () => {
+    expect(() =>
+      validateRecordRoaEthereum(
+        "mydomain",
+        Record.ETH,
+        key,
+        key,
+        Buffer.alloc(64),
+        Buffer.alloc(20),
+      ),
+    ).toThrow(UnsupportedTldError);
   });
 });

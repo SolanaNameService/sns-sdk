@@ -10,7 +10,13 @@ const connection = new Connection(process.env.RPC_URL!);
 
 describe("resolve - input validation", () => {
   test("throws UnsupportedTldError on bare name", async () => {
-    await expect(resolve(connection, "bonfida")).rejects.toThrow(
+    await expect(resolve(connection, "mydomain")).rejects.toThrow(
+      UnsupportedTldError,
+    );
+  });
+
+  test("throws UnsupportedTldError on unsupported TLD", async () => {
+    await expect(resolve(connection, "mydomain.com")).rejects.toThrow(
       UnsupportedTldError,
     );
   });

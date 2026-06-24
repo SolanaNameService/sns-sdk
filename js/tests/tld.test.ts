@@ -5,24 +5,31 @@ import {
   _parseSnsSubdomain,
   _parseSnsTopLevelDomain,
 } from "../src/utils/parseSnsDomain";
-import { getTld, SNS_TLD, SOL_TLD } from "../src/utils/tld";
+import {
+  getTld,
+  parseSnsTld,
+  parseSupportedTld,
+  SNS_TLD,
+  SOL_TLD,
+} from "../src/utils/tld";
+import { UnsupportedTldError } from "../src/error";
 
 test.each([
   // .sol matches
-  { input: "bonfida.sol", expected: SOL_TLD },
-  { input: "sub.bonfida.sol", expected: SOL_TLD },
+  { input: "parent.sol", expected: SOL_TLD },
+  { input: "sub.parent.sol", expected: SOL_TLD },
   // .sns matches
   { input: "alice.sns", expected: SNS_TLD },
   { input: "sub.alice.sns", expected: SNS_TLD },
   // bare name — no suffix
-  { input: "bonfida", expected: undefined },
+  { input: "parent", expected: undefined },
   // empty string
   { input: "", expected: undefined },
   // wrong TLD
-  { input: "bonfida.com", expected: undefined },
+  { input: "parent.com", expected: undefined },
   // pins case-sensitivity: uppercase TLD is not recognised
-  { input: "bonfida.SOL", expected: undefined },
-  { input: "bonfida.SNS", expected: undefined },
+  { input: "parent.SOL", expected: undefined },
+  { input: "parent.SNS", expected: undefined },
   // TLD alone (edge case: the string IS the suffix)
   { input: ".sol", expected: SOL_TLD },
   { input: ".sns", expected: SNS_TLD },
@@ -31,34 +38,72 @@ test.each([
 });
 
 test.each([
-  ["bonfida.sns", "bonfida"],
-])("_parseSnsTopLevelDomain(%s)", (input, expected) => {
-  expect(_parseSnsTopLevelDomain(input)).toBe(expected);
+  ["parent.sns", ["parent", SNS_TLD]],
+  ["sub.parent.sns", ["sub.parent", SNS_TLD]],
+  ["parent.sol", ["parent", SOL_TLD]],
+  ["sub.parent.sol", ["sub.parent", SOL_TLD]],
+])("parseSupportedTld(%s)", (input, expected) => {
+  expect(parseSupportedTld(input)).toEqual(expected);
+});
+
+test.each(["parent", "parent.com", "parent.SNS", "parent.SOL"])(
+  "parseSupportedTld rejects %s",
+  (input) => {
+    expect(() => parseSupportedTld(input)).toThrow(UnsupportedTldError);
+  },
+);
+
+test("parseSupportedTld rejects unsupported TLD when restricted", () => {
+  expect(() => parseSupportedTld("parent.sol", [SNS_TLD])).toThrow(
+    UnsupportedTldError,
+  );
 });
 
 test.each([
-  "bonfida.sol",
-  "Bonfida.sns",
-  "bonfida.SNS",
-  "bonfida.sns ",
-  " bonfida.sns",
-  "sub.bonfida.sns",
+  ["parent.sns", ["parent", SNS_TLD]],
+  ["sub.parent.sns", ["sub.parent", SNS_TLD]],
+])("parseSnsTld(%s)", (input, expected) => {
+  expect(parseSnsTld(input)).toEqual(expected);
+});
+
+test.each(["parent", "parent.sol", "parent.com", "parent.SNS"])(
+  "parseSnsTld rejects %s",
+  (input) => {
+    expect(() => parseSnsTld(input)).toThrow(UnsupportedTldError);
+  },
+);
+
+test.each([["parent.sns", "parent"]])(
+  "_parseSnsTopLevelDomain(%s)",
+  (input, expected) => {
+    expect(_parseSnsTopLevelDomain(input)).toBe(expected);
+  },
+);
+
+test.each([
+  "parent.sol",
+  "Parent.sns",
+  "parent.SNS",
+  "parent.sns ",
+  " parent.sns",
+  "sub.parent.sns",
   ".sns",
-  "bonfida..sns",
+  "parent..sns",
 ])("_parseSnsTopLevelDomain rejects %s", (input) => {
   expect(() => _parseSnsTopLevelDomain(input)).toThrow();
 });
 
-test.each([
-  ["sub.bonfida.sns", ["sub", "bonfida"]],
-])("_parseSnsSubdomain(%s)", (input, expected) => {
-  expect(_parseSnsSubdomain(input)).toEqual(expected);
-});
+test.each([["sub.parent.sns", ["sub", "parent"]]])(
+  "_parseSnsSubdomain(%s)",
+  (input, expected) => {
+    expect(_parseSnsSubdomain(input)).toEqual(expected);
+  },
+);
 
 test.each([
-  "bonfida.sns",
-  "sub.bonfida.sol",
-  "Sub.bonfida.sns",
+  "parent.sns",
+  "sub.parent.sol",
+  "Sub.parent.sns",
   "sub..sns",
   "sub.parent.extra.sns",
 ])("_parseSnsSubdomain rejects %s", (input) => {
@@ -66,17 +111,15 @@ test.each([
 });
 
 test.each([
-  ["bonfida.sns", "bonfida"],
-  ["sub.bonfida.sns", "sub.bonfida"],
+  ["parent.sns", "parent"],
+  ["sub.parent.sns", "sub.parent"],
 ])("_parseSnsDomain(%s)", (input, expected) => {
   expect(_parseSnsDomain(input)).toBe(expected);
 });
 
-test.each([
-  "bonfida.sol",
-  "Bonfida.sns",
-  "sub.parent.extra.sns",
-  "sub..sns",
-])("_parseSnsDomain rejects %s", (input) => {
-  expect(() => _parseSnsDomain(input)).toThrow();
-});
+test.each(["parent.sol", "Parent.sns", "sub.parent.extra.sns", "sub..sns"])(
+  "_parseSnsDomain rejects %s",
+  (input) => {
+    expect(() => _parseSnsDomain(input)).toThrow();
+  },
+);

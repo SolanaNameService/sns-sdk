@@ -4,17 +4,17 @@ import { UnsupportedTldError } from "../src/error";
 import { getDomainKeySync } from "../src/utils/getDomainKeySync";
 
 test("Derivation - throws on bare name", () => {
-  expect(() => getDomainKeySync("bonfida")).toThrow(UnsupportedTldError);
+  expect(() => getDomainKeySync("mydomain")).toThrow(UnsupportedTldError);
 });
 
 test("Derivation - .sns produces identical keys to .sol", () => {
   // Both strip to the same bare label and route through SNS derivation.
   // This pins the cross-TLD equivalence so a future routing change is caught.
-  expect(getDomainKeySync("bonfida.sns").pubkey.toBase58()).toBe(
-    getDomainKeySync("bonfida.sol").pubkey.toBase58(),
+  expect(getDomainKeySync("mydomain.sns").pubkey.toBase58()).toBe(
+    getDomainKeySync("mydomain.sol").pubkey.toBase58(),
   );
-  expect(getDomainKeySync("dex.bonfida.sns").pubkey.toBase58()).toBe(
-    getDomainKeySync("dex.bonfida.sol").pubkey.toBase58(),
+  expect(getDomainKeySync("dex.mydomain.sns").pubkey.toBase58()).toBe(
+    getDomainKeySync("dex.mydomain.sol").pubkey.toBase58(),
   );
 });
 

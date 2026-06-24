@@ -8,6 +8,7 @@ import { VAULT_OWNER } from "../../src/constants";
 import { findSubdomains } from "../../src/utils/findSubdomains";
 import { getDomainKeySync } from "../../src/utils/getDomainKeySync";
 import { resolve } from "../../src/resolve/resolve";
+import { InvalidSubdomainError } from "../../src/error";
 
 jest.setTimeout(20_000);
 
@@ -92,4 +93,28 @@ test("Create sub - Fee payer", async () => {
   tx.feePayer = VAULT_OWNER;
   const res = await connection.simulateTransaction(tx);
   expect(res.value.err).toBe(null);
+});
+
+test("createSubdomain rejects top-level .sns input", async () => {
+  await expect(
+    createSubdomain(connection, "mydomain.sns", PublicKey.default),
+  ).rejects.toThrow(InvalidSubdomainError);
+});
+
+test("createSubdomain rejects malformed .sns subdomain", async () => {
+  await expect(
+    createSubdomain(connection, "sub..sns", PublicKey.default),
+  ).rejects.toThrow(InvalidSubdomainError);
+});
+
+test("transferSubdomain rejects top-level .sns input", async () => {
+  await expect(
+    transferSubdomain(connection, "mydomain.sns", PublicKey.default),
+  ).rejects.toThrow(InvalidSubdomainError);
+});
+
+test("transferSubdomain rejects extra-label .sns input", async () => {
+  await expect(
+    transferSubdomain(connection, "sub.parent.extra.sns", PublicKey.default),
+  ).rejects.toThrow(InvalidSubdomainError);
 });

@@ -1,5 +1,5 @@
 require("dotenv").config();
-import { test, expect, jest, describe } from "@jest/globals";
+import { describe, expect, jest, test } from "@jest/globals";
 import { getMultipleRecords } from "../../src/record/getMultipleRecords";
 import { getRecord } from "../../src/record/getRecord";
 import { getRecordV2Key } from "../../src/record/getRecordV2Key";
@@ -10,7 +10,9 @@ import { deleteRecord } from "../../src/bindings/deleteRecord";
 import { setRecordRoaVerifier } from "../../src/bindings/setRecordRoaVerifier";
 import { setRecordStalenessVerifier } from "../../src/bindings/setRecordStalenessVerifier";
 import { updateRecord } from "../../src/bindings/updateRecord";
+import { validateRecordRoa } from "../../src/bindings/validateRecordRoa";
 import { validateRecordRoaEthereum } from "../../src/bindings/validateRecordRoaEthereum";
+import { InvalidDomainError } from "../../src/error";
 
 jest.setTimeout(50_000);
 
@@ -19,7 +21,13 @@ const connection = new Connection(process.env.RPC_URL!);
 test("Create record", async () => {
   const domain = "wallet-guide-9.sns";
   const owner = new PublicKey("Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8");
-  const ix = createRecord(domain, Record.Github, "bonfida", owner, owner);
+  const ix = createRecord(
+    domain,
+    Record.Github,
+    "SolanaNameService",
+    owner,
+    owner,
+  );
   const tx = new Transaction().add(ix);
   tx.feePayer = owner;
   tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
@@ -31,7 +39,13 @@ test("Update record", async () => {
   const domain = "wallet-guide-9.sns";
   const owner = new PublicKey("Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8");
   const tx = new Transaction();
-  const ix_1 = createRecord(domain, Record.Github, "bonfida", owner, owner);
+  const ix_1 = createRecord(
+    domain,
+    Record.Github,
+    "SolanaNameService",
+    owner,
+    owner,
+  );
   tx.add(ix_1);
   const ix_2 = updateRecord(domain, Record.Github, "some text", owner, owner);
   tx.add(ix_2);
@@ -45,7 +59,13 @@ test("Delete record", async () => {
   const domain = "wallet-guide-9.sns";
   const owner = new PublicKey("Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8");
   const tx = new Transaction();
-  const ix_1 = createRecord(domain, Record.Github, "bonfida", owner, owner);
+  const ix_1 = createRecord(
+    domain,
+    Record.Github,
+    "SolanaNameService",
+    owner,
+    owner,
+  );
   tx.add(ix_1);
   const ix_2 = deleteRecord(domain, Record.Github, owner, owner);
   tx.add(ix_2);
@@ -59,7 +79,13 @@ test("Set record staleness verifier", async () => {
   const domain = "wallet-guide-9.sns";
   const owner = new PublicKey("Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8");
   const tx = new Transaction();
-  const ix_1 = createRecord(domain, Record.Github, "bonfida", owner, owner);
+  const ix_1 = createRecord(
+    domain,
+    Record.Github,
+    "SolanaNameService",
+    owner,
+    owner,
+  );
   tx.add(ix_1);
   const ix_2 = setRecordStalenessVerifier(
     domain,
@@ -123,7 +149,13 @@ test("Set RoA verifier", async () => {
   const domain = "wallet-guide-9.sns";
   const owner = new PublicKey("Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8");
   const tx = new Transaction();
-  const ix_1 = createRecord(domain, Record.Github, "bonfida", owner, owner);
+  const ix_1 = createRecord(
+    domain,
+    Record.Github,
+    "SolanaNameService",
+    owner,
+    owner,
+  );
   tx.add(ix_1);
   const ix_2 = setRecordRoaVerifier(domain, Record.Github, owner, owner, owner);
   tx.add(ix_2);
@@ -136,7 +168,13 @@ test("Set RoA verifier", async () => {
 test("Create record for sub", async () => {
   const domain = "sub-0.wallet-guide-9.sns";
   const owner = new PublicKey("Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8");
-  const ix = createRecord(domain, Record.Github, "bonfida", owner, owner);
+  const ix = createRecord(
+    domain,
+    Record.Github,
+    "SolanaNameService",
+    owner,
+    owner,
+  );
   const tx = new Transaction().add(ix);
   tx.feePayer = owner;
   tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
@@ -148,7 +186,9 @@ test("Create record for sub & update & verify staleness & delete", async () => {
   const domain = "sub-0.wallet-guide-9.sns";
   const owner = new PublicKey("Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8");
   const tx = new Transaction();
-  tx.add(createRecord(domain, Record.Github, "bonfida", owner, owner));
+  tx.add(
+    createRecord(domain, Record.Github, "SolanaNameService", owner, owner),
+  );
   tx.add(updateRecord(domain, Record.Github, "somethingelse", owner, owner));
   tx.add(
     setRecordStalenessVerifier(domain, Record.Github, owner, owner, owner),
@@ -254,5 +294,70 @@ describe("getRecordV2Key", () => {
     },
   ])("$domain", (e) => {
     expect(getRecordV2Key(e.domain, e.record).toBase58()).toBe(e.expected);
+  });
+});
+
+describe(".sns record APIs reject malformed .sns shapes", () => {
+  const owner = PublicKey.default;
+
+  test("createRecord rejects extra-label .sns input", () => {
+    expect(() =>
+      createRecord(
+        "a.b.c.sns",
+        Record.Github,
+        "SolanaNameService",
+        owner,
+        owner,
+      ),
+    ).toThrow(InvalidDomainError);
+  });
+
+  test("updateRecord rejects extra-label .sns input", () => {
+    expect(() =>
+      updateRecord("a.b.c.sns", Record.Github, "value", owner, owner),
+    ).toThrow(InvalidDomainError);
+  });
+
+  test("deleteRecord rejects extra-label .sns input", () => {
+    expect(() =>
+      deleteRecord("a.b.c.sns", Record.Github, owner, owner),
+    ).toThrow(InvalidDomainError);
+  });
+
+  test("setRecordStalenessVerifier rejects extra-label .sns input", () => {
+    expect(() =>
+      setRecordStalenessVerifier(
+        "a.b.c.sns",
+        Record.Github,
+        owner,
+        owner,
+        owner,
+      ),
+    ).toThrow(InvalidDomainError);
+  });
+
+  test("setRecordRoaVerifier rejects extra-label .sns input", () => {
+    expect(() =>
+      setRecordRoaVerifier("a.b.c.sns", Record.Github, owner, owner, owner),
+    ).toThrow(InvalidDomainError);
+  });
+
+  test("validateRecordRoa rejects extra-label .sns input", () => {
+    expect(() =>
+      validateRecordRoa("a.b.c.sns", Record.Github, owner, owner, owner),
+    ).toThrow(InvalidDomainError);
+  });
+
+  test("validateRecordRoaEthereum rejects extra-label .sns input", () => {
+    expect(() =>
+      validateRecordRoaEthereum(
+        "a.b.c.sns",
+        Record.ETH,
+        owner,
+        owner,
+        Buffer.alloc(64),
+        Buffer.alloc(20),
+      ),
+    ).toThrow(InvalidDomainError);
   });
 });

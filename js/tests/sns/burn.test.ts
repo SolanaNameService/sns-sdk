@@ -2,6 +2,7 @@ require("dotenv").config();
 import { test, jest, expect } from "@jest/globals";
 import { Connection, PublicKey, Transaction } from "@solana/web3.js";
 import { burnDomain } from "../../src/bindings/burnDomain";
+import { InvalidDomainError } from "../../src/error";
 
 jest.setTimeout(20_000);
 
@@ -20,4 +21,10 @@ test("Burn .sns domain", async () => {
   tx.feePayer = OWNER;
   const res = await connection.simulateTransaction(tx);
   expect(res.value.err).toBe(null);
+});
+
+test("burnDomain rejects subdomain .sns input", () => {
+  expect(() => burnDomain("sub.mydomain.sns", OWNER, BURN_DST)).toThrow(
+    InvalidDomainError,
+  );
 });
