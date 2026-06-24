@@ -12,6 +12,28 @@ import {
 import { CreateWithNftInstruction } from "../instructions/createWithNftInstruction";
 import { _parseSnsTopLevelDomain } from "../utils/parseSnsDomain";
 
+const PREFIX = "metadata";
+const EDITION = "edition";
+
+const getMetadataPda = (nftMint: PublicKey) => {
+  return PublicKey.findProgramAddressSync(
+    [Buffer.from(PREFIX), METAPLEX_ID.toBuffer(), nftMint.toBuffer()],
+    METAPLEX_ID,
+  )[0];
+};
+
+const getMasterEditionPda = (nftMint: PublicKey) => {
+  return PublicKey.findProgramAddressSync(
+    [
+      Buffer.from(PREFIX),
+      METAPLEX_ID.toBuffer(),
+      nftMint.toBuffer(),
+      Buffer.from(EDITION),
+    ],
+    METAPLEX_ID,
+  )[0];
+};
+
 /**
  * Builds the instruction to register a `.sns` domain name using a Wolves
  * collection NFT in lieu of a token payment.
@@ -26,9 +48,7 @@ import { _parseSnsTopLevelDomain } from "../utils/parseSnsDomain";
  * @param reverseLookupAccount The derived public key of the reverse lookup account
  * @param buyer The buyer's wallet — pays rent and must hold the NFT
  * @param nftSource The buyer's token account holding the Wolves NFT
- * @param nftMetadata The Metaplex metadata account for the NFT
  * @param nftMint The mint address of the Wolves NFT
- * @param masterEdition The Metaplex master edition account for the NFT
  * @returns A {@link TransactionInstruction} that registers the domain
  */
 export const registerDomainWithNft = (
@@ -38,9 +58,7 @@ export const registerDomainWithNft = (
   reverseLookupAccount: PublicKey,
   buyer: PublicKey,
   nftSource: PublicKey,
-  nftMetadata: PublicKey,
   nftMint: PublicKey,
-  masterEdition: PublicKey,
 ) => {
   const trimmedDomain = _parseSnsTopLevelDomain(domain);
 
@@ -48,6 +66,9 @@ export const registerDomainWithNft = (
     [nameAccount.toBuffer()],
     REGISTER_PROGRAM_ID,
   );
+  const nftMetadata = getMetadataPda(nftMint);
+  const masterEdition = getMasterEditionPda(nftMint);
+
   const ix = new CreateWithNftInstruction({
     space,
     name: trimmedDomain,

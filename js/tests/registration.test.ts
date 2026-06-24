@@ -1,6 +1,7 @@
 require("dotenv").config();
-import { test, jest, expect } from "@jest/globals";
+import { expect, jest, test } from "@jest/globals";
 import { Connection, PublicKey } from "@solana/web3.js";
+
 import { registerDomain } from "../src/bindings/registerDomain";
 import { registerDomainWithNft } from "../src/bindings/registerDomainWithNft";
 import { UnsupportedTldError } from "../src/error";
@@ -15,8 +16,6 @@ test("Register with NFT rejects bare domain", () => {
     registerDomainWithNft(
       "mydomain",
       1_000,
-      PublicKey.default,
-      PublicKey.default,
       PublicKey.default,
       PublicKey.default,
       PublicKey.default,

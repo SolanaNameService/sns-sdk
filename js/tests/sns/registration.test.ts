@@ -1,14 +1,14 @@
 require("dotenv").config();
-import { expect, jest, test } from "@jest/globals";
-import { Connection, PublicKey, Transaction } from "@solana/web3.js";
-import { getAssociatedTokenAddressSync } from "@solana/spl-token";
-import { Metaplex } from "@metaplex-foundation/js";
 import { randomBytes } from "crypto";
 
-import { InvalidDomainError } from "../../src/error";
-import { registerDomainWithNft } from "../../src/bindings/registerDomainWithNft";
+import { expect, jest, test } from "@jest/globals";
+import { getAssociatedTokenAddressSync } from "@solana/spl-token";
+import { Connection, PublicKey, Transaction } from "@solana/web3.js";
+
 import { registerDomain } from "../../src/bindings/registerDomain";
+import { registerDomainWithNft } from "../../src/bindings/registerDomainWithNft";
 import { REFERRERS } from "../../src/constants";
+import { InvalidDomainError } from "../../src/error";
 import { getDomainKeySync } from "../../src/utils/getDomainKeySync";
 import { getReverseKeySync } from "../../src/utils/getReverseKeySync";
 
@@ -32,11 +32,8 @@ test("Register with NFT", async () => {
   // https://solscan.io/collection/3c138f8640f62b62016f8020f0532ff888bb0866363c26fb2241bcf28c0776ad#holders
   const holder = new PublicKey("FiUYY19eXuVcEAHSJ87KEzYjYnfKZm6KbHoVtdQBNGfk");
   const source = new PublicKey("Df9Jz3NrGVd5jjjrXbedwuHbCc1hL131bUXq2143tTfQ");
-
-  const metaplex = new Metaplex(connection);
   const nftMint = new PublicKey("7cpq5U6ze5PPcTPVxGifXA8xyDp8rgAJQNwBDj8eWd8w");
-  const nftMetadata = metaplex.nfts().pdas().metadata({ mint: nftMint });
-  const masterEdition = metaplex.nfts().pdas().masterEdition({ mint: nftMint });
+
   const ix = registerDomainWithNft(
     domain,
     1_000,
@@ -44,9 +41,7 @@ test("Register with NFT", async () => {
     reverse,
     holder,
     source,
-    nftMetadata,
     nftMint,
-    masterEdition,
   );
   tx.add(ix);
   const { blockhash } = await connection.getLatestBlockhash();
@@ -123,8 +118,6 @@ test("registerDomainWithNft rejects subdomain .sns input", () => {
     registerDomainWithNft(
       "sub.mydomain.sns",
       1_000,
-      PublicKey.default,
-      PublicKey.default,
       PublicKey.default,
       PublicKey.default,
       PublicKey.default,
