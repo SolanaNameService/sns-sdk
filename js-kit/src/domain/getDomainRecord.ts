@@ -68,7 +68,7 @@ export async function getDomainRecord({
   const verified = {
     staleness: _verifyStalenessSync({ domainOwner, state }),
     ...(verifier && {
-      rightOfAssociation: _verifyRoaSync({ record, state, verifier }),
+      roa: _verifyRoaSync({ record, state, verifier }),
     }),
   };
 
