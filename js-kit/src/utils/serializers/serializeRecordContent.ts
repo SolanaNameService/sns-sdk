@@ -1,5 +1,5 @@
-import { bech32 } from "@scure/base";
-import { Address, ReadonlyUint8Array } from "@solana/kit";
+import { type Bech32DecodedWithArray, bech32 } from "@scure/base";
+import type { Address, ReadonlyUint8Array } from "@solana/kit";
 import { parse as parseIp } from "ipaddr.js";
 import { encode as encodePunycode } from "punycode/";
 
@@ -52,7 +52,16 @@ export const serializeRecordContent = ({
     );
     return uint8ArrayFromHex(content.slice(2));
   } else if (record === Record.Injective) {
-    const decoded = bech32.decodeToBytes(content);
+    let decoded: Bech32DecodedWithArray<string>;
+
+    try {
+      decoded = bech32.decodeToBytes(content);
+    } catch {
+      throw new InvalidInjectiveAddressError(
+        "The record content must be a valid Injective address"
+      );
+    }
+
     _check(
       decoded.prefix === "inj" && content.length === 42,
       new InvalidInjectiveAddressError(
@@ -63,20 +72,39 @@ export const serializeRecordContent = ({
       decoded.bytes.length === 20,
       new InvalidInjectiveAddressError("The record data must be 20 bytes long")
     );
+
     return decoded.bytes;
   } else if (record === Record.A) {
-    const array = parseIp(content).toByteArray();
+    let array: number[];
+
+    try {
+      array = parseIp(content).toByteArray();
+    } catch {
+      throw new InvalidARecordError(
+        "The record content must be a valid IPv4 address"
+      );
+    }
     _check(
       array.length === 4,
       new InvalidARecordError("The record content must be 4 bytes long")
     );
+
     return new Uint8Array(array);
   } else if (record === Record.AAAA) {
-    const array = parseIp(content).toByteArray();
+    let array: number[];
+
+    try {
+      array = parseIp(content).toByteArray();
+    } catch {
+      throw new InvalidAAAARecordError(
+        "The record content must be a valid IPv6 address"
+      );
+    }
     _check(
       array.length === 16,
       new InvalidAAAARecordError("The record content must be 16 bytes long")
     );
+
     return new Uint8Array(array);
   } else {
     throw new InvalidRecordInputError("The record content is malformed");
