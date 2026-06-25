@@ -16,6 +16,8 @@ import { Record } from "../../types/record";
 import { _check } from "../check";
 import { uint8ArrayFromHex } from "../uint8Array/uint8ArrayFromHex";
 
+const EVM_ADDRESS_REGEX = /^0x[0-9a-fA-F]{40}$/;
+
 interface SerializeRecordContentParams {
   content: string;
   record: Record;
@@ -43,13 +45,9 @@ export const serializeRecordContent = ({
     return addressCodec.encode(content as Address);
   } else if (EVM_RECORDS.has(record)) {
     _check(
-      content.slice(0, 2) === "0x",
-      new InvalidEvmAddressError("The record content must start with `0x`")
-    );
-    _check(
-      content.length === 42,
+      EVM_ADDRESS_REGEX.test(content),
       new InvalidEvmAddressError(
-        "The record content must be 42 characters long"
+        "The record content must be a valid EVM address starting with `0x`"
       )
     );
     return uint8ArrayFromHex(content.slice(2));
