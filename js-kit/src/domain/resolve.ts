@@ -55,7 +55,7 @@ export type ResolveOptions =
  *
  * @param data - The record data to verify.
  * @param signature - The signature associated with the record.
- * @param address - The address of the record's ownery.
+ * @param address - The address of the record's owner.
  * @returns A promise that resolves to a boolean indicating whether the signature is valid.
  */
 const verifySolRecordV1Signature = async ({
@@ -155,7 +155,7 @@ const resolveSns = async ({
     }
 
     throw new InvalidRoAError(
-      `The RoA ID shoudl be ${addressCodec.decode(content)} but is ${addressCodec.decode(roaId)} `
+      `The RoA ID should be ${addressCodec.decode(content)} but is ${addressCodec.decode(roaId)} `
     );
   }
 
