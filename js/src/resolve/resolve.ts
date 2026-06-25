@@ -25,17 +25,10 @@ import { Record } from "../types/record";
 import { getDomainKeySync } from "../utils/getDomainKeySync";
 import { getTld, SNS_TLD, SOL_TLD } from "../utils/tld";
 
-export type AllowPda = "any" | boolean;
-
-type ResolveConfig = AllowPda extends true
-  ? {
-      allowPda: true;
-      programIds: PublicKey[];
-    }
-  : {
-      allowPda: AllowPda;
-      programIds?: PublicKey[];
-    };
+export type ResolveConfig =
+  | { allowPda: false; programIds?: never }
+  | { allowPda: "any"; programIds?: never }
+  | { allowPda: true; programIds: PublicKey[] };
 
 /**
  * This function can be used to verify the validity of a SOL record

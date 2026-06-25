@@ -1,7 +1,7 @@
 require("dotenv").config();
 import { test, jest, expect, describe } from "@jest/globals";
 import { Connection, SystemProgram } from "@solana/web3.js";
-import { AllowPda, resolve } from "../../src/resolve/resolve";
+import { resolve, ResolveConfig } from "../../src/resolve/resolve";
 import {
   InvalidRoAError,
   PdaOwnerNotAllowed,
@@ -29,12 +29,15 @@ describe("resolve .sns domains", () => {
     {
       domain: "sns-ip-5-wallet-5.sns",
       result: "96GKJgm2W3P8Bae78brPrJf4Yi9AN1wtPJwg2XVQ2rMr",
-      config: { allowPda: true, programIds: [SystemProgram.programId] },
+      config: {
+        allowPda: true,
+        programIds: [SystemProgram.programId],
+      } as ResolveConfig,
     },
     {
       domain: "sns-ip-5-wallet-5.sns",
       result: "96GKJgm2W3P8Bae78brPrJf4Yi9AN1wtPJwg2XVQ2rMr",
-      config: { allowPda: "any" as AllowPda },
+      config: { allowPda: "any" } as ResolveConfig,
     },
     {
       domain: "sns-ip-5-wallet-7.sns",
@@ -53,12 +56,15 @@ describe("resolve .sns domains", () => {
     {
       domain: "sns-ip-5-wallet-10.sns",
       result: "96GKJgm2W3P8Bae78brPrJf4Yi9AN1wtPJwg2XVQ2rMr",
-      config: { allowPda: true, programIds: [SystemProgram.programId] },
+      config: {
+        allowPda: true,
+        programIds: [SystemProgram.programId],
+      } as ResolveConfig,
     },
     {
       domain: "sns-ip-5-wallet-10.sns",
       result: "96GKJgm2W3P8Bae78brPrJf4Yi9AN1wtPJwg2XVQ2rMr",
-      config: { allowPda: "any" as AllowPda },
+      config: { allowPda: "any" } as ResolveConfig,
     },
   ])("$domain resolves correctly", async (e) => {
     const resolvedValue = await resolve(connection, e.domain, e?.config);
