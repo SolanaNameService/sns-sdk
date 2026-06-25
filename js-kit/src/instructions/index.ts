@@ -8,7 +8,7 @@ export * from "./createWithNftInstruction";
 export * from "./deleteNameRegistryInstruction";
 export * from "./deleteRecordInstruction";
 export * from "./reallocInstruction";
-export * from "./registerFavoriteInstruction";
+export * from "./registerPrimaryInstruction";
 export * from "./transferInstruction";
 export * from "./updateNameRegistryInstruction";
 export * from "./updateRecordInstruction";
