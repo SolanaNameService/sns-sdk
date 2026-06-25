@@ -47,15 +47,10 @@ type ResolveParamsWithOptions = Omit<ResolveParams, "options"> & {
 
 export type AllowPda = "any" | boolean;
 
-type ResolveOptions = AllowPda extends true
-  ? {
-      allowPda: true;
-      programIds: Address[];
-    }
-  : {
-      allowPda: AllowPda;
-      programIds?: Address[];
-    };
+export type ResolveOptions =
+  | { allowPda: false; programIds?: never }
+  | { allowPda: "any"; programIds?: never }
+  | { allowPda: true; programIds: Address[] };
 
 /**
  * Verifies the signature of a Solana record using Ed25519 cryptographic verification.
