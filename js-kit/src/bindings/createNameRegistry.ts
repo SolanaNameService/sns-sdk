@@ -63,7 +63,11 @@ export const createNameRegistry = async ({
 
   lamports =
     lamports ||
-    (await rpc.getMinimumBalanceForRentExemption(BigInt(space)).send());
+    (await rpc
+      .getMinimumBalanceForRentExemption(
+        BigInt(space + RegistryState.HEADER_LEN)
+      )
+      .send());
 
   let parentOwner: Address | undefined;
   if (parentAddress) {
