@@ -31,11 +31,12 @@ export type ResolveConfig =
   | { allowPda: true; programIds: PublicKey[] };
 
 /**
- * This function can be used to verify the validity of a SOL record
- * @param record The record data to verify
- * @param signedRecord The signed data
+ * Verifies a SOL record V1 signature.
+ *
+ * @param record The expected signed payload
+ * @param signedRecord The signature bytes
  * @param pubkey The public key of the signer
- * @returns
+ * @returns Whether the signature is valid
  */
 const verifySolRecordV1Signature = (
   record: Uint8Array,

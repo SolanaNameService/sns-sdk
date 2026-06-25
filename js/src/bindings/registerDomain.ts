@@ -39,6 +39,22 @@ import { _parseSnsTopLevelDomain } from "../utils/parseSnsDomain";
  * @param referrerKey Optional referrer key
  * @returns
  */
+/**
+ * Builds the instructions to register a .sns domain.
+ *
+ * If a supported referrer is provided and its token account does not exist,
+ * the returned instructions include an idempotent associated token account
+ * creation instruction before the registration instruction.
+ *
+ * @param connection Solana RPC connection
+ * @param domain The full domain name to register, including the `.sns` suffix
+ * @param space The number of bytes to allocate for the domain name account
+ * @param buyer The public key of the buyer
+ * @param buyerTokenAccount The buyer's token account used to pay for registration
+ * @param mint The token mint used for payment, defaults to USDC
+ * @param referrerKey Optional public key of the referrer
+ * @returns The transaction instructions required to register the domain
+ */
 export const registerDomain = async (
   connection: Connection,
   domain: string,

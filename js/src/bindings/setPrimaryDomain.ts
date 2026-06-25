@@ -5,11 +5,16 @@ import { NameRegistryState } from "../state";
 import { SNS_ROOT_DOMAIN_ACCOUNT } from "../constants";
 
 /**
- * This function can be used to set a primary domain
- * @param nameAccount The name account being set as primary
- * @param owner The owner of the name account
- * @param programId The name offer program ID
- * @returns
+ * Builds the instruction to register a domain as the owner's primary domain.
+ *
+ * This derives the owner's primary-domain account, detects whether the provided
+ * name account is a subdomain, and includes the parent name account when
+ * required by the primary-domain program.
+ *
+ * @param connection Solana RPC connection
+ * @param nameAccount The domain name account to register as primary
+ * @param owner The owner of the domain name account
+ * @returns The instruction that sets the owner's primary domain
  */
 export const setPrimaryDomain = async (
   connection: Connection,
@@ -34,5 +39,6 @@ export const setPrimaryDomain = async (
     SystemProgram.programId,
     parent,
   );
+
   return ix;
 };

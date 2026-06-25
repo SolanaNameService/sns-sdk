@@ -33,19 +33,21 @@ export class PrimaryDomain {
   }
 
   /**
-   * This function can be used to deserialize a Buffer into a PrimaryDomain object
-   * @param data The buffer to deserialize
-   * @returns
+   * Deserializes raw primary-domain account data.
+   *
+   * @param data The raw primary-domain account data
+   * @returns The deserialized primary-domain account
    */
   static deserialize(data: Buffer) {
     return new PrimaryDomain(deserialize(this.schema, data) as any);
   }
 
   /**
-   * This function can be used to retrieve and deserialize a primary domain
-   * @param connection The Solana RPC connection object
-   * @param key The primary account key
-   * @returns
+   * Fetches and deserializes a primary-domain account.
+   *
+   * @param connection Solana RPC connection
+   * @param key The primary-domain account address
+   * @returns The deserialized primary-domain account
    */
   static async retrieve(connection: Connection, key: PublicKey) {
     const accountInfo = await connection.getAccountInfo(key);
@@ -58,10 +60,11 @@ export class PrimaryDomain {
   }
 
   /**
-   * This function can be used to derive the key of a primary domain
-   * @param programId The name offer program ID
-   * @param owner The owner to retrieve the primary domain for
-   * @returns
+   * Derives the primary-domain account address for an owner.
+   *
+   * @param programId The primary-domain program ID
+   * @param owner The public key of the wallet owner
+   * @returns The derived primary-domain account address and bump seed
    */
   static async getKey(programId: PublicKey, owner: PublicKey) {
     return await PublicKey.findProgramAddress(
@@ -71,10 +74,11 @@ export class PrimaryDomain {
   }
 
   /**
-   * This function can be used to derive the key of a primary domain
-   * @param programId The name offer program ID
-   * @param owner The owner to retrieve the primary domain for
-   * @returns
+   * Synchronously derives the primary-domain account address for an owner.
+   *
+   * @param programId The primary-domain program ID
+   * @param owner The public key of the wallet owner
+   * @returns The derived primary-domain account address and bump seed
    */
   static getKeySync(programId: PublicKey, owner: PublicKey) {
     return PublicKey.findProgramAddressSync(
@@ -85,10 +89,11 @@ export class PrimaryDomain {
 }
 
 /**
- * This function can be used to retrieve the primary domain of a user
- * @param connection The Solana RPC connection object
- * @param owner The owner you want to retrieve the primary domain for
- * @returns
+ * Retrieves the primary domain set for a wallet.
+ *
+ * @param connection Solana RPC connection
+ * @param owner The public key of the wallet owner
+ * @returns The primary domain account, reverse domain name, and stale status
  */
 export const getPrimaryDomain = async (
   connection: Connection,
