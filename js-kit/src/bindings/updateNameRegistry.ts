@@ -48,7 +48,7 @@ export async function updateNameRegistry({
 
   const ix = new UpdateNameRegistryInstruction({
     offset,
-    inputDat: data,
+    inputData: data,
   }).getInstruction(NAME_PROGRAM_ADDRESS, domainAddress, signer);
 
   return ix;
