@@ -45,8 +45,6 @@ type ResolveParamsWithOptions = Omit<ResolveParams, "options"> & {
   options: ResolveOptions;
 };
 
-export type AllowPda = "any" | boolean;
-
 export type ResolveOptions =
   | { allowPda: false; programIds?: never }
   | { allowPda: "any"; programIds?: never }

@@ -6,7 +6,7 @@ import { getDomainOwner } from "../../src/domain/getDomainOwner";
 import { getDomainRecord } from "../../src/domain/getDomainRecord";
 import { getDomainRecords } from "../../src/domain/getDomainRecords";
 import { getSubdomains } from "../../src/domain/getSubdomains";
-import { AllowPda, resolve } from "../../src/domain/resolve";
+import { ResolveOptions, resolve } from "../../src/domain/resolve";
 import {
   InvalidRoAError,
   InvalidValidationError,
@@ -119,7 +119,7 @@ describe("SOL domain reads", () => {
         domain: "wallet-guide-9.sol",
         record: Record.Url,
         value: "https://google.com",
-        verified: { staleness: false, rightOfAssociation: false },
+        verified: { staleness: false, roa: false },
       },
       {
         domain: "wallet-guide-9.sol",
@@ -164,7 +164,7 @@ describe("SOL domain reads", () => {
         {
           record: Record.Url,
           value: "https://google.com",
-          verified: { staleness: false, rightOfAssociation: false },
+          verified: { staleness: false, roa: false },
         },
         { record: Record.ETH },
       ];
@@ -250,12 +250,15 @@ describe("SOL domain reads", () => {
       {
         domain: "sns-ip-5-wallet-5.sol",
         result: "96GKJgm2W3P8Bae78brPrJf4Yi9AN1wtPJwg2XVQ2rMr",
-        options: { allowPda: true, programIds: [SYSTEM_PROGRAM_ADDRESS] },
+        options: {
+          allowPda: true,
+          programIds: [SYSTEM_PROGRAM_ADDRESS],
+        } as ResolveOptions,
       },
       {
         domain: "sns-ip-5-wallet-5.sol",
         result: "96GKJgm2W3P8Bae78brPrJf4Yi9AN1wtPJwg2XVQ2rMr",
-        options: { allowPda: "any" as AllowPda },
+        options: { allowPda: "any" } as ResolveOptions,
       },
       {
         domain: "sns-ip-5-wallet-7.sol",
@@ -272,12 +275,15 @@ describe("SOL domain reads", () => {
       {
         domain: "sns-ip-5-wallet-10.sol",
         result: "96GKJgm2W3P8Bae78brPrJf4Yi9AN1wtPJwg2XVQ2rMr",
-        options: { allowPda: true, programIds: [SYSTEM_PROGRAM_ADDRESS] },
+        options: {
+          allowPda: true,
+          programIds: [SYSTEM_PROGRAM_ADDRESS],
+        } as ResolveOptions,
       },
       {
         domain: "sns-ip-5-wallet-10.sol",
         result: "96GKJgm2W3P8Bae78brPrJf4Yi9AN1wtPJwg2XVQ2rMr",
-        options: { allowPda: "any" as AllowPda },
+        options: { allowPda: "any" } as ResolveOptions,
       },
       {
         domain: "wallet-guide-5.sol",
