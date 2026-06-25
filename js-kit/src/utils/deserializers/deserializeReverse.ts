@@ -31,7 +31,7 @@ export function deserializeReverse({
 }: DeserializeReverseParams): string | undefined {
   if (!data) return undefined;
 
-  const view = new DataView(data.buffer);
+  const view = new DataView(data.buffer, data.byteOffset, data.byteLength);
   const nameLength = view.getUint32(0, true);
 
   return utf8Codec
