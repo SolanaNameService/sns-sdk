@@ -49,7 +49,7 @@ export * from "./instructions/createWithNftInstruction";
 export * from "./instructions/deleteNameRegistryInstruction";
 export * from "./instructions/deleteRecordInstruction";
 export * from "./instructions/reallocInstruction";
-export * from "./instructions/registerFavoriteInstruction";
+export * from "./instructions/registerPrimaryInstruction";
 export * from "./instructions/transferInstruction";
 export * from "./instructions/updateNameRegistryInstruction";
 export * from "./instructions/updateRecordInstruction";
