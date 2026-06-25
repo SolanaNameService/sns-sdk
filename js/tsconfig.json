@@ -31,11 +31,6 @@
     "noUnusedParameters": true,
     "strict": true
   },
-  "include": [
-    "src/*",
-    "src/.ts",
-    "src/deprecated/.ts",
-    "src/nft/retrieveRecords.ts"
-  ],
+  "include": ["src/*"],
   "exclude": ["src/**/*.test.ts", "**/node_modules", "dist", "benchmarks"]
 }

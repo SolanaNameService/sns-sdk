@@ -6,14 +6,14 @@ export function updateInstruction(
   nameProgramId: PublicKey,
   nameAccountKey: PublicKey,
   offset: Numberu32,
-  input_data: Buffer,
+  inputData: Buffer,
   nameUpdateSigner: PublicKey,
 ): TransactionInstruction {
   const buffers = [
     Buffer.from(Int8Array.from([1])),
     offset.toBuffer(),
-    new Numberu32(input_data.length).toBuffer(),
-    input_data,
+    new Numberu32(inputData.length).toBuffer(),
+    inputData,
   ];
 
   const data = Buffer.concat(buffers);

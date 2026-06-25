@@ -6,6 +6,7 @@ export * from "./bindings/createSubdomain";
 export * from "./bindings/deleteNameRegistry";
 export * from "./bindings/deleteRecord";
 export * from "./bindings/registerDomain";
+export * from "./bindings/setBackground";
 export * from "./bindings/setPrimaryDomain";
 export * from "./bindings/setRecordRoaVerifier";
 export * from "./bindings/setRecordStalenessVerifier";
