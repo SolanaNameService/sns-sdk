@@ -1,4 +1,4 @@
-import { Address } from "@solana/addresses";
+import type { Address } from "@solana/kit";
 
 export const SYSTEM_PROGRAM_ADDRESS =
   "11111111111111111111111111111111" as Address;
