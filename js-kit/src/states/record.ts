@@ -8,7 +8,11 @@ import {
 } from "@solana/kit";
 import { Schema, deserialize } from "borsh";
 
-import { InvalidValidationError, NoRecordDataError } from "../errors";
+import {
+  InvalidSerializedDataError,
+  InvalidValidationError,
+  NoRecordDataError,
+} from "../errors";
 import { Validation } from "../types/validation";
 
 export const NAME_REGISTRY_LEN = 96;
@@ -122,8 +126,14 @@ export class RecordState {
     const startOffset =
       getValidationLength(this.header.stalenessValidation) +
       getValidationLength(this.header.rightOfAssociationValidation);
+    const endOffset = startOffset + this.header.contentLength;
+    if (endOffset > this.data.length) {
+      throw new InvalidSerializedDataError(
+        "Record content length exceeds account data"
+      );
+    }
 
-    return this.data.slice(startOffset);
+    return this.data.slice(startOffset, endOffset);
   }
 
   getStalenessId(): Uint8Array {
