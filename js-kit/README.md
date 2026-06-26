@@ -10,8 +10,6 @@
 
 The JS-KIT SDK is a JavaScript toolkit for managing SNS domains and records. Built on `@solana/kit` (formerly `@solana/web3.js` 2.x), it provides typed helpers for resolving domains, reading records, and building domain or record operations.
 
-**Note: This SDK is currently in beta and subject to changes. Features, APIs, and functionality may evolve as development progresses.**
-
 ## Features
 
 - Resolve `.sns` and `.sol` domains
