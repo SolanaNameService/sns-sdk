@@ -64,6 +64,24 @@ const getConnection = (c: Context<Env>, clientRpc?: string) => {
   return new Connection(endpoint, "processed");
 };
 
+const stripKnownTld = (domain: string) =>
+  domain.replace(/\.(sns|sol)$/i, "");
+
+const toSnsDomain = (domain: string) => `${stripKnownTld(domain)}.sns`;
+
+const toSolDomain = (domain: string) => `${stripKnownTld(domain)}.sol`;
+
+const toCanonicalSnsDomain = (domain: string) =>
+  `${stripKnownTld(domain.trim().toLowerCase())}.sns`;
+
+const resolveSnsProxy = (connection: Connection, domain: string) =>
+  resolve(connection, toSnsDomain(domain));
+
+const resolveSolProxy = (connection: Connection, domain: string) =>
+  resolve(connection, toSolDomain(domain));
+
+void toCanonicalSnsDomain;
+
 function response<T>(success: boolean, result: T) {
   return { s: success ? "ok" : "error", result };
 }
@@ -81,7 +99,37 @@ app.get("/resolve/:domain", async (c) => {
   const { domain } = c.req.param();
   const rpc = c.req.query("rpc");
   try {
-    const res = await resolve(getConnection(c, rpc), domain);
+    const res = await resolveSnsProxy(getConnection(c, rpc), domain);
+    return c.json(response(true, res));
+  } catch (err) {
+    console.log(err);
+    return c.json(response(false, "Domain not found"));
+  }
+});
+
+/**
+ * Resolves a .sns domain to the current owner
+ */
+app.get("/resolveSns/:domain", async (c) => {
+  const { domain } = c.req.param();
+  const rpc = c.req.query("rpc");
+  try {
+    const res = await resolveSnsProxy(getConnection(c, rpc), domain);
+    return c.json(response(true, res));
+  } catch (err) {
+    console.log(err);
+    return c.json(response(false, "Domain not found"));
+  }
+});
+
+/**
+ * Resolves a .sol domain to the current owner
+ */
+app.get("/resolveSol/:domain", async (c) => {
+  const { domain } = c.req.param();
+  const rpc = c.req.query("rpc");
+  try {
+    const res = await resolveSolProxy(getConnection(c, rpc), domain);
     return c.json(response(true, res));
   } catch (err) {
     console.log(err);
