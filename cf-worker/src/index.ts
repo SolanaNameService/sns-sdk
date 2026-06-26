@@ -4,27 +4,25 @@ import {
   resolve,
   getReverseKeySync,
   Record,
-  getRecordKeySync,
-  getRecord,
+  getRecord as getRecordV4,
   reverseLookup,
-  registerDomainNameV2,
   findSubdomains,
-  getAllDomains,
-  getFavoriteDomain,
   reverseLookupBatch,
-  getTokenizedDomains,
-  getRecords,
   RecordVersion,
   getTwitterRegistry,
   getHandleAndRegistryKey,
-  getRecordV2,
-  getMultipleRecordsV2,
-  getMultipleFavoriteDomains,
   NameRegistryState,
   GUARDIANS,
   createSubdomain,
   transferInstruction,
   NAME_PROGRAM_ID,
+  registerDomain,
+  getSnsDomainsForOwner,
+  getSnsNftsForOwner,
+  getPrimaryDomain,
+  getMultiplePrimaryDomains,
+  getMultipleRecords,
+  getRecordV1Key,
 } from "@bonfida/spl-name-service";
 import {
   Connection,
@@ -80,7 +78,57 @@ const resolveSnsProxy = (connection: Connection, domain: string) =>
 const resolveSolProxy = (connection: Connection, domain: string) =>
   resolve(connection, toSolDomain(domain));
 
-void toCanonicalSnsDomain;
+const registerDomainNameV2 = (
+  connection: Connection,
+  domain: string,
+  space: number,
+  buyer: PublicKey,
+  buyerTokenAccount: PublicKey,
+  mint: PublicKey,
+  referrerKey?: PublicKey,
+) =>
+  registerDomain(
+    connection,
+    toCanonicalSnsDomain(domain),
+    space,
+    buyer,
+    buyerTokenAccount,
+    mint,
+    referrerKey,
+  );
+
+const getAllDomains = getSnsDomainsForOwner;
+
+const getTokenizedDomains = getSnsNftsForOwner;
+
+const getFavoriteDomain = getPrimaryDomain;
+
+const getMultipleFavoriteDomains = getMultiplePrimaryDomains;
+
+const getRecordKeySync = (domain: string, record: Record) =>
+  getRecordV1Key(toSnsDomain(domain), record);
+
+const getRecord = async (
+  connection: Connection,
+  domain: string,
+  record: Record,
+) => {
+  const { registry } = await NameRegistryState.retrieve(
+    connection,
+    getRecordKeySync(domain, record),
+  );
+  return registry;
+};
+
+const getRecords = (connection: Connection, domain: string, records: Record[]) =>
+  NameRegistryState.retrieveBatch(
+    connection,
+    records.map((record) => getRecordKeySync(domain, record)),
+  );
+
+const getRecordV2 = getRecordV4;
+
+const getMultipleRecordsV2 = getMultipleRecords;
 
 function response<T>(success: boolean, result: T) {
   return { s: success ? "ok" : "error", result };
