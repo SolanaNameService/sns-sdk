@@ -97,14 +97,6 @@ const registerDomainNameV2 = (
     referrerKey,
   );
 
-const getAllDomains = getSnsDomainsForOwner;
-
-const getTokenizedDomains = getSnsNftsForOwner;
-
-const getFavoriteDomain = getPrimaryDomain;
-
-const getMultipleFavoriteDomains = getMultiplePrimaryDomains;
-
 const getRecordKeySync = (domain: string, record: Record) =>
   getRecordV1Key(toSnsDomain(domain), record);
 
@@ -129,6 +121,12 @@ const getRecords = (connection: Connection, domain: string, records: Record[]) =
 const getRecordV2 = getRecordV4;
 
 const getMultipleRecordsV2 = getMultipleRecords;
+
+const isPrimaryDomainNotFoundError = (err: unknown) =>
+  err instanceof Error &&
+  (err.message.includes("Favourite domain not found") ||
+    err.message.includes("primary account does not exist") ||
+    ("type" in err && err.type === "PrimaryDomainNotFound"));
 
 function response<T>(success: boolean, result: T) {
   return { s: success ? "ok" : "error", result };
@@ -196,7 +194,7 @@ app.get("/domain-key/:domain", (c) => {
     });
     const { record } = Query.parse(c.req.query());
 
-    const res = getDomainKeySync(domain, record);
+    const res = getDomainKeySync(toSnsDomain(domain), record);
     return c.json(response(true, res.pubkey.toBase58()));
   } catch (err) {
     console.log(err);
@@ -215,16 +213,11 @@ app.get("/domains/:owner", async (c) => {
   try {
     const { owner } = c.req.param();
     const rpc = c.req.query("rpc");
-    const res = await getAllDomains(
-      getConnection(c, rpc),
-      new PublicKey(owner),
-    );
-    const revs = await reverseLookupBatch(getConnection(c, rpc), res);
+    const connection = getConnection(c, rpc);
+    const res = await getSnsDomainsForOwner(connection, new PublicKey(owner));
+    const revs = await reverseLookupBatch(connection, res);
 
-    const tokenized = await getTokenizedDomains(
-      getConnection(c, rpc),
-      new PublicKey(owner),
-    );
+    const tokenized = await getSnsNftsForOwner(connection, new PublicKey(owner));
 
     return c.json(
       response(
@@ -254,7 +247,7 @@ app.get("/reverse-key/:domain", (c) => {
     const { domain } = c.req.param();
     const query = c.req.query("sub");
 
-    const res = getReverseKeySync(domain, query === "true");
+    const res = getReverseKeySync(toSnsDomain(domain), query === "true");
     return c.json(response(true, res.toBase58()));
   } catch (err) {
     console.log(err);
@@ -272,7 +265,7 @@ app.get("/record-key/:domain/:record", (c) => {
       record: z.enum(Record),
     });
     const { domain, record } = Params.parse(c.req.param());
-    const res = getRecordKeySync(domain, record);
+    const res = getRecordV1Key(toSnsDomain(domain), record);
     return c.json(response(true, res.toBase58()));
   } catch (err) {
     console.log(err);
@@ -394,7 +387,7 @@ app.get("/favorite-domain/:owner", async (c) => {
   try {
     const { owner } = c.req.param();
     const rpc = c.req.query("rpc");
-    const res = await getFavoriteDomain(
+    const res = await getPrimaryDomain(
       getConnection(c, rpc),
       new PublicKey(owner),
     );
@@ -407,10 +400,8 @@ app.get("/favorite-domain/:owner", async (c) => {
     );
   } catch (err) {
     console.log(err);
-    if (err instanceof Error) {
-      if (err.message.includes("Favourite domain not found")) {
-        return c.json(response(true, null));
-      }
+    if (isPrimaryDomainNotFoundError(err)) {
+      return c.json(response(true, null));
     }
     return c.json(response(false, "Invalid domain input"));
   }
@@ -424,14 +415,12 @@ app.get("/multiple-favorite-domains/:owners", async (c) => {
     const { owners } = c.req.param();
     const rpc = c.req.query("rpc");
     const parsed = owners.split(",").map((e) => new PublicKey(e));
-    const res = await getMultipleFavoriteDomains(getConnection(c, rpc), parsed);
+    const res = await getMultiplePrimaryDomains(getConnection(c, rpc), parsed);
     return c.json(response(true, res));
   } catch (err) {
     console.log(err);
-    if (err instanceof Error) {
-      if (err.message.includes("Favourite domain not found")) {
-        return c.json(response(true, null));
-      }
+    if (isPrimaryDomainNotFoundError(err)) {
+      return c.json(response(true, null));
     }
     return c.json(response(false, "Invalid domain input"));
   }
@@ -471,7 +460,7 @@ app.get("/subdomains/:parent", async (c) => {
     const rpc = c.req.query("rpc");
     const subs = await findSubdomains(
       getConnection(c, rpc),
-      getDomainKeySync(parent).pubkey,
+      getDomainKeySync(toSnsDomain(parent)).pubkey,
     );
     return c.json(response(true, subs));
   } catch (err) {
@@ -795,7 +784,7 @@ app.get("/domain-data/:domain", async (c) => {
     const rpc = c.req.query("rpc");
     const connection = getConnection(c, rpc);
 
-    const { pubkey: domainKey } = getDomainKeySync(domain);
+    const { pubkey: domainKey } = getDomainKeySync(toSnsDomain(domain));
     const info = await connection.getAccountInfo(domainKey);
 
     if (!info) {
