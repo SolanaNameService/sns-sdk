@@ -12,7 +12,6 @@ import {
   getTwitterRegistry,
   getHandleAndRegistryKey,
   NameRegistryState,
-  GUARDIANS,
   createSubdomain,
   transferInstruction,
   NAME_PROGRAM_ID,
@@ -22,7 +21,8 @@ import {
   getPrimaryDomain,
   getMultiplePrimaryDomains,
   getMultipleRecords,
-  getRecordV1Key,
+  getRecordV2Key,
+  ErrorType,
 } from "@bonfida/spl-name-service";
 import {
   Connection,
@@ -34,7 +34,6 @@ import { getAssociatedTokenAddress } from "@solana/spl-token";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import { z } from "zod";
-import { Validation } from "@bonfida/sns-records";
 
 const USDC_MINT = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
 
@@ -97,36 +96,10 @@ const registerDomainNameV2 = (
     referrerKey,
   );
 
-const getRecordKeySync = (domain: string, record: Record) =>
-  getRecordV1Key(toSnsDomain(domain), record);
-
-const getRecord = async (
-  connection: Connection,
-  domain: string,
-  record: Record,
-) => {
-  const { registry } = await NameRegistryState.retrieve(
-    connection,
-    getRecordKeySync(domain, record),
-  );
-  return registry;
-};
-
-const getRecords = (connection: Connection, domain: string, records: Record[]) =>
-  NameRegistryState.retrieveBatch(
-    connection,
-    records.map((record) => getRecordKeySync(domain, record)),
-  );
-
-const getRecordV2 = getRecordV4;
-
-const getMultipleRecordsV2 = getMultipleRecords;
-
 const isPrimaryDomainNotFoundError = (err: unknown) =>
   err instanceof Error &&
-  (err.message.includes("Favourite domain not found") ||
-    err.message.includes("primary account does not exist") ||
-    ("type" in err && err.type === "PrimaryDomainNotFound"));
+  "type" in err &&
+  err.type === ErrorType.PrimaryDomainNotFound;
 
 function response<T>(success: boolean, result: T) {
   return { s: success ? "ok" : "error", result };
@@ -256,16 +229,16 @@ app.get("/reverse-key/:domain", (c) => {
 });
 
 /**
- * Returns the public key of the record for the specified domain
+ * Returns the public key of the V2 record for the specified domain
  */
-app.get("/record-key/:domain/:record", (c) => {
+app.get("/record-key-v2/:domain/:record", (c) => {
   try {
     const Params = z.object({
       domain: z.string(),
       record: z.enum(Record),
     });
     const { domain, record } = Params.parse(c.req.param());
-    const res = getRecordV1Key(toSnsDomain(domain), record);
+    const res = getRecordV2Key(toSnsDomain(domain), record);
     return c.json(response(true, res.toBase58()));
   } catch (err) {
     console.log(err);
@@ -278,29 +251,26 @@ app.get("/record-key/:domain/:record", (c) => {
 });
 
 /**
- * Returns the base64 encoded content of a record for the specified domain
+ * Deprecated. Use /record-key-v2/:domain/:record instead.
  */
-app.get("/record/:domain/:record", async (c) => {
-  try {
-    const Params = z.object({
-      domain: z.string(),
-      record: z.enum(Record),
-    });
-    const Query = z.object({
-      rpc: z.string().optional(),
-    });
-    const { domain, record } = Params.parse(c.req.param());
-    const { rpc } = Query.parse(c.req.query());
-    const res = await getRecord(getConnection(c, rpc), domain, record);
-    return c.json(response(true, res?.data?.toString("base64")));
-  } catch (err) {
-    console.log(err);
-    if (err instanceof z.ZodError) {
-      return c.json(response(false, "Invalid input"), 400);
-    } else {
-      return c.json(response(false, "Internal error"), 500);
-    }
-  }
+app.get("/record-key/:domain/:record", (c) => {
+  return c.json(
+    response(
+      false,
+      "This endpoint is deprecated. Use /record-key-v2/:domain/:record instead.",
+    ),
+    400,
+  );
+});
+
+/**
+ * Deprecated. Use /record-v2/:domain/:record instead.
+ */
+app.get("/record/:domain/:record", (c) => {
+  return c.json(
+    response(false, "This endpoint is deprecated. Use /record-v2/:domain/:record instead."),
+    400,
+  );
 });
 
 /**
@@ -318,52 +288,15 @@ app.get("/record-v2/:domain/:record", async (c) => {
     const { domain, record } = Params.parse(c.req.param());
     const { rpc } = Query.parse(c.req.query());
     const connection = getConnection(c, rpc);
-    const { registry } = await NameRegistryState.retrieve(
-      connection,
-      getDomainKeySync(domain).pubkey,
-    );
-    const owner = registry.owner;
-    const res = await getRecordV2(connection, domain, record, {
+    const res = await getRecordV4(connection, toSnsDomain(domain), record, {
       deserialize: true,
     });
-
-    const stale = !res.retrievedRecord
-      .getStalenessId()
-      .equals(owner.toBuffer());
-
-    let roa = undefined;
-
-    if (Record.SOL === record) {
-      roa =
-        res.retrievedRecord
-          .getRoAId()
-          .equals(res.retrievedRecord.getContent()) &&
-        res.retrievedRecord.header.rightOfAssociationValidation ===
-          Validation.Solana;
-    } else if (
-      [Record.ETH, Record.BSC, Record.Injective, Record.BASE].includes(record)
-    ) {
-      roa =
-        res.retrievedRecord
-          .getRoAId()
-          .equals(res.retrievedRecord.getContent()) &&
-        res.retrievedRecord.header.rightOfAssociationValidation ===
-          Validation.Ethereum;
-    } else {
-      const guardian = GUARDIANS.get(record);
-      if (guardian) {
-        roa =
-          res.retrievedRecord.getRoAId().equals(guardian.toBuffer()) &&
-          res.retrievedRecord.header.rightOfAssociationValidation ===
-            Validation.Solana;
-      }
-    }
 
     return c.json(
       response(true, {
         deserialized: res.deserializedContent,
-        stale,
-        roa,
+        stale: !res.verified.staleness,
+        roa: res.verified.roa,
         record: {
           header: res.retrievedRecord.header,
           data: res.retrievedRecord.data.toString("base64"),
@@ -381,9 +314,9 @@ app.get("/record-v2/:domain/:record", async (c) => {
 });
 
 /**
- * Returns the favorite domain for the specified owner and null if it does not exist
+ * Returns the primary domain for the specified owner and null if it does not exist
  */
-app.get("/favorite-domain/:owner", async (c) => {
+const primaryDomainHandler = async (c: Context<Env>) => {
   try {
     const { owner } = c.req.param();
     const rpc = c.req.query("rpc");
@@ -405,12 +338,15 @@ app.get("/favorite-domain/:owner", async (c) => {
     }
     return c.json(response(false, "Invalid domain input"));
   }
-});
+};
+
+app.get("/primary-domain/:owner", primaryDomainHandler);
+app.get("/favorite-domain/:owner", primaryDomainHandler);
 
 /**
- * Returns the favorite domain for the specified owners (comma separated) and undefined if it does not exist
+ * Returns the primary domain for the specified owners (comma separated) and undefined if it does not exist
  */
-app.get("/multiple-favorite-domains/:owners", async (c) => {
+const multiplePrimaryDomainsHandler = async (c: Context<Env>) => {
   try {
     const { owners } = c.req.param();
     const rpc = c.req.query("rpc");
@@ -424,7 +360,10 @@ app.get("/multiple-favorite-domains/:owners", async (c) => {
     }
     return c.json(response(false, "Invalid domain input"));
   }
-});
+};
+
+app.get("/multiple-primary-domains/:owners", multiplePrimaryDomainsHandler);
+app.get("/multiple-favorite-domains/:owners", multiplePrimaryDomainsHandler);
 
 /**
  * Returns the list of supported records
@@ -470,39 +409,6 @@ app.get("/subdomains/:parent", async (c) => {
 });
 
 /**
- * Returns a list of deserialized records. The list of records passed by URL query param must be comma separated.
- * In the case where a record does not exist, the data will be undefined
- */
-app.get("/records/:domain", async (c) => {
-  try {
-    const { domain } = c.req.param();
-    const rpc = c.req.query("rpc");
-
-    const parsedRecords = c.req.query("records")?.split(",");
-    const recordSchema = z.array(z.enum(Record));
-    const records = recordSchema.parse(parsedRecords);
-
-    if (!records || records.length === 0) {
-      return c.json(response(false, "Missing records in URL query params"));
-    }
-
-    const res = await getRecords(getConnection(c, rpc), domain, records);
-
-    const result = res.map((e, idx) => {
-      return { record: records[idx], data: e?.data?.toString("utf-8") };
-    });
-    return c.json(response(true, result));
-  } catch (err) {
-    console.log(err);
-    if (err instanceof z.ZodError) {
-      return c.json(response(false, "Invalid input"), 400);
-    } else {
-      return c.json(response(false, "Internal error"), 500);
-    }
-  }
-});
-
-/**
  * Returns a list of deserialized V2 records. The list of records passed by URL query param must be comma separated.
  * In the case where a record does not exist, the data will not be included in the result.
  */
@@ -520,57 +426,25 @@ app.get("/records-v2/:domain", async (c) => {
     }
 
     const connection = getConnection(c, rpc);
-    const { registry } = await NameRegistryState.retrieve(
-      connection,
-      getDomainKeySync(domain).pubkey,
-    );
-    const owner = registry.owner;
     const results = [];
 
-    const recordsV2 = await getMultipleRecordsV2(connection, domain, records, {
-      deserialize: true,
-    });
+    const recordsV2 = await getMultipleRecords(
+      connection,
+      toSnsDomain(domain),
+      records,
+      {
+        deserialize: true,
+      },
+    );
 
     for (const res of recordsV2) {
       if (res === undefined) break;
 
-      const stale = !res.retrievedRecord
-        .getStalenessId()
-        .equals(owner.toBuffer());
-      const { record } = res;
-      let roa = undefined;
-
-      if (Record.SOL === record) {
-        roa =
-          res.retrievedRecord
-            .getRoAId()
-            .equals(res.retrievedRecord.getContent()) &&
-          res.retrievedRecord.header.rightOfAssociationValidation ===
-            Validation.Solana;
-      } else if (
-        [Record.ETH, Record.BSC, Record.Injective, Record.BASE].includes(record)
-      ) {
-        roa =
-          res.retrievedRecord
-            .getRoAId()
-            .equals(res.retrievedRecord.getContent()) &&
-          res.retrievedRecord.header.rightOfAssociationValidation ===
-            Validation.Ethereum;
-      } else {
-        const guardian = GUARDIANS.get(record);
-        if (guardian) {
-          roa =
-            res.retrievedRecord.getRoAId().equals(guardian.toBuffer()) &&
-            res.retrievedRecord.header.rightOfAssociationValidation ===
-              Validation.Solana;
-        }
-      }
-
       results.push({
         type: res.record,
         deserialized: res.deserializedContent,
-        stale,
-        roa,
+        stale: !res.verified.staleness,
+        roa: res.verified.roa,
         record: {
           header: res.retrievedRecord.header,
           data: res.retrievedRecord.data.toString("base64"),
@@ -785,13 +659,8 @@ app.get("/domain-data/:domain", async (c) => {
     const connection = getConnection(c, rpc);
 
     const { pubkey: domainKey } = getDomainKeySync(toSnsDomain(domain));
-    const info = await connection.getAccountInfo(domainKey);
-
-    if (!info) {
-      return c.json(response(false, "Domain not found"));
-    }
-
-    const base64Data = info.data.slice(96).toString("base64");
+    const { registry } = await NameRegistryState.retrieve(connection, domainKey);
+    const base64Data = registry.data?.toString("base64");
 
     return c.json(response(true, base64Data));
   } catch (err) {
