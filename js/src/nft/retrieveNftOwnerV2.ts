@@ -1,6 +1,7 @@
-import { PublicKey, Connection, SolanaJSONRPCError } from "@solana/web3.js";
-import { getDomainMint } from "./getDomainMint";
 import { AccountLayout } from "@solana/spl-token";
+import { Connection, PublicKey } from "@solana/web3.js";
+
+import { getDomainMint } from "./getDomainMint";
 
 export const retrieveNftOwnerV2 = async (
   connection: Connection,
@@ -28,10 +29,16 @@ export const retrieveNftOwnerV2 = async (
     }
     return null;
   } catch (err) {
-    if (err instanceof SolanaJSONRPCError && err.code === -32602) {
+    if (
+      typeof err === "object" &&
+      err !== null &&
+      "code" in err &&
+      err.code === -32602
+    ) {
       // Mint does not exist
       return null;
     }
+
     throw err;
   }
 };
