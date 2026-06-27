@@ -61,8 +61,7 @@ const getConnection = (c: Context<Env>, clientRpc?: string) => {
   return new Connection(endpoint, "processed");
 };
 
-const stripKnownTld = (domain: string) =>
-  domain.replace(/\.(sns|sol)$/i, "");
+const stripKnownTld = (domain: string) => domain.replace(/\.(sns|sol)$/i, "");
 
 const toSnsDomain = (domain: string) => `${stripKnownTld(domain)}.sns`;
 
@@ -76,25 +75,6 @@ const resolveSnsProxy = (connection: Connection, domain: string) =>
 
 const resolveSolProxy = (connection: Connection, domain: string) =>
   resolve(connection, toSolDomain(domain));
-
-const registerDomainNameV2 = (
-  connection: Connection,
-  domain: string,
-  space: number,
-  buyer: PublicKey,
-  buyerTokenAccount: PublicKey,
-  mint: PublicKey,
-  referrerKey?: PublicKey,
-) =>
-  registerDomain(
-    connection,
-    toCanonicalSnsDomain(domain),
-    space,
-    buyer,
-    buyerTokenAccount,
-    mint,
-    referrerKey,
-  );
 
 const isPrimaryDomainNotFoundError = (err: unknown) =>
   err instanceof Error &&
@@ -190,7 +170,10 @@ app.get("/domains/:owner", async (c) => {
     const res = await getSnsDomainsForOwner(connection, new PublicKey(owner));
     const revs = await reverseLookupBatch(connection, res);
 
-    const tokenized = await getSnsNftsForOwner(connection, new PublicKey(owner));
+    const tokenized = await getSnsNftsForOwner(
+      connection,
+      new PublicKey(owner),
+    );
 
     return c.json(
       response(
@@ -268,7 +251,10 @@ app.get("/record-key/:domain/:record", (c) => {
  */
 app.get("/record/:domain/:record", (c) => {
   return c.json(
-    response(false, "This endpoint is deprecated. Use /record-v2/:domain/:record instead."),
+    response(
+      false,
+      "This endpoint is deprecated. Use /record-v2/:domain/:record instead.",
+    ),
     400,
   );
 });
@@ -525,9 +511,9 @@ app.get("/register", async (c) => {
 
     const connection = getConnection(c, rpc);
 
-    const ixs = await registerDomainNameV2(
+    const ixs = await registerDomain(
       connection,
-      domain,
+      toCanonicalSnsDomain(domain),
       space,
       buyer,
       ata,
@@ -592,21 +578,18 @@ app.get("/create-sub", async (c) => {
 
     const connection = getConnection(c, rpc);
     const ixs: TransactionInstruction[] = [];
+    const ownerKey = new PublicKey(owner);
+    const fullSubdomain = toCanonicalSnsDomain(subdomain);
 
-    const ix = await createSubdomain(
-      connection,
-      subdomain,
-      new PublicKey(owner),
-      0,
-    );
+    const ix = await createSubdomain(connection, fullSubdomain, ownerKey, 0);
     ixs.push(...ix);
 
     if (finalOwner) {
       const ix = transferInstruction(
         NAME_PROGRAM_ID,
-        getDomainKeySync(subdomain).pubkey,
+        getDomainKeySync(fullSubdomain).pubkey,
         new PublicKey(finalOwner),
-        new PublicKey(owner),
+        ownerKey,
       );
       ixs.push(ix);
     }
@@ -614,7 +597,7 @@ app.get("/create-sub", async (c) => {
     if (serialize) {
       const tx = new Transaction().add(...ixs);
 
-      tx.feePayer = new PublicKey(owner);
+      tx.feePayer = ownerKey;
       tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
       const ser = tx.serialize({
         requireAllSignatures: false,
@@ -659,7 +642,10 @@ app.get("/domain-data/:domain", async (c) => {
     const connection = getConnection(c, rpc);
 
     const { pubkey: domainKey } = getDomainKeySync(toSnsDomain(domain));
-    const { registry } = await NameRegistryState.retrieve(connection, domainKey);
+    const { registry } = await NameRegistryState.retrieve(
+      connection,
+      domainKey,
+    );
     const base64Data = registry.data?.toString("base64");
 
     return c.json(response(true, base64Data));
