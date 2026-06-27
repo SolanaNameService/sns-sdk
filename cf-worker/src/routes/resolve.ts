@@ -7,9 +7,8 @@ import { getConnection, response, type Env } from "../utils/http";
 export const registerResolveRoutes = (app: Hono<Env>) => {
   app.get("/resolve/:domain", async (c) => {
     const { domain } = c.req.param();
-    const rpc = c.req.query("rpc");
     try {
-      const res = await resolve(getConnection(c, rpc), toSnsDomain(domain));
+      const res = await resolve(getConnection(c), toSnsDomain(domain));
       return c.json(response(true, res));
     } catch (err) {
       console.log(err);
@@ -19,9 +18,8 @@ export const registerResolveRoutes = (app: Hono<Env>) => {
 
   app.get("/resolveSns/:domain", async (c) => {
     const { domain } = c.req.param();
-    const rpc = c.req.query("rpc");
     try {
-      const res = await resolve(getConnection(c, rpc), toSnsDomain(domain));
+      const res = await resolve(getConnection(c), toSnsDomain(domain));
       return c.json(response(true, res));
     } catch (err) {
       console.log(err);
@@ -31,9 +29,8 @@ export const registerResolveRoutes = (app: Hono<Env>) => {
 
   app.get("/resolveSol/:domain", async (c) => {
     const { domain } = c.req.param();
-    const rpc = c.req.query("rpc");
     try {
-      const res = await resolve(getConnection(c, rpc), toSolDomain(domain));
+      const res = await resolve(getConnection(c), toSolDomain(domain));
       return c.json(response(true, res));
     } catch (err) {
       console.log(err);

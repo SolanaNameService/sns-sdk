@@ -19,25 +19,24 @@ import {
   registerQuerySchema,
 } from "../utils/schemas";
 
-const USDC_MINT = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
+const USDC_MINT = new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
 
 export const registerInstructionRoutes = (app: Hono<Env>) => {
   app.get("/register", async (c) => {
     try {
-      const { buyerStr, domain, space, serialize, refKey, mintStr, rpc } =
+      const { buyer, domain, space, serialize, referrer, mint } =
         registerQuerySchema.parse(c.req.query());
-      const buyer = new PublicKey(buyerStr);
-      const mint = new PublicKey(mintStr || USDC_MINT);
-      const ata = await getAssociatedTokenAddress(mint, buyer, true);
-      const connection = getConnection(c, rpc);
+      const paymentMint = mint ?? USDC_MINT;
+      const ata = await getAssociatedTokenAddress(paymentMint, buyer, true);
+      const connection = getConnection(c);
       const ixs = await registerDomain(
         connection,
         toCanonicalSnsDomain(domain),
         space,
         buyer,
         ata,
-        mint,
-        refKey ? new PublicKey(refKey) : undefined,
+        paymentMint,
+        referrer,
       );
       const result = await buildInstructionResponse(
         connection,
@@ -58,13 +57,12 @@ export const registerInstructionRoutes = (app: Hono<Env>) => {
 
   app.get("/create-sub", async (c) => {
     try {
-      const { owner, subdomain, rpc, serialize, finalOwner } =
+      const { owner, subdomain, serialize, finalOwner } =
         createSubdomainQuerySchema.parse(c.req.query());
-      const connection = getConnection(c, rpc);
+      const connection = getConnection(c);
       const ixs: TransactionInstruction[] = [];
-      const ownerKey = new PublicKey(owner);
       const fullSubdomain = toCanonicalSnsDomain(subdomain);
-      const ix = await createSubdomain(connection, fullSubdomain, ownerKey, 0);
+      const ix = await createSubdomain(connection, fullSubdomain, owner, 0);
       ixs.push(...ix);
 
       if (finalOwner) {
@@ -72,15 +70,15 @@ export const registerInstructionRoutes = (app: Hono<Env>) => {
           transferInstruction(
             NAME_PROGRAM_ID,
             getDomainKeySync(fullSubdomain).pubkey,
-            new PublicKey(finalOwner),
-            ownerKey,
+            finalOwner,
+            owner,
           ),
         );
       }
 
       const result = await buildInstructionResponse(
         connection,
-        ownerKey,
+        owner,
         ixs,
         serialize,
       );

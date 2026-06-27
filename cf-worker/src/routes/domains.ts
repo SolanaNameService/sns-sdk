@@ -9,7 +9,6 @@ import {
   reverseLookup,
   reverseLookupBatch,
 } from "@bonfida/spl-name-service";
-import { PublicKey } from "@solana/web3.js";
 import type { Context, Hono } from "hono";
 import { z } from "zod";
 
@@ -20,15 +19,18 @@ import {
   response,
   type Env,
 } from "../utils/http";
-import { domainKeyQuerySchema } from "../utils/schemas";
+import {
+  domainKeyQuerySchema,
+  ownerParamSchema,
+  pubkeyParamSchema,
+  publicKeySchema,
+} from "../utils/schemas";
 
 const primaryDomainHandler = async (c: Context<Env>) => {
   try {
-    const { owner } = c.req.param();
-    const rpc = c.req.query("rpc");
-    const connection = getConnection(c, rpc);
-    const ownerKey = new PublicKey(owner);
-    const res = await getPrimaryDomain(connection, ownerKey);
+    const { owner } = ownerParamSchema.parse(c.req.param());
+    const connection = getConnection(c);
+    const res = await getPrimaryDomain(connection, owner);
     return c.json(
       response(true, {
         domain: res.domain.toBase58(),
@@ -48,9 +50,10 @@ const primaryDomainHandler = async (c: Context<Env>) => {
 const multiplePrimaryDomainsHandler = async (c: Context<Env>) => {
   try {
     const { owners } = c.req.param();
-    const rpc = c.req.query("rpc");
-    const connection = getConnection(c, rpc);
-    const ownerKeys = owners.split(",").map((owner: string) => new PublicKey(owner));
+    const connection = getConnection(c);
+    const ownerKeys = owners
+      .split(",")
+      .map((owner: string) => publicKeySchema.parse(owner));
     const res = await getMultiplePrimaryDomains(connection, ownerKeys);
     return c.json(response(true, res));
   } catch (err) {
@@ -80,13 +83,11 @@ export const registerDomainRoutes = (app: Hono<Env>) => {
 
   app.get("/domains/:owner", async (c) => {
     try {
-      const { owner } = c.req.param();
-      const rpc = c.req.query("rpc");
-      const connection = getConnection(c, rpc);
-      const ownerKey = new PublicKey(owner);
-      const res = await getSnsDomainsForOwner(connection, ownerKey);
+      const { owner } = ownerParamSchema.parse(c.req.param());
+      const connection = getConnection(c);
+      const res = await getSnsDomainsForOwner(connection, owner);
       const revs = await reverseLookupBatch(connection, res);
-      const tokenized = await getSnsNftsForOwner(connection, ownerKey);
+      const tokenized = await getSnsNftsForOwner(connection, owner);
 
       return c.json(
         response(
@@ -126,28 +127,26 @@ export const registerDomainRoutes = (app: Hono<Env>) => {
 
   app.get("/reverse-lookup/:pubkey", async (c) => {
     try {
-      const { pubkey } = c.req.param();
-      const rpc = c.req.query("rpc");
-      const res = await reverseLookup(getConnection(c, rpc), new PublicKey(pubkey));
+      const { pubkey } = pubkeyParamSchema.parse(c.req.param());
+      const res = await reverseLookup(getConnection(c), pubkey);
       return c.json(response(true, res));
     } catch (err) {
       console.log(err);
-      return c.json(response(false, "Invalid input"));
+      return c.json(response(false, "Invalid input"), 400);
     }
   });
 
   app.get("/subdomains/:parent", async (c) => {
     try {
       const { parent } = c.req.param();
-      const rpc = c.req.query("rpc");
       const subs = await findSubdomains(
-        getConnection(c, rpc),
+        getConnection(c),
         getDomainKeySync(toSnsDomain(parent)).pubkey,
       );
       return c.json(response(true, subs));
     } catch (err) {
       console.log(err);
-      return c.json(response(false, "Invalid input"));
+      return c.json(response(false, "Invalid input"), 400);
     }
   });
 };

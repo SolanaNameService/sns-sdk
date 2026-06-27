@@ -8,8 +8,14 @@ export type Env = {
   };
 };
 
-export const getConnection = (c: Context<Env>, clientRpc?: string) => {
-  const endpoint = clientRpc && clientRpc.trim() ? clientRpc : c.env.RPC_URL;
+export const getConnection = (c: Context<Env>) => {
+  const clientRpc = c.req.query("rpc");
+  const endpoint = clientRpc?.trim() || c.env.RPC_URL?.trim();
+
+  if (!endpoint) {
+    throw new Error("RPC_URL is not configured");
+  }
+
   return new Connection(endpoint, "processed");
 };
 

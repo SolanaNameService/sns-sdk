@@ -21,10 +21,12 @@ export const buildInstructionResponse = async (
     const tx = new Transaction().add(...ixs);
     tx.feePayer = feePayer;
     tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
-    return tx.serialize({
-      requireAllSignatures: false,
-      verifySignatures: false,
-    });
+    return tx
+      .serialize({
+        requireAllSignatures: false,
+        verifySignatures: false,
+      })
+      .toString("base64");
   }
 
   return ixs.map(serializeInstruction);

@@ -3,13 +3,29 @@ import {
   getRecord as getRecordV4,
   getRecordV2Key,
   Record,
+  type RecordResult,
 } from "@bonfida/spl-name-service";
 import type { Hono } from "hono";
 import { z } from "zod";
 
 import { toSnsDomain } from "../utils/domain";
-import { deprecatedEndpoint, getConnection, response, type Env } from "../utils/http";
-import { domainRecordParamSchema, rpcQuerySchema } from "../utils/schemas";
+import {
+  deprecatedEndpoint,
+  getConnection,
+  response,
+  type Env,
+} from "../utils/http";
+import { domainRecordParamSchema, recordsQuerySchema } from "../utils/schemas";
+
+const formatRecordResult = (res: RecordResult) => ({
+  deserialized: res.deserializedContent,
+  stale: !res.verified.staleness,
+  roa: res.verified.roa,
+  record: {
+    header: res.retrievedRecord.header,
+    data: res.retrievedRecord.data.toString("base64"),
+  },
+});
 
 export const registerRecordRoutes = (app: Hono<Env>) => {
   app.get("/record-key-v2/:domain/:record", (c) => {
@@ -37,23 +53,12 @@ export const registerRecordRoutes = (app: Hono<Env>) => {
   app.get("/record-v2/:domain/:record", async (c) => {
     try {
       const { domain, record } = domainRecordParamSchema.parse(c.req.param());
-      const { rpc } = rpcQuerySchema.parse(c.req.query());
-      const connection = getConnection(c, rpc);
+      const connection = getConnection(c);
       const res = await getRecordV4(connection, toSnsDomain(domain), record, {
         deserialize: true,
       });
 
-      return c.json(
-        response(true, {
-          deserialized: res.deserializedContent,
-          stale: !res.verified.staleness,
-          roa: res.verified.roa,
-          record: {
-            header: res.retrievedRecord.header,
-            data: res.retrievedRecord.data.toString("base64"),
-          },
-        }),
-      );
+      return c.json(response(true, formatRecordResult(res)));
     } catch (err) {
       console.log(err);
       if (err instanceof z.ZodError) {
@@ -66,17 +71,10 @@ export const registerRecordRoutes = (app: Hono<Env>) => {
   app.get("/records-v2/:domain", async (c) => {
     try {
       const { domain } = c.req.param();
-      const rpc = c.req.query("rpc");
-      const parsedRecords = c.req.query("records")?.split(",");
-      const recordSchema = z.array(z.enum(Record));
-      const records = recordSchema.parse(parsedRecords);
-
-      if (!records || records.length === 0) {
-        return c.json(response(false, "Missing records in URL query params"));
-      }
+      const { records } = recordsQuerySchema.parse(c.req.query());
 
       const recordsV2 = await getMultipleRecords(
-        getConnection(c, rpc),
+        getConnection(c),
         toSnsDomain(domain),
         records,
         { deserialize: true },
@@ -84,17 +82,11 @@ export const registerRecordRoutes = (app: Hono<Env>) => {
       const results = [];
 
       for (const res of recordsV2) {
-        if (res === undefined) break;
+        if (res === undefined) continue;
 
         results.push({
           type: res.record,
-          deserialized: res.deserializedContent,
-          stale: !res.verified.staleness,
-          roa: res.verified.roa,
-          record: {
-            header: res.retrievedRecord.header,
-            data: res.retrievedRecord.data.toString("base64"),
-          },
+          ...formatRecordResult(res),
         });
       }
 
