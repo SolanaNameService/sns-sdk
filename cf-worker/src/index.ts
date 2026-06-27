@@ -70,12 +70,6 @@ const toSolDomain = (domain: string) => `${stripKnownTld(domain)}.sol`;
 const toCanonicalSnsDomain = (domain: string) =>
   `${stripKnownTld(domain.trim().toLowerCase())}.sns`;
 
-const resolveSnsProxy = (connection: Connection, domain: string) =>
-  resolve(connection, toSnsDomain(domain));
-
-const resolveSolProxy = (connection: Connection, domain: string) =>
-  resolve(connection, toSolDomain(domain));
-
 const isPrimaryDomainNotFoundError = (err: unknown) =>
   err instanceof Error &&
   "type" in err &&
@@ -98,7 +92,7 @@ app.get("/resolve/:domain", async (c) => {
   const { domain } = c.req.param();
   const rpc = c.req.query("rpc");
   try {
-    const res = await resolveSnsProxy(getConnection(c, rpc), domain);
+    const res = await resolve(getConnection(c, rpc), toSnsDomain(domain));
     return c.json(response(true, res));
   } catch (err) {
     console.log(err);
@@ -113,7 +107,7 @@ app.get("/resolveSns/:domain", async (c) => {
   const { domain } = c.req.param();
   const rpc = c.req.query("rpc");
   try {
-    const res = await resolveSnsProxy(getConnection(c, rpc), domain);
+    const res = await resolve(getConnection(c, rpc), toSnsDomain(domain));
     return c.json(response(true, res));
   } catch (err) {
     console.log(err);
@@ -128,7 +122,7 @@ app.get("/resolveSol/:domain", async (c) => {
   const { domain } = c.req.param();
   const rpc = c.req.query("rpc");
   try {
-    const res = await resolveSolProxy(getConnection(c, rpc), domain);
+    const res = await resolve(getConnection(c, rpc), toSolDomain(domain));
     return c.json(response(true, res));
   } catch (err) {
     console.log(err);
