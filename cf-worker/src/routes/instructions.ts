@@ -1,10 +1,4 @@
-import {
-  createSubdomain,
-  getDomainKeySync,
-  NAME_PROGRAM_ID,
-  registerDomain,
-  transferInstruction,
-} from "@bonfida/spl-name-service";
+import { createSubdomain, registerDomain } from "@bonfida/spl-name-service";
 import { getAssociatedTokenAddress } from "@solana/spl-token";
 import { PublicKey } from "@solana/web3.js";
 import type { TransactionInstruction } from "@solana/web3.js";
@@ -55,26 +49,16 @@ export const registerInstructionRoutes = (app: Hono<Env>) => {
     }
   });
 
-  app.get("/create-sub", async (c) => {
+  app.get("/create-subdomain", async (c) => {
     try {
-      const { owner, subdomain, serialize, finalOwner } =
-        createSubdomainQuerySchema.parse(c.req.query());
+      const { owner, subdomain, serialize } = createSubdomainQuerySchema.parse(
+        c.req.query(),
+      );
       const connection = getConnection(c);
       const ixs: TransactionInstruction[] = [];
       const fullSubdomain = toCanonicalSnsDomain(subdomain);
       const ix = await createSubdomain(connection, fullSubdomain, owner, 0);
       ixs.push(...ix);
-
-      if (finalOwner) {
-        ixs.push(
-          transferInstruction(
-            NAME_PROGRAM_ID,
-            getDomainKeySync(fullSubdomain).pubkey,
-            finalOwner,
-            owner,
-          ),
-        );
-      }
 
       const result = await buildInstructionResponse(
         connection,

@@ -55,27 +55,17 @@ export const domainKeyQuerySchema = z.object({
     .optional(),
 });
 
-export const registerQuerySchema = z
-  .object({
-    buyerStr: z.string().refine(isPubkey),
-    domain: z.string(),
-    space: z.coerce.number().min(0),
-    serialize: booleanSchema.optional(),
-    refKey: z.string().refine(isPubkey).optional(),
-    mintStr: z.string().refine(isPubkey).optional(),
-  })
-  .transform(({ buyerStr, mintStr, refKey, domain, space, serialize }) => ({
-    buyer: new PublicKey(buyerStr),
-    domain,
-    space,
-    serialize,
-    referrer: refKey ? new PublicKey(refKey) : undefined,
-    mint: mintStr ? new PublicKey(mintStr) : undefined,
-  }));
+export const registerQuerySchema = z.object({
+  buyer: publicKeySchema,
+  domain: z.string(),
+  space: z.coerce.number().min(0),
+  serialize: booleanSchema.optional(),
+  referrer: publicKeySchema.optional(),
+  mint: publicKeySchema.optional(),
+});
 
 export const createSubdomainQuerySchema = z.object({
   owner: publicKeySchema,
   subdomain: z.string(),
   serialize: booleanSchema.optional(),
-  finalOwner: publicKeySchema.optional(),
 });
