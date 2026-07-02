@@ -42,6 +42,9 @@ pub enum SnsError {
     WrongValidation,
     InvalidRoa,
     PdaOwnerNotAllowed,
+    UnsupportedTld,
+    SubdomainNotAllowed,
+    InvalidDomainCasing,
 }
 
 impl From<ClientError> for SnsError {

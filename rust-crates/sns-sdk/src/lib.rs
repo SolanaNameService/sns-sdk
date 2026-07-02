@@ -5,6 +5,7 @@ pub mod derivation;
 pub mod error;
 pub mod favourite_domain;
 pub mod register;
+pub mod tld;
 mod utils;
 
 pub mod record;
