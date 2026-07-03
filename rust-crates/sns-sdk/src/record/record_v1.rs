@@ -5,8 +5,7 @@ use {
     bech32::u5,
     bech32::ToBase32,
     ed25519_dalek,
-    solana_program::{program_pack::Pack, pubkey::Pubkey},
-    spl_name_service::state::NameRecordHeader,
+    solana_program::pubkey::Pubkey,
     std::net::{Ipv4Addr, Ipv6Addr},
 };
 
@@ -21,14 +20,12 @@ pub fn check_sol_record(
     Ok(res)
 }
 
-pub fn check_sol_record_v1_data(
-    account_data: &[u8],
+pub(crate) fn check_sol_record_v1_data(
+    record_data: &[u8],
     record_key: &Pubkey,
     registry_owner: &Pubkey,
 ) -> Result<Option<Pubkey>, SnsError> {
-    let payload = account_data
-        .get(NameRecordHeader::LEN..NameRecordHeader::LEN + 96)
-        .ok_or(SnsError::InvalidRecordData)?;
+    let payload = record_data.get(..96).ok_or(SnsError::InvalidRecordData)?;
     let record = [&payload[..32], &record_key.to_bytes()].concat();
     let sig = &payload[32..];
     let encoded = hex::encode(record);

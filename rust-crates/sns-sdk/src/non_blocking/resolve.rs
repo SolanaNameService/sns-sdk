@@ -28,7 +28,7 @@ pub enum AllowPda {
     AllowAny,
 }
 
-pub async fn resolve_owner(
+pub async fn resolve(
     rpc_client: &RpcClient,
     domain: &str,
     allow_pda: AllowPda,
@@ -59,14 +59,22 @@ pub async fn resolve_owner(
 
     // SNS-IP 5 step 2: V2 SOL record. `Ok(None)` means stale -> fall through to V1.
     if let Some(acc) = sol_v2_acc {
-        if let Some(owner) = check_sol_record_v2_data(&acc.data, &registry.owner)? {
+        let record_data = acc
+            .data
+            .get(NameRecordHeader::LEN..)
+            .ok_or(SnsError::InvalidRecordData)?;
+        if let Some(owner) = check_sol_record_v2_data(record_data, &registry.owner)? {
             return Ok(Some(owner));
         }
     }
 
     // SNS-IP 5 step 3: V1 SOL record. `Ok(None)` means bad signature -> fall through.
     if let Some(acc) = sol_v1_acc {
-        if let Some(owner) = check_sol_record_v1_data(&acc.data, &sol_v1_key, &registry.owner)? {
+        let record_data = acc
+            .data
+            .get(NameRecordHeader::LEN..)
+            .ok_or(SnsError::InvalidRecordData)?;
+        if let Some(owner) = check_sol_record_v1_data(record_data, &sol_v1_key, &registry.owner)? {
             return Ok(Some(owner));
         }
     }
@@ -214,13 +222,19 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn resolve() {
+    async fn test_resolve() {
         dotenv().ok();
         let client = RpcClient::new(std::env::var("RPC_URL").unwrap());
 
         // `🇺🇸`: V1 signature no longer verifies after registry-owner rotation, so the
         // current registry owner is returned.
-        let res = resolve_owner(&client, "🇺🇸.sns", AllowPda::Deny)
+        let res = resolve(&client, "🇺🇸.sns", AllowPda::Deny).await.unwrap();
+        assert_eq!(
+            res.unwrap(),
+            pubkey!("8fe1EFcmz4BYeX6zGp6HUdoaHjVYhzsv599ub52WJbos")
+        );
+
+        let res = resolve(&client, "0xluna.sns", AllowPda::Deny)
             .await
             .unwrap();
         assert_eq!(
@@ -228,15 +242,7 @@ mod tests {
             pubkey!("8fe1EFcmz4BYeX6zGp6HUdoaHjVYhzsv599ub52WJbos")
         );
 
-        let res = resolve_owner(&client, "0xluna.sns", AllowPda::Deny)
-            .await
-            .unwrap();
-        assert_eq!(
-            res.unwrap(),
-            pubkey!("8fe1EFcmz4BYeX6zGp6HUdoaHjVYhzsv599ub52WJbos")
-        );
-
-        let res = resolve_owner(&client, "bonfida.sns", AllowPda::Deny)
+        let res = resolve(&client, "bonfida.sns", AllowPda::Deny)
             .await
             .unwrap();
         assert_eq!(
@@ -245,7 +251,7 @@ mod tests {
         );
 
         // Domain does not exist
-        let res = resolve_owner(
+        let res = resolve(
             &client,
             &format!("{}.sns", generate_random_string(20)),
             AllowPda::Deny,
@@ -263,50 +269,83 @@ mod tests {
         let cases = [
             // wallet-1: tokenized -> NFT owner.
             (
-                "sns-ip-5-wallet-1.sns",
+                "sns-ip-5-wallet-1",
                 pubkey!("ALd1XSrQMCPSRayYUoUZnp6KcP6gERfJhWzkP49CkXKs"),
             ),
             // wallet-2: V2 fresh + valid RoA -> record content.
             (
-                "sns-ip-5-wallet-2.sns",
+                "sns-ip-5-wallet-2",
                 pubkey!("AxwzQXhZNJb9zLyiHUQA12L2GL7CxvUNrp6neee6r3cA"),
             ),
             // wallet-4: V2 stale, no V1, registry owner not a PDA -> registry owner.
             (
-                "sns-ip-5-wallet-4.sns",
+                "sns-ip-5-wallet-4",
                 pubkey!("7PLHHJawDoa4PGJUK3mUnusV7SEVwZwEyV5csVzm86J4"),
             ),
             // wallet-7: no V2, V1 valid -> record content.
             (
-                "sns-ip-5-wallet-7.sns",
+                "sns-ip-5-wallet-7",
                 pubkey!("53Ujp7go6CETvC7LTyxBuyopp5ivjKt6VSfixLm1pQrH"),
             ),
             // wallet-8: no V2, V1 invalid signature -> registry owner.
             (
-                "sns-ip-5-wallet-8.sns",
+                "sns-ip-5-wallet-8",
                 pubkey!("ALd1XSrQMCPSRayYUoUZnp6KcP6gERfJhWzkP49CkXKs"),
             ),
             // wallet-9: no V2, no V1, registry owner not a PDA -> registry owner.
             (
-                "sns-ip-5-wallet-9.sns",
+                "sns-ip-5-wallet-9",
                 pubkey!("ALd1XSrQMCPSRayYUoUZnp6KcP6gERfJhWzkP49CkXKs"),
             ),
             // V2 SOL backward-compat fixtures.
             (
-                "wallet-guide-6.sns",
+                "wallet-guide-5",
+                pubkey!("Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8"),
+            ),
+            (
+                "wallet-guide-4",
                 pubkey!("Hf4daCT4tC2Vy9RCe9q8avT68yAsNJ1dQe6xiQqyGuqZ"),
             ),
             (
-                "wallet-guide-8.sns",
+                "wallet-guide-3",
+                pubkey!("Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8"),
+            ),
+            (
+                "wallet-guide-2",
+                pubkey!("36Dn3RWhB8x4c83W6ebQ2C2eH9sh5bQX2nMdkP2cWaA4"),
+            ),
+            (
+                "wallet-guide-1",
+                pubkey!("36Dn3RWhB8x4c83W6ebQ2C2eH9sh5bQX2nMdkP2cWaA4"),
+            ),
+            (
+                "wallet-guide-0",
+                pubkey!("Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8"),
+            ),
+            (
+                "sub-0.wallet-guide-3",
+                pubkey!("Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8"),
+            ),
+            (
+                "sub-1.wallet-guide-3",
+                pubkey!("Hf4daCT4tC2Vy9RCe9q8avT68yAsNJ1dQe6xiQqyGuqZ"),
+            ),
+            (
+                "wallet-guide-6",
+                pubkey!("Hf4daCT4tC2Vy9RCe9q8avT68yAsNJ1dQe6xiQqyGuqZ"),
+            ),
+            (
+                "wallet-guide-8",
                 pubkey!("36Dn3RWhB8x4c83W6ebQ2C2eH9sh5bQX2nMdkP2cWaA4"),
             ),
         ];
 
-        for (domain, expected) in cases {
-            let res = resolve_owner(&client, domain, AllowPda::Deny)
-                .await
-                .unwrap();
-            assert_eq!(res, Some(expected), "domain {domain}");
+        for tld in ["sns", "sol"] {
+            for (domain, expected) in cases {
+                let domain = format!("{domain}.{tld}");
+                let res = resolve(&client, &domain, AllowPda::Deny).await.unwrap();
+                assert_eq!(res, Some(expected), "domain {domain}");
+            }
         }
     }
 
@@ -320,16 +359,17 @@ mod tests {
         let expected = pubkey!("96GKJgm2W3P8Bae78brPrJf4Yi9AN1wtPJwg2XVQ2rMr");
         let system_program = solana_program::system_program::ID;
 
-        for domain in ["sns-ip-5-wallet-5.sns", "sns-ip-5-wallet-10.sns"] {
-            let res = resolve_owner(&client, domain, AllowPda::Allow(vec![system_program]))
-                .await
-                .unwrap();
-            assert_eq!(res, Some(expected), "domain {domain} with Allow");
+        for tld in ["sns", "sol"] {
+            for domain in ["sns-ip-5-wallet-5", "sns-ip-5-wallet-10"] {
+                let domain = format!("{domain}.{tld}");
+                let res = resolve(&client, &domain, AllowPda::Allow(vec![system_program]))
+                    .await
+                    .unwrap();
+                assert_eq!(res, Some(expected), "domain {domain} with Allow");
 
-            let res = resolve_owner(&client, domain, AllowPda::AllowAny)
-                .await
-                .unwrap();
-            assert_eq!(res, Some(expected), "domain {domain} with AllowAny");
+                let res = resolve(&client, &domain, AllowPda::AllowAny).await.unwrap();
+                assert_eq!(res, Some(expected), "domain {domain} with AllowAny");
+            }
         }
     }
 
@@ -338,26 +378,38 @@ mod tests {
         dotenv().ok();
         let client = RpcClient::new(std::env::var("RPC_URL").unwrap());
 
-        // wallet-3: V2 fresh, on-chain record uses non-Solana validations.
-        let res = resolve_owner(&client, "sns-ip-5-wallet-3.sns", AllowPda::Deny).await;
-        assert!(matches!(res, Err(SnsError::WrongValidation)), "{res:?}");
+        for tld in ["sns", "sol"] {
+            let domain = format!("sns-ip-5-wallet-3.{tld}");
+            let res = resolve(&client, &domain, AllowPda::Deny).await;
+            assert!(
+                matches!(res, Err(SnsError::WrongValidation)),
+                "{domain}: {res:?}"
+            );
 
-        // wallet-12: on-chain `right_of_association_validation = UnverifiedSolana` (the
-        // state `write_roa` leaves behind before `validate_solana_signature` runs), so
-        // the validation check short-circuits before any RoA comparison runs.
-        let res = resolve_owner(&client, "sns-ip-5-wallet-12.sns", AllowPda::Deny).await;
-        assert!(matches!(res, Err(SnsError::WrongValidation)), "{res:?}");
+            let domain = format!("sns-ip-5-wallet-12.{tld}");
+            let res = resolve(&client, &domain, AllowPda::Deny).await;
+            assert!(
+                matches!(res, Err(SnsError::WrongValidation)),
+                "{domain}: {res:?}"
+            );
 
-        // wallet-6: V2 stale + PDA owner + Deny -> PdaOwnerNotAllowed.
-        let res = resolve_owner(&client, "sns-ip-5-wallet-6.sns", AllowPda::Deny).await;
-        assert!(matches!(res, Err(SnsError::PdaOwnerNotAllowed)), "{res:?}");
+            let domain = format!("sns-ip-5-wallet-6.{tld}");
+            let res = resolve(&client, &domain, AllowPda::Deny).await;
+            assert!(
+                matches!(res, Err(SnsError::PdaOwnerNotAllowed)),
+                "{domain}: {res:?}"
+            );
 
-        // wallet-11: no V2, no V1, PDA owner + Deny -> PdaOwnerNotAllowed.
-        let res = resolve_owner(&client, "sns-ip-5-wallet-11.sns", AllowPda::Deny).await;
-        assert!(matches!(res, Err(SnsError::PdaOwnerNotAllowed)), "{res:?}");
+            let domain = format!("sns-ip-5-wallet-11.{tld}");
+            let res = resolve(&client, &domain, AllowPda::Deny).await;
+            assert!(
+                matches!(res, Err(SnsError::PdaOwnerNotAllowed)),
+                "{domain}: {res:?}"
+            );
+        }
 
         // wallet-6 with an empty allow-list still throws (program not in list).
-        let res = resolve_owner(&client, "sns-ip-5-wallet-6.sns", AllowPda::Allow(vec![])).await;
+        let res = resolve(&client, "sns-ip-5-wallet-6.sns", AllowPda::Allow(vec![])).await;
         assert!(matches!(res, Err(SnsError::PdaOwnerNotAllowed)), "{res:?}");
     }
 
