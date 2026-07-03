@@ -1,23 +1,17 @@
 use {
-    solana_account_decoder::UiAccountEncoding,
     solana_client::{
         client_error::{ClientError, ClientErrorKind},
         rpc_client::RpcClient,
-        rpc_config::{RpcAccountInfoConfig, RpcProgramAccountsConfig},
-        rpc_filter::{Memcmp, RpcFilterType},
         rpc_request::RpcError::RpcRequestError,
     },
     solana_program::{program_pack::Pack, pubkey::Pubkey},
     spl_name_service::state::{get_seeds_and_key, NameRecordHeader},
-    spl_token::state::Mint,
 };
 
 use crate::{
-    derivation::{
-        get_domain_key, get_domain_mint, get_hashed_name, REVERSE_LOOKUP_CLASS, ROOT_DOMAIN_ACCOUNT,
-    },
+    blocking::nft::resolve_nft_owner,
+    derivation::{get_domain_key, get_hashed_name, REVERSE_LOOKUP_CLASS},
     error::SnsError,
-    primary_domain::{derive_primary_domain_key, PrimaryDomain},
     record::{get_record_key, record_v1::check_sol_record, Record},
 };
 
@@ -100,119 +94,45 @@ pub fn resolve_reverse(rpc_client: &RpcClient, key: &Pubkey) -> Result<Option<St
     }
 }
 
-pub fn get_domains_owner(rpc_client: &RpcClient, owner: Pubkey) -> Result<Vec<Pubkey>, SnsError> {
-    let config = RpcProgramAccountsConfig {
-        filters: Some(vec![
-            RpcFilterType::Memcmp(Memcmp::new_raw_bytes(32, owner.to_bytes().to_vec())),
-            RpcFilterType::Memcmp(Memcmp::new_raw_bytes(
-                0,
-                ROOT_DOMAIN_ACCOUNT.to_bytes().to_vec(),
-            )),
-        ]),
-        with_context: None,
-        account_config: RpcAccountInfoConfig {
-            encoding: Some(UiAccountEncoding::Base64),
-            ..Default::default()
-        },
-        sort_results: None,
-    };
-    let res = rpc_client.get_program_accounts_with_config(&spl_name_service::ID, config)?;
-    let keys = res.into_iter().map(|x| x.0).collect::<Vec<_>>();
-    Ok(keys)
-}
-
-pub fn get_subdomains(rpc_client: &RpcClient, parent: Pubkey) -> Result<Vec<String>, SnsError> {
-    let config = RpcProgramAccountsConfig {
-        filters: Some(vec![
-            RpcFilterType::Memcmp(Memcmp::new_raw_bytes(0, parent.to_bytes().to_vec())),
-            RpcFilterType::Memcmp(Memcmp::new_raw_bytes(
-                64,
-                REVERSE_LOOKUP_CLASS.to_bytes().to_vec(),
-            )),
-        ]),
-        with_context: None,
-        account_config: RpcAccountInfoConfig {
-            encoding: Some(UiAccountEncoding::Base64),
-            ..Default::default()
-        },
-        sort_results: None,
-    };
-    let res = rpc_client.get_program_accounts_with_config(&spl_name_service::ID, config)?;
-
-    let res = res
-        .into_iter()
-        .map(|(_, acc)| {
-            let mut offset = NameRecordHeader::LEN;
-            let len = u32::from_le_bytes(acc.data[offset..offset + 4].try_into().unwrap());
-            offset += 4;
-            String::from_utf8(acc.data[offset..offset + len as usize].to_vec()).unwrap()
+pub fn resolve_reverse_batch(
+    rpc_client: &RpcClient,
+    keys: &[Pubkey],
+) -> Result<Vec<Option<String>>, SnsError> {
+    let reverse_keys = keys
+        .iter()
+        .map(|k| {
+            let hashed = get_hashed_name(&k.to_string());
+            let (key, _) = get_seeds_and_key(
+                &spl_name_service::ID,
+                hashed,
+                Some(&REVERSE_LOOKUP_CLASS),
+                None,
+            );
+            key
         })
-        .map(|x| x.strip_prefix('\0').unwrap().to_owned())
         .collect::<Vec<_>>();
 
+    let mut res = vec![];
+    for keys in reverse_keys.chunks(100) {
+        let accs = rpc_client.get_multiple_accounts(keys)?;
+        for acc in accs {
+            if let Some(acc) = acc {
+                let data = acc.data[NameRecordHeader::LEN..].to_vec();
+                let len = u32::from_le_bytes(data[0..4].try_into().unwrap());
+                let reverse = String::from_utf8(data[4..4 + len as usize].to_vec())
+                    .or(Err(SnsError::InvalidReverse))?;
+                res.push(Some(reverse))
+            } else {
+                res.push(None)
+            }
+        }
+    }
     Ok(res)
-}
-
-pub fn resolve_nft_owner(
-    rpc_client: &RpcClient,
-    domain_key: &Pubkey,
-) -> Result<Option<Pubkey>, SnsError> {
-    let mint_key = get_domain_mint(domain_key);
-    let acc = rpc_client.get_multiple_accounts(&[mint_key])?;
-    let acc = acc.first().ok_or(SnsError::InvalidDomain)?;
-    if acc.is_none() {
-        return Ok(None);
-    }
-    let mint = Mint::unpack(&acc.as_ref().unwrap().data)?;
-    if mint.supply != 1 {
-        return Ok(None);
-    }
-
-    let config = RpcProgramAccountsConfig {
-        filters: Some(vec![
-            RpcFilterType::Memcmp(Memcmp::new_raw_bytes(0, mint_key.to_bytes().to_vec())),
-            RpcFilterType::Memcmp(Memcmp::new_raw_bytes(64, vec![1])),
-            RpcFilterType::DataSize(165),
-        ]),
-        with_context: None,
-        account_config: RpcAccountInfoConfig {
-            encoding: Some(UiAccountEncoding::Base64),
-            ..Default::default()
-        },
-        sort_results: None,
-    };
-    let res = rpc_client.get_program_accounts_with_config(&spl_token::ID, config)?;
-
-    if let Some((_, acc)) = res.first() {
-        return Ok(Some(
-            spl_token::state::Account::unpack_unchecked(&acc.data)?.owner,
-        ));
-    }
-
-    Ok(None)
-}
-
-pub async fn get_primary_domain(
-    rpc_client: &RpcClient,
-    owner: &Pubkey,
-) -> Result<Option<Pubkey>, SnsError> {
-    let primary_domain_state_key = derive_primary_domain_key(owner);
-    let account = rpc_client
-        .get_account_with_commitment(&primary_domain_state_key, rpc_client.commitment())?
-        .value;
-    if let Some(a) = account {
-        let parsed = PrimaryDomain::parse(&a.data)?;
-        Ok(Some(parsed.name_account))
-    } else {
-        Ok(None)
-    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::blocking::record_v1;
-    use crate::derivation::get_domain_key;
     use crate::utils::test::generate_random_string;
     use dotenv::dotenv;
     use solana_program::pubkey;
@@ -224,16 +144,6 @@ mod tests {
         let key: Pubkey = pubkey!("Crf8hzfthWGbGbLTVCiqRqV5MVnbpHB1L9KQMd6gsinb");
         let reverse = resolve_reverse(&client, &key).unwrap();
         assert_eq!(reverse.unwrap(), "bonfida");
-    }
-
-    #[test]
-    fn test_subs() {
-        dotenv().ok();
-        let client = RpcClient::new(std::env::var("RPC_URL").unwrap());
-        let parent: Pubkey = get_domain_key("bonfida.sol").unwrap();
-        let mut reverse = get_subdomains(&client, parent).unwrap();
-        reverse.sort();
-        assert_eq!(reverse, vec!["dex", "naming", "test"]);
     }
 
     #[test]
@@ -269,22 +179,5 @@ mod tests {
         // Error
         let res = resolve_owner(&RpcClient::new(""), "bonfida");
         assert!(res.is_err())
-    }
-
-    #[test]
-    fn test_get_record_v1() {
-        dotenv().ok();
-        let client = RpcClient::new(std::env::var("RPC_URL").unwrap());
-
-        let res = record_v1::get_record(&client, "bonfida.sns", Record::Url).unwrap();
-        assert_eq!(
-            String::from_utf8(res.unwrap().1)
-                .unwrap()
-                .trim_end_matches('\0'),
-            "https://sns.id"
-        );
-
-        let res = record_v1::get_record(&client, "bonfida.sns", Record::Backpack).unwrap();
-        assert!(res.is_none())
     }
 }

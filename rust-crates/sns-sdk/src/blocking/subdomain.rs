@@ -1,6 +1,6 @@
 use solana_account_decoder::UiAccountEncoding;
-use solana_client::nonblocking::rpc_client::RpcClient;
 use solana_client::{
+    rpc_client::RpcClient,
     rpc_config::{RpcAccountInfoConfig, RpcProgramAccountsConfig},
     rpc_filter::{Memcmp, RpcFilterType},
 };
@@ -9,22 +9,7 @@ use spl_name_service::state::NameRecordHeader;
 
 use crate::{derivation::REVERSE_LOOKUP_CLASS, error::SnsError};
 
-#[cfg(feature = "subdomain")]
-use crate::derivation::get_domain_key;
-#[cfg(feature = "subdomain")]
-use borsh::BorshDeserialize;
-
-#[cfg(feature = "subdomain")]
-pub use sub_registrar::state::registry::Registrar;
-#[cfg(feature = "subdomain")]
-pub use sub_registrar::state::Tag as SubRegistrarAccountTag;
-#[cfg(feature = "subdomain")]
-pub use sub_registrar::ID as SUB_REGISTRAR_PROGRAM_ID;
-
-pub async fn get_subdomains(
-    rpc_client: &RpcClient,
-    parent: &Pubkey,
-) -> Result<Vec<String>, SnsError> {
+pub fn get_subdomains(rpc_client: &RpcClient, parent: Pubkey) -> Result<Vec<String>, SnsError> {
     let config = RpcProgramAccountsConfig {
         filters: Some(vec![
             RpcFilterType::Memcmp(Memcmp::new_raw_bytes(0, parent.to_bytes().to_vec())),
@@ -40,9 +25,7 @@ pub async fn get_subdomains(
         },
         sort_results: None,
     };
-    let res = rpc_client
-        .get_program_accounts_with_config(&spl_name_service::ID, config)
-        .await?;
+    let res = rpc_client.get_program_accounts_with_config(&spl_name_service::ID, config)?;
 
     Ok(res
         .into_iter()
@@ -50,7 +33,6 @@ pub async fn get_subdomains(
             let mut offset = NameRecordHeader::LEN;
             let len = u32::from_le_bytes(acc.data[offset..offset + 4].try_into().unwrap());
             offset += 4;
-
             String::from_utf8(acc.data[offset..offset + len as usize].to_vec()).unwrap()
         })
         .map(|x| x.strip_prefix('\0').unwrap().to_owned())
@@ -63,29 +45,13 @@ mod tests {
     use crate::derivation::get_domain_key;
     use dotenv::dotenv;
 
-    #[tokio::test]
-    async fn test_get_subdomains() {
+    #[test]
+    fn test_get_subdomains() {
         dotenv().ok();
         let client = RpcClient::new(std::env::var("RPC_URL").unwrap());
         let parent = get_domain_key("bonfida.sol").unwrap();
-        let mut reverse = get_subdomains(&client, &parent).await.unwrap();
+        let mut reverse = get_subdomains(&client, parent).unwrap();
         reverse.sort();
         assert_eq!(reverse, vec!["dex", "naming", "test"]);
     }
-}
-
-#[cfg(feature = "subdomain")]
-pub async fn get_sub_registrar_info(
-    rpc_client: &RpcClient,
-    domain: &str,
-) -> Result<Registrar, SnsError> {
-    let key = get_domain_key(domain)?;
-    let registrar_key = Registrar::find_key(&key, &SUB_REGISTRAR_PROGRAM_ID).0;
-    let account = rpc_client.get_account_data(&registrar_key).await?;
-    let expected_tag = SubRegistrarAccountTag::Registrar;
-    if account[0] != expected_tag as u8 {
-        return Err(SnsError::InvalidSubRegistrar);
-    }
-    let result = Registrar::deserialize(&mut (&account as &[u8]))?;
-    Ok(result)
 }
