@@ -33,15 +33,21 @@ mod tests {
     async fn test_get_primary_domain() {
         dotenv().ok();
         let client = RpcClient::new(std::env::var("RPC_URL").unwrap());
-        let domain = get_primary_domain(
-            &client,
-            &pubkey!("HKKp49qGWXd639QsuH7JiLijfVW5UtCVY4s1n2HANwEA"),
-        )
-        .await
-        .unwrap();
-        assert_eq!(
-            &domain.unwrap().to_string(),
-            "Crf8hzfthWGbGbLTVCiqRqV5MVnbpHB1L9KQMd6gsinb"
-        );
+
+        for (owner, expected) in [
+            (
+                pubkey!("FidaeBkZkvDqi1GXNEwB8uWmj9Ngx2HXSS5nyGRuVFcZ"),
+                pubkey!("Crf8hzfthWGbGbLTVCiqRqV5MVnbpHB1L9KQMd6gsinb"),
+            ),
+            (
+                pubkey!("Fw1ETanDZafof7xEULsnq9UY6o71Tpds89tNwPkWLb1v"),
+                pubkey!("AgJujvNQgYESUwBPitq2VUrfTaT2bvueHbgvsxqZ2sHg"),
+            ),
+        ] {
+            assert_eq!(
+                get_primary_domain(&client, &owner).await.unwrap(),
+                Some(expected)
+            );
+        }
     }
 }

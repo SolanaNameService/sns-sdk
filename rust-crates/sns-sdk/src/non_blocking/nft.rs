@@ -153,12 +153,99 @@ mod tests {
     use dotenv::dotenv;
     use solana_program::pubkey;
 
+    const OWNER: Pubkey = pubkey!("Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8");
+
+    fn expected_tokenized_domains() -> Vec<(String, String, String)> {
+        vec![
+            (
+                "wallet-guide-5".to_string(),
+                "iSNVgWfb31aTWa58UxZ6fp7n3TTrUk5Gojggub5stXk".to_string(),
+                "2RJhBbxTiPT2bZq5bhjaTZbsnhbDB7VtTAMmCdBrwBZP".to_string(),
+            ),
+            (
+                "wallet-guide-0".to_string(),
+                "uDTBDfKrJSBTgmWUZLcENPk5YrHfWbcrUbNFLjsvNpn".to_string(),
+                "Eskv5Ns4gyREvNPPgANojNPsz6x1cbn9YwT7esAnxPhP".to_string(),
+            ),
+        ]
+    }
+
     #[tokio::test]
     async fn test_get_sns_nfts_for_owner() {
         dotenv().ok();
         let client = RpcClient::new(std::env::var("RPC_URL").unwrap());
-        let owner = pubkey!("J6QDztZCegYTWnGUYtjqVS9d7AZoS43UbEQmMcdGeP5s");
-        let domains = get_sns_nfts_for_owner(&client, &owner).await.unwrap();
-        println!("{domains:?}");
+        let mut domains = get_sns_nfts_for_owner(&client, &OWNER)
+            .await
+            .unwrap()
+            .into_iter()
+            .map(|(reverse, key)| (reverse, key.to_string()))
+            .collect::<Vec<_>>();
+        domains.sort_by(|a, b| b.0.cmp(&a.0));
+
+        assert_eq!(
+            domains,
+            expected_tokenized_domains()
+                .into_iter()
+                .map(|(reverse, key, _)| (reverse, key))
+                .collect::<Vec<_>>()
+        );
+    }
+
+    #[tokio::test]
+    async fn test_get_nft_records() {
+        dotenv().ok();
+        let client = RpcClient::new(std::env::var("RPC_URL").unwrap());
+        let mut records = get_nft_records(&client, &OWNER)
+            .await
+            .unwrap()
+            .into_iter()
+            .map(|record| (record.name_account.to_string(), record.nft_mint.to_string()))
+            .collect::<Vec<_>>();
+        records.sort();
+
+        let mut expected = expected_tokenized_domains()
+            .into_iter()
+            .map(|(_, key, mint)| (key, mint))
+            .collect::<Vec<_>>();
+        expected.sort();
+
+        assert_eq!(records, expected);
+    }
+
+    #[tokio::test]
+    async fn test_get_record_from_mint() {
+        dotenv().ok();
+        let client = RpcClient::new(std::env::var("RPC_URL").unwrap());
+        let records = get_record_from_mint(
+            &client,
+            &pubkey!("Eskv5Ns4gyREvNPPgANojNPsz6x1cbn9YwT7esAnxPhP"),
+        )
+        .await
+        .unwrap();
+
+        assert_eq!(records.len(), 1);
+        let nft_record = NftRecord::deserialize(&mut records[0].1.data.as_slice()).unwrap();
+        assert_eq!(
+            nft_record.name_account.to_string(),
+            "uDTBDfKrJSBTgmWUZLcENPk5YrHfWbcrUbNFLjsvNpn"
+        );
+        assert_eq!(
+            nft_record.nft_mint.to_string(),
+            "Eskv5Ns4gyREvNPPgANojNPsz6x1cbn9YwT7esAnxPhP"
+        );
+    }
+
+    #[tokio::test]
+    async fn test_resolve_nft_owner() {
+        dotenv().ok();
+        let client = RpcClient::new(std::env::var("RPC_URL").unwrap());
+        let owner = resolve_nft_owner(
+            &client,
+            &pubkey!("iSNVgWfb31aTWa58UxZ6fp7n3TTrUk5Gojggub5stXk"),
+        )
+        .await
+        .unwrap();
+
+        assert_eq!(owner, Some(OWNER));
     }
 }
