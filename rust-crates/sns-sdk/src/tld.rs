@@ -53,7 +53,9 @@ pub fn parse_supported_tld(domain: &str) -> Result<(&str, Tld), SnsError> {
 /// surrounding whitespace ([`SnsError::InvalidDomainCasing`]), and malformed label
 /// structure — empty labels or more than two labels ([`SnsError::InvalidDomain`]).
 pub fn parse_sns_domain(domain: &str) -> Result<String, SnsError> {
-    let bare = domain.strip_suffix(SNS_TLD).ok_or(SnsError::UnsupportedTld)?;
+    let bare = domain
+        .strip_suffix(SNS_TLD)
+        .ok_or(SnsError::UnsupportedTld)?;
 
     if !is_canonical_lowercase(bare) {
         return Err(SnsError::InvalidDomainCasing);
@@ -75,7 +77,9 @@ pub fn parse_sns_domain(domain: &str) -> Result<String, SnsError> {
 /// surrounding whitespace ([`SnsError::InvalidDomainCasing`]), and empty names
 /// ([`SnsError::InvalidDomain`]).
 pub fn parse_sns_top_level_domain(domain: &str) -> Result<String, SnsError> {
-    let bare = domain.strip_suffix(SNS_TLD).ok_or(SnsError::UnsupportedTld)?;
+    let bare = domain
+        .strip_suffix(SNS_TLD)
+        .ok_or(SnsError::UnsupportedTld)?;
 
     if bare.is_empty() {
         return Err(SnsError::InvalidDomain);
@@ -96,8 +100,14 @@ mod tests {
 
     #[test]
     fn parse_supported_tld_accepts_sns_and_sol() {
-        assert_eq!(parse_supported_tld("mydomain.sns").unwrap(), ("mydomain", Tld::Sns));
-        assert_eq!(parse_supported_tld("mydomain.sol").unwrap(), ("mydomain", Tld::Sol));
+        assert_eq!(
+            parse_supported_tld("mydomain.sns").unwrap(),
+            ("mydomain", Tld::Sns)
+        );
+        assert_eq!(
+            parse_supported_tld("mydomain.sol").unwrap(),
+            ("mydomain", Tld::Sol)
+        );
         assert_eq!(
             parse_supported_tld("sub.mydomain.sns").unwrap(),
             ("sub.mydomain", Tld::Sns)
@@ -128,7 +138,10 @@ mod tests {
     #[test]
     fn parse_sns_domain_accepts_canonical_names() {
         assert_eq!(parse_sns_domain("mydomain.sns").unwrap(), "mydomain");
-        assert_eq!(parse_sns_domain("sub.mydomain.sns").unwrap(), "sub.mydomain");
+        assert_eq!(
+            parse_sns_domain("sub.mydomain.sns").unwrap(),
+            "sub.mydomain"
+        );
     }
 
     #[test]
@@ -170,7 +183,10 @@ mod tests {
 
     #[test]
     fn parse_sns_top_level_domain_accepts_top_level_only() {
-        assert_eq!(parse_sns_top_level_domain("mydomain.sns").unwrap(), "mydomain");
+        assert_eq!(
+            parse_sns_top_level_domain("mydomain.sns").unwrap(),
+            "mydomain"
+        );
     }
 
     #[test]

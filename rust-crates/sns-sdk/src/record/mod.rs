@@ -1,6 +1,7 @@
 use crate::{
-    derivation::{derive, get_prefix, trim_tld, Domain, ROOT_DOMAIN_ACCOUNT},
+    derivation::{derive, get_prefix, get_sns_domain_key, Domain},
     error::SnsError,
+    tld::parse_supported_tld,
 };
 use sns_records::state::validation::Validation;
 use solana_program::pubkey;
@@ -155,34 +156,14 @@ pub fn get_record_key(
     record: Record,
     record_version: RecordVersion,
 ) -> Result<Pubkey, SnsError> {
-    let domain = trim_tld(domain);
-    let splitted = domain.split('.').collect::<Vec<_>>();
-    match splitted.len() {
-        1 => {
-            let parent = derive(domain, &ROOT_DOMAIN_ACCOUNT, None);
-            let prefix = get_prefix(Domain::Record(record_version));
-            let key = derive(
-                &format!("{}{}", prefix, record.as_str()),
-                &parent,
-                get_record_class(record_version),
-            );
-            Ok(key)
-        }
-        2 => {
-            let parent = derive(splitted[1], &ROOT_DOMAIN_ACCOUNT, None);
-            let sub_domain = get_prefix(Domain::Sub) + splitted[0];
-            let sub_key = derive(&sub_domain, &parent, None);
-
-            let record_prefix = get_prefix(Domain::Record(record_version));
-            let key = derive(
-                &format!("{record_prefix}{}", record.as_str()),
-                &sub_key,
-                get_record_class(record_version),
-            );
-            Ok(key)
-        }
-        _ => Err(SnsError::InvalidDomain),
-    }
+    let (domain, _) = parse_supported_tld(domain)?;
+    let domain_key = get_sns_domain_key(domain)?.key;
+    let record_prefix = get_prefix(Domain::Record(record_version));
+    Ok(derive(
+        &format!("{record_prefix}{}", record.as_str()),
+        &domain_key,
+        get_record_class(record_version),
+    ))
 }
 
 pub fn get_record_v2_key(domain: &str, record: Record) -> Result<Pubkey, SnsError> {
@@ -221,7 +202,7 @@ mod test {
     fn test_get_record_key() {
         let v1 = pubkey!("3RfzNCvEqEKZeohqVN16Z1oi6rw5TrANwqAo4hMx6njv");
         let v2 = pubkey!("6xdnfxf7URWom6oP7MMS39bFVEMMfufmFvJXFyd2xwoP");
-        let domain = "something.sol";
+        let domain = "something.sns";
         assert_eq!(
             get_record_key(domain, Record::CNAME, RecordVersion::V1).unwrap(),
             v1
@@ -230,5 +211,13 @@ mod test {
             get_record_key(domain, Record::CNAME, RecordVersion::V2).unwrap(),
             v2
         );
+        assert_eq!(
+            get_record_key("something.sol", Record::CNAME, RecordVersion::V1).unwrap(),
+            v1
+        );
+        assert!(matches!(
+            get_record_key("something", Record::CNAME, RecordVersion::V1),
+            Err(SnsError::UnsupportedTld)
+        ));
     }
 }

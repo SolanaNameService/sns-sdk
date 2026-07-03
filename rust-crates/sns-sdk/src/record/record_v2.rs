@@ -398,7 +398,7 @@ mod test {
 
     #[test]
     fn v2_record_key_for_subdomain_matches_domain_key_derivation() {
-        let domain = "dex.bonfida";
+        let domain = "dex.bonfida.sns";
         let record = Record::Url;
         let domain_key = get_domain_key(domain).unwrap();
         let expected = derive(

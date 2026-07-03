@@ -3,7 +3,11 @@ use {
     spl_name_service::state::{get_seeds_and_key, HASH_PREFIX},
 };
 
-use crate::{error::SnsError, record::RecordVersion};
+use crate::{
+    error::SnsError,
+    record::RecordVersion,
+    tld::{parse_supported_tld, Tld},
+};
 
 pub use constants::*;
 #[cfg(not(feature = "devnet"))]
@@ -74,20 +78,27 @@ pub fn derive_reverse(domain_key: &Pubkey, parent: Option<&Pubkey>) -> Pubkey {
     key
 }
 
-pub fn trim_tld(domain: &str) -> &str {
-    domain.strip_suffix(".sol").unwrap_or(domain)
-}
-
 #[inline(always)]
 pub fn get_domain_key(domain: &str) -> Result<Pubkey, SnsError> {
     get_domain_key_with_parent(domain).map(|d| d.key)
 }
+
 pub struct DomainKeyWithParent {
     pub key: Pubkey,
     pub parent: Pubkey,
+    pub is_sub: bool,
 }
+
 pub fn get_domain_key_with_parent(domain: &str) -> Result<DomainKeyWithParent, SnsError> {
-    let domain = trim_tld(domain);
+    let (domain, tld) = parse_supported_tld(domain)?;
+    match tld {
+        Tld::Sns => get_sns_domain_key(domain),
+        // `.sol` currently aliases to the SNS derivation path for compatibility.
+        Tld::Sol => get_sol_domain_key(domain),
+    }
+}
+
+pub(crate) fn get_sns_domain_key(domain: &str) -> Result<DomainKeyWithParent, SnsError> {
     let splitted = domain.split('.').collect::<Vec<_>>();
     match splitted.len() {
         1 => {
@@ -95,55 +106,31 @@ pub fn get_domain_key_with_parent(domain: &str) -> Result<DomainKeyWithParent, S
             Ok(DomainKeyWithParent {
                 key,
                 parent: ROOT_DOMAIN_ACCOUNT,
+                is_sub: false,
             })
         }
         2 => {
             let parent = derive(splitted[1], &ROOT_DOMAIN_ACCOUNT, None);
             let sub_domain = get_prefix(Domain::Sub) + splitted[0];
             let key = derive(&sub_domain, &parent, None);
-            Ok(DomainKeyWithParent { key, parent })
+            Ok(DomainKeyWithParent {
+                key,
+                parent,
+                is_sub: true,
+            })
         }
-        // 3 => {
-        //     let parent = derive(splitted[2], &ROOT_DOMAIN_ACCOUNT);
-        //     let sub_domain = get_prefix(Domain::Sub) + splitted[1];
-        //     let sub_key = derive(&sub_domain, &parent);
-        //     let record = get_prefix(Domain::Record(record)) + splitted[0];
-        //     let key = derive(&record, &sub_key);
-        //     Ok(key)
-        // }
         _ => Err(SnsError::InvalidDomain),
     }
 }
 
+pub(crate) fn get_sol_domain_key(domain: &str) -> Result<DomainKeyWithParent, SnsError> {
+    get_sns_domain_key(domain)
+}
+
 pub fn get_reverse_key(domain: &str) -> Result<Pubkey, SnsError> {
-    let domain = trim_tld(domain);
-    let splitted = domain.split('.').collect::<Vec<_>>();
-    match splitted.len() {
-        1 => {
-            let domain_key = get_domain_key(domain)?;
-            let hashed = get_hashed_name(&domain_key.to_string());
-            let (key, _) = get_seeds_and_key(
-                &spl_name_service::ID,
-                hashed,
-                Some(&REVERSE_LOOKUP_CLASS),
-                None,
-            );
-            Ok(key)
-        }
-        2 => {
-            let parent_key = get_domain_key(splitted[1])?;
-            let domain_key = get_domain_key(domain)?;
-            let hashed = get_hashed_name(&domain_key.to_string());
-            let (key, _) = get_seeds_and_key(
-                &spl_name_service::ID,
-                hashed,
-                Some(&REVERSE_LOOKUP_CLASS),
-                Some(&parent_key),
-            );
-            Ok(key)
-        }
-        _ => Err(SnsError::InvalidDomain),
-    }
+    let domain_key = get_domain_key_with_parent(domain)?;
+    let parent = domain_key.is_sub.then_some(&domain_key.parent);
+    Ok(derive_reverse(&domain_key.key, parent))
 }
 
 pub fn get_domain_mint(domain_key: &Pubkey) -> Pubkey {
@@ -156,7 +143,7 @@ mod tests {
 
     #[test]
     fn main_domain() {
-        let result = get_domain_key("bonfida").unwrap();
+        let result = get_domain_key("bonfida.sns").unwrap();
         let expected: Pubkey = pubkey!("Crf8hzfthWGbGbLTVCiqRqV5MVnbpHB1L9KQMd6gsinb");
         assert_eq!(result, expected);
         let result = get_domain_key("bonfida.sol").unwrap();
@@ -165,11 +152,23 @@ mod tests {
     }
     #[test]
     fn sub_domain() {
-        let result = get_domain_key("dex.bonfida").unwrap();
+        let result = get_domain_key("dex.bonfida.sns").unwrap();
         let expected: Pubkey = pubkey!("HoFfFXqFHAC8RP3duuQNzag1ieUwJRBv1HtRNiWFq4Qu");
         assert_eq!(result, expected);
         let result = get_domain_key("dex.bonfida.sol").unwrap();
         let expected: Pubkey = pubkey!("HoFfFXqFHAC8RP3duuQNzag1ieUwJRBv1HtRNiWFq4Qu");
         assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn bare_domain_errors() {
+        assert!(matches!(
+            get_domain_key("bonfida"),
+            Err(SnsError::UnsupportedTld)
+        ));
+        assert!(matches!(
+            get_domain_key("dex.bonfida"),
+            Err(SnsError::UnsupportedTld)
+        ));
     }
 }

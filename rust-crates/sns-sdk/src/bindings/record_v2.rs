@@ -1,11 +1,11 @@
 //! Transaction-instruction builders for V2 records.
 
-use solana_program::{instruction::Instruction, pubkey::Pubkey, system_program};
 use sns_records::instruction::{
     allocate_and_post_record, delete_record, edit_record, validate_ethereum_signature,
     validate_solana_signature, write_roa,
 };
 use sns_records::state::validation::Validation;
+use solana_program::{instruction::Instruction, pubkey::Pubkey, system_program};
 
 use crate::{
     derivation::get_domain_key,
@@ -199,7 +199,7 @@ mod tests {
     fn fixture() -> (Pubkey, Pubkey, &'static str, Record) {
         let owner = pubkey!("Crf8hzfthWGbGbLTVCiqRqV5MVnbpHB1L9KQMd6gsinb");
         let payer = pubkey!("HKKp49qGWXd639QsuH7JiLijfVW5UtCVY4s1n2HANwEA");
-        (owner, payer, "bonfida", Record::Url)
+        (owner, payer, "bonfida.sns", Record::Url)
     }
 
     /// Every V2 record instruction routes 7 base accounts in this order. The validate
@@ -219,19 +219,22 @@ mod tests {
     #[test]
     fn create_record_v2_tag_and_accounts() {
         let (owner, payer, domain, record) = fixture();
-        let ix = create_record_v2_instruction(domain, record, "https://sns.id", owner, payer)
-            .unwrap();
+        let ix =
+            create_record_v2_instruction(domain, record, "https://sns.id", owner, payer).unwrap();
         assert_base_accounts(&ix, payer, owner, domain);
         assert_eq!(ix.accounts.len(), 7);
-        assert_eq!(ix.accounts[3].pubkey, get_record_v2_key(domain, record).unwrap());
+        assert_eq!(
+            ix.accounts[3].pubkey,
+            get_record_v2_key(domain, record).unwrap()
+        );
         assert_eq!(ix.data[0], 1); // AllocateAndPostRecord
     }
 
     #[test]
     fn update_record_v2_tag_and_accounts() {
         let (owner, payer, domain, record) = fixture();
-        let ix = update_record_v2_instruction(domain, record, "https://sns.id", owner, payer)
-            .unwrap();
+        let ix =
+            update_record_v2_instruction(domain, record, "https://sns.id", owner, payer).unwrap();
         assert_base_accounts(&ix, payer, owner, domain);
         assert_eq!(ix.accounts.len(), 7);
         assert_eq!(ix.data[0], 2); // EditRecord
@@ -254,7 +257,7 @@ mod tests {
         assert_base_accounts(&ix, payer, owner, domain);
         assert_eq!(ix.accounts.len(), 7);
         assert_eq!(ix.data[0], 6); // WriteRoa
-        // Last 32 bytes of the borsh-encoded `roa_id: Vec<u8>` are the pubkey bytes.
+                                   // Last 32 bytes of the borsh-encoded `roa_id: Vec<u8>` are the pubkey bytes.
         let tail = &ix.data[ix.data.len() - 32..];
         assert_eq!(tail, roa_id.to_bytes());
     }
@@ -263,8 +266,7 @@ mod tests {
     fn validate_record_v2_content_tag_and_accounts() {
         let (owner, payer, domain, record) = fixture();
         let verifier = pubkey!("CnNHzcp7L4jKiA2Rsca3hZyVwSmoqXaT8wGwzS8WvvB2");
-        let ix =
-            validate_record_v2_content(true, domain, record, owner, payer, verifier).unwrap();
+        let ix = validate_record_v2_content(true, domain, record, owner, payer, verifier).unwrap();
         assert_base_accounts(&ix, payer, owner, domain);
         assert_eq!(ix.accounts.len(), 8);
         assert_eq!(ix.accounts[7].pubkey, verifier);
@@ -292,7 +294,7 @@ mod tests {
         assert_eq!(ix.accounts.len(), 7);
         assert_eq!(ix.data[0], 4); // ValidateEthereumSignature
         assert_eq!(ix.data[1], 2); // validation = Ethereum (borsh enum discriminant)
-        // The signature and expected pubkey are borsh `Vec<u8>` (len prefix + bytes).
+                                   // The signature and expected pubkey are borsh `Vec<u8>` (len prefix + bytes).
         let tail = &ix.data[ix.data.len() - expected_pubkey.len()..];
         assert_eq!(tail, expected_pubkey.as_slice());
     }
@@ -311,7 +313,7 @@ mod simulate {
     use solana_program::pubkey;
     use solana_sdk::transaction::Transaction;
 
-    const DOMAIN: &str = "wallet-guide-9";
+    const DOMAIN: &str = "wallet-guide-9.sns";
     const OWNER: Pubkey = pubkey!("Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8");
 
     fn client() -> RpcClient {
@@ -330,7 +332,11 @@ mod simulate {
             .simulate_transaction_with_config(&tx, config)
             .await
             .unwrap();
-        assert!(res.value.err.is_none(), "simulation failed: {:?}", res.value);
+        assert!(
+            res.value.err.is_none(),
+            "simulation failed: {:?}",
+            res.value
+        );
     }
 
     #[tokio::test]
@@ -345,7 +351,8 @@ mod simulate {
         let create =
             create_record_v2_instruction(DOMAIN, Record::Github, "bonfida", OWNER, OWNER).unwrap();
         let update =
-            update_record_v2_instruction(DOMAIN, Record::Github, "some text", OWNER, OWNER).unwrap();
+            update_record_v2_instruction(DOMAIN, Record::Github, "some text", OWNER, OWNER)
+                .unwrap();
         simulate_ok(&client(), &[create, update]).await;
     }
 

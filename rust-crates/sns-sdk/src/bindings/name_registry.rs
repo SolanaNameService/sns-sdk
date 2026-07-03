@@ -99,7 +99,7 @@ mod tests {
     };
     use solana_program::pubkey;
 
-    const DOMAIN: &str = "wallet-guide-9";
+    const DOMAIN: &str = "wallet-guide-9.sns";
     const OWNER: Pubkey = pubkey!("Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8");
     const NEW_OWNER: Pubkey = pubkey!("33m47vH6Eav6jr5Ry86XjhRft2jRBLDnDgPSHoquXi2Z");
 
@@ -124,7 +124,7 @@ mod tests {
 
         assert_eq!(ix.program_id, spl_name_service::ID);
         assert_eq!(ix.data[0], 0); // NameRegistryInstruction::Create
-        // system, payer, name, owner, class-default, parent, parent_owner
+                                   // system, payer, name, owner, class-default, parent, parent_owner
         assert_eq!(ix.accounts.len(), 7);
         // the derived account matches the canonical V1 record key for this domain
         assert_eq!(
@@ -189,7 +189,7 @@ mod simulate {
     use solana_sdk::transaction::Transaction;
     use spl_name_service::state::NameRecordHeader;
 
-    const DOMAIN: &str = "wallet-guide-9";
+    const DOMAIN: &str = "wallet-guide-9.sns";
     const OWNER: Pubkey = pubkey!("Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8");
     const NEW_OWNER: Pubkey = pubkey!("33m47vH6Eav6jr5Ry86XjhRft2jRBLDnDgPSHoquXi2Z");
 
@@ -209,7 +209,11 @@ mod simulate {
             .simulate_transaction_with_config(&tx, config)
             .await
             .unwrap();
-        assert!(res.value.err.is_none(), "simulation failed: {:?}", res.value);
+        assert!(
+            res.value.err.is_none(),
+            "simulation failed: {:?}",
+            res.value
+        );
     }
 
     #[tokio::test]
