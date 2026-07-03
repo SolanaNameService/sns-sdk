@@ -17,7 +17,7 @@ interface Domain {
   records: {
     record: Record;
     verified?: { roa: boolean; staleness: boolean };
-    error?: SNSError;
+    error?: typeof SNSError;
   }[];
 }
 
@@ -30,7 +30,7 @@ describe("SOL record reads", () => {
       records: [
         {
           record: Record.SOL,
-          error: new NoRecordDataError("Record account not found"),
+          error: NoRecordDataError,
         },
       ],
     },

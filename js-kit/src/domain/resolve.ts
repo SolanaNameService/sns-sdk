@@ -13,7 +13,7 @@ import { addressCodec, utf8Codec } from "../codecs";
 import {
   CouldNotFindNftOwnerError,
   DomainDoesNotExistError,
-  InvalidRoAError,
+  InvalidRoaError,
   InvalidValidationError,
   PdaOwnerNotAllowedError,
   RecordMalformedError,
@@ -154,7 +154,7 @@ const resolveSns = async ({
       return addressCodec.decode(content);
     }
 
-    throw new InvalidRoAError(
+    throw new InvalidRoaError(
       `The RoA ID should be ${addressCodec.decode(content)} but is ${addressCodec.decode(roaId)} `
     );
   }

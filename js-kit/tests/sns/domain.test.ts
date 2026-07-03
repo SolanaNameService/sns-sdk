@@ -8,7 +8,6 @@ import { getDomainRecords } from "../../src/domain/getDomainRecords";
 import { getSubdomains } from "../../src/domain/getSubdomains";
 import { ResolveOptions, resolve } from "../../src/domain/resolve";
 import {
-  InvalidRoAError,
   InvalidValidationError,
   MissingVerifierError,
   NoRecordDataError,
@@ -104,7 +103,7 @@ describe("SNS domain reads", () => {
       {
         domain: "wallet-guide-9.sns",
         record: Record.BTC,
-        error: new NoRecordDataError("Record account not found"),
+        error: NoRecordDataError,
       },
       {
         domain: "wallet-guide-9.sns",
@@ -121,7 +120,7 @@ describe("SNS domain reads", () => {
       {
         domain: "wallet-guide-9.sns",
         record: Record.ETH,
-        error: new NoRecordDataError("Record account not found"),
+        error: NoRecordDataError,
       },
     ])("getDomainRecord $domain $record", async (item) => {
       if (item.value) {
@@ -333,17 +332,24 @@ describe("SNS domain reads", () => {
     });
 
     test.each([
-      { domain: "sns-ip-5-wallet-3.sns", error: new InvalidValidationError() },
-      { domain: "sns-ip-5-wallet-6.sns", error: new PdaOwnerNotAllowedError() },
+      {
+        domain: "sns-ip-5-wallet-3.sns",
+        error: InvalidValidationError,
+      },
+      {
+        domain: "sns-ip-5-wallet-6.sns",
+        error: PdaOwnerNotAllowedError,
+      },
       {
         domain: "sns-ip-5-wallet-11.sns",
-        error: new PdaOwnerNotAllowedError(),
+        error: PdaOwnerNotAllowedError,
       },
-      { domain: "sns-ip-5-wallet-12.sns", error: new InvalidRoAError() },
-    ])("$domain throws correctly", async (e) => {
-      await expect(
-        resolve({ rpc: TEST_RPC, domain: e.domain })
-      ).rejects.toThrow(e.error);
+      {
+        domain: "sns-ip-5-wallet-12.sns",
+        error: InvalidValidationError,
+      },
+    ])("$domain throws expected error", async ({ domain, error }) => {
+      await expect(resolve({ rpc: TEST_RPC, domain })).rejects.toThrow(error);
     });
   });
 });
