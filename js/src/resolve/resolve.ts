@@ -9,7 +9,7 @@ import {
 import {
   CouldNotFindNftOwner,
   DomainDoesNotExist,
-  InvalidRoAError,
+  InvalidRoaError,
   PdaOwnerNotAllowed,
   RecordMalformed,
   UnsupportedTldError,
@@ -127,8 +127,8 @@ const resolveSns = async (
       return new PublicKey(content);
     }
 
-    throw new InvalidRoAError(
-      `The RoA ID shoudl be ${new PublicKey(
+    throw new InvalidRoaError(
+      `The RoA ID should be ${new PublicKey(
         content,
       ).toBase58()} but is ${new PublicKey(roaId).toBase58()} `,
     );

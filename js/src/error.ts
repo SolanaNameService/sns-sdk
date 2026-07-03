@@ -18,7 +18,7 @@ export enum ErrorType {
   InvalidCustomBg = "InvalidCustomBackground",
   MissingVerifier = "MissingVerifier",
   PythFeedNotFound = "PythFeedNotFound",
-  InvalidRoA = "InvalidRoA",
+  InvalidRoa = "InvalidRoa",
   InvalidParent = "InvalidParent",
   NftRecordNotFound = "NftRecordNotFound",
   PdaOwnerNotAllowed = "PdaOwnerNotAllowed",
@@ -156,9 +156,9 @@ export class PythFeedNotFoundError extends SNSError {
   }
 }
 
-export class InvalidRoAError extends SNSError {
+export class InvalidRoaError extends SNSError {
   constructor(message?: string) {
-    super(ErrorType.InvalidRoA, message);
+    super(ErrorType.InvalidRoa, message);
   }
 }
 

@@ -2,11 +2,7 @@ require("dotenv").config();
 import { test, jest, expect, describe } from "@jest/globals";
 import { Connection, SystemProgram } from "@solana/web3.js";
 import { resolve, ResolveConfig } from "../../src/resolve/resolve";
-import {
-  InvalidRoAError,
-  PdaOwnerNotAllowed,
-  WrongValidation,
-} from "../../src/error";
+import { PdaOwnerNotAllowed, WrongValidation } from "../../src/error";
 
 jest.setTimeout(50_000);
 
@@ -74,22 +70,22 @@ describe("resolve .sns domains", () => {
   test.each([
     {
       domain: "sns-ip-5-wallet-3.sns",
-      error: new WrongValidation(),
+      error: WrongValidation,
     },
     {
       domain: "sns-ip-5-wallet-6.sns",
-      error: new PdaOwnerNotAllowed(),
+      error: PdaOwnerNotAllowed,
     },
     {
       domain: "sns-ip-5-wallet-11.sns",
-      error: new PdaOwnerNotAllowed(),
+      error: PdaOwnerNotAllowed,
     },
     {
       domain: "sns-ip-5-wallet-12.sns",
-      error: new InvalidRoAError(),
+      error: WrongValidation,
     },
-  ])("$domain throws an error", async (e) => {
-    await expect(resolve(connection, e.domain)).rejects.toThrow(e.error);
+  ])("$domain throws expected error", async ({ domain, error }) => {
+    await expect(resolve(connection, domain)).rejects.toThrow(error);
   });
 
   test.each([
