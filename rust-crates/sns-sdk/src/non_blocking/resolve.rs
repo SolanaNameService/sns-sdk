@@ -21,7 +21,7 @@ use crate::{
         ROOT_DOMAIN_ACCOUNT,
     },
     error::SnsError,
-    favourite_domain::{derive_favourite_domain_key, FavouriteDomain},
+    primary_domain::{derive_primary_domain_key, PrimaryDomain},
     record::{
         get_record_key, record_v1::check_sol_record, record_v2::parse_raw_record_v2, Record,
         RecordVersion,
@@ -530,17 +530,17 @@ pub async fn resolve_nft_owner(
     Ok(None)
 }
 
-pub async fn get_favourite_domain(
+pub async fn get_primary_domain(
     rpc_client: &RpcClient,
     owner: &Pubkey,
 ) -> Result<Option<Pubkey>, SnsError> {
-    let favourite_domain_state_key = derive_favourite_domain_key(owner);
+    let primary_domain_state_key = derive_primary_domain_key(owner);
     let account = rpc_client
-        .get_account_with_commitment(&favourite_domain_state_key, rpc_client.commitment())
+        .get_account_with_commitment(&primary_domain_state_key, rpc_client.commitment())
         .await?
         .value;
     if let Some(a) = account {
-        let parsed = FavouriteDomain::parse(&a.data)?;
+        let parsed = PrimaryDomain::parse(&a.data)?;
         Ok(Some(parsed.name_account))
     } else {
         Ok(None)
@@ -845,10 +845,10 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_get_favourite_domain() {
+    async fn test_get_primary_domain() {
         dotenv().ok();
         let client = RpcClient::new(std::env::var("RPC_URL").unwrap());
-        let domain = get_favourite_domain(
+        let domain = get_primary_domain(
             &client,
             &pubkey!("HKKp49qGWXd639QsuH7JiLijfVW5UtCVY4s1n2HANwEA"),
         )

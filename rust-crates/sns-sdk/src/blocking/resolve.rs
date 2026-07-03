@@ -17,7 +17,7 @@ use crate::{
         get_domain_key, get_domain_mint, get_hashed_name, REVERSE_LOOKUP_CLASS, ROOT_DOMAIN_ACCOUNT,
     },
     error::SnsError,
-    favourite_domain::{derive_favorite_domain_key, FavouriteDomain},
+    primary_domain::{derive_primary_domain_key, PrimaryDomain},
     record::{get_record_key, record_v1::check_sol_record, Record},
 };
 
@@ -203,16 +203,16 @@ pub fn resolve_nft_owner(
     Ok(None)
 }
 
-pub async fn get_favourite_domain(
+pub async fn get_primary_domain(
     rpc_client: &RpcClient,
     owner: &Pubkey,
 ) -> Result<Option<Pubkey>, SnsError> {
-    let favourite_domain_state_key = derive_favorite_domain_key(owner);
+    let primary_domain_state_key = derive_primary_domain_key(owner);
     let account = rpc_client
-        .get_account_with_commitment(&favourite_domain_state_key, rpc_client.commitment())?
+        .get_account_with_commitment(&primary_domain_state_key, rpc_client.commitment())?
         .value;
     if let Some(a) = account {
-        let parsed = FavouriteDomain::parse(&a.data)?;
+        let parsed = PrimaryDomain::parse(&a.data)?;
         Ok(Some(parsed.name_account))
     } else {
         Ok(None)
