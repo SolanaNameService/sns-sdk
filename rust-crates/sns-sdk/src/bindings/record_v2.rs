@@ -11,6 +11,7 @@ use crate::{
     derivation::get_domain_key,
     error::SnsError,
     record::{get_record_v2_key, record_v2::serialize_record_v2_content, Record},
+    tld::parse_sns_domain,
 };
 
 fn record_name(record: Record) -> String {
@@ -25,6 +26,7 @@ pub fn create_record_v2_instruction(
     owner: Pubkey,
     payer: Pubkey,
 ) -> Result<Instruction, SnsError> {
+    parse_sns_domain(domain)?;
     let record_key = get_record_v2_key(domain, record)?;
     let domain_key = get_domain_key(domain)?;
     let content_bytes = serialize_record_v2_content(content, record)?;
@@ -54,6 +56,7 @@ pub fn update_record_v2_instruction(
     owner: Pubkey,
     payer: Pubkey,
 ) -> Result<Instruction, SnsError> {
+    parse_sns_domain(domain)?;
     let record_key = get_record_v2_key(domain, record)?;
     let domain_key = get_domain_key(domain)?;
     let content_bytes = serialize_record_v2_content(content, record)?;
@@ -82,6 +85,7 @@ pub fn delete_record_v2(
     owner: Pubkey,
     payer: Pubkey,
 ) -> Result<Instruction, SnsError> {
+    parse_sns_domain(domain)?;
     let record_key = get_record_v2_key(domain, record)?;
     let domain_key = get_domain_key(domain)?;
 
@@ -107,6 +111,7 @@ pub fn write_roa_record_v2(
     payer: Pubkey,
     roa_id: Pubkey,
 ) -> Result<Instruction, SnsError> {
+    parse_sns_domain(domain)?;
     let record_key = get_record_v2_key(domain, record)?;
     let domain_key = get_domain_key(domain)?;
 
@@ -138,6 +143,7 @@ pub fn validate_record_v2_content(
     payer: Pubkey,
     verifier: Pubkey,
 ) -> Result<Instruction, SnsError> {
+    parse_sns_domain(domain)?;
     let record_key = get_record_v2_key(domain, record)?;
     let domain_key = get_domain_key(domain)?;
 
@@ -170,6 +176,7 @@ pub fn eth_validate_record_v2_content(
     signature: Vec<u8>,
     expected_pubkey: Vec<u8>,
 ) -> Result<Instruction, SnsError> {
+    parse_sns_domain(domain)?;
     let record_key = get_record_v2_key(domain, record)?;
     let domain_key = get_domain_key(domain)?;
 
@@ -194,6 +201,7 @@ pub fn eth_validate_record_v2_content(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::{derivation::get_domain_key, record::get_record_v2_key};
     use solana_program::pubkey;
 
     fn fixture() -> (Pubkey, Pubkey, &'static str, Record) {
@@ -228,6 +236,96 @@ mod tests {
             get_record_v2_key(domain, record).unwrap()
         );
         assert_eq!(ix.data[0], 1); // AllocateAndPostRecord
+    }
+
+    #[test]
+    fn create_record_v2_accepts_subdomains() {
+        let (owner, payer, _, record) = fixture();
+        let domain = "sub.bonfida.sns";
+        let ix =
+            create_record_v2_instruction(domain, record, "https://sns.id", owner, payer).unwrap();
+
+        assert_base_accounts(&ix, payer, owner, domain);
+    }
+
+    #[test]
+    fn record_v2_write_apis_requires_sns() {
+        let (owner, payer, _, record) = fixture();
+        let verifier = pubkey!("CnNHzcp7L4jKiA2Rsca3hZyVwSmoqXaT8wGwzS8WvvB2");
+        let roa_id = pubkey!("CnNHzcp7L4jKiA2Rsca3hZyVwSmoqXaT8wGwzS8WvvB2");
+
+        fn assert_error(
+            result: Result<Instruction, SnsError>,
+            expected: fn(SnsError) -> bool,
+            domain: &str,
+            api: &str,
+        ) {
+            let Err(error) = result else {
+                panic!("{api} accepted invalid write domain {domain}");
+            };
+            assert!(expected(error), "{api} returned wrong error for {domain}");
+        }
+
+        fn unsupported_tld(error: SnsError) -> bool {
+            matches!(error, SnsError::UnsupportedTld)
+        }
+
+        fn invalid_domain_casing(error: SnsError) -> bool {
+            matches!(error, SnsError::InvalidDomainCasing)
+        }
+
+        let cases: [(&str, fn(SnsError) -> bool); 4] = [
+            ("bonfida", unsupported_tld),
+            ("bonfida.sol", unsupported_tld),
+            ("Bonfida.sns", invalid_domain_casing),
+            (" bonfida.sns", invalid_domain_casing),
+        ];
+
+        for (domain, expected) in cases {
+            assert_error(
+                create_record_v2_instruction(domain, record, "https://sns.id", owner, payer),
+                expected,
+                domain,
+                "create_record_v2_instruction",
+            );
+            assert_error(
+                update_record_v2_instruction(domain, record, "https://sns.id", owner, payer),
+                expected,
+                domain,
+                "update_record_v2_instruction",
+            );
+            assert_error(
+                delete_record_v2(domain, record, owner, payer),
+                expected,
+                domain,
+                "delete_record_v2",
+            );
+            assert_error(
+                write_roa_record_v2(domain, record, owner, payer, roa_id),
+                expected,
+                domain,
+                "write_roa_record_v2",
+            );
+            assert_error(
+                validate_record_v2_content(true, domain, record, owner, payer, verifier),
+                expected,
+                domain,
+                "validate_record_v2_content",
+            );
+            assert_error(
+                eth_validate_record_v2_content(
+                    domain,
+                    record,
+                    owner,
+                    payer,
+                    vec![0xABu8; 65],
+                    vec![0xCDu8; 20],
+                ),
+                expected,
+                domain,
+                "eth_validate_record_v2_content",
+            );
+        }
     }
 
     #[test]

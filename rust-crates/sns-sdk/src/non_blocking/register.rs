@@ -4,13 +4,14 @@ use solana_sdk::transaction::Transaction;
 use spl_associated_token_account::get_associated_token_address;
 
 use crate::{
-    derivation::{get_domain_key, get_reverse_key, ROOT_DOMAIN_ACCOUNT},
+    derivation::{derive_reverse, get_sns_domain_key, ROOT_DOMAIN_ACCOUNT},
     error::SnsError,
     register::{
         create::{Accounts, Params},
         get_register_instruction, PYTH_MAPPING_ACC, PYTH_PRICE_PRODUCT_ACCOUNTS, REFERRERS,
         REGISTER_PROGRAM_ID, USDC_MINT, VAULT_OWNER,
     },
+    tld::parse_sns_top_level_domain,
 };
 
 pub async fn register_domain_name(
@@ -24,8 +25,9 @@ pub async fn register_domain_name(
 ) -> Result<Transaction, SnsError> {
     let central_state =
         Pubkey::find_program_address(&[REGISTER_PROGRAM_ID.as_ref()], &REGISTER_PROGRAM_ID).0;
-    let name_account = get_domain_key(name)?;
-    let reverse_lookup_account = get_reverse_key(name)?;
+    let name = parse_sns_top_level_domain(name)?;
+    let name_account = get_sns_domain_key(&name)?.key;
+    let reverse_lookup_account = derive_reverse(&name_account, None);
     let derived_state =
         Pubkey::find_program_address(&[name_account.as_ref()], &REGISTER_PROGRAM_ID).0;
     let referrer_idx = if let Some(referrer) = referrer_key {
@@ -91,7 +93,7 @@ pub async fn register_domain_name(
             referrer_account_opt: referrer_token_account.as_ref(),
         },
         Params {
-            name: name.to_owned(),
+            name,
             space,
             referrer_idx_opt: referrer_idx,
         },
@@ -110,12 +112,71 @@ mod test {
     use dotenv::dotenv;
 
     #[tokio::test]
+    async fn test_registration_requires_top_level_sns() {
+        let client = RpcClient::new("http://localhost:8899".to_string());
+        let buyer_token_account = get_associated_token_address(&VAULT_OWNER, &FIDA_MINT);
+
+        assert!(matches!(
+            register_domain_name(
+                &client,
+                "domain",
+                1_000,
+                &VAULT_OWNER,
+                &buyer_token_account,
+                Some(&FIDA_MINT),
+                None,
+            )
+            .await,
+            Err(SnsError::UnsupportedTld)
+        ));
+        assert!(matches!(
+            register_domain_name(
+                &client,
+                "domain.sol",
+                1_000,
+                &VAULT_OWNER,
+                &buyer_token_account,
+                Some(&FIDA_MINT),
+                None,
+            )
+            .await,
+            Err(SnsError::UnsupportedTld)
+        ));
+        assert!(matches!(
+            register_domain_name(
+                &client,
+                "sub.domain.sns",
+                1_000,
+                &VAULT_OWNER,
+                &buyer_token_account,
+                Some(&FIDA_MINT),
+                None,
+            )
+            .await,
+            Err(SnsError::SubdomainNotAllowed)
+        ));
+        assert!(matches!(
+            register_domain_name(
+                &client,
+                "Domain.sns",
+                1_000,
+                &VAULT_OWNER,
+                &buyer_token_account,
+                Some(&FIDA_MINT),
+                None,
+            )
+            .await,
+            Err(SnsError::InvalidDomainCasing)
+        ));
+    }
+
+    #[tokio::test]
     async fn test_registration() {
         dotenv().ok();
         let client = RpcClient::new(std::env::var("RPC_URL").unwrap());
         let mut tx = register_domain_name(
             &client,
-            &generate_random_string(10),
+            &format!("{}.sns", generate_random_string(10)),
             1_000,
             &VAULT_OWNER,
             &get_associated_token_address(&VAULT_OWNER, &FIDA_MINT),
@@ -136,7 +197,7 @@ mod test {
         let client = RpcClient::new(std::env::var("RPC_URL").unwrap());
         let mut tx = register_domain_name(
             &client,
-            &generate_random_string(10),
+            &format!("{}.sns", generate_random_string(10)),
             1_000,
             &VAULT_OWNER,
             &get_associated_token_address(&VAULT_OWNER, &FIDA_MINT),
