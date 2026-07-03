@@ -13,8 +13,6 @@ use {
     spl_token::state::Mint,
 };
 
-use sns_records::state::validation::Validation;
-
 use crate::{
     derivation::{
         get_domain_key, get_domain_mint, get_hashed_name, NAME_TOKENIZER_ID, REVERSE_LOOKUP_CLASS,
@@ -23,8 +21,8 @@ use crate::{
     error::SnsError,
     primary_domain::{derive_primary_domain_key, PrimaryDomain},
     record::{
-        get_record_key, record_v1::check_sol_record, record_v2::parse_raw_record_v2, Record,
-        RecordVersion,
+        get_record_key, record_v1::check_sol_record_v1_data, record_v2::check_sol_record_v2_data,
+        Record, RecordVersion,
     },
 };
 
@@ -104,128 +102,6 @@ pub async fn resolve_owner(
                 _ => Err(SnsError::PdaOwnerNotAllowed),
             }
         }
-    }
-}
-
-/// Validate a V2 SOL record against the current registry owner and return the destination pubkey.
-///
-/// - `Ok(Some(_))` – record is fresh, RoA matches content
-/// - `Ok(None)` – record is stale (staleness id != current registry owner) → caller should fall through
-/// - `Err(RecordMalformed)` – content length != 32
-/// - `Err(WrongValidation)` – either validation field != Solana
-/// - `Err(InvalidRoa)` – RoA id != content
-fn check_sol_record_v2_data(
-    account_data: &[u8],
-    registry_owner: &Pubkey,
-) -> Result<Option<Pubkey>, SnsError> {
-    let record = parse_raw_record_v2(account_data)?;
-
-    // SOL record stores exactly one Solana pubkey (32B). Anything else = malformed.
-    if record.content.len() != 32 {
-        return Err(SnsError::RecordMalformed);
-    }
-
-    // SNS-IP 5 requires both proofs to be Solana Ed25519 signatures. Other variants
-    // (None / Ethereum / UnverifiedSolana / XChain) cannot authorize SOL resolution.
-    if !matches!(record.staleness_validation, Validation::Solana)
-        || !matches!(record.roa_validation, Validation::Solana)
-    {
-        return Err(SnsError::WrongValidation);
-    }
-
-    // Staleness: the pubkey baked into the record must equal the *current* registry
-    // owner. If the domain has been transferred since the record was signed, the
-    // record is stale - return `None` so the caller falls through to V1 / registry.
-    if record.staleness_id != registry_owner.as_ref() {
-        return Ok(None);
-    }
-
-    // Right-of-Association: the destination address must have signed off on
-    // receiving funds for this domain. The on-chain program stores `roa_id` only
-    // after a valid signature, so `roa_id == content` proves consent.
-    if record.roa_id == record.content {
-        let bytes: [u8; 32] = record
-            .content
-            .try_into()
-            .map_err(|_| SnsError::InvalidPubkey)?;
-        return Ok(Some(Pubkey::new_from_array(bytes)));
-    }
-
-    // Record is fresh but RoA doesn't match content -> can't safely resolve.
-    Err(SnsError::InvalidRoa)
-}
-
-fn check_sol_record_v1_data(
-    account_data: &[u8],
-    record_key: &Pubkey,
-    registry_owner: &Pubkey,
-) -> Result<Option<Pubkey>, SnsError> {
-    // V1 payload after the SPL header = 32B destination pubkey + 64B Ed25519 signature.
-    let payload = account_data
-        .get(NameRecordHeader::LEN..NameRecordHeader::LEN + 96)
-        .ok_or(SnsError::InvalidRecordData)?;
-    // Signer signed hex(destination || record_key) -- rebuild the same bytes to verify.
-    let record = [&payload[..32], &record_key.to_bytes()].concat();
-    let sig = &payload[32..];
-    let encoded = hex::encode(record);
-    // Signature must verify against the *current* registry owner; the destination is
-    // only trusted because that owner explicitly signed off on it.
-    if check_sol_record(encoded.as_bytes(), sig, *registry_owner)? {
-        let bytes: [u8; 32] = payload[0..32]
-            .try_into()
-            .map_err(|_| SnsError::InvalidPubkey)?;
-        return Ok(Some(Pubkey::new_from_array(bytes)));
-    }
-    Ok(None)
-}
-
-/// Resolve only the V1 SOL record for `domain`, validating the signature against `owner`.
-///
-/// Returns `Ok(Some(_))` if the record exists and the signature is valid for `owner`,
-/// `Ok(None)` if the record is missing or the signature does not verify. Errors are
-/// reserved for RPC / decoding failures.
-pub async fn resolve_sol_record_v1(
-    rpc_client: &RpcClient,
-    owner: &Pubkey,
-    domain: &str,
-) -> Result<Option<Pubkey>, SnsError> {
-    let record_key = get_record_key(domain, Record::Sol, RecordVersion::V1)?;
-    let mut accs = rpc_client.get_multiple_accounts(&[record_key]).await?;
-    match accs.swap_remove(0) {
-        Some(acc) => check_sol_record_v1_data(&acc.data, &record_key, owner),
-        None => Ok(None),
-    }
-}
-
-/// Resolve only the V2 SOL record for `domain`, validating staleness + RoA against `owner`.
-///
-/// Returns `Ok(Some(_))` if the record is fresh and the RoA matches the content,
-/// `Ok(None)` if the record is missing or stale. `RecordMalformed`/`WrongValidation`/
-/// `InvalidRoa` errors propagate when the record exists but is structurally invalid.
-pub async fn resolve_sol_record_v2(
-    rpc_client: &RpcClient,
-    owner: &Pubkey,
-    domain: &str,
-) -> Result<Option<Pubkey>, SnsError> {
-    let record_key = get_record_key(domain, Record::Sol, RecordVersion::V2)?;
-    let mut accs = rpc_client.get_multiple_accounts(&[record_key]).await?;
-    match accs.swap_remove(0) {
-        Some(acc) => check_sol_record_v2_data(&acc.data, owner),
-        None => Ok(None),
-    }
-}
-
-pub async fn resolve_record(
-    rpc_client: &RpcClient,
-    domain: &str,
-    record: Record,
-) -> Result<Option<(NameRecordHeader, Vec<u8>)>, SnsError> {
-    let key = get_record_key(domain, record, crate::record::RecordVersion::V1)?;
-    let res = resolve_name_registry(rpc_client, &key).await?;
-    if let Some(res) = res {
-        Ok(Some(res))
-    } else {
-        Ok(None)
     }
 }
 
@@ -551,6 +427,7 @@ pub async fn get_primary_domain(
 mod tests {
     use super::*;
     use crate::derivation::get_domain_key;
+    use crate::non_blocking::record_v1;
     use crate::record::record_v1::deserialize_record;
     use crate::record::Record;
     use crate::utils::test::generate_random_string;
@@ -730,62 +607,6 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_resolve_sol_record_v2_standalone() {
-        dotenv().ok();
-        let client = RpcClient::new(std::env::var("RPC_URL").unwrap());
-        // wallet-2 is set up with a fresh V2 SOL record pointing to a distinct address.
-        let domain = "sns-ip-5-wallet-2.sns";
-        let domain_key = get_domain_key(domain).unwrap();
-        let (header, _) = resolve_name_registry(&client, &domain_key)
-            .await
-            .unwrap()
-            .unwrap();
-        let res = resolve_sol_record_v2(&client, &header.owner, domain)
-            .await
-            .unwrap();
-        assert_eq!(
-            res,
-            Some(pubkey!("AxwzQXhZNJb9zLyiHUQA12L2GL7CxvUNrp6neee6r3cA"))
-        );
-
-        // Missing V2 record returns Ok(None).
-        let res = resolve_sol_record_v2(&client, &header.owner, "bonfida.sns")
-            .await
-            .unwrap();
-        assert_eq!(res, None);
-    }
-
-    #[tokio::test]
-    async fn test_resolve_sol_record_v1_standalone() {
-        dotenv().ok();
-        let client = RpcClient::new(std::env::var("RPC_URL").unwrap());
-        // wallet-guide-4 carries a fresh V1 SOL record signed by its current registry owner.
-        let domain = "wallet-guide-4.sol";
-        let domain_key = get_domain_key(domain).unwrap();
-        let (header, _) = resolve_name_registry(&client, &domain_key)
-            .await
-            .unwrap()
-            .unwrap();
-        let res = resolve_sol_record_v1(&client, &header.owner, domain)
-            .await
-            .unwrap();
-        assert_eq!(
-            res,
-            Some(pubkey!("Hf4daCT4tC2Vy9RCe9q8avT68yAsNJ1dQe6xiQqyGuqZ"))
-        );
-
-        // Missing V1 record returns Ok(None).
-        let res = resolve_sol_record_v1(
-            &client,
-            &header.owner,
-            &format!("{}.sns", generate_random_string(20)),
-        )
-        .await
-        .unwrap();
-        assert_eq!(res, None);
-    }
-
-    #[tokio::test]
     async fn batch_resolve_reverses() {
         dotenv().ok();
         let client = RpcClient::new(std::env::var("RPC_URL").unwrap());
@@ -805,11 +626,11 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_resolve_record() {
+    async fn test_get_record_v1() {
         dotenv().ok();
         let client = RpcClient::new(std::env::var("RPC_URL").unwrap());
 
-        let res = resolve_record(&client, "bonfida.sns", Record::Url)
+        let res = record_v1::get_record(&client, "bonfida.sns", Record::Url)
             .await
             .unwrap();
         assert_eq!(
@@ -817,12 +638,12 @@ mod tests {
             "https://sns.id"
         );
 
-        let res = resolve_record(&client, "bonfida.sns", Record::Backpack)
+        let res = record_v1::get_record(&client, "bonfida.sns", Record::Backpack)
             .await
             .unwrap();
         assert!(res.is_none());
 
-        let res = resolve_record(&client, "🍍.sns", Record::Eth)
+        let res = record_v1::get_record(&client, "🍍.sns", Record::Eth)
             .await
             .unwrap();
         assert_eq!(

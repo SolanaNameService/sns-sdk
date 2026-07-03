@@ -5,7 +5,8 @@ use {
     bech32::u5,
     bech32::ToBase32,
     ed25519_dalek,
-    solana_program::pubkey::Pubkey,
+    solana_program::{program_pack::Pack, pubkey::Pubkey},
+    spl_name_service::state::NameRecordHeader,
     std::net::{Ipv4Addr, Ipv6Addr},
 };
 
@@ -18,6 +19,26 @@ pub fn check_sol_record(
     let sig = ed25519_dalek::Signature::from_bytes(signed_record)?;
     let res = key.verify_strict(record, &sig).is_ok();
     Ok(res)
+}
+
+pub fn check_sol_record_v1_data(
+    account_data: &[u8],
+    record_key: &Pubkey,
+    registry_owner: &Pubkey,
+) -> Result<Option<Pubkey>, SnsError> {
+    let payload = account_data
+        .get(NameRecordHeader::LEN..NameRecordHeader::LEN + 96)
+        .ok_or(SnsError::InvalidRecordData)?;
+    let record = [&payload[..32], &record_key.to_bytes()].concat();
+    let sig = &payload[32..];
+    let encoded = hex::encode(record);
+    if check_sol_record(encoded.as_bytes(), sig, *registry_owner)? {
+        let bytes: [u8; 32] = payload[0..32]
+            .try_into()
+            .map_err(|_| SnsError::InvalidPubkey)?;
+        return Ok(Some(Pubkey::new_from_array(bytes)));
+    }
+    Ok(None)
 }
 
 pub fn get_record_size(record: Record) -> Option<usize> {

@@ -66,20 +66,6 @@ pub fn resolve_owner(rpc_client: &RpcClient, domain: &str) -> Result<Option<Pubk
     Ok(Some(header.owner))
 }
 
-pub fn resolve_record(
-    rpc_client: &RpcClient,
-    domain: &str,
-    record: Record,
-) -> Result<Option<(NameRecordHeader, Vec<u8>)>, SnsError> {
-    let key = get_record_key(domain, record, crate::record::RecordVersion::V1)?;
-    let res = resolve_name_registry(rpc_client, &key)?;
-    if let Some(res) = res {
-        Ok(Some(res))
-    } else {
-        Ok(None)
-    }
-}
-
 pub fn resolve_name_registry(
     rpc_client: &RpcClient,
     key: &Pubkey,
@@ -128,6 +114,7 @@ pub fn get_domains_owner(rpc_client: &RpcClient, owner: Pubkey) -> Result<Vec<Pu
             encoding: Some(UiAccountEncoding::Base64),
             ..Default::default()
         },
+        sort_results: None,
     };
     let res = rpc_client.get_program_accounts_with_config(&spl_name_service::ID, config)?;
     let keys = res.into_iter().map(|x| x.0).collect::<Vec<_>>();
@@ -148,6 +135,7 @@ pub fn get_subdomains(rpc_client: &RpcClient, parent: Pubkey) -> Result<Vec<Stri
             encoding: Some(UiAccountEncoding::Base64),
             ..Default::default()
         },
+        sort_results: None,
     };
     let res = rpc_client.get_program_accounts_with_config(&spl_name_service::ID, config)?;
 
@@ -191,6 +179,7 @@ pub fn resolve_nft_owner(
             encoding: Some(UiAccountEncoding::Base64),
             ..Default::default()
         },
+        sort_results: None,
     };
     let res = rpc_client.get_program_accounts_with_config(&spl_token::ID, config)?;
 
@@ -222,6 +211,7 @@ pub async fn get_primary_domain(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::blocking::record_v1;
     use crate::derivation::get_domain_key;
     use crate::utils::test::generate_random_string;
     use dotenv::dotenv;
@@ -282,11 +272,11 @@ mod tests {
     }
 
     #[test]
-    fn test_resolve_record() {
+    fn test_get_record_v1() {
         dotenv().ok();
         let client = RpcClient::new(std::env::var("RPC_URL").unwrap());
 
-        let res = resolve_record(&client, "bonfida", Record::Url).unwrap();
+        let res = record_v1::get_record(&client, "bonfida.sns", Record::Url).unwrap();
         assert_eq!(
             String::from_utf8(res.unwrap().1)
                 .unwrap()
@@ -294,7 +284,7 @@ mod tests {
             "https://sns.id"
         );
 
-        let res = resolve_record(&client, "bonfida", Record::Backpack).unwrap();
+        let res = record_v1::get_record(&client, "bonfida.sns", Record::Backpack).unwrap();
         assert!(res.is_none())
     }
 }

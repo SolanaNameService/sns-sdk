@@ -5,14 +5,10 @@ use sns_records::state::{
 };
 use solana_program::{program_pack::Pack, pubkey};
 
-use super::{convert_u5_array, get_record_key, Record};
-use crate::{
-    error::SnsError,
-    non_blocking::resolve::{resolve_name_registry, resolve_name_registry_batch},
-};
+use super::{convert_u5_array, Record};
+use crate::error::SnsError;
 use {
     bech32::ToBase32,
-    solana_client::nonblocking::rpc_client::RpcClient,
     solana_program::pubkey::Pubkey,
     spl_name_service::state::NameRecordHeader,
     std::net::{Ipv4Addr, Ipv6Addr},
@@ -141,25 +137,35 @@ pub fn parse_record_v2(record: Record, account_data: &[u8]) -> Result<ParsedReco
     })
 }
 
-pub async fn retrieve_record_v2(
-    rpc_client: RpcClient,
-    record: Record,
-    domain: &str,
-) -> Result<Option<(NameRecordHeader, Vec<u8>)>, SnsError> {
-    let record_key = get_record_key(domain, record, super::RecordVersion::V2)?;
-    resolve_name_registry(&rpc_client, &record_key).await
-}
+pub fn check_sol_record_v2_data(
+    account_data: &[u8],
+    registry_owner: &Pubkey,
+) -> Result<Option<Pubkey>, SnsError> {
+    let record = parse_raw_record_v2(account_data)?;
 
-pub async fn retrieve_records_batch_v2(
-    rpc_client: RpcClient,
-    records: &[Record],
-    domain: &str,
-) -> Result<Vec<Option<(NameRecordHeader, Vec<u8>)>>, SnsError> {
-    let pubkeys: Vec<Pubkey> = records
-        .iter()
-        .map(|r| get_record_key(domain, *r, super::RecordVersion::V2))
-        .collect::<Result<Vec<_>, _>>()?;
-    resolve_name_registry_batch(&rpc_client, &pubkeys).await
+    if record.content.len() != 32 {
+        return Err(SnsError::RecordMalformed);
+    }
+
+    if !matches!(record.staleness_validation, Validation::Solana)
+        || !matches!(record.roa_validation, Validation::Solana)
+    {
+        return Err(SnsError::WrongValidation);
+    }
+
+    if record.staleness_id != registry_owner.as_ref() {
+        return Ok(None);
+    }
+
+    if record.roa_id == record.content {
+        let bytes: [u8; 32] = record
+            .content
+            .try_into()
+            .map_err(|_| SnsError::InvalidPubkey)?;
+        return Ok(Some(Pubkey::new_from_array(bytes)));
+    }
+
+    Err(SnsError::InvalidRoa)
 }
 
 pub fn deserialize_record_v2_content(content: &[u8], record: Record) -> Result<String, SnsError> {
