@@ -44,17 +44,25 @@ pub async fn get_subdomains(
         .get_program_accounts_with_config(&spl_name_service::ID, config)
         .await?;
 
-    Ok(res
-        .into_iter()
-        .map(|(_, acc)| {
-            let mut offset = NameRecordHeader::LEN;
-            let len = u32::from_le_bytes(acc.data[offset..offset + 4].try_into().unwrap());
-            offset += 4;
-
-            String::from_utf8(acc.data[offset..offset + len as usize].to_vec()).unwrap()
-        })
-        .map(|x| x.strip_prefix('\0').unwrap().to_owned())
-        .collect())
+    let mut results = Vec::with_capacity(res.len());
+    for (_, acc) in res {
+        let payload = acc
+            .data
+            .get(NameRecordHeader::LEN..)
+            .ok_or(SnsError::InvalidNameAccountData)?;
+        let len_data = payload.get(..4).ok_or(SnsError::InvalidReverse)?;
+        let len = u32::from_le_bytes(len_data.try_into().map_err(|_| SnsError::InvalidReverse)?);
+        let label_data = payload
+            .get(4..4 + len as usize)
+            .ok_or(SnsError::InvalidReverse)?;
+        let label = String::from_utf8(label_data.to_vec()).map_err(|_| SnsError::InvalidReverse)?;
+        let subdomain = label
+            .strip_prefix('\0')
+            .ok_or(SnsError::InvalidReverse)?
+            .to_owned();
+        results.push(subdomain);
+    }
+    Ok(results)
 }
 
 #[cfg(test)]

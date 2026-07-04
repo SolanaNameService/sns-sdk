@@ -113,10 +113,10 @@ pub async fn resolve_nft_owner(
     let mint_key = get_domain_mint(domain_key);
     let acc = rpc_client.get_multiple_accounts(&[mint_key]).await?;
     let acc = acc.first().ok_or(SnsError::InvalidDomain)?;
-    if acc.is_none() {
+    let Some(acc) = acc.as_ref() else {
         return Ok(None);
-    }
-    let mint = Mint::unpack(&acc.as_ref().unwrap().data)?;
+    };
+    let mint = Mint::unpack(&acc.data)?;
     if mint.supply != 1 {
         return Ok(None);
     }

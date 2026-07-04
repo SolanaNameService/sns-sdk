@@ -45,6 +45,7 @@ pub enum SnsError {
     UnsupportedTld,
     SubdomainNotAllowed,
     InvalidDomainCasing,
+    InvalidNameAccountData,
 }
 
 impl From<ClientError> for SnsError {

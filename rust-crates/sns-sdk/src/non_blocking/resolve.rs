@@ -101,17 +101,26 @@ pub async fn resolve(
     }
 }
 
-pub fn deserialize_name_registry(data: &[u8]) -> Result<(NameRecordHeader, Vec<u8>), SnsError> {
-    let header = NameRecordHeader::unpack_unchecked(&data[0..NameRecordHeader::LEN])?;
-    let data = data[NameRecordHeader::LEN..].to_vec();
-    Ok((header, data))
+pub(crate) fn deserialize_name_registry(
+    data: &[u8],
+) -> Result<(NameRecordHeader, Vec<u8>), SnsError> {
+    let header_data = data
+        .get(..NameRecordHeader::LEN)
+        .ok_or(SnsError::InvalidNameAccountData)?;
+    let payload = data
+        .get(NameRecordHeader::LEN..)
+        .ok_or(SnsError::InvalidNameAccountData)?;
+    let header = NameRecordHeader::unpack_unchecked(header_data)?;
+    Ok((header, payload.to_vec()))
 }
 
-pub fn deserialize_reverse(data: &[u8]) -> Result<String, SnsError> {
-    let len = u32::from_le_bytes(data[0..4].try_into().unwrap());
-    let reverse =
-        String::from_utf8(data[4..4 + len as usize].to_vec()).or(Err(SnsError::InvalidReverse))?;
-    Ok(reverse)
+pub(crate) fn deserialize_reverse(data: &[u8]) -> Result<String, SnsError> {
+    let len_data = data.get(..4).ok_or(SnsError::InvalidReverse)?;
+    let len = u32::from_le_bytes(len_data.try_into().map_err(|_| SnsError::InvalidReverse)?);
+    let reverse_data = data
+        .get(4..4 + len as usize)
+        .ok_or(SnsError::InvalidReverse)?;
+    String::from_utf8(reverse_data.to_vec()).map_err(|_| SnsError::InvalidReverse)
 }
 
 pub async fn resolve_name_registry(
