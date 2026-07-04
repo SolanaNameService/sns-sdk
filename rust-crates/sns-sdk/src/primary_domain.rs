@@ -9,6 +9,8 @@ use crate::NAME_OFFERS_PROGRAM_ID;
 
 pub fn derive_primary_domain_key(owner: &Pubkey) -> Pubkey {
     Pubkey::find_program_address(
+        // Preserve the original on-chain PDA seed spelling for compatibility with
+        // existing primary-domain accounts.
         &[b"favourite_domain", &owner.to_bytes()],
         &NAME_OFFERS_PROGRAM_ID,
     )
