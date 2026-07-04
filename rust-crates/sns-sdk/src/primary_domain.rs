@@ -60,7 +60,6 @@ pub mod set_primary_domain {
     }
 
     #[derive(BorshDeserialize, BorshSerialize, BorshSize, Clone, Copy)]
-    #[cfg_attr(feature = "instruction_params_casting", derive(Zeroable, Pod))]
     #[repr(C)]
     pub struct Params {}
 }

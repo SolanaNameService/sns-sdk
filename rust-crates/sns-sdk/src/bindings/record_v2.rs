@@ -5,7 +5,8 @@ use sns_records::instruction::{
     validate_solana_signature, write_roa,
 };
 use sns_records::state::validation::Validation;
-use solana_program::{instruction::Instruction, pubkey::Pubkey, system_program};
+use solana_program::{instruction::Instruction, pubkey::Pubkey};
+use solana_sdk_ids::system_program;
 
 use crate::{
     derivation::get_domain_key,

@@ -19,6 +19,7 @@ subdomain = ["sub-registrar"]
 [dependencies]
 spl-name-service = { workspace = true, features = ["no-entrypoint"] }
 solana-program = { workspace = true }
+solana-sdk-ids = { workspace = true }
 derive_more = "0.99.17"
 solana-sdk = { workspace = true }
 solana-client = { workspace = true }

@@ -104,7 +104,7 @@ impl<'a> RecordV2Fields<'a> {
     }
 }
 
-pub fn decode_record_v2_fields(record_data: &[u8]) -> Result<RecordV2Fields, SnsError> {
+pub fn decode_record_v2_fields(record_data: &[u8]) -> Result<RecordV2Fields<'_>, SnsError> {
     if record_data.len() < RecordHeader::LEN {
         return Err(SnsError::InvalidRecordData);
     }
