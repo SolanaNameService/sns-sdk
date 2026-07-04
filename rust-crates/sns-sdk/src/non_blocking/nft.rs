@@ -15,6 +15,13 @@ use crate::{
     non_blocking::resolve::resolve_reverse_batch,
 };
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SnsNftDomain {
+    pub reverse: String,
+    pub key: Pubkey,
+    pub mint: Pubkey,
+}
+
 pub async fn get_record_from_mint(
     rpc_client: &RpcClient,
     mint: &Pubkey,
@@ -88,19 +95,19 @@ pub async fn get_nft_records(
 pub async fn get_sns_nfts_for_owner(
     rpc_client: &RpcClient,
     owner: &Pubkey,
-) -> Result<Vec<(String, Pubkey)>, SnsError> {
-    let pubkeys = get_nft_records(rpc_client, owner)
-        .await?
-        .into_iter()
-        .map(|r| r.name_account)
-        .collect::<Vec<_>>();
-
+) -> Result<Vec<SnsNftDomain>, SnsError> {
+    let records = get_nft_records(rpc_client, owner).await?;
+    let pubkeys = records.iter().map(|r| r.name_account).collect::<Vec<_>>();
     let reverses = resolve_reverse_batch(rpc_client, &pubkeys).await?;
 
     let mut results = vec![];
-    for (rev, key) in reverses.into_iter().zip(pubkeys) {
+    for (rev, record) in reverses.into_iter().zip(records) {
         if let Some(rev) = rev {
-            results.push((rev, key))
+            results.push(SnsNftDomain {
+                reverse: rev,
+                key: record.name_account,
+                mint: record.nft_mint,
+            })
         }
     }
     Ok(results)
@@ -154,21 +161,18 @@ mod tests {
     use solana_program::pubkey;
 
     const OWNER: Pubkey = pubkey!("Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8");
-
-    fn expected_tokenized_domains() -> Vec<(String, String, String)> {
-        vec![
-            (
-                "wallet-guide-5".to_string(),
-                "iSNVgWfb31aTWa58UxZ6fp7n3TTrUk5Gojggub5stXk".to_string(),
-                "2RJhBbxTiPT2bZq5bhjaTZbsnhbDB7VtTAMmCdBrwBZP".to_string(),
-            ),
-            (
-                "wallet-guide-0".to_string(),
-                "uDTBDfKrJSBTgmWUZLcENPk5YrHfWbcrUbNFLjsvNpn".to_string(),
-                "Eskv5Ns4gyREvNPPgANojNPsz6x1cbn9YwT7esAnxPhP".to_string(),
-            ),
-        ]
-    }
+    const EXPECTED_TOKENIZED_DOMAINS: [(&str, Pubkey, Pubkey); 2] = [
+        (
+            "wallet-guide-5",
+            pubkey!("iSNVgWfb31aTWa58UxZ6fp7n3TTrUk5Gojggub5stXk"),
+            pubkey!("2RJhBbxTiPT2bZq5bhjaTZbsnhbDB7VtTAMmCdBrwBZP"),
+        ),
+        (
+            "wallet-guide-0",
+            pubkey!("uDTBDfKrJSBTgmWUZLcENPk5YrHfWbcrUbNFLjsvNpn"),
+            pubkey!("Eskv5Ns4gyREvNPPgANojNPsz6x1cbn9YwT7esAnxPhP"),
+        ),
+    ];
 
     #[tokio::test]
     async fn test_get_sns_nfts_for_owner() {
@@ -178,15 +182,15 @@ mod tests {
             .await
             .unwrap()
             .into_iter()
-            .map(|(reverse, key)| (reverse, key.to_string()))
+            .map(|domain| (domain.reverse, domain.key, domain.mint))
             .collect::<Vec<_>>();
         domains.sort_by(|a, b| b.0.cmp(&a.0));
 
         assert_eq!(
             domains,
-            expected_tokenized_domains()
-                .into_iter()
-                .map(|(reverse, key, _)| (reverse, key))
+            EXPECTED_TOKENIZED_DOMAINS
+                .iter()
+                .map(|(reverse, key, mint)| ((*reverse).to_string(), *key, *mint))
                 .collect::<Vec<_>>()
         );
     }
@@ -199,13 +203,13 @@ mod tests {
             .await
             .unwrap()
             .into_iter()
-            .map(|record| (record.name_account.to_string(), record.nft_mint.to_string()))
+            .map(|record| (record.name_account, record.nft_mint))
             .collect::<Vec<_>>();
         records.sort();
 
-        let mut expected = expected_tokenized_domains()
-            .into_iter()
-            .map(|(_, key, mint)| (key, mint))
+        let mut expected = EXPECTED_TOKENIZED_DOMAINS
+            .iter()
+            .map(|(_, key, mint)| (*key, *mint))
             .collect::<Vec<_>>();
         expected.sort();
 
@@ -225,14 +229,8 @@ mod tests {
 
         assert_eq!(records.len(), 1);
         let nft_record = NftRecord::deserialize(&mut records[0].1.data.as_slice()).unwrap();
-        assert_eq!(
-            nft_record.name_account.to_string(),
-            "uDTBDfKrJSBTgmWUZLcENPk5YrHfWbcrUbNFLjsvNpn"
-        );
-        assert_eq!(
-            nft_record.nft_mint.to_string(),
-            "Eskv5Ns4gyREvNPPgANojNPsz6x1cbn9YwT7esAnxPhP"
-        );
+        assert_eq!(nft_record.name_account, EXPECTED_TOKENIZED_DOMAINS[1].1);
+        assert_eq!(nft_record.nft_mint, EXPECTED_TOKENIZED_DOMAINS[1].2);
     }
 
     #[tokio::test]
