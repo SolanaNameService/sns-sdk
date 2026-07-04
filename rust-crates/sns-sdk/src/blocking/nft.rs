@@ -13,14 +13,8 @@ use crate::{
     blocking::resolve::resolve_reverse_batch,
     derivation::{get_domain_mint, NAME_TOKENIZER_ID},
     error::SnsError,
+    nft::SnsNftDomain,
 };
-
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct SnsNftDomain {
-    pub reverse: String,
-    pub key: Pubkey,
-    pub mint: Pubkey,
-}
 
 pub fn get_record_from_mint(
     rpc_client: &RpcClient,

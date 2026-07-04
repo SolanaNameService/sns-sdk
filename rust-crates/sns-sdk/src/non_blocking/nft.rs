@@ -12,15 +12,9 @@ use spl_token::state::{Account, Mint};
 use crate::{
     derivation::{get_domain_mint, NAME_TOKENIZER_ID},
     error::SnsError,
+    nft::SnsNftDomain,
     non_blocking::resolve::resolve_reverse_batch,
 };
-
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct SnsNftDomain {
-    pub reverse: String,
-    pub key: Pubkey,
-    pub mint: Pubkey,
-}
 
 pub async fn get_record_from_mint(
     rpc_client: &RpcClient,

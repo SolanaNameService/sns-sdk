@@ -3,6 +3,7 @@ use solana_program::{pubkey, pubkey::Pubkey};
 pub mod bindings;
 pub mod derivation;
 pub mod error;
+pub mod nft;
 pub mod primary_domain;
 pub mod register;
 pub mod tld;
