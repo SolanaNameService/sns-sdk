@@ -9,7 +9,19 @@ use spl_name_service::state::NameRecordHeader;
 
 use crate::{derivation::REVERSE_LOOKUP_CLASS, error::SnsError};
 
-pub fn get_subdomains(rpc_client: &RpcClient, parent: Pubkey) -> Result<Vec<String>, SnsError> {
+#[cfg(feature = "subdomain")]
+use crate::derivation::get_domain_key;
+#[cfg(feature = "subdomain")]
+use borsh::BorshDeserialize;
+
+#[cfg(feature = "subdomain")]
+pub use sub_registrar::state::registry::Registrar;
+#[cfg(feature = "subdomain")]
+pub use sub_registrar::state::Tag as SubRegistrarAccountTag;
+#[cfg(feature = "subdomain")]
+pub use sub_registrar::ID as SUB_REGISTRAR_PROGRAM_ID;
+
+pub fn get_subdomains(rpc_client: &RpcClient, parent: &Pubkey) -> Result<Vec<String>, SnsError> {
     let config = RpcProgramAccountsConfig {
         filters: Some(vec![
             RpcFilterType::Memcmp(Memcmp::new_raw_bytes(0, parent.to_bytes().to_vec())),
@@ -39,6 +51,19 @@ pub fn get_subdomains(rpc_client: &RpcClient, parent: Pubkey) -> Result<Vec<Stri
         .collect())
 }
 
+#[cfg(feature = "subdomain")]
+pub fn get_sub_registrar_info(rpc_client: &RpcClient, domain: &str) -> Result<Registrar, SnsError> {
+    let key = get_domain_key(domain)?;
+    let registrar_key = Registrar::find_key(&key, &SUB_REGISTRAR_PROGRAM_ID).0;
+    let account = rpc_client.get_account_data(&registrar_key)?;
+    let expected_tag = SubRegistrarAccountTag::Registrar;
+    if account[0] != expected_tag as u8 {
+        return Err(SnsError::InvalidSubRegistrar);
+    }
+    let result = Registrar::deserialize(&mut (&account as &[u8]))?;
+    Ok(result)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -50,7 +75,7 @@ mod tests {
         dotenv().ok();
         let client = RpcClient::new(std::env::var("RPC_URL").unwrap());
         let parent = get_domain_key("bonfida.sol").unwrap();
-        let mut reverse = get_subdomains(&client, parent).unwrap();
+        let mut reverse = get_subdomains(&client, &parent).unwrap();
         reverse.sort();
         assert_eq!(reverse, vec!["dex", "naming", "test"]);
     }

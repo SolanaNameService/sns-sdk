@@ -104,6 +104,24 @@ pub fn resolve_name_registry(
     }
 }
 
+pub fn resolve_name_registry_batch(
+    rpc_client: &RpcClient,
+    keys: &[Pubkey],
+) -> Result<Vec<Option<(NameRecordHeader, Vec<u8>)>>, SnsError> {
+    let mut res = vec![];
+    for keys in keys.chunks(100) {
+        let accs = rpc_client.get_multiple_accounts(keys)?;
+        for acc in accs {
+            if let Some(acc) = acc {
+                res.push(Some(deserialize_name_registry(&acc.data)?));
+            } else {
+                res.push(None);
+            }
+        }
+    }
+    Ok(res)
+}
+
 pub fn deserialize_name_registry(data: &[u8]) -> Result<(NameRecordHeader, Vec<u8>), SnsError> {
     let header = NameRecordHeader::unpack_unchecked(&data[0..NameRecordHeader::LEN])?;
     let data = data[NameRecordHeader::LEN..].to_vec();
@@ -150,19 +168,13 @@ pub fn resolve_reverse_batch(
         })
         .collect::<Vec<_>>();
 
-    let mut res = vec![];
-    for keys in reverse_keys.chunks(100) {
-        let accs = rpc_client.get_multiple_accounts(keys)?;
-        for acc in accs {
-            if let Some(acc) = acc {
-                let data = acc.data[NameRecordHeader::LEN..].to_vec();
-                res.push(Some(deserialize_reverse(&data)?))
-            } else {
-                res.push(None)
-            }
-        }
-    }
-    Ok(res)
+    resolve_name_registry_batch(rpc_client, &reverse_keys)?
+        .into_iter()
+        .map(|record| match record {
+            Some((_, data)) => Ok(Some(deserialize_reverse(&data)?)),
+            None => Ok(None),
+        })
+        .collect()
 }
 
 #[cfg(test)]
