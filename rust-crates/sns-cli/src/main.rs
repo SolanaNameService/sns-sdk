@@ -136,15 +136,6 @@ enum Commands {
         #[arg(long, short, help = "Optional custom RPC URL")]
         url: Option<String>,
     },
-    #[command(arg_required_else_help = true)]
-    Bridge {
-        #[arg(required = true)]
-        target_chain: String,
-        #[arg(required = true)]
-        domain: String,
-        #[arg(required = true)]
-        keypair_path: String,
-    },
     #[command(
         arg_required_else_help = true,
         about = "Fetch all the domain names owned for the specified wallets"
@@ -790,7 +781,6 @@ async fn main() {
         Commands::ReverseLookup { key, url } => {
             process_reverse_lookup(&get_rpc_client(url), &key).await
         }
-        Commands::Bridge { .. } => unimplemented!(),
         Commands::Register {
             domains,
             keypair_path,
