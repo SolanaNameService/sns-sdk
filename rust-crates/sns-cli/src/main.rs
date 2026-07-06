@@ -80,14 +80,14 @@ enum Commands {
         #[arg(long, short, help = "Optional custom RPC URL")]
         url: Option<String>,
     },
-    #[command(arg_required_else_help = true, about = "Register a favourite domain")]
-    RegisterFavourite {
+    #[command(arg_required_else_help = true, about = "Set a primary domain")]
+    SetPrimaryDomain {
         #[arg(
             required = true,
-            help = "The path to the wallet private key used to set the favourite domain or an owner wallet"
+            help = "The path to the wallet private key used to set the primary domain or an owner wallet"
         )]
         owner: String,
-        #[arg(required = true, help = "The .sns domain to set as favorite")]
+        #[arg(required = true, help = "The .sns domain to set as primary domain")]
         domain: String,
         #[arg(long, short, help = "Optional custom RPC URL")]
         url: Option<String>,
@@ -544,12 +544,12 @@ impl OwnerKind {
     }
 }
 
-async fn process_register_favourite(
+async fn process_set_primary_domain(
     rpc_client: &RpcClient,
     owner_keypair_path_or_address: &str,
     domain: &str,
 ) -> CliResult {
-    println!("Registering favourite domain...");
+    println!("Setting primary domain...");
     let owner_kind = {
         match read_keypair_file(owner_keypair_path_or_address) {
             Ok(kp) => OwnerKind::Keypair(kp),
@@ -588,14 +588,14 @@ async fn process_register_favourite(
                 blockhash,
             );
             let sig = rpc_client.send_and_confirm_transaction(&tx).await?;
-            println!("Favourite set, txid: {sig}");
+            println!("Primary domain set, txid: {sig}");
         }
         OwnerKind::Pubkey(_) => {
             let mut tx = Transaction::new_with_payer(&[ix.clone()], Some(&owner));
             tx.message.recent_blockhash = blockhash;
 
             println!(
-                "base58 register favourite tx: {}",
+                "base58 set primary domain tx: {}",
                 bs58::encode(bincode::serialize(&tx).unwrap()).into_string()
             );
         }
@@ -961,8 +961,8 @@ async fn main() {
             space,
             url,
         } => process_register(&get_rpc_client(url), &keypair_path, domains, space).await,
-        Commands::RegisterFavourite { owner, domain, url } => {
-            process_register_favourite(&get_rpc_client(url), &owner, &domain).await
+        Commands::SetPrimaryDomain { owner, domain, url } => {
+            process_set_primary_domain(&get_rpc_client(url), &owner, &domain).await
         }
         Commands::Record(RecordCommand { cmd, v2, url }) => match cmd {
             RecordSubCommand::Get { domain, record } => {
