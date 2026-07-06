@@ -74,10 +74,22 @@ impl<'a> ParsedRecordV2<'a> {
         if validation as u16 != self.header.right_of_association_validation {
             return Err(SnsError::UnverifiedRecord);
         }
-        if matches!(self.record, Record::CNAME | Record::Url) && self.roa_id != GUARDIAN_ID.as_ref()
-        {
-            return Err(SnsError::UnverifiedRecord);
+
+        match self.record {
+            Record::CNAME | Record::Url => {
+                if self.roa_id != GUARDIAN_ID.as_ref() {
+                    return Err(SnsError::UnverifiedRecord);
+                }
+            }
+            Record::Sol | Record::Injective | Record::Eth | Record::Bsc | Record::BASE => {
+                let content = serialize_record_v2_content(&self.content, self.record)?;
+                if self.roa_id != content.as_slice() {
+                    return Err(SnsError::UnverifiedRecord);
+                }
+            }
+            _ => {}
         }
+
         Ok(())
     }
 }
@@ -423,5 +435,92 @@ mod test {
         let actual = get_record_v2_key(domain, record).unwrap();
 
         assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn verify_roa_accepts_guardian_records() {
+        for (record, content) in [
+            (Record::Url, b"https://sns.id".to_vec()),
+            (
+                Record::CNAME,
+                serialize_record_v2_content("sns.id", Record::CNAME).unwrap(),
+            ),
+        ] {
+            let buf = build_v2_record(
+                Validation::None,
+                Validation::Solana,
+                &[],
+                GUARDIAN_ID.as_ref(),
+                &content,
+            );
+
+            let parsed = decode_record_v2_fields(&buf)
+                .unwrap()
+                .parse_content(record)
+                .unwrap();
+
+            assert!(parsed.verify_roa().is_ok(), "record {record:?}");
+        }
+    }
+
+    #[test]
+    fn verify_roa_accepts_solana_self_signed_records() {
+        let content = [0x44u8; 32];
+        let buf = build_v2_record(
+            Validation::None,
+            Validation::Solana,
+            &[],
+            &content,
+            &content,
+        );
+
+        let parsed = decode_record_v2_fields(&buf)
+            .unwrap()
+            .parse_content(Record::Sol)
+            .unwrap();
+
+        assert!(parsed.verify_roa().is_ok());
+    }
+
+    #[test]
+    fn verify_roa_accepts_ethereum_self_signed_records() {
+        let content = [0x55u8; 20];
+        let buf = build_v2_record(
+            Validation::None,
+            Validation::Ethereum,
+            &[],
+            &content,
+            &content,
+        );
+
+        let parsed = decode_record_v2_fields(&buf)
+            .unwrap()
+            .parse_content(Record::Eth)
+            .unwrap();
+
+        assert!(parsed.verify_roa().is_ok());
+    }
+
+    #[test]
+    fn verify_roa_rejects_wrong_self_signed_id() {
+        let content = [0x55u8; 20];
+        let roa_id = [0x66u8; 20];
+        let buf = build_v2_record(
+            Validation::None,
+            Validation::Ethereum,
+            &[],
+            &roa_id,
+            &content,
+        );
+
+        let parsed = decode_record_v2_fields(&buf)
+            .unwrap()
+            .parse_content(Record::Eth)
+            .unwrap();
+
+        assert!(matches!(
+            parsed.verify_roa(),
+            Err(SnsError::UnverifiedRecord)
+        ));
     }
 }
