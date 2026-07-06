@@ -55,10 +55,7 @@ enum Commands {
         about = "Resolve the owner of the specified domain names"
     )]
     Resolve {
-        #[arg(
-            required = true,
-            help = "The list of domains to resolve with or without .sol suffix"
-        )]
+        #[arg(required = true, help = "The list of .sns domains to resolve")]
         domain: Vec<String>,
         #[arg(long, short, help = "Optional custom RPC URL")]
         url: Option<String>,
@@ -78,10 +75,7 @@ enum Commands {
             help = "The space to allocate for each domain (1kB to 10kB"
         )]
         space: u64,
-        #[arg(
-            required = true,
-            help = "The list of domains to register with or without .sol suffix"
-        )]
+        #[arg(required = true, help = "The list of .sns domains to register")]
         domains: Vec<String>,
         #[arg(long, short, help = "Optional custom RPC URL")]
         url: Option<String>,
@@ -93,7 +87,7 @@ enum Commands {
             help = "The path to the wallet private key used to set the favourite domain or an owner wallet"
         )]
         owner: String,
-        #[arg(required = true, help = "The domain to set as favorite")]
+        #[arg(required = true, help = "The .sns domain to set as favorite")]
         domain: String,
         #[arg(long, short, help = "Optional custom RPC URL")]
         url: Option<String>,
@@ -110,10 +104,7 @@ enum Commands {
         owner_keypair: String,
         #[arg(required = true, help = "The new owner of the domains")]
         new_owner: String,
-        #[arg(
-            required = true,
-            help = "The list of domains to transfer with or without .sol suffix"
-        )]
+        #[arg(required = true, help = "The list of .sns domains to transfer")]
         domain: Vec<String>,
         #[arg(long, short, help = "Optional custom RPC URL")]
         url: Option<String>,
@@ -128,10 +119,7 @@ enum Commands {
             help = "The path to the wallet private key which currently owns the domains to burn"
         )]
         keypair_path: String,
-        #[arg(
-            required = true,
-            help = "The list of domains to burn with or without .sol suffix"
-        )]
+        #[arg(required = true, help = "The list of .sns domains to burn")]
         domain: Vec<String>,
         #[arg(long, short, help = "Optional custom RPC URL")]
         url: Option<String>,
@@ -141,10 +129,7 @@ enum Commands {
         about = "Fetch the name registry data for the specified domain names"
     )]
     Lookup {
-        #[arg(
-            required = true,
-            help = "The list of domains to fetch with or without .sol suffix"
-        )]
+        #[arg(required = true, help = "The list of .sns domains to fetch")]
         domain: Vec<String>,
         #[arg(long, short, help = "Optional custom RPC URL")]
         url: Option<String>,
@@ -180,7 +165,7 @@ enum Commands {
         #[arg(long, short, help = "Optional custom RPC URL")]
         url: Option<String>,
 
-        #[arg(required = true, help = "The domain to get information for")]
+        #[arg(required = true, help = "The .sns domain to get information for")]
         domain: String,
     },
     Count(CountCommand),
@@ -200,14 +185,14 @@ pub struct RecordCommand {
 pub enum RecordSubCommand {
     #[command(about = "Gets a record content")]
     Get {
-        #[clap(long, help = "The domain of the record to fetch")]
+        #[clap(long, help = "The .sns domain of the record to fetch")]
         domain: String,
         #[clap(long, help = "The record to fetch")]
         record: String,
     },
     #[command(about = "Sets a record content")]
     Set {
-        #[clap(long, help = "The domain of the record to set")]
+        #[clap(long, help = "The .sns domain of the record to set")]
         domain: String,
         #[clap(long, help = "The record to set")]
         record: String,
@@ -248,11 +233,31 @@ fn get_rpc_client(url: Option<String>) -> RpcClient {
     }
 }
 
-fn format_domain(domain: &str) -> String {
-    if domain.ends_with(".sol") {
-        return domain.to_owned();
+fn validate_sns_domain(domain: &str) -> anyhow::Result<()> {
+    if !domain.ends_with(".sns") {
+        return Err(anyhow!("Domain must include the .sns suffix"));
     }
-    format!("{domain}.sol")
+    Ok(())
+}
+
+fn strip_top_level_sns_domain(domain: &str) -> anyhow::Result<&str> {
+    let Some(name) = domain.strip_suffix(".sns") else {
+        return Err(anyhow!("Registration requires a top-level .sns domain"));
+    };
+
+    if name.contains('.') {
+        return Err(anyhow!("Registration requires a top-level .sns domain"));
+    }
+
+    Ok(name)
+}
+
+fn display_reverse_domain(domain: &str) -> String {
+    if domain.ends_with(".sns") {
+        domain.to_string()
+    } else {
+        format!("{domain}.sns")
+    }
 }
 
 fn make_tx_url(sig: &str) -> String {
@@ -290,8 +295,9 @@ async fn process_domains(rpc_client: &RpcClient, owners: Vec<String>) -> CliResu
             .into_iter()
             .flatten()
             .for_each(|x| {
+                let displayed = display_reverse_domain(&x);
                 table.add_row(row![
-                    format_domain(&x),
+                    displayed,
                     owner,
                     format!("https://naming.bonfida.org/domain/{x}")
                 ]);
@@ -311,14 +317,14 @@ async fn process_resolve(rpc_client: &RpcClient, domains: Vec<String>) -> CliRes
 
     let pb = progress_bar(domains.len());
     for (idx, domain) in domains.into_iter().enumerate() {
-        let row = match resolve::resolve_owner(rpc_client, &domain, resolve::AllowPda::Deny).await?
-        {
+        validate_sns_domain(&domain)?;
+        let row = match resolve::resolve(rpc_client, &domain, resolve::AllowPda::Deny).await? {
             Some(owner) => row![
-                format_domain(&domain),
+                domain,
                 owner,
                 format!("https://explorer.solana.com/address/{owner}")
             ],
-            _ => row![format_domain(&domain), "Domain not found"],
+            _ => row![domain, "Domain not found"],
         };
         table.add_row(row);
         pb.set_position(idx as u64);
@@ -339,6 +345,7 @@ async fn process_burn(
     table.add_row(row!["Domain", "Transaction", "Explorer"]);
     let pb = progress_bar(domains.len());
     for (idx, domain) in domains.into_iter().enumerate() {
+        validate_sns_domain(&domain)?;
         let domain_key = sns_sdk::derivation::get_domain_key(&domain)?;
         let keypair = read_keypair_file(keypair_path)?;
         let ix = spl_name_service::instruction::delete(
@@ -352,11 +359,7 @@ async fn process_burn(
         tx.partial_sign(&[&keypair], blockhash);
         let sig = rpc_client.send_and_confirm_transaction(&tx).await?;
 
-        table.add_row(row![
-            format_domain(&domain),
-            sig,
-            make_tx_url(&sig.to_string())
-        ]);
+        table.add_row(row![domain, sig, make_tx_url(&sig.to_string())]);
         pb.set_position(idx as u64);
     }
     pb.finish();
@@ -376,6 +379,7 @@ async fn process_transfer(
     table.add_row(row!["Domain", "Transaction", "Explorer"]);
     let pb = progress_bar(domains.len());
     for (idx, domain) in domains.into_iter().enumerate() {
+        validate_sns_domain(&domain)?;
         let domain_key = sns_sdk::derivation::get_domain_key(&domain)?;
         let keypair = read_keypair_file(owner_keypair)?;
         let ix = spl_name_service::instruction::transfer(
@@ -389,11 +393,7 @@ async fn process_transfer(
         let blockhash = rpc_client.get_latest_blockhash().await?;
         tx.partial_sign(&[&keypair], blockhash);
         let sig = rpc_client.send_and_confirm_transaction(&tx).await?;
-        table.add_row(row![
-            format_domain(&domain),
-            sig,
-            make_tx_url(&sig.to_string())
-        ]);
+        table.add_row(row![domain, sig, make_tx_url(&sig.to_string())]);
         pb.set_position(idx as u64);
     }
     pb.finish();
@@ -408,6 +408,7 @@ async fn process_lookup(rpc_client: &RpcClient, domains: Vec<String>) -> CliResu
     table.add_row(row!["Domain", "Domain key", "Parent", "Owner", "Data"]);
     let pb = progress_bar(domains.len());
     for (idx, domain) in domains.into_iter().enumerate() {
+        validate_sns_domain(&domain)?;
         let sns_sdk::derivation::DomainKeyWithParent {
             key: domain_key,
             parent,
@@ -416,15 +417,9 @@ async fn process_lookup(rpc_client: &RpcClient, domains: Vec<String>) -> CliResu
         let row = match resolve::resolve_name_registry(rpc_client, &domain_key).await? {
             Some((header, data)) => {
                 let data = String::from_utf8(data)?;
-                row![
-                    format_domain(&domain),
-                    domain_key,
-                    header.parent_name,
-                    header.owner,
-                    data
-                ]
+                row![domain, domain_key, header.parent_name, header.owner, data]
             }
-            _ => row![format_domain(&domain), domain_key, parent, "N/A", "N/A"],
+            _ => row![domain, domain_key, parent, "N/A", "N/A"],
         };
         table.add_row(row);
         pb.set_position(idx as u64);
@@ -441,7 +436,7 @@ async fn process_reverse_lookup(rpc_client: &RpcClient, key: &str) -> CliResult 
     if let Some(reverse) = resolve::resolve_reverse(rpc_client, &Pubkey::from_str(key)?).await? {
         let mut table = Table::new();
         table.add_row(row!["Public key", "Reverse"]);
-        table.add_row(row![key, format_domain(&reverse)]);
+        table.add_row(row![key, display_reverse_domain(&reverse)]);
         Term::stdout().clear_line()?;
         table.printstd();
     } else {
@@ -491,14 +486,15 @@ async fn process_register(
     let re = regex::Regex::new(r"^[a-z\d\-_]+$").unwrap();
 
     for (idx, domain) in domains.into_iter().enumerate() {
-        if !re.is_match(&domain) {
-            return Err(anyhow!("Invalid domain").into());
+        let registration_name = strip_top_level_sns_domain(&domain)?;
+        if !re.is_match(registration_name) {
+            return Err(anyhow!("Registration requires a top-level .sns domain").into());
         }
         let response = client
             .get(format!(
                 "https://sns-sdk-proxy.bonfida.workers.dev/register?buyer={}&domain={}&space={}",
                 keypair.pubkey(),
-                domain,
+                registration_name,
                 space
             ))
             .send()
@@ -525,11 +521,7 @@ async fn process_register(
         let blockhash = rpc_client.get_latest_blockhash().await?;
         tx.partial_sign(&[&keypair], blockhash);
         let sig = rpc_client.send_and_confirm_transaction(&tx).await?;
-        table.add_row(row![
-            format_domain(&domain),
-            sig,
-            make_tx_url(&sig.to_string())
-        ]);
+        table.add_row(row![domain, sig, make_tx_url(&sig.to_string())]);
         pb.set_position(idx as u64);
     }
     pb.finish();
@@ -573,6 +565,7 @@ async fn process_register_favourite(
         }
     };
     let owner = owner_kind.owner();
+    validate_sns_domain(domain)?;
     let domain_key = get_domain_key(domain)?;
     let ix = sns_sdk::primary_domain::set_primary_domain_instruction(
         NAME_OFFERS_PROGRAM_ID,
@@ -622,6 +615,7 @@ async fn process_record_set(
     let mut table = Table::new();
     table.add_row(row!["Transaction", "Signature"]);
 
+    validate_sns_domain(domain)?;
     let record = Record::try_from_str(record_str)?;
     let keypair = read_keypair_file(keypair_path)?;
     let data = sns_sdk::record::record_v1::serialize_record(content, record)?;
@@ -734,6 +728,7 @@ async fn process_record_get(
     record_str: &str,
     v2: bool,
 ) -> CliResult {
+    validate_sns_domain(domain)?;
     let record = Record::try_from_str(record_str)?;
 
     let key = record::get_record_key(
@@ -750,7 +745,7 @@ async fn process_record_get(
         let des = record::record_v1::deserialize_record(&data, record, &key)?;
 
         table.add_row(row!["Domain", "Record", "Content"]);
-        table.add_row(row![format_domain(domain), record_str, des]);
+        table.add_row(row![domain, record_str, des]);
     }
     Term::stdout().clear_to_end_of_screen()?;
     table.printstd();
@@ -832,6 +827,7 @@ pub async fn process_system_dump(rpc_client: &RpcClient) -> CliResult {
 }
 
 async fn process_sub_registrar_info(rpc_client: &RpcClient, domain: &str) -> CliResult {
+    validate_sns_domain(domain)?;
     let registrar =
         sns_sdk::non_blocking::subdomain::get_sub_registrar_info(rpc_client, domain).await?;
     println!("{registrar:#?}");
