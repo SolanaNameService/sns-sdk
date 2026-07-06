@@ -1,8 +1,6 @@
 use serde::Serialize;
 use sns_sdk::{
-    derivation::ROOT_DOMAIN_ACCOUNT,
-    primary_domain::set_primary_domain::Accounts,
-    record::{self, get_record_v2_key},
+    derivation::ROOT_DOMAIN_ACCOUNT, primary_domain::set_primary_domain::Accounts,
     NAME_OFFERS_PROGRAM_ID,
 };
 use solana_account_decoder::{UiAccountEncoding, UiDataSliceConfig};
@@ -23,16 +21,13 @@ use {
     indicatif::{ProgressBar, ProgressState, ProgressStyle},
     prettytable::{row, Table},
     serde::Deserialize,
-    sns_sdk::non_blocking::{domain, resolve},
-    sns_sdk::{
-        derivation::{get_domain_key, get_hashed_name},
-        record::Record,
-    },
+    sns_sdk::derivation::get_domain_key,
+    sns_sdk::non_blocking::{domain, nft, record_v2, resolve},
+    sns_sdk::record::{record_v2::decode_record_v2_fields, Record},
     solana_client::nonblocking::rpc_client::RpcClient,
     solana_program::instruction::{AccountMeta, Instruction},
     solana_program::program_pack::Pack,
     solana_program::pubkey::Pubkey,
-    solana_sdk::commitment_config::{CommitmentConfig, CommitmentLevel},
     solana_sdk::signer::keypair::read_keypair_file,
     solana_sdk::{signer::Signer, transaction::Transaction},
     spl_name_service::state::NameRecordHeader,
@@ -160,7 +155,7 @@ enum Commands {
         #[arg(required = true, help = "The list of wallets")]
         owners: Vec<String>,
     },
-    Record(RecordCommand),
+    RecordV2(RecordV2Command),
     GetSubRegistrarInfo {
         #[arg(long, short, help = "Optional custom RPC URL")]
         url: Option<String>,
@@ -172,37 +167,22 @@ enum Commands {
 }
 
 #[derive(Debug, Args)]
-pub struct RecordCommand {
+pub struct RecordV2Command {
     #[command(subcommand)]
-    pub cmd: RecordSubCommand,
-    #[clap(long, help = "Use records V2", default_value_t)]
-    v2: bool,
+    pub cmd: RecordV2SubCommand,
     #[arg(long, short, help = "Optional custom RPC URL")]
     url: Option<String>,
 }
 
 #[derive(Debug, Subcommand)]
-pub enum RecordSubCommand {
-    #[command(about = "Gets a record content")]
+pub enum RecordV2SubCommand {
+    #[command(about = "Gets a V2 record content")]
     Get {
         #[clap(long, help = "The .sns domain of the record to fetch")]
         domain: String,
         #[clap(long, help = "The record to fetch")]
         record: String,
     },
-    #[command(about = "Sets a record content")]
-    Set {
-        #[clap(long, help = "The .sns domain of the record to set")]
-        domain: String,
-        #[clap(long, help = "The record to set")]
-        record: String,
-        #[clap(long, help = "The content of the record")]
-        content: String,
-        #[clap(long, help = "The path of keypair ownning the domain")]
-        keypair: String,
-    },
-    #[command(about = "Dump records system info")]
-    SystemDump,
 }
 
 #[derive(Debug, Args)]
@@ -258,6 +238,33 @@ fn display_reverse_domain(domain: &str) -> String {
     } else {
         format!("{domain}.sns")
     }
+}
+
+fn record_has_roa_verification(record: Record) -> bool {
+    record.roa_validation() as u16 != 0
+}
+
+fn parse_record_arg(record: &str) -> anyhow::Result<Record> {
+    if let Ok(record) = Record::try_from_str(record) {
+        return Ok(record);
+    }
+
+    let normalized = match record.to_ascii_uppercase().as_str() {
+        "EMAIL" => "email",
+        "URL" => "url",
+        "DISCORD" => "discord",
+        "GITHUB" => "github",
+        "REDDIT" => "reddit",
+        "TWITTER" => "twitter",
+        "TELEGRAM" => "telegram",
+        "PIC" => "pic",
+        "BACKPACK" => "backpack",
+        "BIO" => "bio",
+        "INJECTIVE" => "INJ",
+        _ => record,
+    };
+
+    Record::try_from_str(normalized).map_err(|err| anyhow!("{err:?}"))
 }
 
 fn make_tx_url(sig: &str) -> String {
@@ -604,225 +611,54 @@ async fn process_set_primary_domain(
     Ok(())
 }
 
-async fn process_record_set(
+async fn process_record_v2_get(
     rpc_client: &RpcClient,
     domain: &str,
     record_str: &str,
-    content: &str,
-    keypair_path: &str,
 ) -> CliResult {
-    let mut ixs = vec![];
-    let mut table = Table::new();
-    table.add_row(row!["Transaction", "Signature"]);
-
     validate_sns_domain(domain)?;
-    let record = Record::try_from_str(record_str)?;
-    let keypair = read_keypair_file(keypair_path)?;
-    let data = sns_sdk::record::record_v1::serialize_record(content, record)?;
-    let key = record::get_record_key(
-        domain,
-        Record::try_from_str(record_str)?,
-        record::RecordVersion::V1,
-    )?;
-    let hashed_name = get_hashed_name(&format!("\x01{record_str}"));
-    let parent = get_domain_key(domain)?;
+    let record = parse_record_arg(record_str)?;
 
-    let lamports = rpc_client
-        .get_minimum_balance_for_rent_exemption(data.len() + NameRecordHeader::LEN)
-        .await?;
+    let Some((_, data)) = record_v2::get_record_v2(rpc_client, domain, record).await? else {
+        return Err(anyhow!("Record not found").into());
+    };
 
-    let acc = rpc_client
-        .get_account_with_commitment(&key, CommitmentConfig::default())
-        .await?;
+    let parsed = decode_record_v2_fields(&data)?.parse_content(record)?;
+    let domain_key = get_domain_key(domain)?;
+    let (domain_header, domain_data) = resolve::resolve_name_registry(rpc_client, &domain_key)
+        .await?
+        .ok_or_else(|| anyhow!("Domain not found"))?;
+    let effective_owner = nft::resolve_nft_owner(rpc_client, &domain_key)
+        .await?
+        .unwrap_or(domain_header.owner);
 
-    if let Some(value) = acc.value {
-        if value.data.len() - NameRecordHeader::LEN != data.len() {
-            // Delete existing record
-            // This is the only way to handle the account resizing
-            let ix = spl_name_service::instruction::delete(
-                spl_name_service::ID,
-                key,
-                keypair.pubkey(),
-                keypair.pubkey(),
-            )?;
-
-            // Clean up transaction
-            let mut tx = Transaction::new_with_payer(&[ix], Some(&keypair.pubkey()));
-            let blockhash = rpc_client.get_latest_blockhash().await?;
-            tx.sign(&[&keypair], blockhash);
-
-            let sig = rpc_client
-                .send_and_confirm_transaction_with_spinner(&tx)
-                .await?;
-            table.add_row(row!["Clean up", make_tx_url(&sig.to_string())]);
-
-            // Create the record
-            let ix = spl_name_service::instruction::create(
-                spl_name_service::ID,
-                spl_name_service::instruction::NameRegistryInstruction::Create {
-                    hashed_name,
-                    lamports,
-                    space: data.len() as u32,
-                },
-                key,
-                keypair.pubkey(),
-                keypair.pubkey(),
-                None,
-                Some(parent),
-                Some(keypair.pubkey()),
-            )?;
-            ixs.push(ix);
-        }
+    let staleness_verified = parsed
+        .verify_staleness(effective_owner, Some(&domain_data))
+        .is_ok();
+    let roa_verified = if record_has_roa_verification(record) {
+        parsed.verify_roa().is_ok().to_string()
     } else {
-        let ix: Instruction = spl_name_service::instruction::create(
-            spl_name_service::ID,
-            spl_name_service::instruction::NameRegistryInstruction::Create {
-                hashed_name,
-                lamports,
-                space: data.len() as u32,
-            },
-            key,
-            keypair.pubkey(),
-            keypair.pubkey(),
-            None,
-            Some(parent),
-            Some(keypair.pubkey()),
-        )?;
-        ixs.push(ix);
-    }
+        "N/A".to_string()
+    };
 
-    // Update
-    let ix = spl_name_service::instruction::update(
-        spl_name_service::ID,
-        0,
-        data,
-        key,
-        keypair.pubkey(),
-        Some(parent),
-    )?;
-    ixs.push(ix);
-
-    let mut tx = Transaction::new_with_payer(&ixs, Some(&keypair.pubkey()));
-    let blockhash = rpc_client.get_latest_blockhash().await?;
-    tx.sign(&[&keypair], blockhash);
-
-    let sig = rpc_client
-        .send_and_confirm_transaction_with_spinner_and_commitment(
-            &tx,
-            CommitmentConfig {
-                commitment: CommitmentLevel::Processed,
-            },
-        )
-        .await?;
-    table.add_row(row!["Update record", make_tx_url(&sig.to_string())]);
-
-    Term::stdout().clear_to_end_of_screen()?;
-    table.printstd();
-
-    Ok(())
-}
-
-async fn process_record_get(
-    rpc_client: &RpcClient,
-    domain: &str,
-    record_str: &str,
-    v2: bool,
-) -> CliResult {
-    validate_sns_domain(domain)?;
-    let record = Record::try_from_str(record_str)?;
-
-    let key = record::get_record_key(
-        domain,
-        Record::try_from_str(record_str)?,
-        if v2 {
-            record::RecordVersion::V2
-        } else {
-            record::RecordVersion::V1
-        },
-    )?;
     let mut table = Table::new();
-    if let Some((_, data)) = resolve::resolve_name_registry(rpc_client, &key).await? {
-        let des = record::record_v1::deserialize_record(&data, record, &key)?;
-
-        table.add_row(row!["Domain", "Record", "Content"]);
-        table.add_row(row![domain, record_str, des]);
-    }
+    table.add_row(row![
+        "Domain",
+        "Record",
+        "Content",
+        "Staleness Verified",
+        "RoA Verified"
+    ]);
+    table.add_row(row![
+        domain,
+        record.as_str(),
+        parsed.content,
+        staleness_verified,
+        roa_verified
+    ]);
     Term::stdout().clear_to_end_of_screen()?;
     table.printstd();
-    Ok(())
-}
 
-#[derive(Serialize)]
-pub struct SystemDumpRecord {
-    domain: String,
-    record_type: Option<String>,
-    record_key: String,
-}
-
-pub async fn process_system_dump(rpc_client: &RpcClient) -> CliResult {
-    let record_v2_accounts = rpc_client
-        .get_program_accounts_with_config(
-            &spl_name_service::ID,
-            RpcProgramAccountsConfig {
-                filters: Some(vec![RpcFilterType::Memcmp(Memcmp::new_raw_bytes(
-                    64,
-                    sns_records::central_state::KEY.as_ref().to_vec(),
-                ))]),
-                account_config: RpcAccountInfoConfig {
-                    encoding: Some(UiAccountEncoding::Base64),
-                    data_slice: None,
-                    commitment: None,
-                    min_context_slot: None,
-                },
-                with_context: None,
-                sort_results: None,
-            },
-        )
-        .await?;
-    eprintln!("Found {} v2 records", record_v2_accounts.len());
-    let mut by_parent: HashMap<Pubkey, Vec<Pubkey>> = HashMap::new();
-    for (k, a) in record_v2_accounts {
-        let spl_header = NameRecordHeader::unpack_unchecked(&a.data[..NameRecordHeader::LEN])?;
-        let entry = by_parent.entry(spl_header.parent_name);
-        match entry {
-            std::collections::hash_map::Entry::Occupied(mut o) => o.get_mut().push(k),
-            std::collections::hash_map::Entry::Vacant(v) => {
-                v.insert(vec![k]);
-            }
-        }
-    }
-    let parent_domains = by_parent.keys().cloned().collect::<Vec<_>>();
-    eprintln!("From a total of {} domains", by_parent.keys().len());
-    let reverse_lookup_keys =
-        sns_sdk::non_blocking::resolve::resolve_reverse_batch(rpc_client, &parent_domains).await?;
-    for (domain, name) in parent_domains
-        .into_iter()
-        .zip(reverse_lookup_keys.into_iter())
-    {
-        if name.is_none() {
-            continue;
-        }
-        let name = name.unwrap();
-        use Record::*;
-        let possible_records = [
-            Ipfs, Arwv, Sol, Eth, Btc, Ltc, Doge, Email, Url, Discord, Github, Reddit, Twitter,
-            Telegram, Pic, Shdw, Point, Bsc, Injective, Backpack, A, AAAA, CNAME, TXT, BASE,
-        ]
-        .into_iter()
-        .map(|r| get_record_v2_key(&name, r).map(|res| (res, r)))
-        .collect::<Result<HashMap<_, _>, _>>()?;
-        for record in by_parent.get(&domain).unwrap() {
-            let record_type = possible_records.get(record);
-            println!(
-                "{}",
-                serde_json::to_string(&SystemDumpRecord {
-                    domain: name.clone(),
-                    record_type: record_type.map(|r| r.as_str().to_owned()),
-                    record_key: record.to_string()
-                })?
-            )
-        }
-    }
     Ok(())
 }
 
@@ -964,24 +800,10 @@ async fn main() {
         Commands::SetPrimaryDomain { owner, domain, url } => {
             process_set_primary_domain(&get_rpc_client(url), &owner, &domain).await
         }
-        Commands::Record(RecordCommand { cmd, v2, url }) => match cmd {
-            RecordSubCommand::Get { domain, record } => {
-                process_record_get(&get_rpc_client(url), &domain, &record, v2).await
+        Commands::RecordV2(RecordV2Command { cmd, url }) => match cmd {
+            RecordV2SubCommand::Get { domain, record } => {
+                process_record_v2_get(&get_rpc_client(url), &domain, &record).await
             }
-            RecordSubCommand::Set {
-                domain,
-                record,
-                content,
-                keypair,
-            } => {
-                if v2 {
-                    unimplemented!()
-                } else {
-                    process_record_set(&get_rpc_client(url), &domain, &record, &content, &keypair)
-                        .await
-                }
-            }
-            RecordSubCommand::SystemDump {} => process_system_dump(&get_rpc_client(url)).await,
         },
         Commands::GetSubRegistrarInfo { url, domain } => {
             process_sub_registrar_info(&get_rpc_client(url), domain.as_str()).await
