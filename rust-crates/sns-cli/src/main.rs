@@ -344,7 +344,7 @@ async fn process_burn(
     let pb = progress_bar(domains.len());
     for (idx, domain) in domains.into_iter().enumerate() {
         validate_sns_domain(&domain)?;
-        let domain_key = sns_sdk::derivation::get_domain_key(&domain)?;
+        let domain_key = get_domain_key(&domain)?;
         let keypair = read_keypair_file(keypair_path)?;
         let ix = spl_name_service::instruction::delete(
             spl_name_service::ID,
@@ -378,7 +378,7 @@ async fn process_transfer(
     let pb = progress_bar(domains.len());
     for (idx, domain) in domains.into_iter().enumerate() {
         validate_sns_domain(&domain)?;
-        let domain_key = sns_sdk::derivation::get_domain_key(&domain)?;
+        let domain_key = get_domain_key(&domain)?;
         let keypair = read_keypair_file(owner_keypair)?;
         let ix = spl_name_service::instruction::transfer(
             spl_name_service::ID,
@@ -481,7 +481,7 @@ async fn process_register(
     let client = reqwest::Client::new();
     let keypair = read_keypair_file(keypair_path)?;
 
-    let re = regex::Regex::new(r"^[a-z\d\-_]+$").unwrap();
+    let re = regex::Regex::new(r"^[a-z\d\-_]+$")?;
 
     for (idx, domain) in domains.into_iter().enumerate() {
         let registration_name = strip_top_level_sns_domain(&domain)?;
@@ -504,13 +504,13 @@ async fn process_register(
         for r in response.result {
             let program_id = Pubkey::from_str(&r.program_id)?;
             let mut accounts = vec![];
-            r.keys.into_iter().for_each(|key| {
+            for key in r.keys {
                 accounts.push(if key.is_writable {
-                    AccountMeta::new(Pubkey::from_str(&key.pubkey).unwrap(), key.is_signer)
+                    AccountMeta::new(Pubkey::from_str(&key.pubkey)?, key.is_signer)
                 } else {
-                    AccountMeta::new_readonly(Pubkey::from_str(&key.pubkey).unwrap(), key.is_signer)
-                })
-            });
+                    AccountMeta::new_readonly(Pubkey::from_str(&key.pubkey)?, key.is_signer)
+                });
+            }
             let data = base64::engine::general_purpose::URL_SAFE.decode(r.data)?;
             ixs.push(Instruction::new_with_bytes(program_id, &data, accounts))
         }
@@ -594,7 +594,7 @@ async fn process_set_primary_domain(
 
             println!(
                 "base58 set primary domain tx: {}",
-                bs58::encode(bincode::serialize(&tx).unwrap()).into_string()
+                bs58::encode(bincode::serialize(&tx)?).into_string()
             );
         }
     }
@@ -713,7 +713,9 @@ async fn process_count_command(rpc_client: &RpcClient, count_type: CountSubComma
                     }
                 }
             }
-            let domains = name_accounts.get(&ROOT_DOMAIN_ACCOUNT).unwrap();
+            let domains = name_accounts
+                .get(&ROOT_DOMAIN_ACCOUNT)
+                .ok_or_else(|| anyhow!("Root domain account not found"))?;
             let mut total_number_of_subdomains: usize = 0;
             let mut number_of_domains_with_subdomains: usize = 0;
             let mut top_domains = top_domains.map(|n| (n, BTreeSet::new()));
