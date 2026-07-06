@@ -231,6 +231,16 @@ fn display_reverse_domain(domain: &str) -> String {
     }
 }
 
+fn display_registry_data(data: &[u8]) -> String {
+    let data = data
+        .iter()
+        .rposition(|byte| *byte != 0)
+        .map(|last_non_zero| &data[..=last_non_zero])
+        .unwrap_or_default();
+
+    String::from_utf8_lossy(data).to_string()
+}
+
 fn record_has_roa_verification(record: Record) -> bool {
     record.roa_validation() as u16 != 0
 }
@@ -414,7 +424,7 @@ async fn process_lookup(rpc_client: &RpcClient, domains: Vec<String>) -> CliResu
         } = sns_sdk::derivation::get_domain_key_with_parent(&domain)?;
         let row = match resolve::resolve_name_registry(rpc_client, &domain_key).await? {
             Some((header, data)) => {
-                let data = String::from_utf8(data)?;
+                let data = display_registry_data(&data);
                 row![domain, domain_key, header.parent_name, header.owner, data]
             }
             _ => row![domain, domain_key, parent, "N/A", "N/A"],
