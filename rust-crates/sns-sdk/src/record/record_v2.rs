@@ -47,7 +47,7 @@ impl<'a> ParsedRecordV2<'a> {
                     .get(..2)
                     .ok_or(SnsError::InvalidRecordData)?
                     .try_into()
-                    .unwrap(),
+                    .map_err(|_| SnsError::InvalidRecordData)?,
             );
             let expected_owner_address = self
                 .staleness_id
@@ -58,6 +58,8 @@ impl<'a> ParsedRecordV2<'a> {
             {
                 return Err(SnsError::StaleRecord);
             }
+
+            return Ok(());
         }
         if self.header.staleness_validation != Validation::Solana as u16
             || self.staleness_id != domain_owner_key.as_ref()
