@@ -1,7 +1,7 @@
 use serde::Serialize;
 use sns_sdk::{
     derivation::ROOT_DOMAIN_ACCOUNT,
-    favourite_domain::register_favourite::Accounts,
+    primary_domain::set_primary_domain::Accounts,
     record::{self, get_record_v2_key},
     NAME_OFFERS_PROGRAM_ID,
 };
@@ -10,7 +10,8 @@ use solana_client::{
     rpc_config::{RpcAccountInfoConfig, RpcProgramAccountsConfig},
     rpc_filter::{Memcmp, RpcFilterType},
 };
-use solana_sdk::{bs58, signature::Keypair, system_program};
+use solana_sdk::{bs58, signature::Keypair};
+use solana_sdk_ids::system_program;
 use std::collections::{BTreeSet, HashMap};
 
 use {
@@ -22,7 +23,7 @@ use {
     indicatif::{ProgressBar, ProgressState, ProgressStyle},
     prettytable::{row, Table},
     serde::Deserialize,
-    sns_sdk::non_blocking::resolve,
+    sns_sdk::non_blocking::{domain, resolve},
     sns_sdk::{
         derivation::{get_domain_key, get_hashed_name},
         record::Record,
@@ -283,7 +284,7 @@ async fn process_domains(rpc_client: &RpcClient, owners: Vec<String>) -> CliResu
 
     for (idx, owner) in owners.into_iter().enumerate() {
         let owner_key = Pubkey::from_str(&owner)?;
-        let domains = resolve::get_domains_owner(rpc_client, owner_key).await?;
+        let domains = domain::get_sns_domains_for_owner(rpc_client, owner_key).await?;
         resolve::resolve_reverse_batch(rpc_client, &domains)
             .await?
             .into_iter()
@@ -410,6 +411,7 @@ async fn process_lookup(rpc_client: &RpcClient, domains: Vec<String>) -> CliResu
         let sns_sdk::derivation::DomainKeyWithParent {
             key: domain_key,
             parent,
+            is_sub: _,
         } = sns_sdk::derivation::get_domain_key_with_parent(&domain)?;
         let row = match resolve::resolve_name_registry(rpc_client, &domain_key).await? {
             Some((header, data)) => {
@@ -572,15 +574,15 @@ async fn process_register_favourite(
     };
     let owner = owner_kind.owner();
     let domain_key = get_domain_key(domain)?;
-    let ix = sns_sdk::favourite_domain::get_register_favourite_instruction(
+    let ix = sns_sdk::primary_domain::set_primary_domain_instruction(
         NAME_OFFERS_PROGRAM_ID,
         Accounts {
             owner: &owner,
             name: &domain_key,
-            favourite_domain: &sns_sdk::favourite_domain::derive_favourite_domain_key(&owner),
+            primary_domain: &sns_sdk::primary_domain::derive_primary_domain_key(&owner),
             system_program: &system_program::ID,
         },
-        sns_sdk::favourite_domain::register_favourite::Params {},
+        sns_sdk::primary_domain::set_primary_domain::Params {},
     );
     let blockhash = rpc_client.get_latest_blockhash().await?;
 

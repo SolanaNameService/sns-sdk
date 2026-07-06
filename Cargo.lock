@@ -4169,6 +4169,7 @@ dependencies = [
  "solana-client",
  "solana-program",
  "solana-sdk",
+ "solana-sdk-ids",
  "spl-name-service-2",
  "tokio",
 ]
