@@ -95,7 +95,7 @@ This applies to write APIs such as:
 Example:
 
 ```ts
-await registerDomain(connection, "mydomain.sns", space, buyer, buyerTokenAccount);
+await registerDomain("mydomain.sns", space, buyer, buyerTokenAccount);
 
 createRecord(
   "sub.mydomain.sns",
@@ -123,29 +123,29 @@ For example, use `"mydomain"` rather than `"mydomain.sns"` when directly creatin
 
 Update imports and function calls using this map.
 
-| v3 | v4 |
-| --- | --- |
-| `createRecordInstruction` | `createRecord` |
-| `createRecordV2Instruction` | `createRecord` |
-| `updateRecordInstruction` | `updateRecord` |
-| `updateRecordV2Instruction` | `updateRecord` |
-| `deleteRecordV2` | `deleteRecord` |
-| `validateRecordV2Content` | `validateRecordRoa` |
+| v3                           | v4                          |
+| ---------------------------- | --------------------------- |
+| `createRecordInstruction`    | `createRecord`              |
+| `createRecordV2Instruction`  | `createRecord`              |
+| `updateRecordInstruction`    | `updateRecord`              |
+| `updateRecordV2Instruction`  | `updateRecord`              |
+| `deleteRecordV2`             | `deleteRecord`              |
+| `validateRecordV2Content`    | `validateRecordRoa`         |
 | `ethValidateRecordV2Content` | `validateRecordRoaEthereum` |
-| `writRoaRecordV2` | `setRecordRoaVerifier` |
-| `registerDomainNameV2` | `registerDomain` |
-| `registerWithNft` | `registerDomainWithNft` |
-| `registerFavorite` | `setPrimaryDomain` |
-| `transferNameOwnership` | `transferDomain` |
-| `updateNameRegistryData` | `updateNameRegistry` |
-| `createReverseName` | `createReverse` |
-| `getAllRegisteredDomains` | `getAllSnsDomains` |
-| `getAllDomains` | `getSnsDomainsForOwner` |
-| `getTokenizedDomains` | `getSnsNftsForOwner` |
-| `FavouriteDomain` | `PrimaryDomain` |
-| `getFavoriteDomain` | `getPrimaryDomain` |
+| `writRoaRecordV2`            | `setRecordRoaVerifier`      |
+| `registerDomainNameV2`       | `registerDomain`            |
+| `registerWithNft`            | `registerDomainWithNft`     |
+| `registerFavorite`           | `setPrimaryDomain`          |
+| `transferNameOwnership`      | `transferDomain`            |
+| `updateNameRegistryData`     | `updateNameRegistry`        |
+| `createReverseName`          | `createReverse`             |
+| `getAllRegisteredDomains`    | `getAllSnsDomains`          |
+| `getAllDomains`              | `getSnsDomainsForOwner`     |
+| `getTokenizedDomains`        | `getSnsNftsForOwner`        |
+| `FavouriteDomain`            | `PrimaryDomain`             |
+| `getFavoriteDomain`          | `getPrimaryDomain`          |
 | `getMultipleFavoriteDomains` | `getMultiplePrimaryDomains` |
-| `ROOT_DOMAIN_ACCOUNT` | `SNS_ROOT_DOMAIN_ACCOUNT` |
+| `ROOT_DOMAIN_ACCOUNT`        | `SNS_ROOT_DOMAIN_ACCOUNT`   |
 
 ## 3. Registration migration
 
@@ -154,13 +154,7 @@ Update imports and function calls using this map.
 `registerDomain` replaces `registerDomainNameV2`.
 
 ```ts
-await registerDomain(
-  connection,
-  "mydomain.sns",
-  space,
-  buyer,
-  buyerTokenAccount,
-);
+await registerDomain("mydomain.sns", space, buyer, buyerTokenAccount);
 ```
 
 Important changes:
@@ -168,6 +162,7 @@ Important changes:
 - pass `"mydomain.sns"` instead of `"mydomain"`
 - subdomains such as `"sub.mydomain.sns"` are rejected
 - `.sol` domains are rejected
+- `registerDomain` no longer takes a `Connection` paramm
 
 ### `registerWithNft` -> `registerDomainWithNft`
 
@@ -287,16 +282,16 @@ Do not pass `.sol` domains to record write or validation APIs.
 
 ### Record helper rename map
 
-| v3 | v4 |
-| --- | --- |
-| `getRecords` | `getMultipleRecords` |
-| `getRecordV2` | `getRecord` |
-| `getMultipleRecordsV2` | `getMultipleRecords` |
-| `serializeRecord` | `serializeRecordContent` |
-| `deserializeRecord` | `deserializeRecordContent` |
-| `serializeRecordV2Content` | `serializeRecordContent` |
-| `deserializeRecordV2Content` | `deserializeRecordContent` |
-| `getRecordKeySync` | `getRecordV1Key` or `getRecordV2Key` |
+| v3                           | v4                                   |
+| ---------------------------- | ------------------------------------ |
+| `getRecords`                 | `getMultipleRecords`                 |
+| `getRecordV2`                | `getRecord`                          |
+| `getMultipleRecordsV2`       | `getMultipleRecords`                 |
+| `serializeRecord`            | `serializeRecordContent`             |
+| `deserializeRecord`          | `deserializeRecordContent`           |
+| `serializeRecordV2Content`   | `serializeRecordContent`             |
+| `deserializeRecordV2Content` | `deserializeRecordContent`           |
+| `getRecordKeySync`           | `getRecordV1Key` or `getRecordV2Key` |
 
 For new code, prefer the high-level record APIs: `getRecord`, `getMultipleRecords`, `createRecord`, `updateRecord`, `deleteRecord`, `serializeRecordContent`, and `deserializeRecordContent`.
 
@@ -314,5 +309,3 @@ The following legacy exports were also removed or replaced:
 - `resolveSolRecordV1`
 - `resolveSolRecordV2`
 - legacy per-record helper exports such as `getUrlRecord`, `getDiscordRecord`, `getGithubRecord`, and similar helpers
-
-Use the replacement APIs listed above for v4 migrations.

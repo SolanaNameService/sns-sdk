@@ -56,7 +56,6 @@ test("Indempotent ATA creation ref", async () => {
   for (let i = 0; i < 3; i++) {
     const domain = randomBytes(10).toString("hex") + ".sns";
     const ix = await registerDomain(
-      connection,
       domain,
       1_000,
       VAULT_OWNER,
@@ -77,7 +76,6 @@ test("Register V2", async () => {
   const tx = new Transaction();
   const domain = randomBytes(10).toString("hex") + ".sns";
   const ix = await registerDomain(
-    connection,
     domain,
     1_000,
     VAULT_OWNER,
@@ -97,7 +95,6 @@ test("Registration V2 with ref", async () => {
   const tx = new Transaction();
   const domain = randomBytes(10).toString("hex") + ".sns";
   const ix = await registerDomain(
-    connection,
     domain,
     1_000,
     VAULT_OWNER,
@@ -130,7 +127,6 @@ test("registerDomainWithNft rejects subdomain .sns input", () => {
 test("registerDomain rejects subdomain .sns input", async () => {
   await expect(
     registerDomain(
-      connection,
       "sub.mydomain.sns",
       1_000,
       PublicKey.default,

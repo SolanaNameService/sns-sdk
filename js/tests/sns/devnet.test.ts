@@ -20,7 +20,6 @@ const OWNER3 = new PublicKey("3DdZkHbt2rHDzKSNPK9ApQCwhA6anDKUzuWoCooie6oJ");
 test("Registration", async () => {
   const tx = new Transaction();
   const ix = await devnet.bindings.registerDomain(
-    connection,
     randomBytes(10).toString("hex") + ".sns",
     1_000,
     OWNER2,

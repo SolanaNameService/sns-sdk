@@ -663,7 +663,6 @@ const transferSubdomain = async (
 
 /**
  * This function can be used to register a .sns domain
- * @param connection The Solana RPC connection object
  * @param domain The full domain name including TLD (e.g. `"mydomain.sns"`)
  * @param space The domain name account size (max 10kB)
  * @param buyer The public key of the buyer
@@ -673,7 +672,6 @@ const transferSubdomain = async (
  * @returns
  */
 const registerDomain = async (
-  connection: Connection,
   domain: string,
   space: number,
   buyer: PublicKey,
@@ -709,16 +707,13 @@ const registerDomain = async (
 
   if (refIdx !== -1 && !!referrerKey) {
     refTokenAccount = getAssociatedTokenAddressSync(mint, referrerKey, true);
-    const acc = await connection.getAccountInfo(refTokenAccount);
-    if (!acc?.data) {
-      const ix = createAssociatedTokenAccountIdempotentInstruction(
-        buyer,
-        refTokenAccount,
-        referrerKey,
-        mint,
-      );
-      ixs.push(ix);
-    }
+    const ix = createAssociatedTokenAccountIdempotentInstruction(
+      buyer,
+      refTokenAccount,
+      referrerKey,
+      mint,
+    );
+    ixs.push(ix);
   }
 
   const vault = getAssociatedTokenAddressSync(

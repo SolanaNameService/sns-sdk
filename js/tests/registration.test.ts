@@ -27,12 +27,6 @@ test("Register with NFT rejects bare domain", () => {
 
 test("Register domain rejects bare domain", async () => {
   await expect(
-    registerDomain(
-      connection,
-      "mydomain",
-      1_000,
-      PublicKey.default,
-      PublicKey.default,
-    ),
+    registerDomain("mydomain", 1_000, PublicKey.default, PublicKey.default),
   ).rejects.toThrow(UnsupportedTldError);
 });

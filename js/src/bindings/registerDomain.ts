@@ -4,7 +4,6 @@ import {
   TOKEN_PROGRAM_ID,
 } from "@solana/spl-token";
 import {
-  Connection,
   PublicKey,
   SystemProgram,
   SYSVAR_RENT_PUBKEY,
@@ -29,24 +28,12 @@ import { getPythFeedAccountKey } from "../utils/getPythFeedAccountKey";
 import { _parseSnsTopLevelDomain } from "../utils/parseSnsDomain";
 
 /**
- * This function can be used to register a .sns domain
- * @param connection The Solana RPC connection object
- * @param domain The full domain name including TLD (e.g. `"mydomain.sns"`)
- * @param space The domain name account size (max 10kB)
- * @param buyer The public key of the buyer
- * @param buyerTokenAccount The buyer token account (USDC)
- * @param mint Optional mint used to purchase the domain, defaults to USDC
- * @param referrerKey Optional referrer key
- * @returns
- */
-/**
  * Builds the instructions to register a .sns domain.
  *
  * If a supported referrer is provided and its token account does not exist,
  * the returned instructions include an idempotent associated token account
  * creation instruction before the registration instruction.
  *
- * @param connection Solana RPC connection
  * @param domain The full domain name to register, including the `.sns` suffix
  * @param space The number of bytes to allocate for the domain name account
  * @param buyer The public key of the buyer
@@ -56,7 +43,6 @@ import { _parseSnsTopLevelDomain } from "../utils/parseSnsDomain";
  * @returns The transaction instructions required to register the domain
  */
 export const registerDomain = async (
-  connection: Connection,
   domain: string,
   space: number,
   buyer: PublicKey,
@@ -91,16 +77,13 @@ export const registerDomain = async (
 
   if (refIdx !== -1 && !!referrerKey) {
     refTokenAccount = getAssociatedTokenAddressSync(mint, referrerKey, true);
-    const acc = await connection.getAccountInfo(refTokenAccount);
-    if (!acc?.data) {
-      const ix = createAssociatedTokenAccountIdempotentInstruction(
-        buyer,
-        refTokenAccount,
-        referrerKey,
-        mint,
-      );
-      ixs.push(ix);
-    }
+    const ix = createAssociatedTokenAccountIdempotentInstruction(
+      buyer,
+      refTokenAccount,
+      referrerKey,
+      mint,
+    );
+    ixs.push(ix);
   }
 
   const vault = getAssociatedTokenAddressSync(mint, VAULT_OWNER, true);

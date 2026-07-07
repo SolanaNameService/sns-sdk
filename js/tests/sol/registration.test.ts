@@ -23,12 +23,6 @@ test("registerDomainWithNft rejects .sol domain", () => {
 
 test("registerDomain rejects .sol domain", async () => {
   await expect(
-    registerDomain(
-      connection,
-      "mydomain.sol",
-      1_000,
-      PublicKey.default,
-      PublicKey.default,
-    ),
+    registerDomain("mydomain.sol", 1_000, PublicKey.default, PublicKey.default),
   ).rejects.toThrow(UnsupportedTldError);
 });
