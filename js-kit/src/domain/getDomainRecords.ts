@@ -44,16 +44,16 @@ interface Result {
 }
 
 /**
- * Retrieves multiple records under a domain, verifies their state, and optionally deserializes their content.
+ * Retrieves V2 records under a domain, verifies them, and optionally deserializes their content.
  *
- * @param params - An object containing the following properties:
- *   - `rpc`: An RPC interface implementing GetAccountInfoApi, GetMultipleAccountsApi, and GetTokenLargestAccountsApi.
- *   - `domain`: The full domain name whose records are to be retrieved, including a `.sns` or `.sol` suffix.
- *   - `records`: An array of record types to retrieve.
- *   - `options`: (Optional) Additional options for processing:
- *       - `deserialize`: Whether to deserialize the record content.
- *       - `verifiers`: An array of custom verifiers for the records.
- * @returns A promise that resolves to an array of results for the retrieved records, including their verification status and optionally their deserialized content.
+ * @param params Record retrieval parameters
+ * @param params.rpc RPC client implementing account, multiple-account, and token-largest-account APIs
+ * @param params.domain Full domain name including a `.sns` or `.sol` suffix
+ * @param params.records Record types to retrieve
+ * @param params.options Optional record processing options
+ * @param params.options.deserialize Whether to deserialize record content
+ * @param params.options.verifiers Optional custom verifiers aligned with `records`
+ * @returns Results aligned with `records`; entries are `undefined` when a V2 record account is missing.
  */
 export async function getDomainRecords<
   T extends Record[],

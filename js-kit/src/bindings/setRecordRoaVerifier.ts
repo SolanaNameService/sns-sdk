@@ -14,15 +14,15 @@ import {
 } from "./recordValidation";
 
 /**
- * Stores the expected Right of Association verifier for a .sns record.
+ * Builds an instruction to store the expected Right of Association verifier for a V2 record.
  *
- * @param params - An object containing the following properties:
- *   - `domain`: The full .sns domain under which the record resides.
- *   - `record`: An enumeration representing the record type.
- *   - `owner`: The address of the domain's owner.
- *   - `payer`: The address funding the operation.
- *   - `verifier`: The expected RoA verifier to store in the record.
- * @returns A promise that resolves to the set record RoA verifier instruction.
+ * @param params V2 record validation parameters
+ * @param params.domain Full `.sns` domain or subdomain name
+ * @param params.record V2 record type
+ * @param params.owner Current owner of the domain
+ * @param params.payer Fee payer for the instruction
+ * @param params.verifier Verifier account used by the record validation instruction
+ * @returns Transaction instruction.
  */
 export const setRecordRoaVerifier = async ({
   domain,

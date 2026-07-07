@@ -17,10 +17,10 @@ interface GetDomainOwnerParams {
  * Retrieves the owner of the specified domain. If the domain is tokenized,
  * the NFT's owner is returned; otherwise, the registry owner is returned.
  *
- * @param params - An object containing the following properties:
- *   - `rpc`: An RPC interface implementing GetAccountInfoApi and GetTokenLargestAccountsApi.
- *   - `domain`: The full domain name whose owner is to be retrieved, including a `.sns` or `.sol` suffix.
- * @returns A promise that resolves to the owner of the domain.
+ * @param params Domain owner retrieval parameters
+ * @param params.rpc RPC client implementing account and token-largest-account APIs
+ * @param params.domain Full domain name including a `.sns` or `.sol` suffix
+ * @returns The domain owner address.
  */
 export const getDomainOwner = async ({ rpc, domain }: GetDomainOwnerParams) => {
   const { domainAddress } = await getDomainAddress({ domain });

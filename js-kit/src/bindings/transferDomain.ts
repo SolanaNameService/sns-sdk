@@ -16,13 +16,13 @@ interface TransferDomainParams {
 }
 
 /**
- * Transfers a top-level .sns domain to a new owner.
+ * Builds an instruction to transfer a top-level `.sns` domain.
  *
- * @param params - An object containing the following properties:
- *   - `rpc`: An RPC interface implementing GetAccountInfoApi.
- *   - `domain`: The full .sns domain name to be transferred.
- *   - `newOwner`: The address of the new owner of the domain.
- * @returns A promise that resolves to the transfer domain instruction.
+ * @param params Transfer parameters
+ * @param params.rpc RPC client implementing account lookup
+ * @param params.domain Full `.sns` domain name
+ * @param params.newOwner New owner of the domain
+ * @returns Transaction instruction.
  */
 export const transferDomain = async ({
   rpc,

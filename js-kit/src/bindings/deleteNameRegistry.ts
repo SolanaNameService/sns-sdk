@@ -20,13 +20,13 @@ interface DeleteNameRegistryParams {
  * This low-level helper accepts a raw registry seed/name and does not parse
  * `.sns` or `.sol` suffixes.
  *
- * @param params - An object containing the following properties:
- *   - `rpc`: An RPC interface implementing GetAccountInfoApi.
- *   - `name`: The raw registry seed/name whose account will be deleted.
- *   - `refundAddress`: The address to which the refunded rent balance will be sent.
- *   - `classAddress`: (Optional) The address of the class associated with the registry.
- *   - `parentAddress`: (Optional) The address of the parent registry.
- * @returns A promise which resolves to the delete name registry instruction.
+ * @param params Deletion parameters
+ * @param params.rpc RPC client implementing account lookup
+ * @param params.name Raw registry seed/name whose account will be deleted
+ * @param params.refundAddress Address receiving the refunded rent balance
+ * @param params.classAddress Optional class address for the registry
+ * @param params.parentAddress Optional parent registry address
+ * @returns Transaction instruction.
  */
 export const deleteNameRegistry = async ({
   rpc,

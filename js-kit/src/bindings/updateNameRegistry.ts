@@ -20,14 +20,14 @@ export interface UpdateNameRegistryParams {
  * This low-level helper accepts a raw registry seed/name as `domain` and does
  * not parse `.sns` or `.sol` suffixes.
  *
- * @param params - An object containing the following properties:
- *   - `rpc`: An RPC interface implementing GetAccountInfoApi.
- *   - `domain`: The raw registry seed/name whose account will be updated.
- *   - `offset`: The offset in bytes where the update should begin.
- *   - `data`: The data to be written to the registry.
- *   - `classAddress`: (Optional) The address of the class associated with the registry.
- *   - `parentAddress`: (Optional) The address of the parent registry.
- * @returns A promise that resolves to the update name registry instruction.
+ * @param params Update parameters
+ * @param params.rpc RPC client implementing account lookup
+ * @param params.domain Raw registry seed/name whose account will be updated
+ * @param params.offset Offset in bytes where the update should begin
+ * @param params.data Data to write to the registry
+ * @param params.classAddress Optional class address for the registry
+ * @param params.parentAddress Optional parent registry address
+ * @returns Transaction instruction.
  */
 export async function updateNameRegistry({
   rpc,

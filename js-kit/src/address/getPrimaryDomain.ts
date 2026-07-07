@@ -20,15 +20,15 @@ interface GetPrimaryDomainParams {
 }
 
 /**
- * Fetches the primary SNS domain associated with a given wallet address.
+ * Retrieves the primary SNS domain associated with a wallet address.
  *
- * @param params - An object containing the following properties:
- *   - `rpc`: An RPC interface implementing GetAccountInfoApi and GetTokenLargestAccountsApi.
- *   - `walletAddress`: The wallet address for which the primary domain is retrieved.
- * @returns A promise resolving to an object containing:
- *   - `domainAddress`: The address of the primary domain.
- *   - `domainName`: The primary domain name (without .sns suffix).
- *   - `stale`: false if primary domain was set by the current domain owner, true otherwise.
+ * Returned domain names omit the TLD suffix; subdomain primary names can
+ * include parent labels such as `sub.parent`.
+ *
+ * @param params Primary domain retrieval parameters
+ * @param params.rpc RPC client implementing account and token-largest-account APIs
+ * @param params.walletAddress Wallet address whose primary domain is retrieved
+ * @returns Primary domain address, domain name, and stale status.
  */
 export const getPrimaryDomain = async ({
   rpc,

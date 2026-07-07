@@ -19,13 +19,13 @@ interface BurnDomainParams {
 }
 
 /**
- * Generates an instruction to burn a domain.
+ * Builds an instruction to burn a top-level `.sns` domain.
  *
- * @param params - An object containing the following properties:
- *   - `domain`: The full .sns domain name to be burned.
- *   - `owner`: The address of the current owner of the domain.
- *   - `refundAddress`: The address to which rent will be refunded.
- * @returns A promise which resolves to the burn domain instruction.
+ * @param params Burn parameters
+ * @param params.domain Full `.sns` domain name
+ * @param params.owner Current owner of the domain
+ * @param params.refundAddress Account receiving reclaimed rent
+ * @returns Transaction instruction.
  */
 export const burnDomain = async ({
   domain,

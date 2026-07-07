@@ -23,13 +23,11 @@ export interface RecordVerificationParams {
 /**
  * Derives the V2 record account and the domain account that owns that record.
  *
- * @param params - An object containing the following properties:
- *   - `domain`: The full `.sns` domain or subdomain that owns the record.
- *   - `record`: The record type whose V2 record account should be derived.
- * @returns A promise resolving to the derived V2 record account address as
- *   `domainAddress` and the owning domain/subdomain account address as
- *   `parentAddress`.
- * @throws InvalidParentError - If the owning domain account cannot be resolved.
+ * @param params Record derivation parameters
+ * @param params.domain Full `.sns` domain or subdomain name
+ * @param params.record Record type
+ * @returns Derived V2 record account address and owning domain/subdomain account address.
+ * @throws InvalidParentError If the owning domain account cannot be resolved.
  */
 export const _getRecordAndParentAddress = async ({
   domain,
@@ -57,18 +55,15 @@ export const _getRecordAndParentAddress = async ({
 /**
  * Builds the SNS records program's Solana-signature validation instruction.
  *
- * @param params - An object containing the following properties:
- *   - `staleness`: The low-level program mode flag. `true` updates staleness
- *     verifier metadata; `false` validates Right of Association.
- *   - `domain`: The full `.sns` domain or subdomain that owns the record.
- *   - `record`: The record type whose V2 record account is being validated.
- *   - `owner`: The domain owner account passed to the records program.
- *   - `payer`: The fee payer for the validation instruction.
- *   - `verifier`: The Solana verifier account used by the selected validation
- *     mode.
- * @returns A promise resolving to the `ValidateSolanaSignatureInstruction`
- *   instruction for the SNS records program.
- * @throws InvalidParentError - If the owning domain account cannot be resolved.
+ * @param params Validation instruction parameters
+ * @param params.staleness Whether to build the staleness-verifier instruction mode
+ * @param params.domain Full `.sns` domain or subdomain name
+ * @param params.record Record type
+ * @param params.owner Current owner of the domain
+ * @param params.payer Fee payer for the instruction
+ * @param params.verifier Verifier account used by the record validation instruction
+ * @returns Transaction instruction.
+ * @throws InvalidParentError If the owning domain account cannot be resolved.
  */
 export const _buildValidateSolanaSignatureInstruction = async ({
   staleness,

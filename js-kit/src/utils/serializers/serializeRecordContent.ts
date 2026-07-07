@@ -24,12 +24,19 @@ interface SerializeRecordContentParams {
 }
 
 /**
- * Serializes record content based on its type.
+ * Serializes record content according to SNS-IP 1.
  *
- * @param params - An object containing the following properties:
- *   - `content`: The record content to serialize.
- *   - `record`: The type of record for which the content is being serialized.
- * @returns The serialized content as a ReadonlyUint8Array.
+ * `CNAME` and `TXT` content is punycode-encoded before UTF-8 serialization.
+ *
+ * @param params Record serialization parameters
+ * @param params.content Record content to serialize
+ * @param params.record Record type
+ * @returns Serialized record content.
+ * @throws InvalidEvmAddressError If an EVM record is not a `0x`-prefixed 20-byte hex address.
+ * @throws InvalidInjectiveAddressError If an Injective record is not a valid Injective address.
+ * @throws InvalidARecordError If an `A` record is not a valid IPv4 address.
+ * @throws InvalidAAAARecordError If an `AAAA` record is not a valid IPv6 address.
+ * @throws InvalidRecordInputError If the record type or content is unsupported.
  */
 export const serializeRecordContent = ({
   content,

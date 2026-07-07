@@ -11,12 +11,12 @@ interface GetRecordV2AddressParams {
 }
 
 /**
- * Derives the address of a version 2 record.
+ * Derives the address of a V2 record account.
  *
- * @param params - An object containing the following properties:
- *   - `domain`: The full domain name under which the record resides, including a .sns or .sol suffix.
- *   - `record`: The type of record to derive the address for.
- * @returns A promise that resolves to the derived record address.
+ * @param params Record address derivation parameters
+ * @param params.domain Full domain name including a `.sns` or `.sol` suffix
+ * @param params.record Record type
+ * @returns The derived V2 record account address.
  */
 export const getRecordV2Address = async ({
   domain,

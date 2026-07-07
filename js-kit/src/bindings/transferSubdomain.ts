@@ -16,18 +16,15 @@ interface TransferSubdomainParams {
 }
 
 /**
- * Transfers a subdomain to a new owner.
+ * Builds an instruction to transfer a `.sns` subdomain.
  *
- * @param params - An object containing the following properties:
- *   - `rpc`: An RPC interface implementing GetAccountInfoApi.
- *   - `subdomain`: The full .sns subdomain to transfer, e.g. something.parent.sns.
- *   - `newOwner`: The address of the new owner.
- *   - `isParentOwnerSigner`: (Optional) Specifies if the parent domain owner is a signer
- *     for this transaction.
- *   - `currentOwner`: (Optional) The current owner of the subdomain. If not provided, it
- *     will be resolved automatically. This is useful for building transactions when the subdomain
- *     does not yet exist.
- * @returns A promise that resolves to the transfer subdomain instruction.
+ * @param params Transfer parameters
+ * @param params.rpc RPC client implementing account lookup
+ * @param params.subdomain Full `.sns` subdomain name
+ * @param params.newOwner New owner of the subdomain
+ * @param params.isParentOwnerSigner Whether the parent domain owner signs the transfer
+ * @param params.currentOwner Optional current owner of the subdomain. Resolved automatically when omitted
+ * @returns Transaction instruction.
  */
 export const transferSubdomain = async ({
   rpc,

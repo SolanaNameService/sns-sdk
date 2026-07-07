@@ -6,6 +6,10 @@ const isCanonicalLowercase = (domain: string) =>
 
 /**
  * Parses a top-level `.sns` domain and returns the raw domain label.
+ *
+ * @param domain Full lowercase top-level `.sns` domain name
+ * @returns Raw domain label without the `.sns` suffix.
+ * @throws InvalidDomainError If the domain is malformed.
  */
 export const _parseSnsTopLevelDomain = (domain: string): string => {
   const [trimmedDomain] = parseSnsTld(domain);
@@ -23,6 +27,10 @@ export const _parseSnsTopLevelDomain = (domain: string): string => {
 
 /**
  * Parses a `.sns` subdomain and returns `[subdomainLabel, parentLabel]`.
+ *
+ * @param subdomain Full lowercase `.sns` subdomain name in `sub.parent.sns` form
+ * @returns Subdomain label and parent label.
+ * @throws InvalidSubdomainError If the subdomain is malformed.
  */
 export const _parseSnsSubdomain = (subdomain: string): [string, string] => {
   const [trimmedSubdomain] = parseSnsTld(subdomain);
@@ -44,6 +52,10 @@ export const _parseSnsSubdomain = (subdomain: string): [string, string] => {
 /**
  * Parses a writable `.sns` domain and allows either `name.sns` or
  * `sub.parent.sns`.
+ *
+ * @param domain Full lowercase `.sns` domain or subdomain name
+ * @returns Domain name without the `.sns` suffix.
+ * @throws InvalidDomainError If the domain is malformed.
  */
 export const _parseSnsDomain = (domain: string): string => {
   const [trimmedDomain] = parseSnsTld(domain);

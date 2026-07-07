@@ -11,11 +11,11 @@ interface GetAllSnsDomainsParams {
 }
 
 /**
- * Retrieves the addresses of all .sns domains.
+ * Retrieves all top-level SNS domain accounts.
  *
- * @param params - An object containing the following properties:
- *   - `rpc`: An RPC interface implementing GetProgramAccountsApi.
- * @returns A promise that resolves to an array of objects representing domain addresses and owners.
+ * @param params Domain retrieval parameters
+ * @param params.rpc RPC client implementing program account lookup
+ * @returns Domain account addresses and owners.
  */
 export const getAllSnsDomains = async ({ rpc }: GetAllSnsDomainsParams) => {
   const accounts = await rpc

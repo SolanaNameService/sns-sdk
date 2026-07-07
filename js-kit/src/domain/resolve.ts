@@ -53,10 +53,11 @@ export type ResolveOptions =
 /**
  * Verifies the signature of a Solana record using Ed25519 cryptographic verification.
  *
- * @param data - The record data to verify.
- * @param signature - The signature associated with the record.
- * @param address - The address of the record's owner.
- * @returns A promise that resolves to a boolean indicating whether the signature is valid.
+ * @param params Signature verification parameters
+ * @param params.data Record data to verify
+ * @param params.signature Signature associated with the record
+ * @param params.address Record owner address used as the Ed25519 public key
+ * @returns Whether the signature is valid.
  */
 const verifySolRecordV1Signature = async ({
   data,
@@ -233,14 +234,13 @@ const resolveSol = async (params: ResolveParamsWithOptions): Promise<Address> =>
   resolveSns(params);
 
 /**
- * Resolves a .sns or .sol domain to its target address according to SNS-IP 5.
+ * Resolves a `.sns` or `.sol` domain to its target address according to SNS-IP 5.
  *
- * @param params - An object containing the following properties:
- *   - `rpc`: An RPC interface implementing GetAccountInfoApi, GetMultipleAccountsApi, and GetTokenLargestAccountsApi.
- *   - `domain`: The full domain name to resolve, including a .sns or .sol suffix.
- *   - `config`: (Optional) Configuration for resolving the domain, including whether to allow PDA owners
- *     and permissible program IDs.
- * @returns A promise that resolves to the target address.
+ * @param params Resolution parameters
+ * @param params.rpc RPC client implementing account, multiple-account, and token-largest-account APIs
+ * @param params.domain Full domain name including a `.sns` or `.sol` suffix
+ * @param params.options Optional PDA owner resolution options. Defaults to `{ allowPda: false }`
+ * @returns The resolved target address.
  */
 export const resolve = async ({
   rpc,

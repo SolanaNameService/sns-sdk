@@ -19,12 +19,12 @@ import { Validation } from "../types/validation";
 import { uint8ArraysEqual } from "../utils/uint8Array/uint8ArraysEqual";
 
 /**
- * Gets the default verifier for a given record and record state.
- * This is an internal utility function.
+ * Internal helper that derives the default verifier for a record state.
  *
- * @param record - The record whose verifier is to be determined.
- * @param state - The state of the record.
- * @returns The default verifier as a ReadonlyUint8Array or undefined if no verifier is found.
+ * @param params Default verifier parameters
+ * @param params.record Record type
+ * @param params.state Record state
+ * @returns The default verifier, or `undefined` when no verifier is found.
  */
 export const _getDefaultVerifier = ({
   record,
@@ -45,12 +45,15 @@ export const _getDefaultVerifier = ({
 };
 
 /**
- * Verifies the right of association for a record synchronously.
- * This function is intended for internal use only.
+ * Internal helper that verifies a record's Right of Association validation.
  *
- * @param record - The record to verify.
- * @param state - The state of the record.
- * @param verifier - The verifier for the record.
+ * Ethereum/secp256k1 validation is used for EVM RoA records; Solana validation
+ * is used otherwise.
+ *
+ * @param params Right of Association verification parameters
+ * @param params.record Record type to verify
+ * @param params.state Record state
+ * @param params.verifier Verifier for the record
  * @returns True if the association is valid, false otherwise.
  */
 export const _verifyRoaSync = ({
@@ -75,14 +78,14 @@ export const _verifyRoaSync = ({
 };
 
 /**
- * Verifies the right of association for a record asynchronously.
+ * Verifies a record's Right of Association validation.
  *
- * @param rpc - The RPC interface implementing GetAccountInfoApi and GetTokenLargestAccountsApi.
- * @param domain - The full domain name under which the record resides, including a `.sns` or `.sol` suffix.
- * @param record - The record to verify.
- * @param verifier - (Optional) The verifier for the record. If not specified, a default verifier is derived.
- * @returns A promise that resolves to true if the association is valid, false otherwise.
- * @throws MissingVerifierError - If no verifier is specified and no default verifier is found.
+ * @param rpc RPC client implementing account and token-largest-account APIs
+ * @param domain Full domain name including a `.sns` or `.sol` suffix
+ * @param record Record type to verify
+ * @param verifier Optional verifier for the record. If omitted, a default verifier is derived
+ * @returns True if the association is valid, false otherwise.
+ * @throws MissingVerifierError If no verifier is specified and no default verifier is found.
  */
 export const verifyRecordRightOfAssociation = async (
   rpc: Rpc<GetAccountInfoApi & GetTokenLargestAccountsApi>,

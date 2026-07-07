@@ -23,12 +23,15 @@ interface Result {
 }
 
 /**
- * Fetches NFT states for a given address.
+ * Retrieves tokenized SNS domain NFT states for an address.
  *
- * @param params - An object containing the following properties:
- *   - `rpc`: An RPC interface implementing GetProgramAccountsApi.
- *   - `address`: The address whose associated NFT states are to be fetched.
- * @returns A promise resolving to an array of NftState objects.
+ * Failed NFT state lookups are skipped. If token account retrieval fails, an
+ * empty array is returned.
+ *
+ * @param params NFT state retrieval parameters
+ * @param params.rpc RPC client implementing program account lookup
+ * @param params.address Address whose tokenized domain NFT states are retrieved
+ * @returns Successfully decoded NFT states.
  */
 const getNftStatesForAddress = async ({
   rpc,
@@ -82,10 +85,12 @@ const getNftStatesForAddress = async ({
  * If NFT records cannot be retrieved or decoded, this function returns an empty
  * array instead of throwing.
  *
- * @param params - An object containing the following properties:
- *   - `rpc`: An RPC interface implementing GetMultipleAccountsApi and GetProgramAccountsApi.
- *   - `address`: The address for which SNS domain NFTs are to be fetched.
- * @returns A promise resolving to an array of Result objects containing domain (without .sns suffix), domainAddress, and mint.
+ * Entries without reverse lookup results are omitted.
+ *
+ * @param params Tokenized domain retrieval parameters
+ * @param params.rpc RPC client implementing multiple-account and program account APIs
+ * @param params.address Address whose SNS domain NFTs are retrieved
+ * @returns Tokenized domain records with names without a TLD suffix, domain addresses, and mints.
  */
 export const getSnsNftsForAddress = async ({
   rpc,

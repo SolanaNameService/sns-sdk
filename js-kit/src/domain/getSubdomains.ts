@@ -25,12 +25,15 @@ interface Result {
 }
 
 /**
- * Retrieves all subdomains under the specified domain, including their owners.
+ * Retrieves subdomains under a parent domain, including their owners.
  *
- * @param params - An object containing the following properties:
- *   - `rpc`: An RPC interface implementing GetProgramAccountsApi.
- *   - `domain`: The full parent domain name whose subdomains are to be retrieved, including a `.sns` or `.sol` suffix.
- * @returns A promise that resolves to an array of subdomain objects, each containing the subdomain name and owner address.
+ * Entries without reverse lookup data are omitted. Passing a subdomain returns
+ * an empty array.
+ *
+ * @param params Subdomain retrieval parameters
+ * @param params.rpc RPC client implementing program account lookup
+ * @param params.domain Full parent domain name including a `.sns` or `.sol` suffix
+ * @returns Subdomain names and owner addresses.
  */
 export const getSubdomains = async ({
   rpc,

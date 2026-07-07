@@ -26,15 +26,15 @@ interface RegisterDomainWithNftParams {
 }
 
 /**
- * Registers a .sns domain using a Bonfida Wolves NFT.
+ * Builds an instruction to register a top-level `.sns` domain using a Bonfida Wolves NFT.
  *
- * @param params - An object containing the following properties:
- *   - `domain`: The full .sns domain name to be registered.
- *   - `space`: The space in bytes to be allocated for the domain registry.
- *   - `buyer`: The address of the buyer registering the domain.
- *   - `nftSource`: The address of the NFT source account.
- *   - `nftMint`: The mint address of the NFT used for registration.
- * @returns A promise which resolves to the register domain with NFT instruction.
+ * @param params Registration parameters
+ * @param params.domain Full `.sns` domain name
+ * @param params.space Number of bytes to allocate for the domain registry
+ * @param params.buyer Buyer paying for the registration
+ * @param params.nftSource NFT source account
+ * @param params.nftMint NFT mint used for registration
+ * @returns Transaction instruction.
  */
 export const registerDomainWithNft = async ({
   domain,

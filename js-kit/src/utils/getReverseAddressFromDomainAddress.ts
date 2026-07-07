@@ -9,12 +9,12 @@ interface GetReverseAddressFromDomainAddressParams {
 }
 
 /**
- * Derive the reverse address from a domain address.
+ * Derives the reverse lookup account address from a domain address.
  *
- * @param params - An object containing the following properties:
- *   - `domainAddress`: The domain address to compute the reverse for.
- *   - `parentAddress`: The parent address (optional).
- * @returns The address of the reverse account.
+ * @param params Reverse lookup derivation parameters
+ * @param params.domainAddress Domain account address to reverse look up
+ * @param params.parentAddress Optional parent address for subdomain reverse lookups
+ * @returns The reverse lookup account address.
  */
 export const getReverseAddressFromDomainAddress = async ({
   domainAddress,

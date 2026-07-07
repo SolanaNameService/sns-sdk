@@ -23,17 +23,18 @@ interface CreateSubdomainParams {
 }
 
 /**
- * Creates a subdomain for the specified domain. This includes setting up the subdomain
- * registry and its reverse lookup record if not already existing.
+ * Builds the instructions to create a `.sns` subdomain.
  *
- * @param params - An object containing the following properties:
- *   - `rpc`: An RPC interface implementing GetAccountInfoApi and GetMinimumBalanceForRentExemptionApi.
- *   - `subdomain`: The full .sns subdomain to create, e.g. something.parent.sns.
- *   - `owner`: The address of the owner of the parent domain.
- *   - `space`: (Optional) The space in bytes allocated to the subdomain account (default: 2,000).
- *   - `feePayer`: (Optional) The address funding the subdomain creation (default: owner address).
- * @returns A promise that resolves to an array of instructions required to create the subdomain
- *   and its reverse lookup record.
+ * The subdomain registry instruction is always included. The reverse lookup
+ * instruction is included only when the reverse lookup account does not exist.
+ *
+ * @param params Subdomain creation parameters
+ * @param params.rpc RPC client implementing account and rent-exemption APIs
+ * @param params.subdomain Full `.sns` subdomain name
+ * @param params.owner New subdomain owner and parent owner for reverse lookup creation
+ * @param params.space Optional space in bytes allocated to the subdomain account. Defaults to 2,000
+ * @param params.feePayer Optional account funding subdomain creation. Defaults to `owner`
+ * @returns Transaction instructions.
  */
 export const createSubdomain = async ({
   rpc,

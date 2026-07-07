@@ -22,15 +22,17 @@ interface UpdateRecordParams {
 }
 
 /**
- * Updates an existing record under the specified domain.
+ * Builds an instruction to update a V2 record for a `.sns` domain or subdomain.
  *
- * @param params - An object containing the following properties:
- *   - `domain`: The full .sns domain under which the record resides.
- *   - `record`: An enumeration representing the type of record to be updated.
- *   - `content`: The updated content to be associated with the record.
- *   - `owner`: The address of the domain's owner.
- *   - `payer`: The address funding the record update.
- * @returns A promise that resolves to the update record instruction.
+ * Record content is serialized according to SNS-IP 1.
+ *
+ * @param params Record update parameters
+ * @param params.domain Full `.sns` domain or subdomain name
+ * @param params.record Record type
+ * @param params.content Record content
+ * @param params.owner Current owner of the domain
+ * @param params.payer Fee payer for the instruction
+ * @returns Transaction instruction.
  */
 export const updateRecord = async ({
   domain,

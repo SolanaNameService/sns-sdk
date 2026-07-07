@@ -13,12 +13,14 @@ interface GetDomainAddressParams {
 }
 
 /**
- * Derives the address of a domain, a subdomain, or a record.
+ * Derives the address of a domain, subdomain, or record account.
  *
- * @param params - An object containing the following properties:
- *   - `domain`: The full domain name to process, including a .sns or .sol suffix.
- *   - `record`: (Optional) The record version. Only provide if the domain being resolved is a record.
- * @returns A promise that resolves to an object containing the derived address and additional metadata.
+ * `.sns` and `.sol` suffixes are stripped before deriving SNS account addresses.
+ *
+ * @param params Derivation parameters
+ * @param params.domain Full domain name including a `.sns` or `.sol` suffix
+ * @param params.record Optional record account version for record derivation
+ * @returns Derived account address and metadata describing top-level, subdomain, or sub-record derivation.
  */
 export const getDomainAddress = async ({
   domain,

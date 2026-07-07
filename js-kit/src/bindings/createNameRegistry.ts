@@ -32,17 +32,16 @@ interface CreateNameRegistryParams {
  * This low-level helper accepts a raw registry seed/name and does not parse
  * `.sns` or `.sol` suffixes.
  *
- * @param params - An object containing the following properties:
- *   - `rpc`: An RPC interface implementing GetAccountInfoApi and GetMinimumBalanceForRentExemptionApi.
- *   - `name`: The raw registry seed/name for the new account.
- *   - `space`: The space in bytes allocated to the account.
- *   - `payer`: The allocation cost payer.
- *   - `owner`: The address to be set as the owner of the new name account.
- *   - `lamports`: (Optional) The budget to be set for the name account. If not specified,
- *                 it'll be the minimum for rent exemption.
- *   - `classAddress`: (Optional) The address of the class associated with the registry.
- *   - `parentAddress`: (Optional) The address of the parent registry.
- * @returns A promise which resolves to the create name registry instruction.
+ * @param params Creation parameters
+ * @param params.rpc RPC client implementing account and rent-exemption APIs
+ * @param params.name Raw registry seed/name for the new account
+ * @param params.space Space in bytes allocated to the account
+ * @param params.payer Account paying for allocation
+ * @param params.owner Owner of the new name account
+ * @param params.lamports Optional lamports to fund the account. Defaults to the rent-exempt minimum
+ * @param params.classAddress Optional class address for the registry
+ * @param params.parentAddress Optional parent registry address
+ * @returns Transaction instruction.
  */
 export const createNameRegistry = async ({
   rpc,

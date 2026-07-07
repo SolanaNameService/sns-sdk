@@ -20,14 +20,14 @@ interface DeleteRecordParams {
 }
 
 /**
- * Deletes a record under the specified domain and refunds the rent to the payer.
+ * Builds an instruction to delete a V2 record for a `.sns` domain or subdomain.
  *
- * @param params - An object containing the following properties:
- *   - `domain`: The full .sns domain under which the record resides.
- *   - `record`: An enumeration representing the type of record to be deleted.
- *   - `owner`: The address of the domain's owner.
- *   - `payer`: The address funding the record deletion.
- * @returns A promise which resolves to the delete record instruction.
+ * @param params Record deletion parameters
+ * @param params.domain Full `.sns` domain or subdomain name
+ * @param params.record Record type
+ * @param params.owner Current owner of the domain
+ * @param params.payer Fee payer for the instruction
+ * @returns Transaction instruction.
  */
 export const deleteRecord = async ({
   domain,

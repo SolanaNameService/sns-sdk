@@ -25,13 +25,13 @@ interface CreateReverseParams {
  * This low-level helper accepts the stored reverse payload as `domain` and
  * does not parse `.sns` or `.sol` suffixes.
  *
- * @param params - An object containing the following properties:
- *   - `domainAddress`: The address of the domain for which the reverse lookup record is created.
- *   - `domain`: The domain name to be associated with the reverse lookup record.
- *   - `payer`: The address funding the creation of the reverse lookup record.
- *   - `parentAddress`: (Optional) The address of the parent domain, if applicable.
- *   - `parentOwner`: (Optional) The address of the parent domain owner, if applicable.
- * @returns A promise which resolves to the create reverse lookup instruction.
+ * @param params Reverse lookup creation parameters
+ * @param params.domainAddress Domain account the reverse lookup points to
+ * @param params.domain Raw reverse payload to store
+ * @param params.payer Account funding reverse lookup creation
+ * @param params.parentAddress Optional parent domain address for subdomain reverse lookups
+ * @param params.parentOwner Optional parent domain owner for subdomain reverse lookups
+ * @returns Transaction instruction.
  */
 export const createReverse = async ({
   domainAddress,

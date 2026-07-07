@@ -21,11 +21,11 @@ export interface SetPrimaryDomainParams {
  * This is an address-only API: `domainAddress` must be an already-derived SNS
  * domain account.
  *
- * @param params - An object containing the following properties:
- *   - `rpc`: An RPC interface implementing GetAccountInfoApi.
- *   - `domainAddress`: The SNS domain account address to be set as primary.
- *   - `owner`: The address of the domain owner.
- * @returns A promise which resolves to the set primary domain instruction.
+ * @param params Primary-domain registration parameters
+ * @param params.rpc RPC client implementing account lookup
+ * @param params.domainAddress SNS domain account address to set as primary
+ * @param params.owner Owner of the domain account
+ * @returns Transaction instruction.
  */
 export const setPrimaryDomain = async ({
   rpc,

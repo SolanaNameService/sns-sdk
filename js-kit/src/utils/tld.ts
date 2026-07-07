@@ -9,6 +9,10 @@ export type SupportedTld = (typeof SUPPORTED_TLDS)[number];
 /**
  * Returns the matching TLD from `supportedTlds` if `domain` ends with one,
  * or `undefined` otherwise.
+ *
+ * @param domain Domain name to inspect
+ * @param supportedTlds Supported suffixes to match against
+ * @returns The matching suffix, or `undefined` when none match.
  */
 export const getTld = (
   domain: string,
@@ -16,8 +20,12 @@ export const getTld = (
 ): string | undefined => supportedTlds.find((tld) => domain.endsWith(tld));
 
 /**
- * Validates that `domain` ends with one of the `supportedTlds`, strips that
- * suffix, and returns a `[trimmedDomain, tld]` tuple.
+ * Ensures `domain` ends with one of the `supportedTlds` and strips that suffix.
+ *
+ * @param domain Domain name to parse
+ * @param supportedTlds Supported suffixes to match against
+ * @returns Domain name without suffix and the matching suffix.
+ * @throws UnsupportedTldError If no supported suffix matches.
  */
 export const parseSupportedTld = (
   domain: string,
@@ -33,8 +41,11 @@ export const parseSupportedTld = (
 };
 
 /**
- * Validates that `domain` ends with `.sns`, strips that suffix, and returns a
- * `[trimmedDomain, SNS_TLD]` tuple.
+ * Ensures `domain` ends with `.sns` and strips that suffix.
+ *
+ * @param domain Domain name to parse
+ * @returns Domain name without suffix and the `.sns` suffix.
+ * @throws UnsupportedTldError If the domain does not end with `.sns`.
  */
 export const parseSnsTld = (domain: string): [string, string] =>
   parseSupportedTld(domain, [SNS_TLD]);

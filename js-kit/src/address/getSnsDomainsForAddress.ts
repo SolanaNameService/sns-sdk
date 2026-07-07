@@ -23,12 +23,15 @@ interface Result {
 }
 
 /**
- * Retrieves the SNS domains owned by a given address.
+ * Retrieves directly registry-owned top-level SNS domains for an address.
  *
- * @param params - An object containing the following properties:
- *   - `rpc`: An RPC interface implementing GetProgramAccountsApi and GetMultipleAccountsApi.
- *   - `address`: The address for which to retrieve associated domains.
- * @returns A promise resolving to an array of objects containing domain (without .sns suffix) and domainAddress.
+ * Tokenized domains and subdomains are not included. Entries without reverse
+ * lookup results are omitted.
+ *
+ * @param params Domain retrieval parameters
+ * @param params.rpc RPC client implementing program account and multiple-account APIs
+ * @param params.address Address whose directly registry-owned SNS domains are retrieved
+ * @returns Domain records with names without a TLD suffix and domain addresses.
  */
 export const getSnsDomainsForAddress = async ({
   rpc,

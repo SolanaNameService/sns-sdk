@@ -22,17 +22,16 @@ interface ValidateRecordRoaEthereumParams {
 }
 
 /**
- * Validates the Right of Association of a .sns record using an Ethereum
- * signature.
+ * Builds an instruction to validate a V2 record's Right of Association with an Ethereum signature.
  *
- * @param params - An object containing the following properties:
- *   - `domain`: The full .sns domain under which the record resides.
- *   - `record`: An enumeration representing the record type.
- *   - `owner`: The address of the domain's owner.
- *   - `payer`: The address funding the validation process.
- *   - `signature`: The Ethereum signature used for validation.
- *   - `expectedPubkey`: The expected Ethereum public key associated with the validation.
- * @returns A promise that resolves to the Ethereum signature validation instruction.
+ * @param params Record validation parameters
+ * @param params.domain Full `.sns` domain or subdomain name
+ * @param params.record Record type
+ * @param params.owner Current owner of the domain
+ * @param params.payer Fee payer for the instruction
+ * @param params.signature Ethereum signature used for validation
+ * @param params.expectedPubkey Expected Ethereum public key for validation
+ * @returns Transaction instruction.
  */
 export const validateRecordRoaEthereum = async ({
   domain,

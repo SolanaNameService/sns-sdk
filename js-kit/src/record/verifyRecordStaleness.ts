@@ -14,11 +14,11 @@ import { Validation } from "../types/validation";
 import { uint8ArraysEqual } from "../utils/uint8Array/uint8ArraysEqual";
 
 /**
- * Verifies the staleness of a record synchronously.
- * This is intended for internal use only.
+ * Internal helper that verifies a record's staleness validation.
  *
- * @param domainOwner - The address of the domain's owner.
- * @param state - The state of the record to verify.
+ * @param params Staleness verification parameters
+ * @param params.domainOwner Current owner of the domain
+ * @param params.state Record state to verify
  * @returns True if the record's staleness validation passes, false otherwise.
  */
 export const _verifyStalenessSync = ({
@@ -43,13 +43,13 @@ interface VerifyRecordStalenessParams {
 }
 
 /**
- * Verifies the staleness of a record asynchronously.
+ * Verifies a record's staleness validation.
  *
- * @param params - An object containing the following properties:
- *   - `rpc`: The RPC interface implementing GetAccountInfoApi and GetTokenLargestAccountsApi.
- *   - `domain`: The full domain name under which the record resides, including a `.sns` or `.sol` suffix.
- *   - `record`: The record to verify.
- * @returns A promise that resolves to true if the record is stale, false otherwise.
+ * @param params Staleness verification parameters
+ * @param params.rpc RPC client implementing account and token-largest-account APIs
+ * @param params.domain Full domain name including a `.sns` or `.sol` suffix
+ * @param params.record Record type to verify
+ * @returns True if the record's staleness validation passes, false otherwise.
  */
 export const verifyRecordStaleness = async ({
   rpc,

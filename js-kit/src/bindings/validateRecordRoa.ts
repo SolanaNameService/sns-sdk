@@ -6,16 +6,15 @@ import {
 } from "./recordValidation";
 
 /**
- * Validates the Right of Association of a .sns record using the expected
- * Solana verifier.
+ * Builds an instruction to validate a V2 record's Right of Association with a Solana verifier.
  *
- * @param params - An object containing the following properties:
- *   - `domain`: The full .sns domain under which the record resides.
- *   - `record`: An enumeration representing the record type.
- *   - `owner`: The address of the domain's owner.
- *   - `payer`: The address funding the validation process.
- *   - `verifier`: The expected RoA verifier that signs the validation.
- * @returns A promise that resolves to the Solana signature validation instruction.
+ * @param params Record validation parameters
+ * @param params.domain Full `.sns` domain or subdomain name
+ * @param params.record Record type
+ * @param params.owner Current owner of the domain
+ * @param params.payer Fee payer for the instruction
+ * @param params.verifier Verifier account used by the record validation instruction
+ * @returns Transaction instruction.
  */
 export const validateRecordRoa = async (
   params: RecordVerificationParams

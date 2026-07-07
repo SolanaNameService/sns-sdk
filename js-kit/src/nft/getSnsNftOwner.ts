@@ -19,10 +19,10 @@ interface GetSnsNftOwnerParams {
 /**
  * Retrieves the owner of a tokenized SNS domain.
  *
- * @param params - An object containing the following properties:
- *   - `rpc`: An RPC interface implementing GetAccountInfoApi and GetTokenLargestAccountsApi.
- *   - `domainAddress`: The address of the domain whose owner is to be retrieved.
- * @returns A promise that resolves to the SNS domain NFT owner's address, or null if no owner is found.
+ * @param params NFT owner retrieval parameters
+ * @param params.rpc RPC client implementing account and token-largest-account APIs
+ * @param params.domainAddress Domain account address whose tokenized owner is retrieved
+ * @returns The SNS domain NFT owner address, or `null` when no valid tokenized owner is found.
  */
 export const getSnsNftOwner = async ({
   rpc,

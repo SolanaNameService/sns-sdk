@@ -6,18 +6,15 @@ import {
 } from "./recordValidation";
 
 /**
- * Writes or refreshes the staleness verifier metadata for a .sns record.
+ * Builds an instruction to write or refresh staleness verifier metadata for a V2 record.
  *
- * Runtime staleness is still verified client-side/read-time by comparing this
- * stored verifier metadata against the current domain owner.
- *
- * @param params - An object containing the following properties:
- *   - `domain`: The full .sns domain under which the record resides.
- *   - `record`: An enumeration representing the record type.
- *   - `owner`: The address of the domain's owner.
- *   - `payer`: The address funding the operation.
- *   - `verifier`: The verifier to store for staleness checks.
- * @returns A promise that resolves to the Solana signature validation instruction.
+ * @param params V2 record validation parameters
+ * @param params.domain Full `.sns` domain or subdomain name
+ * @param params.record V2 record type
+ * @param params.owner Current owner of the domain
+ * @param params.payer Fee payer for the instruction
+ * @param params.verifier Verifier account used by the record validation instruction
+ * @returns Transaction instruction.
  */
 export const setRecordStalenessVerifier = async (
   params: RecordVerificationParams
