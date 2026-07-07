@@ -1,6 +1,8 @@
 use serde::Serialize;
 use sns_sdk::{
-    derivation::ROOT_DOMAIN_ACCOUNT, primary_domain::set_primary_domain::Accounts,
+    derivation::ROOT_DOMAIN_ACCOUNT,
+    primary_domain::set_primary_domain::Accounts,
+    tld::{parse_sns_domain, parse_sns_top_level_domain},
     NAME_OFFERS_PROGRAM_ID,
 };
 use solana_account_decoder::{UiAccountEncoding, UiDataSliceConfig};
@@ -204,25 +206,6 @@ fn get_rpc_client(url: Option<String>) -> RpcClient {
     }
 }
 
-fn validate_sns_domain(domain: &str) -> anyhow::Result<()> {
-    if !domain.ends_with(".sns") {
-        return Err(anyhow!("Domain must include the .sns suffix"));
-    }
-    Ok(())
-}
-
-fn strip_top_level_sns_domain(domain: &str) -> anyhow::Result<&str> {
-    let Some(name) = domain.strip_suffix(".sns") else {
-        return Err(anyhow!("Registration requires a top-level .sns domain"));
-    };
-
-    if name.contains('.') {
-        return Err(anyhow!("Registration requires a top-level .sns domain"));
-    }
-
-    Ok(name)
-}
-
 fn display_reverse_domain(domain: &str) -> String {
     if domain.ends_with(".sns") {
         domain.to_string()
@@ -325,7 +308,7 @@ async fn process_resolve(rpc_client: &RpcClient, domains: Vec<String>) -> CliRes
 
     let pb = progress_bar(domains.len());
     for (idx, domain) in domains.into_iter().enumerate() {
-        validate_sns_domain(&domain)?;
+        parse_sns_domain(&domain)?;
         let row = match resolve::resolve(rpc_client, &domain, resolve::AllowPda::Deny).await? {
             Some(owner) => row![
                 domain,
@@ -353,7 +336,7 @@ async fn process_burn(
     table.add_row(row!["Domain", "Transaction", "Explorer"]);
     let pb = progress_bar(domains.len());
     for (idx, domain) in domains.into_iter().enumerate() {
-        validate_sns_domain(&domain)?;
+        parse_sns_domain(&domain)?;
         let domain_key = get_domain_key(&domain)?;
         let keypair = read_keypair_file(keypair_path)?;
         let ix = spl_name_service::instruction::delete(
@@ -387,7 +370,7 @@ async fn process_transfer(
     table.add_row(row!["Domain", "Transaction", "Explorer"]);
     let pb = progress_bar(domains.len());
     for (idx, domain) in domains.into_iter().enumerate() {
-        validate_sns_domain(&domain)?;
+        parse_sns_domain(&domain)?;
         let domain_key = get_domain_key(&domain)?;
         let keypair = read_keypair_file(owner_keypair)?;
         let ix = spl_name_service::instruction::transfer(
@@ -416,7 +399,7 @@ async fn process_lookup(rpc_client: &RpcClient, domains: Vec<String>) -> CliResu
     table.add_row(row!["Domain", "Domain key", "Parent", "Owner", "Data"]);
     let pb = progress_bar(domains.len());
     for (idx, domain) in domains.into_iter().enumerate() {
-        validate_sns_domain(&domain)?;
+        parse_sns_domain(&domain)?;
         let sns_sdk::derivation::DomainKeyWithParent {
             key: domain_key,
             parent,
@@ -490,13 +473,15 @@ async fn process_register(
     let pb = progress_bar(domains.len());
     let client = reqwest::Client::new();
     let keypair = read_keypair_file(keypair_path)?;
-
     let re = regex::Regex::new(r"^[a-z\d\-_]+$")?;
 
     for (idx, domain) in domains.into_iter().enumerate() {
-        let registration_name = strip_top_level_sns_domain(&domain)?;
-        if !re.is_match(registration_name) {
-            return Err(anyhow!("Registration requires a top-level .sns domain").into());
+        let registration_name = parse_sns_top_level_domain(&domain)?;
+        if !re.is_match(&registration_name) {
+            return Err(anyhow!(
+                "CLI registrations only support lowercase letters, digits, hyphens, and underscores"
+            )
+            .into());
         }
         let response = client
             .get(format!(
@@ -573,7 +558,7 @@ async fn process_set_primary_domain(
         }
     };
     let owner = owner_kind.owner();
-    validate_sns_domain(domain)?;
+    parse_sns_domain(domain)?;
     let domain_key = get_domain_key(domain)?;
     let ix = sns_sdk::primary_domain::set_primary_domain_instruction(
         NAME_OFFERS_PROGRAM_ID,
@@ -617,7 +602,7 @@ async fn process_record_v2_get(
     domain: &str,
     record_str: &str,
 ) -> CliResult {
-    validate_sns_domain(domain)?;
+    parse_sns_domain(domain)?;
     let record = parse_record_arg(record_str)?;
 
     let Some((_, data)) = record_v2::get_record_v2(rpc_client, domain, record).await? else {
@@ -664,7 +649,7 @@ async fn process_record_v2_get(
 }
 
 async fn process_sub_registrar_info(rpc_client: &RpcClient, domain: &str) -> CliResult {
-    validate_sns_domain(domain)?;
+    parse_sns_domain(domain)?;
     let registrar =
         sns_sdk::non_blocking::subdomain::get_sub_registrar_info(rpc_client, domain).await?;
     println!("{registrar:#?}");
