@@ -8,14 +8,15 @@ import { getHashedNameSync } from "../utils/getHashedNameSync";
 import { getNameAccountKeySync } from "../utils/getNameAccountKeySync";
 
 /**
- * Overwrite the data of the given name registry.
+ * Builds an instruction to overwrite name registry data.
  *
- * @param connection The solana connection object to the RPC node
- * @param name The name of the name registry to update
- * @param offset The offset to which the data should be written into the registry
- * @param input_data The data to be written
- * @param nameClass The class of this name, if it exsists
- * @param nameParent The parent name of this name, if it exists
+ * @param connection Solana RPC connection
+ * @param name Name of the name registry to update
+ * @param offset Offset where data should be written
+ * @param input_data Data to write
+ * @param nameClass Optional class of the name account
+ * @param nameParent Optional parent name account
+ * @returns Transaction instruction.
  */
 export async function updateNameRegistry(
   connection: Connection,

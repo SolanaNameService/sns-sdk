@@ -28,19 +28,19 @@ import { getPythFeedAccountKey } from "../utils/getPythFeedAccountKey";
 import { _parseSnsTopLevelDomain } from "../utils/parseSnsDomain";
 
 /**
- * Builds the instructions to register a .sns domain.
+ * Builds the instructions to register a top-level `.sns` domain.
  *
  * If a supported referrer is provided and its token account does not exist,
  * the returned instructions include an idempotent associated token account
  * creation instruction before the registration instruction.
  *
- * @param domain The full domain name to register, including the `.sns` suffix
+ * @param domain Full `.sns` domain name
  * @param space The number of bytes to allocate for the domain name account
- * @param buyer The public key of the buyer
+ * @param buyer Buyer paying for the registration
  * @param buyerTokenAccount The buyer's token account used to pay for registration
  * @param mint The token mint used for payment, defaults to USDC
  * @param referrerKey Optional public key of the referrer
- * @returns The transaction instructions required to register the domain
+ * @returns Transaction instructions.
  */
 export const registerDomain = async (
   domain: string,

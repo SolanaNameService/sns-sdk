@@ -8,12 +8,12 @@ import { getNameAccountKeySync } from "../utils/getNameAccountKeySync";
 import { _parseSnsTopLevelDomain } from "../utils/parseSnsDomain";
 
 /**
- * Change the owner of a given name account.
+ * Builds an instruction to transfer a top-level `.sns` domain.
  *
- * @param connection The solana connection object to the RPC node
- * @param domain The domain to transfer, must include the TLD suffix (e.g. `mydomain.sns`).
- * @param newOwner The new owner to be set
- * @returns
+ * @param connection Solana RPC connection
+ * @param domain Full `.sns` domain name
+ * @param newOwner New owner of the domain
+ * @returns Transaction instruction.
  */
 export async function transferDomain(
   connection: Connection,

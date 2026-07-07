@@ -274,9 +274,10 @@ const getReverseKeySync = (domain: string, isSub?: boolean) => {
  * Callers are responsible for applying any public API TLD restrictions before
  * invoking this helper. The key derivation itself follows `getDomainKeySync`.
  *
- * @param domain The full domain name including TLD (e.g. `"mydomain.sns"`)
- * @param record The record type whose V2 account should be derived
- * @returns The derived record account as `pubkey` and its owning parent account
+ * @param params Record derivation parameters
+ * @param params.domain Full domain name, including suffix
+ * @param params.record Record type
+ * @returns Derived record account and parent account.
  * @throws {InvalidParentError} When the owning domain account cannot be resolved
  */
 const _getRecordAndParentKey = ({
@@ -303,17 +304,17 @@ const _getRecordAndParentKey = ({
 };
 
 /**
- * Creates a name account with the given rent budget, allocated space, owner and class.
+ * Builds an instruction to create a name account with the given rent budget, space, owner, and class.
  *
- * @param connection The solana connection object to the RPC node
- * @param name The name of the new account
- * @param space The space in bytes allocated to the account
- * @param payerKey The allocation cost payer
- * @param nameOwner The pubkey to be set as owner of the new name account
- * @param lamports The budget to be set for the name account. If not specified, it'll be the minimum for rent exemption
- * @param nameClass The class of this new name
- * @param parentName The parent name of the new name. If specified its owner needs to sign
- * @returns
+ * @param connection Solana RPC connection
+ * @param name Name of the new account
+ * @param space Space in bytes allocated to the account
+ * @param payerKey Account paying for allocation
+ * @param nameOwner Owner of the new name account
+ * @param lamports Lamports to fund the account. Defaults to the rent-exempt minimum
+ * @param nameClass Optional class of the new name account
+ * @param parentName Optional parent name account. Its owner must sign when provided
+ * @returns Transaction instruction.
  */
 async function createNameRegistry(
   connection: Connection,
@@ -363,14 +364,15 @@ async function createNameRegistry(
 }
 
 /**
- * Overwrite the data of the given name registry.
+ * Builds an instruction to overwrite name registry data.
  *
- * @param connection The solana connection object to the RPC node
- * @param name The name of the name registry to update
- * @param offset The offset to which the data should be written into the registry
- * @param input_data The data to be written
- * @param nameClass The class of this name, if it exsists
- * @param nameParent The parent name of this name, if it exists
+ * @param connection Solana RPC connection
+ * @param name Name of the name registry to update
+ * @param offset Offset where data should be written
+ * @param input_data Data to write
+ * @param nameClass Optional class of the name account
+ * @param nameParent Optional parent name account
+ * @returns Transaction instruction.
  */
 async function updateNameRegistry(
   connection: Connection,
@@ -407,12 +409,12 @@ async function updateNameRegistry(
 }
 
 /**
- * Change the owner of a given name account.
+ * Builds an instruction to transfer a top-level `.sns` domain.
  *
- * @param connection The solana connection object to the RPC node
- * @param domain The domain to transfer, must include the TLD suffix (e.g. `mydomain.sns`).
- * @param newOwner The new owner to be set
- * @returns
+ * @param connection Solana RPC connection
+ * @param domain Full `.sns` domain name
+ * @param newOwner New owner of the domain
+ * @returns Transaction instruction.
  */
 async function transferDomain(
   connection: Connection,
@@ -442,14 +444,14 @@ async function transferDomain(
 }
 
 /**
- * Delete the name account and transfer the rent to the target.
+ * Builds an instruction to delete a name account and transfer reclaimed rent.
  *
- * @param connection The solana connection object to the RPC node
- * @param name The name of the name account
- * @param refundTargetKey The refund destination address
- * @param nameClass The class of this name, if it exsists
- * @param nameParent The parent name of this name, if it exists
- * @returns
+ * @param connection Solana RPC connection
+ * @param name Name of the name account
+ * @param refundTargetKey Refund destination address
+ * @param nameClass Optional class of the name account
+ * @param nameParent Optional parent name account
+ * @returns Transaction instruction.
  */
 async function deleteNameRegistry(
   connection: Connection,
@@ -484,13 +486,21 @@ async function deleteNameRegistry(
 }
 
 /**
+ * Builds an instruction to create an SNS reverse lookup account.
  *
- * @param nameAccount The name account to create the reverse account for
- * @param name The name of the domain
- * @param feePayer The fee payer of the transaction
- * @param parentName The parent name account
- * @param parentNameOwner The parent name owner
- * @returns
+ * This is a low-level SNS registrar helper: it creates reverse lookup accounts
+ * for SNS names only. It is not suffix-aware and does not derive `nameAccount`
+ * from a `.sns` domain string. The `name` argument is stored as provided and is
+ * not validated, so callers must ensure it matches the supplied SNS
+ * `nameAccount`. For subdomains, pass the parent name account and parent owner
+ * so the reverse lookup is derived in the parent namespace.
+ *
+ * @param nameAccount The pre-derived SNS name account the reverse lookup points to
+ * @param name The raw reverse name to store without a TLD suffix
+ * @param feePayer Fee payer for the instruction
+ * @param parentName Optional parent name account, required for subdomain reverse lookups
+ * @param parentNameOwner Optional parent name owner, required when `parentName` is provided
+ * @returns Transaction instructions.
  */
 const createReverse = async (
   nameAccount: PublicKey,
@@ -532,11 +542,14 @@ const createReverse = async (
 };
 
 /**
- * This function can be used to create a subdomain
- * @param connection The Solana RPC connection object
- * @param subdomain The subdomain to create, must include the TLD suffix (e.g. `sub.parent.sns`)
- * @param owner The owner of the parent domain creating the subdomain
- * @param space The space to allocate to the subdomain (defaults to 2kb)
+ * Builds the instructions to create a `.sns` subdomain.
+ *
+ * @param connection Solana RPC connection
+ * @param subdomain Full `.sns` subdomain name
+ * @param owner Owner of the parent domain creating the subdomain
+ * @param space Space to allocate to the subdomain. Defaults to 2 kB
+ * @param feePayer Optional fee payer. Defaults to `owner`
+ * @returns Transaction instructions.
  */
 const createSubdomain = async (
   connection: Connection,
@@ -584,6 +597,14 @@ const createSubdomain = async (
   return ixs;
 };
 
+/**
+ * Builds an instruction to burn a top-level `.sns` domain and its reverse lookup account.
+ *
+ * @param domain Full `.sns` domain name
+ * @param owner Current owner of the domain
+ * @param target Account that receives reclaimed lamports
+ * @returns Transaction instruction.
+ */
 const burnDomain = (domain: string, owner: PublicKey, target: PublicKey) => {
   _parseSnsTopLevelDomain(domain);
 
@@ -613,15 +634,14 @@ const burnDomain = (domain: string, owner: PublicKey, target: PublicKey) => {
 };
 
 /**
- * This function is used to transfer the ownership of a subdomain in the Solana Name Service.
+ * Builds an instruction to transfer a `.sns` subdomain.
  *
- * @param {Connection} connection - The Solana RPC connection object.
- * @param {string} subdomain - The subdomain to transfer, must include the TLD suffix (e.g. `sub.parent.sns`).
- * @param {PublicKey} newOwner - The public key of the new owner of the subdomain.
- * @param {boolean} [isParentOwnerSigner=false] - A flag indicating whether the parent name owner is signing this transfer.
- * @param {PublicKey} [owner] - The public key of the current owner of the subdomain. This is an optional parameter. If not provided, the owner will be resolved automatically. This can be helpful to build transactions when the subdomain does not exist yet.
- *
- * @returns {Promise<TransactionInstruction>} - A promise that resolves to a Solana instruction for the transfer operation.
+ * @param connection Solana RPC connection
+ * @param subdomain Full `.sns` subdomain name
+ * @param newOwner New owner of the subdomain
+ * @param isParentOwnerSigner Whether the parent name owner signs the transfer
+ * @param owner Current owner of the subdomain. Resolved automatically when omitted
+ * @returns Transaction instruction.
  */
 const transferSubdomain = async (
   connection: Connection,
@@ -662,14 +682,19 @@ const transferSubdomain = async (
 };
 
 /**
- * This function can be used to register a .sns domain
- * @param domain The full domain name including TLD (e.g. `"mydomain.sns"`)
- * @param space The domain name account size (max 10kB)
- * @param buyer The public key of the buyer
- * @param buyerTokenAccount The buyer token account (USDC)
- * @param mint Optional mint used to purchase the domain, defaults to USDC
- * @param referrerKey Optional referrer key
- * @returns
+ * Builds the instructions to register a top-level `.sns` domain.
+ *
+ * If a supported referrer is provided and its token account does not exist,
+ * the returned instructions include an idempotent associated token account
+ * creation instruction before the registration instruction.
+ *
+ * @param domain Full `.sns` domain name
+ * @param space The number of bytes to allocate for the domain name account
+ * @param buyer Buyer paying for the registration
+ * @param buyerTokenAccount Buyer's token account used to pay for registration
+ * @param mint Token mint used for payment. Defaults to USDC
+ * @param referrerKey Optional public key of the referrer
+ * @returns Transaction instructions.
  */
 const registerDomain = async (
   domain: string,
@@ -760,11 +785,12 @@ const registerDomain = async (
 };
 
 /**
- * This function can be used to set a primary domain
- * @param nameAccount The name account being set as primary
- * @param owner The owner of the name account
- * @param programId The name offer program ID
- * @returns
+ * Builds an instruction to set a domain as the owner's primary domain.
+ *
+ * @param connection Solana RPC connection
+ * @param nameAccount Name account to set as primary
+ * @param owner Owner of the name account
+ * @returns Transaction instruction.
  */
 const setPrimaryDomain = async (
   connection: Connection,
@@ -797,10 +823,11 @@ const setPrimaryDomain = async (
 };
 
 /**
- * This function can be used to retrieve the primary domain of a user
- * @param connection The Solana RPC connection object
- * @param owner The owner you want to retrieve the primary domain for
- * @returns
+ * Retrieves the primary domain set for a wallet.
+ *
+ * @param connection Solana RPC connection
+ * @param owner The public key of the wallet owner
+ * @returns The primary domain account, reverse domain name, and stale status.
  */
 const getPrimaryDomain = async (connection: Connection, owner: PublicKey) => {
   const [primaryKey] = PrimaryDomain.getKeySync(
@@ -835,14 +862,14 @@ const getPrimaryDomain = async (connection: Connection, owner: PublicKey) => {
 };
 
 /**
- * Creates a record account and serializes its content according to SNS-IP 1.
+ * Builds an instruction to create a record for a `.sns` domain or subdomain.
  *
- * @param domain The full domain name including TLD (e.g. `mydomain.sns`)
- * @param record The record type enum
- * @param content The record content to serialize and store
- * @param owner The owner of the domain
- * @param payer The fee payer of the transaction
- * @returns The create record transaction instruction
+ * @param domain Full `.sns` domain or subdomain name
+ * @param record Record type
+ * @param content Record content
+ * @param owner Current owner of the domain
+ * @param payer Fee payer for the instruction
+ * @returns Transaction instruction.
  */
 const createRecord = (
   domain: string,
@@ -884,14 +911,14 @@ const createRecord = (
 };
 
 /**
- * Updates a record account and serializes its content according to SNS-IP 1.
+ * Builds an instruction to update a record for a `.sns` domain or subdomain.
  *
- * @param domain The full domain name including TLD (e.g. `mydomain.sns`)
- * @param record The record type enum
- * @param content The record content to serialize and store
- * @param owner The owner of the record/domain
- * @param payer The fee payer of the transaction
- * @returns The update record transaction instruction
+ * @param domain Full `.sns` domain or subdomain name
+ * @param record Record type
+ * @param content Record content
+ * @param owner Current owner of the domain
+ * @param payer Fee payer for the instruction
+ * @returns Transaction instruction.
  */
 const updateRecord = (
   domain: string,
@@ -933,13 +960,13 @@ const updateRecord = (
 };
 
 /**
- * Deletes a record account and returns the rent to the fee payer.
+ * Builds an instruction to delete a record for a `.sns` domain or subdomain.
  *
- * @param domain The full domain name including TLD (e.g. `mydomain.sns`)
- * @param record The record type enum
- * @param owner The owner of the record/domain
- * @param payer The fee payer of the transaction
- * @returns The delete record transaction instruction
+ * @param domain Full `.sns` domain or subdomain name
+ * @param record Record type
+ * @param owner Current owner of the domain
+ * @param payer Fee payer for the instruction
+ * @returns Transaction instruction.
  */
 const deleteRecord = (
   domain: string,
@@ -983,13 +1010,13 @@ const deleteRecord = (
  * refreshes staleness verifier metadata, while `false` validates Right of
  * Association using the provided Solana verifier.
  *
- * @param staleness Whether to build the staleness verifier instruction mode
- * @param domain The full `.sns` domain or subdomain whose record is validated
- * @param record The record type whose V2 account is validated
- * @param owner The owner of the domain
- * @param payer The fee payer of the transaction
- * @param verifier The Solana verifier account used by the selected mode
- * @returns A transaction instruction for the SNS records program
+ * @param staleness Whether to build the staleness-verifier instruction mode
+ * @param domain Full `.sns` domain or subdomain name
+ * @param record Record type
+ * @param owner Current owner of the domain
+ * @param payer Fee payer for the instruction
+ * @param verifier Verifier account used by the record validation instruction
+ * @returns Transaction instruction.
  * @throws {UnsupportedTldError} When `domain` is not a `.sns` domain
  * @throws {InvalidParentError} When the owning domain account cannot be resolved
  */
@@ -1023,14 +1050,14 @@ const _buildValidateSolanaSignatureInstruction = (
 };
 
 /**
- * Writes or refreshes the staleness verifier metadata for a .sns record.
+ * Builds an instruction to write or refresh staleness verifier metadata.
  *
- * @param domain The full domain name including TLD (e.g. `"mydomain.sns"`)
- * @param record The record type to validate
- * @param owner The owner of the domain
- * @param payer The fee payer of the transaction
- * @param verifier The verifier to store for staleness checks
- * @returns A transaction instruction that sets the staleness verifier
+ * @param domain Full `.sns` domain or subdomain name
+ * @param record Record type
+ * @param owner Current owner of the domain
+ * @param payer Fee payer for the instruction
+ * @param verifier Verifier account used by the record validation instruction
+ * @returns Transaction instruction.
  */
 const setRecordStalenessVerifier = (
   domain: string,
@@ -1049,14 +1076,14 @@ const setRecordStalenessVerifier = (
   );
 
 /**
- * Validates the Right of Association of a .sns record using a Solana verifier.
+ * Builds an instruction to validate a record's Right of Association with a Solana verifier.
  *
- * @param domain The full domain name including TLD (e.g. `"mydomain.sns"`)
- * @param record The record type to validate
- * @param owner The owner of the domain
- * @param payer The fee payer of the transaction
- * @param verifier The expected RoA verifier that signs the validation
- * @returns A transaction instruction that validates the record RoA
+ * @param domain Full `.sns` domain or subdomain name
+ * @param record Record type
+ * @param owner Current owner of the domain
+ * @param payer Fee payer for the instruction
+ * @param verifier Verifier account used by the record validation instruction
+ * @returns Transaction instruction.
  */
 const validateRecordRoa = (
   domain: string,
@@ -1075,14 +1102,14 @@ const validateRecordRoa = (
   );
 
 /**
- * Stores the expected Right of Association verifier for a .sns record.
+ * Builds an instruction to store the expected Right of Association verifier.
  *
- * @param domain The full domain name including TLD (e.g. `"mydomain.sns"`)
- * @param record The record type to set the RoA verifier for
- * @param owner The owner of the domain
- * @param payer The fee payer of the transaction
- * @param verifier The expected RoA verifier to store in the record
- * @returns A transaction instruction that sets the RoA verifier
+ * @param domain Full `.sns` domain or subdomain name
+ * @param record Record type
+ * @param owner Current owner of the domain
+ * @param payer Fee payer for the instruction
+ * @param verifier Verifier account used by the record validation instruction
+ * @returns Transaction instruction.
  */
 const setRecordRoaVerifier = (
   domain: string,

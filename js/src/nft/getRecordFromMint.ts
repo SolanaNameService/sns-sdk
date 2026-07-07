@@ -7,11 +7,11 @@ import { NAME_TOKENIZER_ID } from "./const";
 import { NftRecord } from "./state";
 
 /**
- * This function can be used to retrieve a NFT Record given a mint
+ * Retrieves NFT records for a domain mint.
  *
- * @param connection A solana RPC connection
- * @param mint The mint of the NFT Record
- * @returns
+ * @param connection Solana RPC connection
+ * @param mint NFT record mint
+ * @returns Matching NFT record program accounts.
  */
 export const getRecordFromMint = async (
   connection: Connection,

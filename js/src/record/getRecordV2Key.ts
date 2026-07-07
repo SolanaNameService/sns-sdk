@@ -11,9 +11,9 @@ import { getNameAccountKeySync } from "../utils/getNameAccountKeySync";
  * Most consumers should use the high-level record APIs (`getRecord`,
  * `createRecord`, `updateRecord`, etc.). This helper is exposed for callers
  * that need deterministic account derivation.
- * @param domain The full domain name including TLD (e.g. `mydomain.sns`, `sub.parent.sns`)
- * @param record The record to derive the key for
- * @returns Public key of the record
+ * @param domain Full `.sns` or `.sol` domain name
+ * @param record Record type
+ * @returns Record account public key.
  */
 export const getRecordV2Key = (domain: string, record: Record): PublicKey => {
   const { pubkey } = getDomainKeySync(domain);

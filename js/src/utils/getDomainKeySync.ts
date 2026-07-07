@@ -81,8 +81,9 @@ void getSolDomainKeySync;
  * existing on-chain key derivation. `.sol`-specific derivation is reserved for a
  * future release.
  *
- * @param domain The full domain name including TLD (e.g. `mydomain.sns`, `sub.parent.sns`)
- * @param record Optional parameter: If the domain being resolved is a record
+ * @param domain Full `.sns` or `.sol` domain name
+ * @param record Optional record version for record account derivation
+ * @returns Domain account public key, hash, parent information, and subdomain flags.
  * @throws {UnsupportedTldError} When the domain is missing a supported TLD suffix
  */
 export const getDomainKeySync = (domain: string, record?: RecordVersion) => {

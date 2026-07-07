@@ -7,14 +7,14 @@ import { _parseSnsDomain } from "../utils/parseSnsDomain";
 import { _getRecordAndParentKey } from "./recordValidation";
 
 /**
- * Stores the expected Right of Association verifier for a .sns record.
+ * Builds an instruction to store the expected Right of Association verifier.
  *
- * @param domain The full domain name including TLD (e.g. `"mydomain.sns"`)
- * @param record The record type to set the RoA verifier for
- * @param owner The owner of the domain
- * @param payer The fee payer of the transaction
- * @param verifier The expected RoA verifier to store in the record
- * @returns A transaction instruction that sets the RoA verifier
+ * @param domain Full `.sns` domain or subdomain name
+ * @param record Record type
+ * @param owner Current owner of the domain
+ * @param payer Fee payer for the instruction
+ * @param verifier Verifier account used by the record validation instruction
+ * @returns Transaction instruction.
  */
 export const setRecordRoaVerifier = (
   domain: string,

@@ -8,12 +8,14 @@ import { createNameRegistry } from "./createNameRegistry";
 import { createReverse } from "./createReverse";
 
 /**
- * This function can be used to create a subdomain
- * @param connection The Solana RPC connection object
- * @param subdomain The subdomain to create, must include the TLD suffix (e.g. `sub.parent.sns`)
- * @param owner The owner of the parent domain creating the subdomain
- * @param space The space to allocate to the subdomain (defaults to 2kb)
- * @param feePayer Optional: Specifies a fee payer different from the parent owner
+ * Builds the instructions to create a `.sns` subdomain.
+ *
+ * @param connection Solana RPC connection
+ * @param subdomain Full `.sns` subdomain name
+ * @param owner Owner of the parent domain creating the subdomain
+ * @param space Space to allocate to the subdomain. Defaults to 2 kB
+ * @param feePayer Optional fee payer. Defaults to `owner`
+ * @returns Transaction instructions.
  */
 export const createSubdomain = async (
   connection: Connection,

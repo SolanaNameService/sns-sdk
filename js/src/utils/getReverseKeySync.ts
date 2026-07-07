@@ -5,10 +5,11 @@ import { getNameAccountKeySync } from "./getNameAccountKeySync";
 import { getDomainKeySync } from "./getDomainKeySync";
 
 /**
- * This function can be used to get the key of the reverse account
- * @param domain The full domain name including TLD (e.g. `mydomain.sns`, `sub.parent.sns`)
- * @param isSub Whether the domain is a subdomain or not
- * @returns The public key of the reverse account
+ * Derives the reverse lookup account for a domain name.
+ *
+ * @param domain Full `.sns` or `.sol` domain name
+ * @param isSub Whether the domain is a subdomain
+ * @returns Reverse lookup account public key.
  */
 export const getReverseKeySync = (domain: string, isSub?: boolean) => {
   const { pubkey, parent } = getDomainKeySync(domain);

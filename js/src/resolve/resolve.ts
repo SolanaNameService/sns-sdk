@@ -62,9 +62,9 @@ const resolveSol = async (
 void resolveSol;
 
 /**
- * Internal handler that resolves a .sns domain using the SNS-IP 5 logic.
+ * Internal handler that resolves a supported domain using SNS-IP 5 logic.
  *
- * Accepts a .sns domain without TLD suffix (e.g. `"mydomain").
+ * Expects the full domain name including `.sns` or `.sol`.
  */
 const resolveSns = async (
   connection: Connection,
@@ -192,7 +192,7 @@ const resolveSns = async (
 };
 
 /**
- * Resolve a domain to its owner public key according to SNS-IP 5.
+ * Resolves a domain to its owner public key according to SNS-IP 5.
  *
  * A TLD suffix is **required** — the domain must end with `.sns` or `.sol`
  * (e.g. `"mydomain.sns"`, `"mydomain.sol"`). Bare names without a recognised suffix
@@ -201,9 +201,10 @@ const resolveSns = async (
  * Both `.sns` and `.sol` domains are currently resolved with the same SNS-IP 5
  * logic. `.sol`-specific behaviour (`resolveSol`) is reserved for a future release.
  *
- * @param connection - Solana RPC connection.
- * @param domain - Full domain name including TLD (e.g. `"mydomain.sns"`, `"mydomain.sol"`).
- * @param config - Optional PDA allowance config.
+ * @param connection Solana RPC connection
+ * @param domain Full `.sns` or `.sol` domain name
+ * @param config Optional PDA allowance config
+ * @returns Resolved owner public key.
  * @throws {UnsupportedTldError} When the domain has no recognised TLD suffix.
  */
 export const resolve = async (

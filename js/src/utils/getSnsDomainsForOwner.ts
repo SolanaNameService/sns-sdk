@@ -2,10 +2,11 @@ import { Connection, PublicKey } from "@solana/web3.js";
 import { NAME_PROGRAM_ID, SNS_ROOT_DOMAIN_ACCOUNT } from "../constants";
 
 /**
- * This function can be used to retrieve all domain names owned by `wallet`
- * @param connection The Solana RPC connection object
- * @param wallet The wallet you want to search domain names for
- * @returns
+ * Retrieves top-level `.sns` domain accounts owned by a wallet.
+ *
+ * @param connection Solana RPC connection
+ * @param wallet Wallet to search domain accounts for
+ * @returns Domain account public keys.
  */
 export async function getSnsDomainsForOwner(
   connection: Connection,

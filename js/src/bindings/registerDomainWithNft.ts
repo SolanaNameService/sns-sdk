@@ -35,21 +35,20 @@ const getMasterEditionPda = (nftMint: PublicKey) => {
 };
 
 /**
- * Builds the instruction to register a `.sns` domain name using a Wolves
- * collection NFT in lieu of a token payment.
+ * Builds an instruction to register a top-level `.sns` domain using a Wolves NFT.
  *
  * The `nameAccount` and `reverseLookupAccount` keys must be pre-derived with
  * {@link getDomainKeySync} and {@link getReverseKeySync} respectively before
  * calling this function.
  *
- * @param domain The full domain name including TLD (e.g. `"mydomain.sns"`)
+ * @param domain Full `.sns` domain name
  * @param space The number of bytes to allocate for the name account data
  * @param nameAccount The derived public key of the domain name account
  * @param reverseLookupAccount The derived public key of the reverse lookup account
- * @param buyer The buyer's wallet — pays rent and must hold the NFT
+ * @param buyer Buyer paying for the registration and holding the NFT
  * @param nftSource The buyer's token account holding the Wolves NFT
  * @param nftMint The mint address of the Wolves NFT
- * @returns A {@link TransactionInstruction} that registers the domain
+ * @returns Transaction instruction.
  */
 export const registerDomainWithNft = (
   domain: string,

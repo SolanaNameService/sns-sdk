@@ -18,9 +18,9 @@ interface GetMultipleRecordsOptions {
  * Retrieves multiple records for a domain, verifies the staleness and right
  * of association of each, and optionally deserializes their content.
  *
- * @param connection The Solana RPC connection object.
- * @param domain The full domain name including TLD (e.g. `mydomain.sns`).
- * @param records The list of record types to retrieve.
+ * @param connection Solana RPC connection
+ * @param domain Full `.sns` or `.sol` domain name
+ * @param records Record types to retrieve
  * @param options Optional retrieval settings.
  * @param options.deserialize When `true`, deserializes the raw content of each record.
  * @returns An array of results in the same order as `records`. Each entry

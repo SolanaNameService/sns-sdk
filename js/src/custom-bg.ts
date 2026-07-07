@@ -21,9 +21,9 @@ const NUMBER_ART_KEY = new PublicKey(
 /**
  * Derives the name account keys for a custom background.
  *
- * @param domain The domain name
- * @param customBg The custom background identifier
- * @returns The custom background domain key and background entry key
+ * @param domain Domain label used for custom-background key derivation
+ * @param customBg Custom background identifier
+ * @returns Custom background domain key and background entry key.
  */
 export const getCustomBgKeys = (domain: string, customBg: CustomBg) => {
   const hashedBg = getHashedNameSync(customBg);

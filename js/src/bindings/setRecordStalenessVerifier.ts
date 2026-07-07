@@ -4,14 +4,14 @@ import { Record } from "../types/record";
 import { _buildValidateSolanaSignatureInstruction } from "./recordValidation";
 
 /**
- * Writes or refreshes the staleness verifier metadata for a .sns record.
+ * Builds an instruction to write or refresh staleness verifier metadata.
  *
- * @param domain The full domain name including TLD (e.g. `"mydomain.sns"`)
- * @param record The record type to validate
- * @param owner The owner of the domain
- * @param payer The fee payer of the transaction
- * @param verifier The verifier to store for staleness checks
- * @returns A transaction instruction that sets the staleness verifier
+ * @param domain Full `.sns` domain or subdomain name
+ * @param record Record type
+ * @param owner Current owner of the domain
+ * @param payer Fee payer for the instruction
+ * @param verifier Verifier account used by the record validation instruction
+ * @returns Transaction instruction.
  */
 export const setRecordStalenessVerifier = (
   domain: string,

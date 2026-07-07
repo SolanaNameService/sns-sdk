@@ -5,10 +5,12 @@ import { deserializeReverse } from "./deserializeReverse";
 import { getReverseKeyFromDomainKey } from "./getReverseKeyFromDomainKey";
 
 /**
- * This function can be used to perform a reverse look up
- * @param connection The Solana RPC connection
- * @param nameAccount The public key of the domain to look up
- * @returns The human readable domain name
+ * Performs a reverse lookup for a domain account.
+ *
+ * @param connection Solana RPC connection
+ * @param nameAccount Domain account public key to reverse look up
+ * @param parent Optional parent name account for subdomain reverse lookups
+ * @returns Human-readable domain name.
  */
 export async function reverseLookup(
   connection: Connection,

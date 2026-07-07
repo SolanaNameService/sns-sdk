@@ -26,9 +26,9 @@ export interface RecordResult {
  * Retrieves a record for a domain, verifies its staleness and right of
  * association, and optionally deserializes the record content.
  *
- * @param connection The Solana RPC connection object.
- * @param domain The full domain name including TLD (e.g. `mydomain.sns`).
- * @param record The record type to retrieve.
+ * @param connection Solana RPC connection
+ * @param domain Full `.sns` or `.sol` domain name
+ * @param record Record type to retrieve
  * @param options Optional retrieval settings.
  * @param options.deserialize When `true`, deserializes the raw record content.
  * @returns The requested record, the raw SNS record account, verification

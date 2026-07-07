@@ -5,16 +5,16 @@ import { NameRegistryState } from "../state";
 import { SNS_ROOT_DOMAIN_ACCOUNT } from "../constants";
 
 /**
- * Builds the instruction to register a domain as the owner's primary domain.
+ * Builds an instruction to set a domain as the owner's primary domain.
  *
  * This derives the owner's primary-domain account, detects whether the provided
  * name account is a subdomain, and includes the parent name account when
  * required by the primary-domain program.
  *
  * @param connection Solana RPC connection
- * @param nameAccount The domain name account to register as primary
- * @param owner The owner of the domain name account
- * @returns The instruction that sets the owner's primary domain
+ * @param nameAccount Name account to set as primary
+ * @param owner Owner of the name account
+ * @returns Transaction instruction.
  */
 export const setPrimaryDomain = async (
   connection: Connection,

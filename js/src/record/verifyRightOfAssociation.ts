@@ -7,15 +7,15 @@ import { getRecordV2Key } from "./getRecordV2Key";
 import { ETH_ROA_RECORDS, GUARDIANS } from "./const";
 
 /**
+ * Verifies a record's Right of Association validation.
  *
- * This function verifies the right of association of a record.
- * Note: This function does not verify if the record is stale.
- * Users must verify staleness in addition to the right of association.
- * @param {Connection} connection - The Solana RPC connection object
- * @param {Record} record - The record to be verified.
- * @param {string} domain - The domain associated with the record.
- * @param {Buffer} verifier - The optional verifier to be used in the verification process.
- * @returns {Promise<boolean>} - Returns a promise that resolves to a boolean indicating whether the record has the right of association.
+ * This does not verify staleness; callers must verify staleness separately.
+ *
+ * @param connection Solana RPC connection
+ * @param record Record type
+ * @param domain Full `.sns` or `.sol` domain name
+ * @param verifier Optional verifier. Required when no guardian exists for the record
+ * @returns Whether the record's Right of Association validation matches the verifier.
  */
 export const verifyRightOfAssociation = async (
   connection: Connection,

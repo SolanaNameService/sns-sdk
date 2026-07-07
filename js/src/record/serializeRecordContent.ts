@@ -15,11 +15,11 @@ import { Buffer } from "buffer";
 import { UTF8_ENCODED, EVM_RECORDS } from "./const";
 
 /**
- * This function serializes a string based on the type of record it corresponds to
- * The serialization follows the SNS-IP 1 guideline
- * @param content The content to serialize
- * @param record The type of record
- * @returns The serialized content as a buffer
+ * Serializes record content according to SNS-IP 1.
+ *
+ * @param content Record content
+ * @param record Record type
+ * @returns Serialized record content.
  */
 export const serializeRecordContent = (
   content: string,

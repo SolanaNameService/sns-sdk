@@ -6,15 +6,14 @@ import { getDomainKeySync } from "../utils/getDomainKeySync";
 import { _parseSnsSubdomain } from "../utils/parseSnsDomain";
 
 /**
- * This function is used to transfer the ownership of a subdomain in the Solana Name Service.
+ * Builds an instruction to transfer a `.sns` subdomain.
  *
- * @param {Connection} connection - The Solana RPC connection object.
- * @param {string} subdomain - The subdomain to transfer, must include the TLD suffix (e.g. `sub.parent.sns`).
- * @param {PublicKey} newOwner - The public key of the new owner of the subdomain.
- * @param {boolean} [isParentOwnerSigner=false] - A flag indicating whether the parent name owner is signing this transfer.
- * @param {PublicKey} [owner] - The public key of the current owner of the subdomain. This is an optional parameter. If not provided, the owner will be resolved automatically. This can be helpful to build transactions when the subdomain does not exist yet.
- *
- * @returns {Promise<TransactionInstruction>} - A promise that resolves to a Solana instruction for the transfer operation.
+ * @param connection Solana RPC connection
+ * @param subdomain Full `.sns` subdomain name
+ * @param newOwner New owner of the subdomain
+ * @param isParentOwnerSigner Whether the parent name owner signs the transfer
+ * @param owner Current owner of the subdomain. Resolved automatically when omitted
+ * @returns Transaction instruction.
  */
 export const transferSubdomain = async (
   connection: Connection,

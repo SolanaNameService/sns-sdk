@@ -131,12 +131,13 @@ export const getPrimaryDomain = async (
 };
 
 /**
- * This function can be used to retrieve the primary domains for multiple wallets, up to a maximum of 100.
- * If a wallet does not have a primary domain, the result will be 'undefined' instead of the human readable domain as a string.
- * This function is optimized for network efficiency, making only four RPC calls, three of which are executed in parallel using Promise.all, thereby reducing the overall execution time.
- * @param connection The Solana RPC connection object
- * @param wallets An array of PublicKeys representing the wallets
- * @returns A promise that resolves to an array of strings or undefined, representing the primary domains or lack thereof for each wallet
+ * Retrieves primary domain names for multiple wallets, up to a maximum of 100.
+ *
+ * If a wallet does not have a primary domain, the result is `undefined`.
+ *
+ * @param connection Solana RPC connection
+ * @param wallets Wallet public keys
+ * @returns Primary domain names, or undefined for wallets without one.
  */
 export const getMultiplePrimaryDomains = async (
   connection: Connection,

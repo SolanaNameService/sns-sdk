@@ -21,10 +21,10 @@ interface RecordVerificationParams {
  * Callers are responsible for applying any public API TLD restrictions before
  * invoking this helper. The key derivation itself follows `getDomainKeySync`.
  *
- * @param params The record derivation parameters
- * @param params.domain The full domain name including TLD (e.g. `"mydomain.sns"`)
- * @param params.record The record type whose V2 account should be derived
- * @returns The derived record account as `pubkey` and its owning parent account
+ * @param params Record derivation parameters
+ * @param params.domain Full domain name, including suffix
+ * @param params.record Record type
+ * @returns Derived record account and parent account.
  * @throws {InvalidParentError} When the owning domain account cannot be resolved
  */
 export const _getRecordAndParentKey = ({
@@ -57,14 +57,14 @@ export const _getRecordAndParentKey = ({
  * refreshes staleness verifier metadata, while `false` validates Right of
  * Association using the provided Solana verifier.
  *
- * @param params The validation instruction parameters
- * @param params.staleness Whether to build the staleness verifier instruction mode
- * @param params.domain The full `.sns` domain or subdomain whose record is validated
- * @param params.record The record type whose V2 account is validated
- * @param params.owner The owner of the domain
- * @param params.payer The fee payer of the transaction
- * @param params.verifier The Solana verifier account used by the selected mode
- * @returns A transaction instruction for the SNS records program
+ * @param params Validation instruction parameters
+ * @param params.staleness Whether to build the staleness-verifier instruction mode
+ * @param params.domain Full `.sns` domain or subdomain name
+ * @param params.record Record type
+ * @param params.owner Current owner of the domain
+ * @param params.payer Fee payer for the instruction
+ * @param params.verifier Verifier account used by the record validation instruction
+ * @returns Transaction instruction.
  * @throws {UnsupportedTldError} When `params.domain` is not a `.sns` domain
  * @throws {InvalidParentError} When the owning domain account cannot be resolved
  */

@@ -3,10 +3,11 @@ import { retrieveRecords } from "../nft/retrieveRecords";
 import { reverseLookupBatch } from "./reverseLookupBatch";
 
 /**
- * This function can be used to retrieve all the tokenized domains of an owner
- * @param connection The Solana RPC connection object
- * @param owner The owner of the tokenized domains
- * @returns
+ * Retrieves tokenized `.sns` domains owned by an owner.
+ *
+ * @param connection Solana RPC connection
+ * @param owner Owner of the tokenized domains
+ * @returns Tokenized domain records with name account, mint, and reverse name.
  */
 export const getSnsNftsForOwner = async (
   connection: Connection,

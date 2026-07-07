@@ -11,13 +11,12 @@ import { getReverseKeySync } from "../utils/getReverseKeySync";
 import { _parseSnsTopLevelDomain } from "../utils/parseSnsDomain";
 
 /**
- * Builds the instruction to burn (permanently delete) a domain name and its
- * reverse lookup account, returning any lamports to the target account.
+ * Builds an instruction to burn a top-level `.sns` domain and its reverse lookup account.
  *
- * @param domain The domain to burn, must include the TLD suffix (e.g. `mydomain.sns`).
- * @param owner The current owner of the domain
- * @param target The account that will receive the reclaimed lamports
- * @returns A {@link TransactionInstruction} that burns the domain
+ * @param domain Full `.sns` domain name
+ * @param owner Current owner of the domain
+ * @param target Account that receives reclaimed lamports
+ * @returns Transaction instruction.
  */
 export const burnDomain = (
   domain: string,

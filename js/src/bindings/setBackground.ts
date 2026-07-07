@@ -20,14 +20,13 @@ import { getDomainKeySync } from "../utils/getDomainKeySync";
 import { _parseSnsTopLevelDomain } from "../utils/parseSnsDomain";
 
 /**
- * Builds the instructions to set an issued custom background for a top-level
- * `.sns` domain. Subdomains are not supported.
+ * Builds the instructions to set an issued custom background for a top-level `.sns` domain.
  *
  * @param connection Solana RPC connection
- * @param domain The top-level `.sns` domain, e.g. `"mydomain.sns"`
+ * @param domain Full `.sns` domain name
  * @param bg The issued custom background to set
- * @param owner The public key of the domain owner
- * @returns The transaction instructions required to set the custom background
+ * @param owner Current owner of the domain
+ * @returns Transaction instructions.
  */
 export const setBackground = async (
   connection: Connection,

@@ -13,17 +13,17 @@ import { getHashedNameSync } from "../utils/getHashedNameSync";
 import { getNameAccountKeySync } from "../utils/getNameAccountKeySync";
 
 /**
- * Creates a name account with the given rent budget, allocated space, owner and class.
+ * Builds an instruction to create a name account with the given rent budget, space, owner, and class.
  *
- * @param connection The solana connection object to the RPC node
- * @param name The name of the new account
- * @param space The space in bytes allocated to the account
- * @param payerKey The allocation cost payer
- * @param nameOwner The pubkey to be set as owner of the new name account
- * @param lamports The budget to be set for the name account. If not specified, it'll be the minimum for rent exemption
- * @param nameClass The class of this new name
- * @param parentName The parent name of the new name. If specified its owner needs to sign
- * @returns
+ * @param connection Solana RPC connection
+ * @param name Name of the new account
+ * @param space Space in bytes allocated to the account
+ * @param payerKey Account paying for allocation
+ * @param nameOwner Owner of the new name account
+ * @param lamports Lamports to fund the account. Defaults to the rent-exempt minimum
+ * @param nameClass Optional class of the new name account
+ * @param parentName Optional parent name account. Its owner must sign when provided
+ * @returns Transaction instruction.
  */
 export async function createNameRegistry(
   connection: Connection,

@@ -10,8 +10,7 @@ import { getHashedNameSync } from "../utils/getHashedNameSync";
 import { getNameAccountKeySync } from "../utils/getNameAccountKeySync";
 
 /**
- * Builds the instruction to create an SNS reverse lookup account for an
- * already-derived name account.
+ * Builds an instruction to create an SNS reverse lookup account.
  *
  * This is a low-level SNS registrar helper: it creates reverse lookup accounts
  * for SNS names only. It is not suffix-aware and does not derive `nameAccount`
@@ -22,10 +21,10 @@ import { getNameAccountKeySync } from "../utils/getNameAccountKeySync";
  *
  * @param nameAccount The pre-derived SNS name account the reverse lookup points to
  * @param name The raw reverse name to store without a TLD suffix
- * @param feePayer The account paying for reverse account creation
+ * @param feePayer Fee payer for the instruction
  * @param parentName Optional parent name account, required for subdomain reverse lookups
  * @param parentNameOwner Optional parent name owner, required when `parentName` is provided
- * @returns An array containing the reverse lookup creation instruction
+ * @returns Transaction instructions.
  */
 export const createReverse = async (
   nameAccount: PublicKey,

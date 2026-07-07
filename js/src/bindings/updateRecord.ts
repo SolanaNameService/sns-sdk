@@ -9,14 +9,14 @@ import { getDomainKeySync } from "../utils/getDomainKeySync";
 import { _parseSnsDomain } from "../utils/parseSnsDomain";
 
 /**
- * Updates a record account and serializes its content according to SNS-IP 1.
+ * Builds an instruction to update a record for a `.sns` domain or subdomain.
  *
- * @param domain The full domain name including TLD (e.g. `mydomain.sns`)
- * @param record The record type enum
- * @param content The record content to serialize and store
- * @param owner The owner of the record/domain
- * @param payer The fee payer of the transaction
- * @returns The update record transaction instruction
+ * @param domain Full `.sns` domain or subdomain name
+ * @param record Record type
+ * @param content Record content
+ * @param owner Current owner of the domain
+ * @param payer Fee payer for the instruction
+ * @returns Transaction instruction.
  */
 export const updateRecord = (
   domain: string,

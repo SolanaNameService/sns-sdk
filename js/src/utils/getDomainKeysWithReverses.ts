@@ -4,10 +4,11 @@ import { reverseLookupBatch } from "./reverseLookupBatch";
 import { getSnsDomainsForOwner } from "./getSnsDomainsForOwner";
 
 /**
- * This function can be used to retrieve all domain names owned by `wallet` in a human readable format
- * @param connection The Solana RPC connection object
- * @param wallet The wallet you want to search domain names for
- * @returns Array of pubkeys and the corresponding human readable domain names
+ * Retrieves top-level `.sns` domain accounts owned by a wallet with reverse names.
+ *
+ * @param connection Solana RPC connection
+ * @param wallet Wallet to search domain accounts for
+ * @returns Domain account public keys and their reverse names.
  */
 export async function getDomainKeysWithReverses(
   connection: Connection,

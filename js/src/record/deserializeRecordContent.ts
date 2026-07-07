@@ -8,11 +8,11 @@ import { fromByteArray as ipFromByteArray } from "ipaddr.js";
 import { UTF8_ENCODED, EVM_RECORDS } from "./const";
 
 /**
- * This function deserializes a buffer based on the type of record it corresponds to
- * If the record is not properly serialized according to SNS-IP 1 this function will throw an error
- * @param content The content to deserialize
- * @param record The type of record
- * @returns The deserialized content as a string
+ * Deserializes record content according to SNS-IP 1.
+ *
+ * @param content Serialized record content
+ * @param record Record type
+ * @returns Deserialized record content.
  */
 export const deserializeRecordContent = (
   content: Buffer,

@@ -13,15 +13,15 @@ import { _parseSnsDomain } from "../utils/parseSnsDomain";
 import { _getRecordAndParentKey } from "./recordValidation";
 
 /**
- * Validates the Right of Association of a .sns record using an Ethereum signature.
+ * Builds an instruction to validate a record's Right of Association with an Ethereum signature.
  *
- * @param domain The full domain name including TLD (e.g. `"mydomain.sns"`)
- * @param record The record type to validate
- * @param owner The owner of the domain
- * @param payer The fee payer of the transaction
+ * @param domain Full `.sns` domain or subdomain name
+ * @param record Record type
+ * @param owner Current owner of the domain
+ * @param payer Fee payer for the instruction
  * @param signature The 64-byte Ethereum signature used for validation
  * @param expectedPubkey The 20-byte Ethereum public key expected to match the signature
- * @returns A transaction instruction that validates the Ethereum signature
+ * @returns Transaction instruction.
  */
 export const validateRecordRoaEthereum = (
   domain: string,
