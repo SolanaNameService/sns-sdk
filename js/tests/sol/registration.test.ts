@@ -5,8 +5,6 @@ import { registerDomain } from "../../src/bindings/registerDomain";
 import { registerDomainWithNft } from "../../src/bindings/registerDomainWithNft";
 import { UnsupportedTldError } from "../../src/error";
 
-const connection = {} as any;
-
 test("registerDomainWithNft rejects .sol domain", () => {
   expect(() =>
     registerDomainWithNft(

@@ -1,6 +1,6 @@
 require("dotenv").config();
 import { expect, jest, test } from "@jest/globals";
-import { Connection, PublicKey } from "@solana/web3.js";
+import { PublicKey } from "@solana/web3.js";
 
 import { registerDomain } from "../src/bindings/registerDomain";
 import { registerDomainWithNft } from "../src/bindings/registerDomainWithNft";
@@ -8,8 +8,6 @@ import { UnsupportedTldError } from "../src/error";
 
 jest.setTimeout(20_000);
 jest.retryTimes(3);
-
-const connection = new Connection(process.env.RPC_URL!);
 
 test("Register with NFT rejects bare domain", () => {
   expect(() =>
