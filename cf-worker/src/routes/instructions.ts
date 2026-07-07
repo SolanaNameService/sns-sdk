@@ -24,7 +24,6 @@ export const registerInstructionRoutes = (app: Hono<Env>) => {
       const ata = await getAssociatedTokenAddress(paymentMint, buyer, true);
       const connection = getConnection(c);
       const ixs = await registerDomain(
-        connection,
         toCanonicalSnsDomain(domain),
         space,
         buyer,
