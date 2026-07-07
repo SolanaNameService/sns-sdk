@@ -73,7 +73,6 @@ describe("SNS write bindings", () => {
         });
 
         const ixs = await registerDomain({
-          rpc: TEST_RPC,
           domain,
           space: 1_000,
           buyer: VAULT_OWNER,
@@ -98,7 +97,6 @@ describe("SNS write bindings", () => {
         });
 
         const ixs = await registerDomain({
-          rpc: TEST_RPC,
           domain,
           space: 1_000,
           buyer: VAULT_OWNER,
@@ -122,7 +120,6 @@ describe("SNS write bindings", () => {
         for (let i = 0; i < 3; i++) {
           ixs.push(
             ...(await registerDomain({
-              rpc: TEST_RPC,
               domain: `${randomBytes(10).toString("hex")}.sns`,
               space: 1_000,
               buyer: VAULT_OWNER,

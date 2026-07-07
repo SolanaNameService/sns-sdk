@@ -186,7 +186,6 @@ describe("Bindings", () => {
       async (domain) => {
         await expect(
           registerDomain({
-            rpc: TEST_RPC,
             domain,
             space: 1_000,
             buyer: VAULT_OWNER,
@@ -202,7 +201,6 @@ describe("Bindings", () => {
       async (domain) => {
         await expect(
           registerDomain({
-            rpc: TEST_RPC,
             domain,
             space: 1_000,
             buyer: VAULT_OWNER,

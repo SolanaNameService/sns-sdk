@@ -8,6 +8,7 @@ Use this changelog as a migration guide from v0.10.0 to v1.0.0. The main migrati
 - use canonical lowercase `.sns` domains for write APIs
 - update renamed public APIs and instruction builders
 - migrate record validation helpers to the new explicit names
+- remove the `rpc` parameter from `registerDomain` calls
 - remove imports of deleted unused error exports
 
 ## 1. Domain suffix handling
@@ -80,7 +81,6 @@ Example:
 
 ```ts
 await registerDomain({
-  rpc,
   domain: "mydomain.sns",
   space,
   buyer,
@@ -93,6 +93,35 @@ await createRecord({
   content: "https://example.com",
   owner,
   payer,
+});
+```
+
+`registerDomain` no longer requires the rpc param.
+
+Action required: remove `rpc` from `registerDomain` calls.
+
+Before:
+
+```ts
+await registerDomain({
+  rpc,
+  domain: "mydomain.sns",
+  space,
+  buyer,
+  buyerTokenAccount,
+  referrer,
+});
+```
+
+After:
+
+```ts
+await registerDomain({
+  domain: "mydomain.sns",
+  space,
+  buyer,
+  buyerTokenAccount,
+  referrer,
 });
 ```
 

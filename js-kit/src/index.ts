@@ -41,7 +41,7 @@ export * from "./errors";
 
 export * from "./instructions/allocateAndPostRecordInstruction";
 export * from "./instructions/burnDomainInstruction";
-export * from "./instructions/createAtaInstruction";
+export * from "./instructions/createAtaIdempotentInstruction";
 export * from "./instructions/createNameRegistryInstruction";
 export * from "./instructions/createReverseInstruction";
 export * from "./instructions/createSplitV2Instruction";

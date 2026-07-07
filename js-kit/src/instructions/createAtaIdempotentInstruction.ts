@@ -1,7 +1,7 @@
 import { getCreateAssociatedTokenIdempotentInstructionDataEncoder } from "@solana-program/token";
-import { AccountRole, Address, AccountMeta, Instruction } from "@solana/kit";
+import { AccountMeta, AccountRole, Address, Instruction } from "@solana/kit";
 
-export const _createAtaInstruction = (
+export const _createAtaIdempotentInstruction = (
   programAddress: Address,
   payer: Address,
   ata: Address,

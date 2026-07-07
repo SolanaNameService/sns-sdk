@@ -2,14 +2,7 @@ import {
   ASSOCIATED_TOKEN_PROGRAM_ADDRESS,
   findAssociatedTokenPda,
 } from "@solana-program/token";
-import {
-  Address,
-  GetAccountInfoApi,
-  Instruction,
-  Rpc,
-  fetchEncodedAccount,
-  getProgramDerivedAddress,
-} from "@solana/kit";
+import { Address, Instruction, getProgramDerivedAddress } from "@solana/kit";
 
 import { addressCodec } from "../codecs";
 import {
@@ -26,14 +19,13 @@ import {
 } from "../constants/addresses";
 import { PYTH_FEEDS } from "../constants/pythFeeds";
 import { PythFeedNotFoundError } from "../errors";
-import { _createAtaInstruction } from "../instructions/createAtaInstruction";
+import { _createAtaIdempotentInstruction } from "../instructions/createAtaIdempotentInstruction";
 import { CreateSplitV2Instruction } from "../instructions/createSplitV2Instruction";
 import { _deriveAddress } from "../utils/deriveAddress";
 import { getPythFeedAddress } from "../utils/getPythFeedAddress";
 import { _parseSnsTopLevelDomain } from "../utils/parseSnsDomain";
 
 interface RegisterDomainParams {
-  rpc: Rpc<GetAccountInfoApi>;
   domain: string;
   space: number;
   buyer: Address;
@@ -43,20 +35,22 @@ interface RegisterDomainParams {
 }
 
 /**
- * Registers a .sns domain.
+ * Builds the instructions to register a top-level `.sns` domain.
  *
- * @param params - An object containing the following properties:
- *   - `rpc`: An RPC interface implementing GetAccountInfoApi.
- *   - `domain`: The full .sns domain name to be registered in lowercase.
- *   - `space`: The space in bytes to be allocated for the domain registry (max: 10,000).
- *   - `buyer`: The address of the buyer registering the domain.
- *   - `buyerTokenAccount`: The associated token account of the buyer.
- *   - `mint`: (Optional) The token mint used for payment. Defaults to USDC.
- *   - `referrer`: (Optional) The address of the referrer.
- * @returns A promise which resolves to an array of instructions required for domain registration.
+ * If a supported referrer is provided, the returned instructions include an
+ * idempotent associated token account creation instruction before the
+ * registration instruction.
+ *
+ * @param params Registration parameters
+ * @param params.domain Full `.sns` domain name
+ * @param params.space Number of bytes to allocate for the domain registry
+ * @param params.buyer Buyer paying for the registration
+ * @param params.buyerTokenAccount Buyer's token account used to pay for registration
+ * @param params.mint Token mint used for payment. Defaults to USDC
+ * @param params.referrer Optional referrer address
+ * @returns Transaction instructions.
  */
 export const registerDomain = async ({
-  rpc,
   domain,
   space,
   buyer,
@@ -90,21 +84,17 @@ export const registerDomain = async ({
       owner: referrer,
       tokenProgram: TOKEN_PROGRAM_ADDRESS,
     });
-    const ataAccount = await fetchEncodedAccount(rpc, ata);
+    const ix = _createAtaIdempotentInstruction(
+      ASSOCIATED_TOKEN_PROGRAM_ADDRESS,
+      buyer,
+      ata,
+      referrer,
+      mint,
+      SYSTEM_PROGRAM_ADDRESS,
+      TOKEN_PROGRAM_ADDRESS
+    );
 
-    if (!ataAccount.exists) {
-      const ix = _createAtaInstruction(
-        ASSOCIATED_TOKEN_PROGRAM_ADDRESS,
-        buyer,
-        ata,
-        referrer,
-        mint,
-        SYSTEM_PROGRAM_ADDRESS,
-        TOKEN_PROGRAM_ADDRESS
-      );
-
-      ixs.push(ix);
-    }
+    ixs.push(ix);
   }
 
   const [vaultAta] = await findAssociatedTokenPda({

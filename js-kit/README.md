@@ -107,6 +107,20 @@ import {
 - Raw name registry: `createNameRegistry`, `updateNameRegistry`, `deleteNameRegistry`
 - Reverse lookup: `createReverse`
 
+Example `registerDomain` call:
+
+```typescript
+import { registerDomain } from "@solana-name-service/sns-sdk-kit";
+
+const instructions = await registerDomain({
+  domain: "mydomain.sns",
+  space: 1_000,
+  buyer,
+  buyerTokenAccount,
+  referrer,
+});
+```
+
 ## Documentation
 
 General SNS documentation is available at [guide.sns.id](https://guide.sns.id). For additional SDK usage examples, see the [`tests`](./tests) directory.

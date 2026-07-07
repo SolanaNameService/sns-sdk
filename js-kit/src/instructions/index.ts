@@ -1,6 +1,6 @@
 export * from "./allocateAndPostRecordInstruction";
 export * from "./burnDomainInstruction";
-export * from "./createAtaInstruction";
+export * from "./createAtaIdempotentInstruction";
 export * from "./createNameRegistryInstruction";
 export * from "./createReverseInstruction";
 export * from "./createSplitV2Instruction";
