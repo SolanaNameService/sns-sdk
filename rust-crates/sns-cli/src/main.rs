@@ -1,5 +1,6 @@
 use serde::Serialize;
 use sns_sdk::{
+    bindings::register_domain::{register_domain, USDC_MINT},
     derivation::ROOT_DOMAIN_ACCOUNT,
     primary_domain::set_primary_domain::Accounts,
     tld::{parse_sns_domain, parse_sns_top_level_domain},
@@ -12,26 +13,28 @@ use solana_client::{
 };
 use solana_sdk::{bs58, signature::Keypair};
 use solana_sdk_ids::system_program;
-use std::collections::{BTreeSet, HashMap};
+use std::{
+    collections::{BTreeSet, HashMap},
+    sync::LazyLock,
+};
 
 use {
     anyhow::anyhow,
-    base64::Engine,
     clap::Args,
     clap::{Parser, Subcommand},
     console::Term,
     indicatif::{ProgressBar, ProgressState, ProgressStyle},
     prettytable::{row, Table},
-    serde::Deserialize,
     sns_sdk::derivation::get_domain_key,
     sns_sdk::non_blocking::{domain, nft, record_v2, resolve},
     sns_sdk::record::{record_v2::decode_record_v2_fields, Record},
     solana_client::nonblocking::rpc_client::RpcClient,
-    solana_program::instruction::{AccountMeta, Instruction},
+    solana_program::instruction::Instruction,
     solana_program::program_pack::Pack,
     solana_program::pubkey::Pubkey,
     solana_sdk::signer::keypair::read_keypair_file,
     solana_sdk::{signer::Signer, transaction::Transaction},
+    spl_associated_token_account::get_associated_token_address,
     spl_name_service::state::NameRecordHeader,
     std::fmt::Write,
     std::str::FromStr,
@@ -438,27 +441,37 @@ async fn process_reverse_lookup(rpc_client: &RpcClient, key: &str) -> CliResult 
     Ok(())
 }
 
-#[derive(Deserialize)]
-struct RegisterResponse {
-    #[allow(dead_code)]
-    pub s: String,
-    pub result: Vec<ApiResult>,
+type InstructionResult = Result<Vec<Instruction>, Box<dyn std::error::Error>>;
+
+static VALID_REGISTRATION_NAME: LazyLock<regex::Regex> =
+    LazyLock::new(|| regex::Regex::new(r"^[a-z\d\-_]+$").unwrap());
+
+fn validate_registration_domain(domain: &str) -> Result<(), Box<dyn std::error::Error>> {
+    let registration_name = parse_sns_top_level_domain(domain)?;
+    if !VALID_REGISTRATION_NAME.is_match(&registration_name) {
+        return Err(anyhow!(
+            "CLI registrations only support lowercase letters, digits, hyphens, and underscores"
+        )
+        .into());
+    }
+
+    Ok(())
 }
 
-#[derive(Deserialize)]
-#[serde(rename_all = "camelCase")]
-struct ApiResult {
-    pub program_id: String,
-    pub data: String,
-    pub keys: Vec<Key>,
+fn validate_registration_space(space: u64) -> Result<u32, Box<dyn std::error::Error>> {
+    Ok(u32::try_from(space).map_err(|_| anyhow!("Registration space must fit in a u32 value"))?)
 }
 
-#[derive(Deserialize)]
-#[serde(rename_all = "camelCase")]
-struct Key {
-    pub pubkey: String,
-    pub is_writable: bool,
-    pub is_signer: bool,
+fn build_register_instructions(domain: &str, space: u32, buyer: &Pubkey) -> InstructionResult {
+    let buyer_token_account = get_associated_token_address(buyer, &USDC_MINT);
+    Ok(register_domain(
+        domain,
+        space,
+        buyer,
+        &buyer_token_account,
+        None,
+        None,
+    )?)
 }
 
 async fn process_register(
@@ -467,55 +480,26 @@ async fn process_register(
     domains: Vec<String>,
     space: u64,
 ) -> CliResult {
+    let keypair = read_keypair_file(keypair_path)?;
+    let space = validate_registration_space(space)?;
+    for domain in &domains {
+        validate_registration_domain(domain)?;
+    }
+
     println!("Registering domains...");
     let mut table = Table::new();
     table.add_row(row!["Domain", "Transaction", "Explorer"]);
     let pb = progress_bar(domains.len());
-    let client = reqwest::Client::new();
-    let keypair = read_keypair_file(keypair_path)?;
-    let re = regex::Regex::new(r"^[a-z\d\-_]+$")?;
 
     for (idx, domain) in domains.into_iter().enumerate() {
-        let registration_name = parse_sns_top_level_domain(&domain)?;
-        if !re.is_match(&registration_name) {
-            return Err(anyhow!(
-                "CLI registrations only support lowercase letters, digits, hyphens, and underscores"
-            )
-            .into());
-        }
-        let response = client
-            .get(format!(
-                "https://sns-sdk-proxy.bonfida.workers.dev/register?buyer={}&domain={}&space={}",
-                keypair.pubkey(),
-                registration_name,
-                space
-            ))
-            .send()
-            .await?
-            .json::<RegisterResponse>()
-            .await?;
-
-        let mut ixs = vec![];
-        for r in response.result {
-            let program_id = Pubkey::from_str(&r.program_id)?;
-            let mut accounts = vec![];
-            for key in r.keys {
-                accounts.push(if key.is_writable {
-                    AccountMeta::new(Pubkey::from_str(&key.pubkey)?, key.is_signer)
-                } else {
-                    AccountMeta::new_readonly(Pubkey::from_str(&key.pubkey)?, key.is_signer)
-                });
-            }
-            let data = base64::engine::general_purpose::URL_SAFE.decode(r.data)?;
-            ixs.push(Instruction::new_with_bytes(program_id, &data, accounts))
-        }
+        let ixs = build_register_instructions(&domain, space, &keypair.pubkey())?;
 
         let mut tx = Transaction::new_with_payer(&ixs, Some(&keypair.pubkey()));
         let blockhash = rpc_client.get_latest_blockhash().await?;
         tx.partial_sign(&[&keypair], blockhash);
         let sig = rpc_client.send_and_confirm_transaction(&tx).await?;
         table.add_row(row![domain, sig, make_tx_url(&sig.to_string())]);
-        pb.set_position(idx as u64);
+        pb.set_position((idx + 1) as u64);
     }
     pb.finish();
     Term::stdout().clear_to_end_of_screen()?;
@@ -802,5 +786,43 @@ async fn main() {
 
     if let Err(err) = res {
         eprintln!("Error: {err:?}")
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use sns_sdk::bindings::register_domain::VAULT_OWNER;
+    use solana_client::rpc_config::RpcSimulateTransactionConfig;
+    use std::time::{SystemTime, UNIX_EPOCH};
+
+    #[tokio::test]
+    async fn register_instructions_simulate() {
+        let rpc_url = match std::env::var("RPC_URL") {
+            Ok(url) => url,
+            Err(_) => return,
+        };
+        let rpc = RpcClient::new(rpc_url);
+        let suffix = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap()
+            .as_millis();
+        let domain = format!("cli-rust-sdk-sim-{suffix}.sns");
+        let ixs = build_register_instructions(&domain, 1_000, &VAULT_OWNER).unwrap();
+        let tx = Transaction::new_with_payer(&ixs, Some(&VAULT_OWNER));
+        let config = RpcSimulateTransactionConfig {
+            sig_verify: false,
+            replace_recent_blockhash: true,
+            ..Default::default()
+        };
+        let res = rpc
+            .simulate_transaction_with_config(&tx, config)
+            .await
+            .unwrap();
+        assert!(
+            res.value.err.is_none(),
+            "registration simulation failed: {:?}",
+            res.value
+        );
     }
 }
