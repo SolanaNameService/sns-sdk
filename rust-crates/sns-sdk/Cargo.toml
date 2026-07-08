@@ -17,32 +17,29 @@ devnet = ["sns-warp-common/devnet"]
 subdomain = ["sub-registrar"]
 
 [dependencies]
-spl-name-service = { workspace = true, features = ["no-entrypoint"] }
 solana-program = { workspace = true }
 solana-sdk-ids = { workspace = true }
-derive_more = "0.99.17"
 solana-sdk = { workspace = true }
 solana-client = { workspace = true }
 solana-account-decoder = { workspace = true }
+spl-token = { workspace = true, features = ["no-entrypoint"] }
+spl-associated-token-account = { workspace = true, features = ["no-entrypoint"] }
+spl-name-service = { workspace = true, features = ["no-entrypoint"] }
+sns-records = { version = "0.2.0", features = ["no-entrypoint"] }
+sub-registrar = { version = "0.1.0", optional = true, features = ["no-entrypoint"] }
+sns-warp-common = { version = "0.2.0", features = ["solana"] }
+name-tokenizer = { version = "2.1.0", features = ["no-entrypoint"] }
+derive_more = "0.99.17"
 ed25519-dalek = "1.0.1"
 hex = "0.4.3"
-spl-token = { version = "7.0.0", features = ["no-entrypoint"] }
 borsh = "0.10.3"
 bonfida-utils = "0.7.0"
-spl-associated-token-account = { version = "7.0.0", features = [
-    "no-entrypoint",
-] }
 bech32 = "0.9.1"
 punycode = "0.4.1"
-name-tokenizer = { version = "2.1.0", features = ["no-entrypoint"] }
-sns-records = { version = "0.2.0", features = ["no-entrypoint"] }
-
 futures = "0.3.28"
 bytemuck = "1.13.1"
 num-derive = "0.4.0"
 num-traits = "0.2.16"
-sns-warp-common = { version = "0.2.0", features = ["solana"] }
-sub-registrar = { version = "0.1.0", optional = true, features = ["no-entrypoint"] }
 
 [dev-dependencies]
 tokio = { version = "1.26.0", features = ["full"] }
