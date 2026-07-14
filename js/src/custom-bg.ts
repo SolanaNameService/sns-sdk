@@ -4,6 +4,7 @@ import { CustomBg } from "./types/custom-bg";
 import { getHashedNameSync } from "./utils/getHashedNameSync";
 import { getNameAccountKeySync } from "./utils/getNameAccountKeySync";
 import { InvalidCustomBgError } from "./error";
+import { parseSupportedTld } from "./utils/tld";
 
 const DEGEN_POET_KEY = new PublicKey(
   "ART5dr4bDic2sQVZoFheEmUxwQq5VGSx9he7JxHcXNQD",
@@ -21,13 +22,14 @@ const NUMBER_ART_KEY = new PublicKey(
 /**
  * Derives the name account keys for a custom background.
  *
- * @param domain Domain label used for custom-background key derivation
+ * @param domain Full `.sns` or `.sol` domain name
  * @param customBg Custom background identifier
  * @returns Custom background domain key and background entry key.
  */
 export const getCustomBgKeys = (domain: string, customBg: CustomBg) => {
+  const [trimmedDomain] = parseSupportedTld(domain);
   const hashedBg = getHashedNameSync(customBg);
-  const hashedDomain = getHashedNameSync(domain);
+  const hashedDomain = getHashedNameSync(trimmedDomain);
 
   const domainKey = getNameAccountKeySync(
     hashedDomain,

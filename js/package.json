@@ -1,6 +1,9 @@
 {
-  "name": "@bonfida/spl-name-service",
-  "version": "4.0.0",
+  "name": "@bonfida/spl-name-service-beta",
+  "version": "4.0.0-beta.4",
+  "publishConfig": {
+    "access": "restricted"
+  },
   "license": "MIT",
   "files": [
     "dist"
@@ -25,7 +28,7 @@
     "type": "git",
     "url": "https://github.com/Bonfida/sns-sdk"
   },
-  "homepage": "https://sns.guide",
+  "homepage": "https://guide.sns.id",
   "scripts": {
     "dev": "tsc && node --trace-warnings dist/test.js",
     "build": "rimraf dist && rollup -c && tsc --emitDeclarationOnly --declarationDir dist/cjs && tsc --emitDeclarationOnly --declarationDir dist/esm && node -p \"JSON.stringify({type: 'commonjs'})\" > ./dist/cjs/package.json",

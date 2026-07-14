@@ -45,6 +45,7 @@ This applies to read and key-derivation APIs such as:
 - `getMultipleRecords`
 - `getRecordV1Key`
 - `getRecordV2Key`
+- `getCustomBgKeys`
 
 Example:
 
@@ -91,6 +92,7 @@ This applies to write APIs such as:
 - `setRecordRoaVerifier`
 - `validateRecordRoa`
 - `validateRecordRoaEthereum`
+- `setBackground`
 
 Example:
 
