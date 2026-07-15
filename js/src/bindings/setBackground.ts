@@ -40,7 +40,7 @@ export const setBackground = async (
     throw new InvalidCustomBgError("The selected background is invalid");
   }
 
-  const { bgKey } = getCustomBgKeys(domain, bg);
+  const { bgKey } = getCustomBgKeys(trimmedDomain, bg);
   const {
     pubkey: recordKey,
     hashed,
