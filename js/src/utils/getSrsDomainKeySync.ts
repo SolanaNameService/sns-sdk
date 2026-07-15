@@ -1,6 +1,8 @@
+import { sha256 } from "@noble/hashes/sha2";
 import { PublicKey } from "@solana/web3.js";
 
 import { SOL_REGISTRAR_PROGRAM_ID, SRS_PROGRAM_ID } from "../config";
+import { SRS_HASH_PREFIX } from "../constants";
 import { SOL_TLD } from "./tld";
 
 export const SRS_CENTRAL_STATE = PublicKey.findProgramAddressSync(
@@ -19,8 +21,12 @@ export const SOL_SRS_CLASS = PublicKey.findProgramAddressSync(
  * @param name Domain name with the `.sol` TLD suffix trimmed
  * @returns UTF-8 bytes used as the SRS record PDA seed
  */
-export const getSrsRecordSeed = (name: string): Buffer =>
-  Buffer.from(`name${name}`, "utf8");
+export const getSrsRecordSeed = (name: string): Buffer => {
+  // Buffer.from(`name${name}`, "utf8");
+  const input = SRS_HASH_PREFIX + name;
+  const hashed = sha256(Buffer.from(input, "utf8"));
+  return Buffer.from(hashed);
+};
 
 /**
  * Derives the canonical SRS record account for a `.sol` domain.

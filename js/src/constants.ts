@@ -8,9 +8,14 @@ export const NAME_PROGRAM_ID = new PublicKey(
 );
 
 /**
- * Hash prefix used to derive domain name addresses
+ * Hash prefix used to derive SNS domain name addresses
  */
-export const HASH_PREFIX = "SPL Name Service";
+export const SNS_HASH_PREFIX = "SPL Name Service";
+
+/**
+ * Hash prefix used to derive SRS domain name addresses
+ */
+export const SRS_HASH_PREFIX = "SRS";
 
 /**
  * The `.sns` TLD
