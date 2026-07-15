@@ -6,8 +6,8 @@ import { transferSubdomain } from "../../src/bindings/transferSubdomain";
 import { randomBytes } from "crypto";
 import { VAULT_OWNER } from "../../src/constants";
 import { findSubdomains } from "../../src/utils/findSubdomains";
-import { getDomainKeySync } from "../../src/utils/getDomainKeySync";
-import { resolve } from "../../src/resolve/resolve";
+import { getSnsDomainKeySync } from "../../src/utils/getSnsDomainKeySync";
+import { resolve } from "../../src/resolve";
 import { InvalidSubdomainError } from "../../src/error";
 
 jest.setTimeout(20_000);
@@ -67,7 +67,7 @@ test("Transfer sub", async () => {
 test("Find sub domain", async () => {
   const subs = await findSubdomains(
     connection,
-    getDomainKeySync("67679.sns").pubkey,
+    getSnsDomainKeySync("67679").pubkey,
   );
   const expectedSub = ["bullish", "hollaaa", "testing"];
   subs.sort().forEach((e, idx) => expect(e).toBe(expectedSub[idx]));

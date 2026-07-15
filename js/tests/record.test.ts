@@ -77,17 +77,13 @@ test("Record content serialization/deserialization", () => {
   });
 });
 
-describe("record APIs - bare domain rejection", () => {
-  test("getRecordV1Key rejects bare name", () => {
-    expect(() => getRecordV1Key("mydomain", Record.SOL)).toThrow(
-      UnsupportedTldError,
-    );
+describe("record key derivation and API domain validation", () => {
+  test("getRecordV1Key accepts a TLD-trimmed name", () => {
+    expect(getRecordV1Key("mydomain", Record.SOL)).toBeInstanceOf(PublicKey);
   });
 
-  test("getRecordV2Key rejects bare name", () => {
-    expect(() => getRecordV2Key("mydomain", Record.SOL)).toThrow(
-      UnsupportedTldError,
-    );
+  test("getRecordV2Key accepts a TLD-trimmed name", () => {
+    expect(getRecordV2Key("mydomain", Record.SOL)).toBeInstanceOf(PublicKey);
   });
 
   test("verifyStaleness rejects bare domain", async () => {

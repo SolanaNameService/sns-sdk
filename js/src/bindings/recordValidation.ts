@@ -4,7 +4,7 @@ import { PublicKey } from "@solana/web3.js";
 import { NAME_PROGRAM_ID } from "../constants";
 import { InvalidParentError } from "../error";
 import { Record, RecordVersion } from "../types/record";
-import { getDomainKeySync } from "../utils/getDomainKeySync";
+import { getSnsDomainKeySync } from "../utils/getSnsDomainKeySync";
 import { _parseSnsDomain } from "../utils/parseSnsDomain";
 
 interface RecordVerificationParams {
@@ -18,11 +18,11 @@ interface RecordVerificationParams {
 /**
  * Derives the V2 record account and the owning domain or subdomain account.
  *
- * Callers are responsible for applying any public API TLD restrictions before
- * invoking this helper. The key derivation itself follows `getDomainKeySync`.
+ * Expects a TLD-trimmed `.sns` domain that has already been validated by the
+ * public binding.
  *
  * @param params Record derivation parameters
- * @param params.domain Full domain name, including suffix
+ * @param params.domain TLD-trimmed `.sns` domain name
  * @param params.record Record type
  * @returns Derived record account and parent account.
  * @throws {InvalidParentError} When the owning domain account cannot be resolved
@@ -34,13 +34,13 @@ export const _getRecordAndParentKey = ({
   domain: string;
   record: Record;
 }) => {
-  let { pubkey, parent, isSub } = getDomainKeySync(
+  let { pubkey, parent, isSub } = getSnsDomainKeySync(
     `${record}.${domain}`,
     RecordVersion.V2,
   );
 
   if (isSub) {
-    parent = getDomainKeySync(domain).pubkey;
+    parent = getSnsDomainKeySync(domain).pubkey;
   }
 
   if (!parent) {
@@ -78,9 +78,12 @@ export const _buildValidateSolanaSignatureInstruction = ({
 }: RecordVerificationParams & {
   staleness: boolean;
 }) => {
-  _parseSnsDomain(domain);
+  const trimmedDomain = _parseSnsDomain(domain);
 
-  const { pubkey, parent } = _getRecordAndParentKey({ domain, record });
+  const { pubkey, parent } = _getRecordAndParentKey({
+    domain: trimmedDomain,
+    record,
+  });
 
   return validateSolanaSignature(
     payer,

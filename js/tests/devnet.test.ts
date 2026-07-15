@@ -92,9 +92,3 @@ test("Get primary", async () => {
   );
   expect(primaryDomain).toBe("dotsofan22");
 });
-
-test("getDomainKeySync - throws UnsupportedTldError on bare name", () => {
-  expect(() => devnet.utils.getDomainKeySync("mydomain")).toThrow(
-    UnsupportedTldError,
-  );
-});

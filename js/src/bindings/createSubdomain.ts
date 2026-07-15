@@ -1,7 +1,7 @@
 import { Connection, PublicKey, TransactionInstruction } from "@solana/web3.js";
 
 import { NameRegistryState } from "../state";
-import { getDomainKeySync } from "../utils/getDomainKeySync";
+import { getSnsDomainKeySync } from "../utils/getSnsDomainKeySync";
 import { _parseSnsSubdomain } from "../utils/parseSnsDomain";
 import { getReverseKeySync } from "../utils/getReverseKeySync";
 import { createNameRegistry } from "./createNameRegistry";
@@ -25,9 +25,10 @@ export const createSubdomain = async (
   feePayer?: PublicKey,
 ) => {
   const ixs: TransactionInstruction[] = [];
-  const [sub] = _parseSnsSubdomain(subdomain);
+  const [sub, parentDomain] = _parseSnsSubdomain(subdomain);
+  const trimmedSubdomain = `${sub}.${parentDomain}`;
 
-  const { parent, pubkey } = getDomainKeySync(subdomain);
+  const { parent, pubkey } = getSnsDomainKeySync(trimmedSubdomain);
 
   // Space allocated to the subdomains
   const lamports = await connection.getMinimumBalanceForRentExemption(
@@ -47,7 +48,7 @@ export const createSubdomain = async (
   ixs.push(ix_create);
 
   // Create the reverse name
-  const reverseKey = getReverseKeySync(subdomain, true);
+  const reverseKey = getReverseKeySync(trimmedSubdomain, true);
   const info = await connection.getAccountInfo(reverseKey);
   if (!info?.data) {
     const ix_reverse = await createReverse(

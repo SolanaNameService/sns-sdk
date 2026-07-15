@@ -9,7 +9,7 @@ import { registerDomain } from "../../src/bindings/registerDomain";
 import { registerDomainWithNft } from "../../src/bindings/registerDomainWithNft";
 import { REFERRERS } from "../../src/constants";
 import { InvalidDomainError } from "../../src/error";
-import { getDomainKeySync } from "../../src/utils/getDomainKeySync";
+import { getSnsDomainKeySync } from "../../src/utils/getSnsDomainKeySync";
 import { getReverseKeySync } from "../../src/utils/getReverseKeySync";
 
 jest.setTimeout(20_000);
@@ -26,9 +26,10 @@ const VAULT_OWNER = new PublicKey(
 
 test("Register with NFT", async () => {
   const tx = new Transaction();
-  const domain = randomBytes(10).toString("hex") + ".sns";
-  const { pubkey } = getDomainKeySync(domain);
-  const reverse = getReverseKeySync(domain);
+  const trimmedDomain = randomBytes(10).toString("hex");
+  const domain = trimmedDomain + ".sns";
+  const { pubkey } = getSnsDomainKeySync(trimmedDomain);
+  const reverse = getReverseKeySync(trimmedDomain);
   // https://solscan.io/collection/3c138f8640f62b62016f8020f0532ff888bb0866363c26fb2241bcf28c0776ad#holders
   const holder = new PublicKey("FiUYY19eXuVcEAHSJ87KEzYjYnfKZm6KbHoVtdQBNGfk");
   const source = new PublicKey("Df9Jz3NrGVd5jjjrXbedwuHbCc1hL131bUXq2143tTfQ");

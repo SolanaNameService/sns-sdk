@@ -3,7 +3,7 @@ import { test, jest, expect } from "@jest/globals";
 import { Connection, Transaction } from "@solana/web3.js";
 import { createSubdomain } from "../../src/bindings/createSubdomain";
 import { VAULT_OWNER } from "../../src/constants";
-import { resolve } from "../../src/resolve/resolve";
+import { resolve } from "../../src/resolve";
 
 jest.setTimeout(50_000);
 

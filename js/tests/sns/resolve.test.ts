@@ -1,7 +1,7 @@
 require("dotenv").config();
 import { test, jest, expect, describe } from "@jest/globals";
 import { Connection, SystemProgram } from "@solana/web3.js";
-import { resolve, ResolveConfig } from "../../src/resolve/resolve";
+import { resolve, ResolveConfig } from "../../src/resolve";
 import { PdaOwnerNotAllowed, WrongValidation } from "../../src/error";
 
 jest.setTimeout(50_000);

@@ -23,9 +23,12 @@ export const setRecordRoaVerifier = (
   payer: PublicKey,
   verifier: PublicKey,
 ) => {
-  _parseSnsDomain(domain);
+  const trimmedDomain = _parseSnsDomain(domain);
 
-  const { pubkey, parent } = _getRecordAndParentKey({ domain, record });
+  const { pubkey, parent } = _getRecordAndParentKey({
+    domain: trimmedDomain,
+    record,
+  });
 
   return writeRoa(
     payer,

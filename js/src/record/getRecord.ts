@@ -3,8 +3,8 @@ import { Connection, PublicKey } from "@solana/web3.js";
 
 import { NameRegistryState } from "../state";
 import { Record } from "../types/record";
-import { assertMainnetDomainSupported } from "../utils/assertMainnetDomainSupported";
-import { getDomainKeySync } from "../utils/getDomainKeySync";
+import { assertTldSupported } from "../utils/assertTldSupported";
+import { getSnsDomainKeySync } from "../utils/getSnsDomainKeySync";
 import { ETH_ROA_RECORDS, GUARDIANS, SELF_SIGNED } from "./const";
 import { deserializeRecordContent } from "./deserializeRecordContent";
 import { getRecordV2Key } from "./getRecordV2Key";
@@ -41,11 +41,14 @@ export async function getRecord(
   record: Record,
   options: GetRecordOptions = {},
 ): Promise<RecordResult> {
-  await assertMainnetDomainSupported(connection, domain);
-  const pubkey = getRecordV2Key(domain, record);
+  const [trimmedDomain] = await assertTldSupported(connection, domain);
+  const pubkey = getRecordV2Key(trimmedDomain, record);
 
   const [{ registry, nftOwner }, retrievedRecord] = await Promise.all([
-    NameRegistryState.retrieve(connection, getDomainKeySync(domain).pubkey),
+    NameRegistryState.retrieve(
+      connection,
+      getSnsDomainKeySync(trimmedDomain).pubkey,
+    ),
     SnsRecord.retrieve(connection, pubkey),
   ]);
 

@@ -6,6 +6,9 @@ export const SUPPORTED_TLDS = [SNS_TLD, SOL_TLD] as const;
 
 export type SupportedTld = (typeof SUPPORTED_TLDS)[number];
 
+export const unsupportedTld = () =>
+  new UnsupportedTldError("Domain has an unsupported TLD suffix");
+
 /**
  * Returns the matching TLD from `supportedTlds` if `domain` ends with one,
  * or `undefined` otherwise.
@@ -25,7 +28,7 @@ export const parseSupportedTld = (
 ): [string, string] => {
   const tld = getTld(domain, supportedTlds);
   if (!tld) {
-    throw new UnsupportedTldError("Domain has an unsupported TLD suffix");
+    throw unsupportedTld();
   }
   return [domain.slice(0, -tld.length), tld];
 };

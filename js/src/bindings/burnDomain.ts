@@ -6,7 +6,7 @@ import {
   REVERSE_LOOKUP_CLASS,
 } from "../constants";
 import { BurnInstruction } from "../instructions/burnInstruction";
-import { getDomainKeySync } from "../utils/getDomainKeySync";
+import { getSnsDomainKeySync } from "../utils/getSnsDomainKeySync";
 import { getReverseKeySync } from "../utils/getReverseKeySync";
 import { _parseSnsTopLevelDomain } from "../utils/parseSnsDomain";
 
@@ -23,9 +23,9 @@ export const burnDomain = (
   owner: PublicKey,
   target: PublicKey,
 ) => {
-  _parseSnsTopLevelDomain(domain);
+  const trimmedDomain = _parseSnsTopLevelDomain(domain);
 
-  const { pubkey } = getDomainKeySync(domain);
+  const { pubkey } = getSnsDomainKeySync(trimmedDomain);
   const [state] = PublicKey.findProgramAddressSync(
     [pubkey.toBuffer()],
     REGISTER_PROGRAM_ID,
@@ -40,7 +40,7 @@ export const burnDomain = (
     NAME_PROGRAM_ID,
     SystemProgram.programId,
     pubkey,
-    getReverseKeySync(domain),
+    getReverseKeySync(trimmedDomain),
     resellingState,
     state,
     REVERSE_LOOKUP_CLASS,

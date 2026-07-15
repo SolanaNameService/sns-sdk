@@ -16,7 +16,7 @@ import { Numberu32, Numberu64 } from "../int";
 import { NameRegistryState } from "../state";
 import { CustomBg } from "../types/custom-bg";
 import { Record, RecordVersion } from "../types/record";
-import { getDomainKeySync } from "../utils/getDomainKeySync";
+import { getSnsDomainKeySync } from "../utils/getSnsDomainKeySync";
 import { _parseSnsTopLevelDomain } from "../utils/parseSnsDomain";
 
 /**
@@ -34,7 +34,7 @@ export const setBackground = async (
   bg: CustomBg,
   owner: PublicKey,
 ) => {
-  _parseSnsTopLevelDomain(domain);
+  const trimmedDomain = _parseSnsTopLevelDomain(domain);
 
   if (!Object.values(CustomBg).includes(bg)) {
     throw new InvalidCustomBgError("The selected background is invalid");
@@ -45,7 +45,10 @@ export const setBackground = async (
     pubkey: recordKey,
     hashed,
     parent,
-  } = getDomainKeySync(`${Record.Background}.${domain}`, RecordVersion.V1);
+  } = getSnsDomainKeySync(
+    `${Record.Background}.${trimmedDomain}`,
+    RecordVersion.V1,
+  );
 
   const [bgInfo, recordInfo] = await connection.getMultipleAccountsInfo([
     bgKey,

@@ -27,21 +27,20 @@ const createConnection = (slot: number) => {
   return { connection, getSlot, getAccountInfo, getMultipleAccountsInfo };
 };
 
-describe("TLD support", () => {
+describe("mainnet domain support", () => {
   test("keeps .sol statically supported until SRS is enabled", () => {
     expect(SUPPORTED_TLDS).toContain(SOL_TLD);
-    expect(
-      SOL_SRS_RESOLUTION_ENABLED ||
-        (SUPPORTED_TLDS as readonly string[]).includes(SOL_TLD),
-    ).toBe(true);
+    expect(SUPPORTED_TLDS.includes(SOL_TLD) || SOL_SRS_RESOLUTION_ENABLED).toBe(
+      true,
+    );
   });
 
   test("accepts .sns without requesting the slot", async () => {
     const { connection, getSlot } = createConnection(SOL_TLD_CUTOFF_SLOT);
 
-    await expect(assertTldSupported(connection, "domain.sns")).resolves.toEqual(
-      ["domain", ".sns"],
-    );
+    await expect(
+      assertTldSupported(connection, "domain.sns"),
+    ).resolves.toBeUndefined();
     expect(getSlot).not.toHaveBeenCalled();
   });
 
@@ -88,7 +87,7 @@ describe("TLD support", () => {
     ).rejects.toThrow(UnsupportedTldError);
     await expect(
       assertTldSupported(second.connection, "domain.sol"),
-    ).resolves.toEqual(["domain", ".sol"]);
+    ).resolves.toBeUndefined();
 
     expect(first.getSlot).toHaveBeenCalledTimes(1);
     expect(second.getSlot).toHaveBeenCalledTimes(1);
@@ -108,15 +107,15 @@ describe("TLD support", () => {
     await expect(assertTldSupported(connection, "domain.sol")).rejects.toBe(
       rpcError,
     );
-    await expect(assertTldSupported(connection, "domain.sol")).resolves.toEqual(
-      ["domain", ".sol"],
-    );
+    await expect(
+      assertTldSupported(connection, "domain.sol"),
+    ).resolves.toBeUndefined();
 
     expect(getSlot).toHaveBeenCalledTimes(2);
   });
 });
 
-describe("TLD support in read APIs", () => {
+describe("mainnet read API gating", () => {
   const readApis: Array<
     [string, (connection: Connection) => Promise<unknown>]
   > = [

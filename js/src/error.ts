@@ -27,6 +27,8 @@ export enum ErrorType {
   CouldNotFindNftOwner = "CouldNotFindNftOwner",
   WrongValidation = "WrongValidation",
   UnsupportedTld = "UnsupportedTld",
+  DomainExpired = "DomainExpired",
+  CouldNotFindSrsOwner = "CouldNotFindSrsOwner",
 }
 
 export class SNSError extends Error {
@@ -207,5 +209,17 @@ export class WrongValidation extends SNSError {
 export class UnsupportedTldError extends SNSError {
   constructor(message?: string) {
     super(ErrorType.UnsupportedTld, message);
+  }
+}
+
+export class DomainExpired extends SNSError {
+  constructor(message?: string) {
+    super(ErrorType.DomainExpired, message);
+  }
+}
+
+export class CouldNotFindSrsOwner extends SNSError {
+  constructor(message?: string) {
+    super(ErrorType.CouldNotFindSrsOwner, message);
   }
 }

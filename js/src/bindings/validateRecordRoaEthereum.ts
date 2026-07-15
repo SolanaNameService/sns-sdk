@@ -31,9 +31,12 @@ export const validateRecordRoaEthereum = (
   signature: Buffer,
   expectedPubkey: Buffer,
 ) => {
-  _parseSnsDomain(domain);
+  const trimmedDomain = _parseSnsDomain(domain);
 
-  const { pubkey, parent } = _getRecordAndParentKey({ domain, record });
+  const { pubkey, parent } = _getRecordAndParentKey({
+    domain: trimmedDomain,
+    record,
+  });
 
   return validateEthSignature(
     payer,

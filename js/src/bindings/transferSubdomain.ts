@@ -2,7 +2,7 @@ import { Connection, PublicKey, TransactionInstruction } from "@solana/web3.js";
 import { transferInstruction } from "../instructions/transferInstruction";
 import { NameRegistryState } from "../state";
 import { NAME_PROGRAM_ID } from "../constants";
-import { getDomainKeySync } from "../utils/getDomainKeySync";
+import { getSnsDomainKeySync } from "../utils/getSnsDomainKeySync";
 import { _parseSnsSubdomain } from "../utils/parseSnsDomain";
 
 /**
@@ -22,9 +22,10 @@ export const transferSubdomain = async (
   isParentOwnerSigner?: boolean,
   owner?: PublicKey,
 ): Promise<TransactionInstruction> => {
-  _parseSnsSubdomain(subdomain);
+  const [sub, parentDomain] = _parseSnsSubdomain(subdomain);
+  const trimmedSubdomain = `${sub}.${parentDomain}`;
 
-  const { pubkey, parent } = getDomainKeySync(subdomain);
+  const { pubkey, parent } = getSnsDomainKeySync(trimmedSubdomain);
 
   if (!owner) {
     const { registry } = await NameRegistryState.retrieve(connection, pubkey);

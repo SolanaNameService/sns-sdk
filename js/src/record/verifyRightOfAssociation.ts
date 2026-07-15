@@ -1,11 +1,11 @@
-import { Record } from "../types/record";
-import { MissingVerifierError } from "../error";
-import { Connection } from "@solana/web3.js";
 import { Record as SnsRecord, Validation } from "@bonfida/sns-records";
+import { Connection } from "@solana/web3.js";
 
-import { assertMainnetDomainSupported } from "../utils/assertMainnetDomainSupported";
-import { getRecordV2Key } from "./getRecordV2Key";
+import { MissingVerifierError } from "../error";
+import { Record } from "../types/record";
+import { assertTldSupported } from "../utils/assertTldSupported";
 import { ETH_ROA_RECORDS, GUARDIANS } from "./const";
+import { getRecordV2Key } from "./getRecordV2Key";
 
 /**
  * Verifies a record's Right of Association validation.
@@ -29,8 +29,8 @@ export const verifyRightOfAssociation = async (
     throw new MissingVerifierError("You must specify the verifier");
   }
 
-  await assertMainnetDomainSupported(connection, domain);
-  const recordKey = getRecordV2Key(domain, record);
+  const [trimmedDomain] = await assertTldSupported(connection, domain);
+  const recordKey = getRecordV2Key(trimmedDomain, record);
   const recordObj = await SnsRecord.retrieve(connection, recordKey);
 
   const roaId = recordObj.getRoAId();

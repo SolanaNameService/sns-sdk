@@ -2,17 +2,19 @@ import { REVERSE_LOOKUP_CLASS } from "../constants";
 
 import { getHashedNameSync } from "./getHashedNameSync";
 import { getNameAccountKeySync } from "./getNameAccountKeySync";
-import { getDomainKeySync } from "./getDomainKeySync";
+import { getSnsDomainKeySync } from "./getSnsDomainKeySync";
 
 /**
  * Derives the reverse lookup account for a domain name.
  *
- * @param domain Full `.sns` or `.sol` domain name
- * @param isSub Whether the domain is a subdomain
+ * The caller must trim the TLD suffix before calling this function.
+ *
+ * @param domain Domain name with its TLD suffix trimmed
+ * @param isSub Set to true when deriving a subdomain reverse account
  * @returns Reverse lookup account public key.
  */
 export const getReverseKeySync = (domain: string, isSub?: boolean) => {
-  const { pubkey, parent } = getDomainKeySync(domain);
+  const { pubkey, parent } = getSnsDomainKeySync(domain);
   const hashedReverseLookup = getHashedNameSync(pubkey.toBase58());
   const reverseLookupAccount = getNameAccountKeySync(
     hashedReverseLookup,

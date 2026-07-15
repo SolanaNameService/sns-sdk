@@ -2,7 +2,7 @@ require("dotenv").config();
 import { test, expect, jest } from "@jest/globals";
 import { Connection, PublicKey, Transaction } from "@solana/web3.js";
 import { setPrimaryDomain } from "../../src/bindings/setPrimaryDomain";
-import { getDomainKeySync } from "../../src/utils/getDomainKeySync";
+import { getSnsDomainKeySync } from "../../src/utils/getSnsDomainKeySync";
 
 jest.setTimeout(10_000);
 
@@ -13,7 +13,7 @@ test("Set primary domain", async () => {
   const tx = new Transaction();
   const ix = await setPrimaryDomain(
     connection,
-    getDomainKeySync("wallet-guide-3.sns").pubkey,
+    getSnsDomainKeySync("wallet-guide-3").pubkey,
     owner,
   );
   tx.add(ix);

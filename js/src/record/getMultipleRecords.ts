@@ -3,14 +3,13 @@ import { Connection, PublicKey } from "@solana/web3.js";
 
 import { NameRegistryState } from "../state";
 import { Record } from "../types/record";
-import { assertMainnetDomainSupported } from "../utils/assertMainnetDomainSupported";
-import { getDomainKeySync } from "../utils/getDomainKeySync";
+import { assertTldSupported } from "../utils/assertTldSupported";
+import { getSnsDomainKeySync } from "../utils/getSnsDomainKeySync";
 import { ETH_ROA_RECORDS, GUARDIANS, SELF_SIGNED } from "./const";
 import { deserializeRecordContent } from "./deserializeRecordContent";
 import { getRecordV2Key } from "./getRecordV2Key";
 
 import type { RecordResult } from "./getRecord";
-
 interface GetMultipleRecordsOptions {
   deserialize?: boolean;
 }
@@ -35,11 +34,17 @@ export async function getMultipleRecords(
   records: Record[],
   options: GetMultipleRecordsOptions = {},
 ): Promise<(RecordResult | undefined)[]> {
-  await assertMainnetDomainSupported(connection, domain);
-  const pubkeys = records.map((record) => getRecordV2Key(domain, record));
+  const [trimmedDomain] = await assertTldSupported(connection, domain);
+
+  const pubkeys = records.map((record) =>
+    getRecordV2Key(trimmedDomain, record),
+  );
 
   const [{ registry, nftOwner }, retrievedRecords] = await Promise.all([
-    NameRegistryState.retrieve(connection, getDomainKeySync(domain).pubkey),
+    NameRegistryState.retrieve(
+      connection,
+      getSnsDomainKeySync(trimmedDomain).pubkey,
+    ),
     SnsRecord.retrieveBatch(connection, pubkeys),
   ]);
 

@@ -5,7 +5,7 @@ import { NAME_PROGRAM_ID } from "../constants";
 import { InvalidParentError } from "../error";
 import { serializeRecordContent } from "../record/serializeRecordContent";
 import { Record, RecordVersion } from "../types/record";
-import { getDomainKeySync } from "../utils/getDomainKeySync";
+import { getSnsDomainKeySync } from "../utils/getSnsDomainKeySync";
 import { _parseSnsDomain } from "../utils/parseSnsDomain";
 
 /**
@@ -25,15 +25,15 @@ export const updateRecord = (
   owner: PublicKey,
   payer: PublicKey,
 ) => {
-  _parseSnsDomain(domain);
+  const trimmedDomain = _parseSnsDomain(domain);
 
-  let { pubkey, parent, isSub } = getDomainKeySync(
-    `${record}.${domain}`,
+  let { pubkey, parent, isSub } = getSnsDomainKeySync(
+    `${record}.${trimmedDomain}`,
     RecordVersion.V2,
   );
 
   if (isSub) {
-    parent = getDomainKeySync(domain).pubkey;
+    parent = getSnsDomainKeySync(trimmedDomain).pubkey;
   }
 
   if (!parent) {

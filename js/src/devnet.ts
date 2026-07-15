@@ -48,7 +48,6 @@ import {
 import { deserializeReverse } from "./utils/deserializeReverse";
 import { getHashedNameSync } from "./utils/getHashedNameSync";
 import { getPythFeedAccountKey } from "./utils/getPythFeedAccountKey";
-import { parseSupportedTld, SOL_TLD } from "./utils/tld";
 
 const constants = {
   /**
@@ -204,6 +203,18 @@ const _deriveSync = (
   return { pubkey, hashed };
 };
 
+/**
+ * Derives an SNS namespace account from a TLD-trimmed domain name.
+ *
+ * The caller must trim the TLD suffix before calling this function. For
+ * example, pass `"example"` instead of `"example.sns"`, and pass
+ * `"sub.example"` instead of `"sub.example.sns"`.
+ *
+ * @param domain Domain name with its TLD suffix trimmed
+ * @param record Optional record version when deriving a record account
+ * @returns Derived account key, name hash, and parent/subdomain metadata
+ * @throws {InvalidInputError} When the trimmed domain has unsupported nesting
+ */
 const getSnsDomainKeySync = (domain: string, record?: RecordVersion) => {
   const recordClass =
     record === RecordVersion.V2
@@ -236,29 +247,17 @@ const getSnsDomainKeySync = (domain: string, record?: RecordVersion) => {
   return { ...result, isSub: false, parent: undefined };
 };
 
-const getSolDomainKeySync = (
-  _domain: string,
-  _record?: RecordVersion,
-): ReturnType<typeof getSnsDomainKeySync> => {
-  throw new Error("getSolDomainKeySync is not yet implemented");
-};
-
-void getSolDomainKeySync;
-
-const getDomainKeySync = (domain: string, record?: RecordVersion) => {
-  const [trimmedDomain, tld] = parseSupportedTld(domain);
-
-  if (tld === SOL_TLD) {
-    // Both .sol and .sns currently use SNS derivation for compatibility.
-    // Switch this branch to getSolDomainKeySync once implemented.
-    return getSnsDomainKeySync(trimmedDomain, record);
-  }
-
-  return getSnsDomainKeySync(trimmedDomain, record);
-};
-
+/**
+ * Derives the reverse lookup account for a domain name.
+ *
+ * The caller must trim the TLD suffix before calling this function.
+ *
+ * @param domain Domain name with its TLD suffix trimmed
+ * @param isSub Set to true when deriving a subdomain reverse account
+ * @returns Reverse lookup account public key.
+ */
 const getReverseKeySync = (domain: string, isSub?: boolean) => {
-  const { pubkey, parent } = getDomainKeySync(domain);
+  const { pubkey, parent } = getSnsDomainKeySync(domain);
   const hashedReverseLookup = getHashedNameSync(pubkey.toBase58());
   const reverseLookupAccount = getNameAccountKeySync(
     hashedReverseLookup,
@@ -272,28 +271,22 @@ const getReverseKeySync = (domain: string, isSub?: boolean) => {
  * Derives the V2 record account and the owning domain or subdomain account.
  *
  * Callers are responsible for applying any public API TLD restrictions before
- * invoking this helper. The key derivation itself follows `getDomainKeySync`.
+ * invoking this helper. The key derivation itself follows
+ * `getSnsDomainKeySync`.
  *
- * @param params Record derivation parameters
- * @param params.domain Full domain name, including suffix
- * @param params.record Record type
+ * @param domain Domain name with its TLD suffix trimmed
+ * @param record Record type
  * @returns Derived record account and parent account.
  * @throws {InvalidParentError} When the owning domain account cannot be resolved
  */
-const _getRecordAndParentKey = ({
-  domain,
-  record,
-}: {
-  domain: string;
-  record: Record;
-}) => {
-  let { pubkey, parent, isSub } = getDomainKeySync(
+const _getRecordAndParentKey = (domain: string, record: Record) => {
+  let { pubkey, parent, isSub } = getSnsDomainKeySync(
     `${record}.${domain}`,
     RecordVersion.V2,
   );
 
   if (isSub) {
-    parent = getDomainKeySync(domain).pubkey;
+    parent = getSnsDomainKeySync(domain).pubkey;
   }
 
   if (!parent) {
@@ -559,9 +552,10 @@ const createSubdomain = async (
   feePayer?: PublicKey,
 ) => {
   const ixs: TransactionInstruction[] = [];
-  const [sub] = _parseSnsSubdomain(subdomain);
+  const [sub, parentDomain] = _parseSnsSubdomain(subdomain);
+  const trimmedSubdomain = `${sub}.${parentDomain}`;
 
-  const { parent, pubkey } = getDomainKeySync(subdomain);
+  const { parent, pubkey } = getSnsDomainKeySync(trimmedSubdomain);
 
   // Space allocated to the subdomains
   const lamports = await connection.getMinimumBalanceForRentExemption(
@@ -581,7 +575,7 @@ const createSubdomain = async (
   ixs.push(ix_create);
 
   // Create the reverse name
-  const reverseKey = getReverseKeySync(subdomain, true);
+  const reverseKey = getReverseKeySync(trimmedSubdomain, true);
   const info = await connection.getAccountInfo(reverseKey);
   if (!info?.data) {
     const ix_reverse = await createReverse(
@@ -606,9 +600,9 @@ const createSubdomain = async (
  * @returns Transaction instruction.
  */
 const burnDomain = (domain: string, owner: PublicKey, target: PublicKey) => {
-  _parseSnsTopLevelDomain(domain);
+  const trimmedDomain = _parseSnsTopLevelDomain(domain);
 
-  const { pubkey } = getDomainKeySync(domain);
+  const { pubkey } = getSnsDomainKeySync(trimmedDomain);
   const [state] = PublicKey.findProgramAddressSync(
     [pubkey.toBuffer()],
     constants.REGISTER_PROGRAM_ID,
@@ -623,7 +617,7 @@ const burnDomain = (domain: string, owner: PublicKey, target: PublicKey) => {
     constants.NAME_PROGRAM_ID,
     SystemProgram.programId,
     pubkey,
-    getReverseKeySync(domain),
+    getReverseKeySync(trimmedDomain),
     resellingState,
     state,
     constants.REVERSE_LOOKUP_CLASS,
@@ -650,9 +644,10 @@ const transferSubdomain = async (
   isParentOwnerSigner?: boolean,
   owner?: PublicKey,
 ): Promise<TransactionInstruction> => {
-  _parseSnsSubdomain(subdomain);
+  const [sub, parentDomain] = _parseSnsSubdomain(subdomain);
+  const trimmedSubdomain = `${sub}.${parentDomain}`;
 
-  const { pubkey, parent } = getDomainKeySync(subdomain);
+  const { pubkey, parent } = getSnsDomainKeySync(trimmedSubdomain);
 
   if (!owner) {
     const { registry } = await NameRegistryState.retrieve(connection, pubkey);
@@ -878,15 +873,15 @@ const createRecord = (
   owner: PublicKey,
   payer: PublicKey,
 ) => {
-  _parseSnsDomain(domain);
+  const trimmedDomain = _parseSnsDomain(domain);
 
-  let { pubkey, parent, isSub } = getDomainKeySync(
-    `${record}.${domain}`,
+  let { pubkey, parent, isSub } = getSnsDomainKeySync(
+    `${record}.${trimmedDomain}`,
     RecordVersion.V2,
   );
 
   if (isSub) {
-    parent = getDomainKeySync(domain).pubkey;
+    parent = getSnsDomainKeySync(trimmedDomain).pubkey;
   }
 
   if (!parent) {
@@ -927,15 +922,15 @@ const updateRecord = (
   owner: PublicKey,
   payer: PublicKey,
 ) => {
-  _parseSnsDomain(domain);
+  const trimmedDomain = _parseSnsDomain(domain);
 
-  let { pubkey, parent, isSub } = getDomainKeySync(
-    `${record}.${domain}`,
+  let { pubkey, parent, isSub } = getSnsDomainKeySync(
+    `${record}.${trimmedDomain}`,
     RecordVersion.V2,
   );
 
   if (isSub) {
-    parent = getDomainKeySync(domain).pubkey;
+    parent = getSnsDomainKeySync(trimmedDomain).pubkey;
   }
 
   if (!parent) {
@@ -974,15 +969,14 @@ const deleteRecord = (
   owner: PublicKey,
   payer: PublicKey,
 ) => {
-  _parseSnsDomain(domain);
-
-  let { pubkey, parent, isSub } = getDomainKeySync(
-    `${record}.${domain}`,
+  const trimmedDomain = _parseSnsDomain(domain);
+  let { pubkey, parent, isSub } = getSnsDomainKeySync(
+    `${record}.${trimmedDomain}`,
     RecordVersion.V2,
   );
 
   if (isSub) {
-    parent = getDomainKeySync(domain).pubkey;
+    parent = getSnsDomainKeySync(trimmedDomain).pubkey;
   }
 
   if (!parent) {
@@ -1028,9 +1022,9 @@ const _buildValidateSolanaSignatureInstruction = (
   payer: PublicKey,
   verifier: PublicKey,
 ) => {
-  _parseSnsDomain(domain);
+  const trimmedDomain = _parseSnsDomain(domain);
 
-  const { pubkey, parent } = _getRecordAndParentKey({ domain, record });
+  const { pubkey, parent } = _getRecordAndParentKey(trimmedDomain, record);
 
   const ix = new validateSolanaSignatureInstruction({
     staleness,
@@ -1118,9 +1112,9 @@ const setRecordRoaVerifier = (
   payer: PublicKey,
   verifier: PublicKey,
 ) => {
-  _parseSnsDomain(domain);
+  const trimmedDomain = _parseSnsDomain(domain);
 
-  const { pubkey, parent } = _getRecordAndParentKey({ domain, record });
+  const { pubkey, parent } = _getRecordAndParentKey(trimmedDomain, record);
 
   const ix = new writeRoaInstruction({
     roaId: Array.from(verifier.toBuffer()),
@@ -1143,7 +1137,7 @@ export const devnet = {
     getNameAccountKeySync,
     reverseLookup,
     _deriveSync,
-    getDomainKeySync,
+    getSnsDomainKeySync,
     getReverseKeySync,
     getPrimaryDomain,
   },

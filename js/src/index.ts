@@ -36,7 +36,6 @@ export * from "./utils/check";
 export * from "./utils/deserializeReverse";
 export * from "./utils/findSubdomains";
 export * from "./utils/getAllSnsDomains";
-export * from "./utils/getDomainKeySync";
 export * from "./utils/getDomainKeysWithReverses";
 export * from "./utils/getDomainPriceFromName";
 export * from "./utils/getHashedNameSync";
@@ -45,10 +44,19 @@ export * from "./utils/getPythFeedAccountKey";
 export * from "./utils/getReverseKeyFromDomainKey";
 export * from "./utils/getReverseKeySync";
 export * from "./utils/getSnsDomainsForOwner";
+export * from "./utils/getSnsDomainKeySync";
 export * from "./utils/getSnsNftsForOwner";
 export * from "./utils/reverseLookup";
 export * from "./utils/reverseLookupBatch";
-export * from "./utils/tld";
+export {
+  getTld,
+  parseSnsTld,
+  parseSupportedTld,
+  SNS_TLD,
+  SOL_TLD,
+  SUPPORTED_TLDS,
+} from "./utils/tld";
+export type { SupportedTld } from "./utils/tld";
 
 export * from "./instructions/burnInstruction";
 export * from "./instructions/createInstruction";
@@ -78,7 +86,7 @@ export * from "./int";
 export * from "./types/record";
 export * from "./types/custom-bg";
 
-export * from "./resolve/resolve";
+export * from "./resolve";
 
 export * from "./error";
 export * from "./custom-bg";

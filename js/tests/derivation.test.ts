@@ -1,31 +1,31 @@
 import { expect, test } from "@jest/globals";
 
-import { UnsupportedTldError } from "../src/error";
-import { getDomainKeySync } from "../src/utils/getDomainKeySync";
+import { InvalidInputError } from "../src/error";
+import { getSnsDomainKeySync } from "../src/utils/getSnsDomainKeySync";
 
-test("Derivation - throws on bare name", () => {
-  expect(() => getDomainKeySync("mydomain")).toThrow(UnsupportedTldError);
-});
-
-test("Derivation - .sns produces identical keys to .sol", () => {
-  // Both strip to the same bare label and route through SNS derivation.
-  // This pins the cross-TLD equivalence so a future routing change is caught.
-  expect(getDomainKeySync("mydomain.sns").pubkey.toBase58()).toBe(
-    getDomainKeySync("mydomain.sol").pubkey.toBase58(),
+test("Derivation - derives known SNS namespace keys", () => {
+  expect(getSnsDomainKeySync("bonfida").pubkey.toBase58()).toBe(
+    "Crf8hzfthWGbGbLTVCiqRqV5MVnbpHB1L9KQMd6gsinb",
   );
-  expect(getDomainKeySync("dex.mydomain.sns").pubkey.toBase58()).toBe(
-    getDomainKeySync("dex.mydomain.sol").pubkey.toBase58(),
+  expect(getSnsDomainKeySync("dex.bonfida").pubkey.toBase58()).toBe(
+    "HoFfFXqFHAC8RP3duuQNzag1ieUwJRBv1HtRNiWFq4Qu",
   );
 });
 
 test("Derivation - .sns namespace split classification", () => {
   // "alice.sns" → strip .sns → "alice" (1 label) → top-level domain, not a sub
-  const topLevel = getDomainKeySync("alice.sns");
+  const topLevel = getSnsDomainKeySync("alice");
   expect(topLevel.isSub).toBe(false);
   expect(topLevel.parent).toBeUndefined();
 
   // "sub.alice.sns" → strip .sns → "sub.alice" (2 labels) → subdomain of alice
-  const sub = getDomainKeySync("sub.alice.sns");
+  const sub = getSnsDomainKeySync("sub.alice");
   expect(sub.isSub).toBe(true);
   expect(sub.parent).toBeDefined();
+});
+
+test("Derivation - rejects unsupported nesting", () => {
+  expect(() => getSnsDomainKeySync("deep.sub.alice")).toThrow(
+    InvalidInputError,
+  );
 });

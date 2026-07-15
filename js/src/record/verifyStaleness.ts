@@ -1,10 +1,11 @@
-import { Connection, PublicKey } from "@solana/web3.js";
-import { Record } from "../types/record";
-import { getRecordV2Key } from "./getRecordV2Key";
 import { Record as SnsRecord, Validation } from "@bonfida/sns-records";
+import { Connection, PublicKey } from "@solana/web3.js";
+
 import { NameRegistryState } from "../state";
-import { assertMainnetDomainSupported } from "../utils/assertMainnetDomainSupported";
-import { getDomainKeySync } from "../utils/getDomainKeySync";
+import { Record } from "../types/record";
+import { assertTldSupported } from "../utils/assertTldSupported";
+import { getSnsDomainKeySync } from "../utils/getSnsDomainKeySync";
+import { getRecordV2Key } from "./getRecordV2Key";
 
 /**
  * Verifies a record's staleness validation.
@@ -19,11 +20,11 @@ export const verifyStaleness = async (
   record: Record,
   domain: string,
 ) => {
-  await assertMainnetDomainSupported(connection, domain);
-  const recordKey = getRecordV2Key(domain, record);
+  const [trimmedDomain] = await assertTldSupported(connection, domain);
+  const recordKey = getRecordV2Key(trimmedDomain, record);
   const { registry, nftOwner } = await NameRegistryState.retrieve(
     connection,
-    getDomainKeySync(domain).pubkey,
+    getSnsDomainKeySync(trimmedDomain).pubkey,
   );
   const owner = nftOwner || registry.owner;
   const recordObj = await SnsRecord.retrieve(connection, recordKey);

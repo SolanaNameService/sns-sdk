@@ -263,32 +263,32 @@ test("getMultipleRecords", async () => {
 describe("getRecordV2Key", () => {
   test.each([
     {
-      domain: "domain1.sns",
+      domain: "domain1",
       record: Record.SOL,
       expected: "GBrd6Q53eu1T2PiaQAtm92r3DwxmoGvZ2D6xjtVtN1Qt",
     },
     {
-      domain: "sub.domain2.sns",
+      domain: "sub.domain2",
       record: Record.SOL,
       expected: "A3EFmyCmK5rp73TdgLH8aW49PJ8SJw915arhydRZ6Sws",
     },
     {
-      domain: "domain3.sns",
+      domain: "domain3",
       record: Record.Url,
       expected: "DMZmnjcAnUwSje4o2LGJhipCfNZ5b37GEbbkwbQBWEW1",
     },
     {
-      domain: "sub.domain4.sns",
+      domain: "sub.domain4",
       record: Record.Url,
       expected: "6o8JQ7vss6r9sw9GWNVugZktwfEJ67iUz6H63hhmg4sj",
     },
     {
-      domain: "domain5.sns",
+      domain: "domain5",
       record: Record.IPFS,
       expected: "DQHeVmAj9Nz4uAn2dneEsgBZWcfhUqLdtbDcfWhGL47D",
     },
     {
-      domain: "sub.domain6.sns",
+      domain: "sub.domain6",
       record: Record.IPFS,
       expected: "Dj7tnTTaktrrmdtatRuLG3YdtGZk8XEBMb4w5WtCBHvr",
     },
