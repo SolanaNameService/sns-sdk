@@ -4,18 +4,20 @@ This is a breaking release of `@bonfida/spl-name-service`.
 
 Use this changelog as a migration guide from v3 to v4. The main migration work is:
 
-- pass explicit TLD suffixes to domain APIs
+- pass explicit TLD suffixes to high-level domain APIs
+- pass TLD-trimmed names to low-level synchronous derivation helpers
 - use `.sns` domains for write APIs
+- account for the `.sol` support cutoff
 - update renamed bindings, utilities, and constants
 - migrate records to the v4 record API
 
 ## 1. Domain suffix handling
 
-v4 standardizes domain inputs across the SDK. APIs that work with domains no longer accept ambiguous bare names like `mydomain` unless they are low-level raw name-account APIs.
+v4 separates high-level domain APIs from low-level synchronous derivation APIs.
 
-### Read APIs
+### High-level domain APIs
 
-Read and key-derivation APIs now require a full domain name with a supported suffix.
+High-level domain APIs require a full domain name with a supported suffix.
 
 Use:
 
@@ -33,29 +35,47 @@ Do not use:
 "sub.mydomain";
 ```
 
-Bare names now throw an unsupported TLD error.
+Bare names passed to high-level APIs throw an unsupported TLD error.
 
-Read APIs accept both `.sns` and `.sol`. In v4, `.sol` is an alias for the `.sns` derivation and resolution path for compatibility. There is no separate `.sol` implementation in this release.
-
-This applies to read and key-derivation APIs such as:
+This applies to APIs such as:
 
 - `resolve`
-- `getDomainKeySync`
 - `getRecord`
 - `getMultipleRecords`
-- `getRecordV1Key`
-- `getRecordV2Key`
-- `getCustomBgKeys`
+- `verifyStaleness`
+- `verifyRightOfAssociation`
 
 Example:
 
 ```ts
 await resolve(connection, "mydomain.sns");
 await resolve(connection, "mydomain.sol");
-
-getDomainKeySync("sub.mydomain.sns");
-getDomainKeySync("sub.mydomain.sol");
 ```
+
+Before slot `452825395` (`SOL_TLD_CUTOFF_SLOT`), high-level `.sol` reads and resolution use the existing SNS compatibility path. At or after that slot, high-level APIs including domain resolution will no longer support `.sol` domains and throw `UnsupportedTldError`.
+
+`.sns` behavior is unaffected. SRS-based `.sol` resolution is expected to be restored in a separate future SDK update.
+
+### Synchronous derivation APIs
+
+Low-level synchronous derivation helpers take domain names with the TLD suffix already trimmed:
+
+```ts
+getSnsDomainKeySync("mydomain");
+getSnsDomainKeySync("sub.mydomain");
+
+getRecordV1Key("mydomain", Record.SOL);
+getRecordV2Key("sub.mydomain", Record.Url);
+
+getReverseKeySync("mydomain");
+getReverseKeySync("sub.mydomain", true);
+
+getCustomBgKeys("mydomain", CustomBg.DegenPoet1);
+```
+
+These helpers derive keys for the SPL Name Service-based registrar and account model. They are not applicable to `.sol` domains issued through SRS.
+
+Do not pass `"mydomain.sns"` or `"mydomain.sol"` directly to these helpers. They derive account keys only and do not check current network support for a TLD.
 
 ### Write APIs
 
@@ -144,10 +164,12 @@ Update imports and function calls using this map.
 | `getAllRegisteredDomains`    | `getAllSnsDomains`          |
 | `getAllDomains`              | `getSnsDomainsForOwner`     |
 | `getTokenizedDomains`        | `getSnsNftsForOwner`        |
+| `getDomainKeySync`           | `getSnsDomainKeySync`       |
 | `FavouriteDomain`            | `PrimaryDomain`             |
 | `getFavoriteDomain`          | `getPrimaryDomain`          |
 | `getMultipleFavoriteDomains` | `getMultiplePrimaryDomains` |
 | `ROOT_DOMAIN_ACCOUNT`        | `SNS_ROOT_DOMAIN_ACCOUNT`   |
+| `HASH_PREFIX`                | `SNS_HASH_PREFIX`           |
 
 ## 3. Registration migration
 
@@ -164,7 +186,7 @@ Important changes:
 - pass `"mydomain.sns"` instead of `"mydomain"`
 - subdomains such as `"sub.mydomain.sns"` are rejected
 - `.sol` domains are rejected
-- `registerDomain` no longer takes a `Connection` paramm
+- `registerDomain` no longer takes a `Connection` parameter
 
 ### `registerWithNft` -> `registerDomainWithNft`
 
@@ -233,7 +255,8 @@ Important changes:
 - use `{ deserialize: true }` instead of `true`
 - the return value is no longer a raw `NameRegistryState`
 - the return value is no longer a plain string when deserializing
-- `.sns` and `.sol` domains are accepted for reads
+- `.sns` domains are accepted for reads
+- `.sol` domains are accepted only before finalized slot `452825395`; at or after the cutoff they throw `UnsupportedTldError`
 
 Use these fields on the returned object:
 
@@ -257,6 +280,17 @@ const results = await getMultipleRecords(
 ```
 
 Each returned item is either a `RecordResult` or `undefined` if that record does not exist.
+
+### Deriving record keys
+
+`getRecordV1Key` and `getRecordV2Key` are synchronous derivation helpers. Trim the TLD suffix before calling them:
+
+```ts
+getRecordV1Key("mydomain", Record.SOL);
+getRecordV2Key("sub.mydomain", Record.Url);
+```
+
+These helpers do not check current network support for `.sol`.
 
 ### Writing records
 
