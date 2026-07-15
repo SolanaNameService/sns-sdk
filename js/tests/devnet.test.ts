@@ -3,7 +3,6 @@ import { test, jest, expect } from "@jest/globals";
 import { Connection, PublicKey, Transaction } from "@solana/web3.js";
 import { devnet } from "../src/devnet";
 import { NameRegistryState } from "../src/state";
-import { UnsupportedTldError } from "../src/error";
 
 jest.setTimeout(20_000);
 

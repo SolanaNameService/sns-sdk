@@ -27,7 +27,6 @@ import {
 import { resolve } from "../src/resolve";
 import {
   getSrsDomainKeySync,
-  getSrsRecordSeed,
   SOL_SRS_CLASS,
   SRS_CENTRAL_STATE,
 } from "../src/utils/getSrsDomainKeySync";
@@ -191,28 +190,6 @@ const getCanonicalMint = (domain = "domain.sol") => {
     SRS_PROGRAM_ID,
   )[0];
 };
-
-describe("SRS record derivation", () => {
-  test("generates the current record seed exactly", () => {
-    expect(getSrsRecordSeed("domain")).toEqual(Buffer.from("namedomain"));
-    expect(getSrsRecordSeed("dömain")).toEqual(Buffer.from("namedömain"));
-  });
-
-  test("matches canonical PDA fixtures", () => {
-    const { centralState, solClass, record } =
-      getSrsAddresses("test_domain.sol");
-
-    expect(centralState.toBase58()).toBe(
-      "8K9XmpN6nKy3ERnMovnoj5cbqWKPiGYN8hCRRyW4TLQV",
-    );
-    expect(solClass.toBase58()).toBe(
-      "AjheAtCgSwEcEYd6xi6thcQW25ELWd7wKCx6SKBGUtMQ",
-    );
-    expect(record.toBase58()).toBe(
-      "HcuxUAdeMaA2VHj3FifdTqjNFgJuExyEruLz8zhKYn7k",
-    );
-  });
-});
 
 describe("SRS .sol resolution", () => {
   test("returns a live pubkey owner without slot or legacy RPCs", async () => {

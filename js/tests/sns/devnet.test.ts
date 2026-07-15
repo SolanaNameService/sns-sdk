@@ -94,7 +94,6 @@ test("Transfer subdomain", async () => {
 });
 
 test("Set primary", async () => {
-  const domain = "devnet-test-1.sns";
   const { pubkey: nameAccount } =
     devnet.utils.getSnsDomainKeySync("devnet-test-1");
   const tx = new Transaction();
