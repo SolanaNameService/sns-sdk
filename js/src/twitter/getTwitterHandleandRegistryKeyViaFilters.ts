@@ -42,7 +42,7 @@ export async function getTwitterHandleandRegistryKeyViaFilters(
 
   for (const f of filteredAccounts) {
     if (f.account.data.length > NameRegistryState.HEADER_LEN + 32) {
-      const data = f.account.data.slice(NameRegistryState.HEADER_LEN);
+      const data = f.account.data.subarray(NameRegistryState.HEADER_LEN);
       const state = new ReverseTwitterRegistryState(
         deserialize(ReverseTwitterRegistryState.schema, data) as any,
       );

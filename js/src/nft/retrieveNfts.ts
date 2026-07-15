@@ -28,6 +28,6 @@ export const retrieveNfts = async (connection: Connection) => {
   });
   const offset = 1 + 1 + 32 + 32;
   return result.map(
-    (e) => new PublicKey(e.account.data.slice(offset, offset + 32)),
+    (e) => new PublicKey(e.account.data.subarray(offset, offset + 32)),
   );
 };

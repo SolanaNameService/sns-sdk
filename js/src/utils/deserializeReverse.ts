@@ -14,9 +14,9 @@ export function deserializeReverse(
   trimFirstNullByte = false,
 ): string | undefined {
   if (!data) return undefined;
-  const nameLength = data.slice(0, 4).readUInt32LE(0);
+  const nameLength = data.subarray(0, 4).readUInt32LE(0);
   return data
-    .slice(4, 4 + nameLength)
+    .subarray(4, 4 + nameLength)
     .toString()
     .replace(/^\0/, trimFirstNullByte ? "" : "\0");
 }

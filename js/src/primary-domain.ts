@@ -160,7 +160,7 @@ export const getMultiplePrimaryDomains = async (
   const domainInfos = await connection.getMultipleAccountsInfo(primaryDomains);
   const parentRevKeys: PublicKey[] = [];
   const revKeys = domainInfos.map((e, idx) => {
-    const parent = new PublicKey(e?.data.slice(0, 32) ?? Buffer.alloc(32));
+    const parent = new PublicKey(e?.data.subarray(0, 32) ?? Buffer.alloc(32));
     const isSub =
       e?.owner.equals(NAME_PROGRAM_ID) &&
       !parent.equals(SNS_ROOT_DOMAIN_ACCOUNT);
@@ -197,14 +197,14 @@ export const getMultiplePrimaryDomains = async (
     }
 
     if (parentRevAccount && parentRevAccount.owner.equals(NAME_PROGRAM_ID)) {
-      const des = deserializeReverse(parentRevAccount.data.slice(96));
+      const des = deserializeReverse(parentRevAccount.data.subarray(96));
       parentRev += `.${des}`;
     }
 
-    const nativeOwner = new PublicKey(domainInfo?.data.slice(32, 64));
+    const nativeOwner = new PublicKey(domainInfo?.data.subarray(32, 64));
 
     if (nativeOwner.equals(wallets[i])) {
-      result.push(deserializeReverse(rev?.data.slice(96), true) + parentRev);
+      result.push(deserializeReverse(rev?.data.subarray(96), true) + parentRev);
       continue;
     }
     // Either tokenized or stale
@@ -216,7 +216,7 @@ export const getMultiplePrimaryDomains = async (
     const decoded = AccountLayout.decode(tokenAcc.data);
     // Tokenized
     if (Number(decoded.amount) === 1) {
-      result.push(deserializeReverse(rev?.data.slice(96)) + parentRev);
+      result.push(deserializeReverse(rev?.data.subarray(96)) + parentRev);
       continue;
     }
 

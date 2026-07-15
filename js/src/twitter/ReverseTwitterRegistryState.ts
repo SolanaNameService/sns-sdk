@@ -36,7 +36,7 @@ export class ReverseTwitterRegistryState {
     const res = new ReverseTwitterRegistryState(
       deserialize(
         ReverseTwitterRegistryState.schema,
-        reverseTwitterAccount.data.slice(NameRegistryState.HEADER_LEN),
+        reverseTwitterAccount.data.subarray(NameRegistryState.HEADER_LEN),
       ) as any,
     );
 

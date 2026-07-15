@@ -43,5 +43,7 @@ export async function getTwitterRegistryData(
     throw new MultipleRegistriesError("More than 1 accounts were found");
   }
 
-  return filteredAccounts[0].account.data.slice(NameRegistryState.HEADER_LEN);
+  return filteredAccounts[0].account.data.subarray(
+    NameRegistryState.HEADER_LEN,
+  );
 }

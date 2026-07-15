@@ -102,7 +102,7 @@ export const resolveSns = async (
   if (solRecordV1Info?.data) {
     const encoder = new TextEncoder();
     const expectedBuffer = Buffer.concat([
-      solRecordV1Info.data.slice(
+      solRecordV1Info.data.subarray(
         NameRegistryState.HEADER_LEN,
         NameRegistryState.HEADER_LEN + 32,
       ),
@@ -112,7 +112,7 @@ export const resolveSns = async (
     const expected = encoder.encode(expectedBuffer.toString("hex"));
     const valid = verifySolRecordV1Signature(
       expected,
-      solRecordV1Info.data.slice(
+      solRecordV1Info.data.subarray(
         NameRegistryState.HEADER_LEN + 32,
         NameRegistryState.HEADER_LEN + 32 + SIGNATURE_LENGTH_IN_BYTES,
       ),
@@ -121,7 +121,7 @@ export const resolveSns = async (
 
     if (valid) {
       return new PublicKey(
-        solRecordV1Info.data.slice(
+        solRecordV1Info.data.subarray(
           NameRegistryState.HEADER_LEN,
           NameRegistryState.HEADER_LEN + 32,
         ),

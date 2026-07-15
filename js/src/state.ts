@@ -32,7 +32,7 @@ export class NameRegistryState {
   static deserialize(data: Buffer) {
     const res = new NameRegistryState(deserialize(this.schema, data) as any);
 
-    res.data = data?.slice(this.HEADER_LEN);
+    res.data = data?.subarray(this.HEADER_LEN);
     return res;
   }
 
@@ -48,7 +48,7 @@ export class NameRegistryState {
     const res = new NameRegistryState(
       deserialize(this.schema, nameAccount.data) as any,
     );
-    res.data = nameAccount.data?.slice(this.HEADER_LEN);
+    res.data = nameAccount.data?.subarray(this.HEADER_LEN);
 
     const nftOwner = await retrieveNftOwnerV2(connection, nameAccountKey);
 
@@ -64,7 +64,7 @@ export class NameRegistryState {
     const fn = (data: Buffer | undefined) => {
       if (!data) return undefined;
       const res = new NameRegistryState(deserialize(this.schema, data) as any);
-      res.data = data?.slice(this.HEADER_LEN);
+      res.data = data?.subarray(this.HEADER_LEN);
       return res;
     };
     return nameAccounts.map((e) => fn(e?.data));

@@ -49,7 +49,7 @@ export const retrieveNftOwner = async (
       return undefined;
     }
 
-    return new PublicKey(result[0].account.data.slice(32, 64));
+    return new PublicKey(result[0].account.data.subarray(32, 64));
   } catch {
     return undefined;
   }
