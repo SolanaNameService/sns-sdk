@@ -1,10 +1,13 @@
+import { SOL_SRS_RESOLUTION_ENABLED } from "../config";
 import { UnsupportedTldError } from "../error";
 
 export const SOL_TLD = ".sol";
 export const SNS_TLD = ".sns";
-export const SUPPORTED_TLDS = [SNS_TLD, SOL_TLD] as const;
+export const SUPPORTED_TLDS = SOL_SRS_RESOLUTION_ENABLED
+  ? ([SNS_TLD] as const)
+  : ([SNS_TLD, SOL_TLD] as const);
 
-export type SupportedTld = (typeof SUPPORTED_TLDS)[number];
+export type SupportedTld = typeof SNS_TLD | typeof SOL_TLD;
 
 export const unsupportedTld = () =>
   new UnsupportedTldError("Domain has an unsupported TLD suffix");

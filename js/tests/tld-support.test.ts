@@ -9,7 +9,7 @@ import { verifyRightOfAssociation } from "../src/record/verifyRightOfAssociation
 import { verifyStaleness } from "../src/record/verifyStaleness";
 import { Record } from "../src/types/record";
 import { assertTldSupported } from "../src/utils/assertTldSupported";
-import { SOL_TLD, SUPPORTED_TLDS } from "../src/utils/tld";
+import { SNS_TLD, SOL_TLD, SUPPORTED_TLDS } from "../src/utils/tld";
 
 let endpointId = 0;
 
@@ -28,12 +28,10 @@ const createConnection = (slot: number) => {
 };
 
 describe("TLD support", () => {
-  test("keeps .sol statically supported until SRS is enabled", () => {
-    expect(SUPPORTED_TLDS).toContain(SOL_TLD);
-    expect(
-      SOL_SRS_RESOLUTION_ENABLED ||
-        (SUPPORTED_TLDS as readonly string[]).includes(SOL_TLD),
-    ).toBe(true);
+  test("matches static support to the SRS resolution configuration", () => {
+    expect(SUPPORTED_TLDS).toEqual(
+      SOL_SRS_RESOLUTION_ENABLED ? [SNS_TLD] : [SNS_TLD, SOL_TLD],
+    );
   });
 
   test("accepts .sns without requesting the slot", async () => {
