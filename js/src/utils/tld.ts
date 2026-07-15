@@ -25,9 +25,7 @@ export const parseSupportedTld = (
 ): [string, string] => {
   const tld = getTld(domain, supportedTlds);
   if (!tld) {
-    throw new UnsupportedTldError(
-      `Domain "${domain}" is missing a supported TLD suffix (${supportedTlds.join("/")})`,
-    );
+    throw new UnsupportedTldError("Domain has an unsupported TLD suffix");
   }
   return [domain.slice(0, -tld.length), tld];
 };
@@ -36,5 +34,10 @@ export const parseSupportedTld = (
  * Validates that `domain` ends with `.sns`, strips that suffix, and returns a
  * `[trimmedDomain, SNS_TLD]` tuple.
  */
-export const parseSnsTld = (domain: string): [string, string] =>
-  parseSupportedTld(domain, [SNS_TLD]);
+export const parseSnsTld = (domain: string): [string, string] => {
+  if (!domain.endsWith(SNS_TLD)) {
+    throw new UnsupportedTldError("Domain has an unsupported TLD suffix");
+  }
+
+  return [domain.slice(0, -SNS_TLD.length), SNS_TLD];
+};

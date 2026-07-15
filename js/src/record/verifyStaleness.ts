@@ -3,6 +3,7 @@ import { Record } from "../types/record";
 import { getRecordV2Key } from "./getRecordV2Key";
 import { Record as SnsRecord, Validation } from "@bonfida/sns-records";
 import { NameRegistryState } from "../state";
+import { assertMainnetDomainSupported } from "../utils/assertMainnetDomainSupported";
 import { getDomainKeySync } from "../utils/getDomainKeySync";
 
 /**
@@ -18,6 +19,7 @@ export const verifyStaleness = async (
   record: Record,
   domain: string,
 ) => {
+  await assertMainnetDomainSupported(connection, domain);
   const recordKey = getRecordV2Key(domain, record);
   const { registry, nftOwner } = await NameRegistryState.retrieve(
     connection,

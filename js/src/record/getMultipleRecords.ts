@@ -3,6 +3,7 @@ import { Connection, PublicKey } from "@solana/web3.js";
 
 import { NameRegistryState } from "../state";
 import { Record } from "../types/record";
+import { assertMainnetDomainSupported } from "../utils/assertMainnetDomainSupported";
 import { getDomainKeySync } from "../utils/getDomainKeySync";
 import { ETH_ROA_RECORDS, GUARDIANS, SELF_SIGNED } from "./const";
 import { deserializeRecordContent } from "./deserializeRecordContent";
@@ -34,6 +35,7 @@ export async function getMultipleRecords(
   records: Record[],
   options: GetMultipleRecordsOptions = {},
 ): Promise<(RecordResult | undefined)[]> {
+  await assertMainnetDomainSupported(connection, domain);
   const pubkeys = records.map((record) => getRecordV2Key(domain, record));
 
   const [{ registry, nftOwner }, retrievedRecords] = await Promise.all([
