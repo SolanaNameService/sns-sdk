@@ -1,4 +1,13 @@
 import { describe, expect, jest, test } from "@jest/globals";
+import {
+  ACCOUNT_SIZE,
+  AccountLayout,
+  AccountState,
+  AccountType,
+  MINT_SIZE,
+  MintLayout,
+  TOKEN_2022_PROGRAM_ID,
+} from "@solana/spl-token";
 import { AccountInfo, Connection, Keypair, PublicKey } from "@solana/web3.js";
 
 jest.mock("../src/config", () => ({
@@ -80,6 +89,9 @@ const accountInfo = (
 
 const createConnection = (
   getAccountInfo: (address: PublicKey) => Promise<AccountInfo<Buffer> | null>,
+  getTokenLargestAccounts: (
+    mint: PublicKey,
+  ) => Promise<unknown> = async () => ({ context: { slot: 1 }, value: [] }),
 ) => {
   const getSlot = jest.fn(async () => {
     throw new Error("SRS resolution must not request a slot");
@@ -90,11 +102,94 @@ const createConnection = (
   const connection = {
     rpcEndpoint: "https://srs.example.com",
     getAccountInfo: jest.fn(getAccountInfo),
+    getTokenLargestAccounts: jest.fn(getTokenLargestAccounts),
     getSlot,
     getMultipleAccountsInfo,
   } as unknown as Connection;
 
   return { connection, getSlot, getMultipleAccountsInfo };
+};
+
+const createMintData = ({
+  supply = BigInt(1),
+  decimals = 0,
+  isInitialized = true,
+  withExtension = false,
+}: {
+  supply?: bigint;
+  decimals?: number;
+  isInitialized?: boolean;
+  withExtension?: boolean;
+} = {}): Buffer => {
+  const data = Buffer.alloc(withExtension ? ACCOUNT_SIZE + 1 : MINT_SIZE);
+  MintLayout.encode(
+    {
+      mintAuthorityOption: 0,
+      mintAuthority: PublicKey.default,
+      supply,
+      decimals,
+      isInitialized,
+      freezeAuthorityOption: 0,
+      freezeAuthority: PublicKey.default,
+    },
+    data,
+  );
+  if (withExtension) {
+    data[ACCOUNT_SIZE] = AccountType.Mint;
+  }
+  return data;
+};
+
+const createTokenAccountData = ({
+  mint,
+  owner,
+  amount = BigInt(1),
+  state = AccountState.Initialized,
+  withExtension = false,
+}: {
+  mint: PublicKey;
+  owner: PublicKey;
+  amount?: bigint;
+  state?: AccountState;
+  withExtension?: boolean;
+}): Buffer => {
+  const data = Buffer.alloc(withExtension ? ACCOUNT_SIZE + 1 : ACCOUNT_SIZE);
+  AccountLayout.encode(
+    {
+      mint,
+      owner,
+      amount,
+      delegateOption: 0,
+      delegate: PublicKey.default,
+      state,
+      isNativeOption: 0,
+      isNative: BigInt(0),
+      delegatedAmount: BigInt(0),
+      closeAuthorityOption: 0,
+      closeAuthority: PublicKey.default,
+    },
+    data,
+  );
+  if (withExtension) {
+    data[ACCOUNT_SIZE] = AccountType.Account;
+  }
+  return data;
+};
+
+const tokenBalance = (address: PublicKey, amount = "1") => ({
+  address,
+  amount,
+  decimals: 0,
+  uiAmount: Number(amount),
+  uiAmountString: amount,
+});
+
+const getCanonicalMint = (domain = "domain.sol") => {
+  const { record } = getSrsAddresses(domain);
+  return PublicKey.findProgramAddressSync(
+    [Buffer.from("mint"), record.toBuffer()],
+    SRS_PROGRAM_ID,
+  )[0];
 };
 
 describe("SRS record derivation", () => {
@@ -293,16 +388,6 @@ describe("SRS .sol resolution", () => {
     ).rejects.toThrow(PdaOwnerNotAllowed);
   });
 
-  test("rejects a tokenized owner until token resolution is implemented", async () => {
-    const { connection } = createConnection(async () =>
-      accountInfo(createSrsRecord({ ownerType: 1 })),
-    );
-
-    await expect(resolve(connection, "domain.sol")).rejects.toThrow(
-      CouldNotFindSrsOwner,
-    );
-  });
-
   test("does not route future unsupported TLDs through SRS", async () => {
     const { connection, getSlot, getMultipleAccountsInfo } = createConnection(
       async () => accountInfo(createSrsRecord()),
@@ -313,5 +398,312 @@ describe("SRS .sol resolution", () => {
     );
     expect(getSlot).not.toHaveBeenCalled();
     expect(getMultipleAccountsInfo).not.toHaveBeenCalled();
+  });
+});
+
+describe("tokenized SRS .sol resolution", () => {
+  test.each([AccountState.Initialized, AccountState.Frozen])(
+    "resolves a holder in token account state %s",
+    async (state) => {
+      const mint = getCanonicalMint();
+      const holderAccount = Keypair.generate().publicKey;
+      const holder = Keypair.generate().publicKey;
+      const { record } = getSrsAddresses("domain.sol");
+      const { connection } = createConnection(
+        async (address) => {
+          if (address.equals(record)) {
+            return accountInfo(createSrsRecord({ owner: mint, ownerType: 1 }));
+          }
+          if (address.equals(mint)) {
+            return accountInfo(
+              createMintData({ withExtension: true }),
+              TOKEN_2022_PROGRAM_ID,
+            );
+          }
+          if (address.equals(holderAccount)) {
+            return accountInfo(
+              createTokenAccountData({
+                mint,
+                owner: holder,
+                state,
+                withExtension: true,
+              }),
+              TOKEN_2022_PROGRAM_ID,
+            );
+          }
+          return null;
+        },
+        async () => ({
+          context: { slot: 1 },
+          value: [tokenBalance(holderAccount)],
+        }),
+      );
+
+      await expect(resolve(connection, "domain.sol")).resolves.toEqual(holder);
+    },
+  );
+
+  test("rejects a noncanonical embedded mint", async () => {
+    const { connection } = createConnection(async () =>
+      accountInfo(
+        createSrsRecord({
+          owner: Keypair.generate().publicKey,
+          ownerType: 1,
+        }),
+      ),
+    );
+
+    await expect(resolve(connection, "domain.sol")).rejects.toThrow(
+      RecordMalformed,
+    );
+  });
+
+  test.each([
+    { name: "missing", info: null },
+    {
+      name: "wrong program",
+      info: accountInfo(createMintData(), PublicKey.default),
+    },
+    {
+      name: "malformed",
+      info: accountInfo(Buffer.alloc(1), TOKEN_2022_PROGRAM_ID),
+    },
+    {
+      name: "uninitialized",
+      info: accountInfo(
+        createMintData({ isInitialized: false }),
+        TOKEN_2022_PROGRAM_ID,
+      ),
+    },
+    {
+      name: "nonzero decimals",
+      info: accountInfo(createMintData({ decimals: 1 }), TOKEN_2022_PROGRAM_ID),
+    },
+    {
+      name: "wrong supply",
+      info: accountInfo(
+        createMintData({ supply: BigInt(2) }),
+        TOKEN_2022_PROGRAM_ID,
+      ),
+    },
+  ])("rejects a $name mint", async ({ info }) => {
+    const mint = getCanonicalMint();
+    const { record } = getSrsAddresses("domain.sol");
+    const { connection } = createConnection(async (address) => {
+      if (address.equals(record)) {
+        return accountInfo(createSrsRecord({ owner: mint, ownerType: 1 }));
+      }
+      if (address.equals(mint)) {
+        return info;
+      }
+      return null;
+    });
+
+    await expect(resolve(connection, "domain.sol")).rejects.toThrow(
+      CouldNotFindSrsOwner,
+    );
+  });
+
+  test.each([
+    { name: "no", balances: [] },
+    {
+      name: "multiple",
+      balances: [
+        tokenBalance(Keypair.generate().publicKey),
+        tokenBalance(Keypair.generate().publicKey),
+      ],
+    },
+  ])("rejects $name unique holder", async ({ balances }) => {
+    const mint = getCanonicalMint();
+    const { record } = getSrsAddresses("domain.sol");
+    const { connection } = createConnection(
+      async (address) => {
+        if (address.equals(record)) {
+          return accountInfo(createSrsRecord({ owner: mint, ownerType: 1 }));
+        }
+        if (address.equals(mint)) {
+          return accountInfo(createMintData(), TOKEN_2022_PROGRAM_ID);
+        }
+        return null;
+      },
+      async () => ({ context: { slot: 1 }, value: balances }),
+    );
+
+    await expect(resolve(connection, "domain.sol")).rejects.toThrow(
+      CouldNotFindSrsOwner,
+    );
+  });
+
+  test.each([
+    { name: "missing", makeInfo: () => null },
+    {
+      name: "wrong program",
+      makeInfo: (mint: PublicKey, owner: PublicKey) =>
+        accountInfo(createTokenAccountData({ mint, owner }), PublicKey.default),
+    },
+    {
+      name: "malformed",
+      makeInfo: () => accountInfo(Buffer.alloc(1), TOKEN_2022_PROGRAM_ID),
+    },
+    {
+      name: "wrong mint",
+      makeInfo: (_mint: PublicKey, owner: PublicKey) =>
+        accountInfo(
+          createTokenAccountData({
+            mint: Keypair.generate().publicKey,
+            owner,
+          }),
+          TOKEN_2022_PROGRAM_ID,
+        ),
+    },
+    {
+      name: "wrong amount",
+      makeInfo: (mint: PublicKey, owner: PublicKey) =>
+        accountInfo(
+          createTokenAccountData({ mint, owner, amount: BigInt(0) }),
+          TOKEN_2022_PROGRAM_ID,
+        ),
+    },
+    {
+      name: "uninitialized",
+      makeInfo: (mint: PublicKey, owner: PublicKey) =>
+        accountInfo(
+          createTokenAccountData({
+            mint,
+            owner,
+            state: AccountState.Uninitialized,
+          }),
+          TOKEN_2022_PROGRAM_ID,
+        ),
+    },
+  ])("rejects a $name holder account", async ({ makeInfo }) => {
+    const mint = getCanonicalMint();
+    const holderAccount = Keypair.generate().publicKey;
+    const holder = Keypair.generate().publicKey;
+    const { record } = getSrsAddresses("domain.sol");
+    const { connection } = createConnection(
+      async (address) => {
+        if (address.equals(record)) {
+          return accountInfo(createSrsRecord({ owner: mint, ownerType: 1 }));
+        }
+        if (address.equals(mint)) {
+          return accountInfo(createMintData(), TOKEN_2022_PROGRAM_ID);
+        }
+        if (address.equals(holderAccount)) {
+          return makeInfo(mint, holder);
+        }
+        return null;
+      },
+      async () => ({
+        context: { slot: 1 },
+        value: [tokenBalance(holderAccount)],
+      }),
+    );
+
+    await expect(resolve(connection, "domain.sol")).rejects.toThrow(
+      CouldNotFindSrsOwner,
+    );
+  });
+
+  test("applies PDA policy to the token holder", async () => {
+    const mint = getCanonicalMint();
+    const holderAccount = Keypair.generate().publicKey;
+    const [holder] = PublicKey.findProgramAddressSync(
+      [Buffer.from("holder")],
+      SRS_PROGRAM_ID,
+    );
+    const { record } = getSrsAddresses("domain.sol");
+    const { connection } = createConnection(
+      async (address) => {
+        if (address.equals(record)) {
+          return accountInfo(createSrsRecord({ owner: mint, ownerType: 1 }));
+        }
+        if (address.equals(mint)) {
+          return accountInfo(createMintData(), TOKEN_2022_PROGRAM_ID);
+        }
+        if (address.equals(holderAccount)) {
+          return accountInfo(
+            createTokenAccountData({ mint, owner: holder }),
+            TOKEN_2022_PROGRAM_ID,
+          );
+        }
+        return null;
+      },
+      async () => ({
+        context: { slot: 1 },
+        value: [tokenBalance(holderAccount)],
+      }),
+    );
+
+    await expect(resolve(connection, "domain.sol")).rejects.toThrow(
+      PdaOwnerNotAllowed,
+    );
+    await expect(
+      resolve(connection, "domain.sol", { allowPda: "any" }),
+    ).resolves.toEqual(holder);
+  });
+
+  test("allows a token holder PDA owned by an allowlisted program", async () => {
+    const mint = getCanonicalMint();
+    const holderAccount = Keypair.generate().publicKey;
+    const [holder] = PublicKey.findProgramAddressSync(
+      [Buffer.from("holder")],
+      SRS_PROGRAM_ID,
+    );
+    const allowedProgram = Keypair.generate().publicKey;
+    const { record } = getSrsAddresses("domain.sol");
+    const { connection } = createConnection(
+      async (address) => {
+        if (address.equals(record)) {
+          return accountInfo(createSrsRecord({ owner: mint, ownerType: 1 }));
+        }
+        if (address.equals(mint)) {
+          return accountInfo(createMintData(), TOKEN_2022_PROGRAM_ID);
+        }
+        if (address.equals(holderAccount)) {
+          return accountInfo(
+            createTokenAccountData({ mint, owner: holder }),
+            TOKEN_2022_PROGRAM_ID,
+          );
+        }
+        if (address.equals(holder)) {
+          return accountInfo(Buffer.alloc(0), allowedProgram);
+        }
+        return null;
+      },
+      async () => ({
+        context: { slot: 1 },
+        value: [tokenBalance(holderAccount)],
+      }),
+    );
+
+    await expect(
+      resolve(connection, "domain.sol", {
+        allowPda: true,
+        programIds: [allowedProgram],
+      }),
+    ).resolves.toEqual(holder);
+  });
+
+  test("preserves largest-account RPC errors", async () => {
+    const mint = getCanonicalMint();
+    const rpcError = new Error("RPC unavailable");
+    const { record } = getSrsAddresses("domain.sol");
+    const { connection } = createConnection(
+      async (address) => {
+        if (address.equals(record)) {
+          return accountInfo(createSrsRecord({ owner: mint, ownerType: 1 }));
+        }
+        if (address.equals(mint)) {
+          return accountInfo(createMintData(), TOKEN_2022_PROGRAM_ID);
+        }
+        return null;
+      },
+      async () => {
+        throw rpcError;
+      },
+    );
+
+    await expect(resolve(connection, "domain.sol")).rejects.toBe(rpcError);
   });
 });

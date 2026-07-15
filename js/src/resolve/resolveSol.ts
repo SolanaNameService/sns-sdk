@@ -1,3 +1,8 @@
+import {
+  TOKEN_2022_PROGRAM_ID,
+  unpackAccount,
+  unpackMint,
+} from "@solana/spl-token";
 import { Connection, PublicKey } from "@solana/web3.js";
 
 import { SRS_PROGRAM_ID } from "../config";
@@ -52,14 +57,74 @@ const resolveSrsPubkeyOwner = async (
 };
 
 const resolveSrsTokenOwner = async (
-  _connection: Connection,
-  _record: PublicKey,
-  _mint: PublicKey,
-  _config: ResolveConfig,
+  connection: Connection,
+  record: PublicKey,
+  mint: PublicKey,
+  config: ResolveConfig,
 ): Promise<PublicKey> => {
-  throw new CouldNotFindSrsOwner(
-    "SRS tokenized owner resolution is not yet implemented",
+  const [canonicalMint] = PublicKey.findProgramAddressSync(
+    [Buffer.from("mint"), record.toBuffer()],
+    SRS_PROGRAM_ID,
   );
+
+  if (!mint.equals(canonicalMint)) {
+    throw new RecordMalformed("SRS record has a noncanonical token mint");
+  }
+
+  const mintInfo = await connection.getAccountInfo(mint);
+  if (!mintInfo || !mintInfo.owner.equals(TOKEN_2022_PROGRAM_ID)) {
+    throw new CouldNotFindSrsOwner("SRS token mint is invalid");
+  }
+
+  let mintState;
+  try {
+    mintState = unpackMint(mint, mintInfo, TOKEN_2022_PROGRAM_ID);
+  } catch {
+    throw new CouldNotFindSrsOwner("SRS token mint is invalid");
+  }
+
+  if (
+    !mintState.isInitialized ||
+    mintState.decimals !== 0 ||
+    mintState.supply !== BigInt(1)
+  ) {
+    throw new CouldNotFindSrsOwner("SRS token mint is invalid");
+  }
+
+  const largestAccounts = await connection.getTokenLargestAccounts(mint);
+  const holders = largestAccounts.value.filter(({ amount }) => amount === "1");
+  if (holders.length !== 1) {
+    throw new CouldNotFindSrsOwner(
+      "SRS token mint has no unique current holder",
+    );
+  }
+
+  const holderAddress = holders[0].address;
+  const holderInfo = await connection.getAccountInfo(holderAddress);
+  if (!holderInfo || !holderInfo.owner.equals(TOKEN_2022_PROGRAM_ID)) {
+    throw new CouldNotFindSrsOwner("SRS token holder account is invalid");
+  }
+
+  let holderState;
+  try {
+    holderState = unpackAccount(
+      holderAddress,
+      holderInfo,
+      TOKEN_2022_PROGRAM_ID,
+    );
+  } catch {
+    throw new CouldNotFindSrsOwner("SRS token holder account is invalid");
+  }
+
+  if (
+    !holderState.isInitialized ||
+    !holderState.mint.equals(mint) ||
+    holderState.amount !== BigInt(1)
+  ) {
+    throw new CouldNotFindSrsOwner("SRS token holder account is invalid");
+  }
+
+  return resolveSrsPubkeyOwner(connection, holderState.owner, config);
 };
 
 /** Resolves a TLD-trimmed `.sol` domain from its canonical SRS record. */
