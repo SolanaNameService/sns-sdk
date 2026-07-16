@@ -49,6 +49,25 @@ export const RECORDS_PROGRAM_ADDRESS =
   "HP3D4D1ZCmohQGFVms2SS4LCANgJyksBf5s1F77FuFjZ" as Address;
 
 /**
+ * The Solana Registration Service registrar central state PDA.
+ *
+ * This address is derived from the `central_state` seed and must be recomputed
+ * if `SOL_REGISTRAR_PROGRAM_ADDRESS` is updated.
+ */
+export const SRS_CENTRAL_STATE =
+  "8K9XmpN6nKy3ERnMovnoj5cbqWKPiGYN8hCRRyW4TLQV" as Address;
+
+/**
+ * The Solana Registration Service class PDA for `.sol` records.
+ *
+ * This address is derived from `SRS_CENTRAL_STATE`, `.sol`, and
+ * `SRS_PROGRAM_ADDRESS`. It must be recomputed if either
+ * `SOL_REGISTRAR_PROGRAM_ADDRESS` or `SRS_PROGRAM_ADDRESS` is updated.
+ */
+export const SOL_SRS_CLASS =
+  "AjheAtCgSwEcEYd6xi6thcQW25ELWd7wKCx6SKBGUtMQ" as Address;
+
+/**
  * The reverse lookup class address.
  */
 export const REVERSE_LOOKUP_CLASS =

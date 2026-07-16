@@ -8,7 +8,7 @@ import type {
   Rpc,
 } from "@solana/kit";
 
-import { SOL_TLD_CUTOFF_SLOT } from "../src/config";
+import { SOL_SRS_RESOLUTION_ENABLED, SOL_TLD_CUTOFF_SLOT } from "../src/config";
 import { getDomainOwner } from "../src/domain/getDomainOwner";
 import { getDomainRecord } from "../src/domain/getDomainRecord";
 import { getDomainRecords } from "../src/domain/getDomainRecords";
@@ -105,6 +105,10 @@ const nestedReadCases: [string, ReadCall][] = [
 ];
 
 describe("legacy .sol cutoff", () => {
+  test("ships with SRS resolution disabled", () => {
+    expect(SOL_SRS_RESOLUTION_ENABLED).toBe(false);
+  });
+
   test(".sns and unsupported suffixes do not request a slot", async () => {
     const { rpc } = createRpc(0n);
 
@@ -136,6 +140,14 @@ describe("legacy .sol cutoff", () => {
     await assertTldSupported({ rpc, domain: "example.sol" });
     expect(send).toHaveBeenCalledTimes(2);
     expect(rpc.getSlot).toHaveBeenCalledWith({ commitment: "finalized" });
+  });
+
+  test("routes pre-cutoff .sol resolution through legacy SNS", async () => {
+    const { rpc, send } = createRpc(SOL_TLD_CUTOFF_SLOT - 1n);
+
+    await expect(resolve({ rpc, domain: "example.sol" })).rejects.toThrow();
+    expect(send).toHaveBeenCalledTimes(1);
+    expect(rpc.getMultipleAccounts).toHaveBeenCalledTimes(1);
   });
 
   test("caches only confirmed post-cutoff RPC clients", async () => {

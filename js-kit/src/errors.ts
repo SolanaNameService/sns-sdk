@@ -24,6 +24,8 @@ export enum ErrorType {
   InvalidValidation = "InvalidValidation",
   InvalidSerializedData = "InvalidSerializedData",
   UnsupportedTld = "UnsupportedTld",
+  DomainExpired = "DomainExpired",
+  CouldNotFindSrsOwner = "CouldNotFindSrsOwner",
 }
 
 export class SNSError extends Error {
@@ -187,5 +189,17 @@ export class InvalidSerializedDataError extends SNSError {
 export class UnsupportedTldError extends SNSError {
   constructor(message?: string) {
     super(ErrorType.UnsupportedTld, message);
+  }
+}
+
+export class DomainExpiredError extends SNSError {
+  constructor(message?: string) {
+    super(ErrorType.DomainExpired, message);
+  }
+}
+
+export class CouldNotFindSrsOwnerError extends SNSError {
+  constructor(message?: string) {
+    super(ErrorType.CouldNotFindSrsOwner, message);
   }
 }

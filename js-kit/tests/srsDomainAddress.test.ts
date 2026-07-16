@@ -1,9 +1,34 @@
 import { describe, expect, test } from "@jest/globals";
+import { getProgramDerivedAddress } from "@solana/kit";
 
+import { addressCodec, utf8Codec } from "../src/codecs";
+import {
+  SOL_REGISTRAR_PROGRAM_ADDRESS,
+  SRS_PROGRAM_ADDRESS,
+} from "../src/config";
+import { SOL_SRS_CLASS, SRS_CENTRAL_STATE } from "../src/constants/addresses";
 import { getSrsDomainAddress } from "../src/domain/getSrsDomainAddress";
 import { uint8ArrayToHex } from "../src/utils/uint8Array/uint8ArrayToHex";
 
 describe("getSrsDomainAddress", () => {
+  test("precomputed SRS addresses match their canonical derivation", async () => {
+    const [centralState] = await getProgramDerivedAddress({
+      programAddress: SOL_REGISTRAR_PROGRAM_ADDRESS,
+      seeds: [utf8Codec.encode("central_state")],
+    });
+    const [solClass] = await getProgramDerivedAddress({
+      programAddress: SRS_PROGRAM_ADDRESS,
+      seeds: [
+        utf8Codec.encode("class"),
+        addressCodec.encode(centralState),
+        utf8Codec.encode(".sol"),
+      ],
+    });
+
+    expect(centralState).toBe(SRS_CENTRAL_STATE);
+    expect(solClass).toBe(SOL_SRS_CLASS);
+  });
+
   test.each([
     {
       domain: "example",

@@ -1,11 +1,8 @@
 import { getProgramDerivedAddress } from "@solana/kit";
 
 import { addressCodec, utf8Codec } from "../codecs";
-import {
-  SOL_REGISTRAR_PROGRAM_ADDRESS,
-  SRS_HASH_PREFIX,
-  SRS_PROGRAM_ADDRESS,
-} from "../config";
+import { SRS_HASH_PREFIX, SRS_PROGRAM_ADDRESS } from "../config";
+import { SOL_SRS_CLASS } from "../constants/addresses";
 
 interface GetSrsDomainAddressParams {
   domain: string;
@@ -21,18 +18,6 @@ interface GetSrsDomainAddressParams {
 export const getSrsDomainAddress = async ({
   domain,
 }: GetSrsDomainAddressParams) => {
-  const [centralState] = await getProgramDerivedAddress({
-    programAddress: SOL_REGISTRAR_PROGRAM_ADDRESS,
-    seeds: [utf8Codec.encode("central_state")],
-  });
-  const [solClass] = await getProgramDerivedAddress({
-    programAddress: SRS_PROGRAM_ADDRESS,
-    seeds: [
-      utf8Codec.encode("class"),
-      addressCodec.encode(centralState),
-      utf8Codec.encode(".sol"),
-    ],
-  });
   const hashed = new Uint8Array(
     await crypto.subtle.digest(
       "SHA-256",
@@ -43,7 +28,7 @@ export const getSrsDomainAddress = async ({
     programAddress: SRS_PROGRAM_ADDRESS,
     seeds: [
       utf8Codec.encode("record"),
-      addressCodec.encode(solClass),
+      addressCodec.encode(SOL_SRS_CLASS),
       hashed,
     ],
   });
