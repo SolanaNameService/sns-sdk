@@ -1,4 +1,7 @@
 //! Transaction-instruction builders for V2 records.
+//!
+//! Public builders require a full canonical `.sns` domain. Bare names, `.sol`
+//! names, uppercase names, and malformed domains are rejected.
 
 use sns_records::instruction::{
     allocate_and_post_record, delete_record, edit_record, validate_ethereum_signature,
@@ -9,7 +12,7 @@ use solana_program::{instruction::Instruction, pubkey::Pubkey};
 use solana_sdk_ids::system_program;
 
 use crate::{
-    derivation::get_domain_key,
+    derivation::get_sns_domain_key,
     error::SnsError,
     record::{get_record_v2_key, record_v2::serialize_record_v2_content, Record},
     tld::parse_sns_domain,
@@ -17,6 +20,13 @@ use crate::{
 
 fn record_name(record: Record) -> String {
     format!("\x02{}", record.as_str())
+}
+
+fn parse_sns_record_keys(domain: &str, record: Record) -> Result<(Pubkey, Pubkey), SnsError> {
+    let trimmed_domain = parse_sns_domain(domain)?;
+    let record_key = get_record_v2_key(&trimmed_domain, record)?;
+    let domain_key = get_sns_domain_key(&trimmed_domain)?.key;
+    Ok((record_key, domain_key))
 }
 
 /// Build the instruction that allocates a V2 record account and posts its content.
@@ -27,9 +37,7 @@ pub fn create_record_v2_instruction(
     owner: Pubkey,
     payer: Pubkey,
 ) -> Result<Instruction, SnsError> {
-    parse_sns_domain(domain)?;
-    let record_key = get_record_v2_key(domain, record)?;
-    let domain_key = get_domain_key(domain)?;
+    let (record_key, domain_key) = parse_sns_record_keys(domain, record)?;
     let content_bytes = serialize_record_v2_content(content, record)?;
 
     Ok(allocate_and_post_record(
@@ -57,9 +65,7 @@ pub fn update_record_v2_instruction(
     owner: Pubkey,
     payer: Pubkey,
 ) -> Result<Instruction, SnsError> {
-    parse_sns_domain(domain)?;
-    let record_key = get_record_v2_key(domain, record)?;
-    let domain_key = get_domain_key(domain)?;
+    let (record_key, domain_key) = parse_sns_record_keys(domain, record)?;
     let content_bytes = serialize_record_v2_content(content, record)?;
 
     Ok(edit_record(
@@ -86,9 +92,7 @@ pub fn delete_record_v2(
     owner: Pubkey,
     payer: Pubkey,
 ) -> Result<Instruction, SnsError> {
-    parse_sns_domain(domain)?;
-    let record_key = get_record_v2_key(domain, record)?;
-    let domain_key = get_domain_key(domain)?;
+    let (record_key, domain_key) = parse_sns_record_keys(domain, record)?;
 
     Ok(delete_record(
         delete_record::Accounts {
@@ -112,9 +116,7 @@ pub fn write_roa_record_v2(
     payer: Pubkey,
     roa_id: Pubkey,
 ) -> Result<Instruction, SnsError> {
-    parse_sns_domain(domain)?;
-    let record_key = get_record_v2_key(domain, record)?;
-    let domain_key = get_domain_key(domain)?;
+    let (record_key, domain_key) = parse_sns_record_keys(domain, record)?;
 
     Ok(write_roa(
         write_roa::Accounts {
@@ -144,9 +146,7 @@ pub fn validate_record_v2_content(
     payer: Pubkey,
     verifier: Pubkey,
 ) -> Result<Instruction, SnsError> {
-    parse_sns_domain(domain)?;
-    let record_key = get_record_v2_key(domain, record)?;
-    let domain_key = get_domain_key(domain)?;
+    let (record_key, domain_key) = parse_sns_record_keys(domain, record)?;
 
     Ok(validate_solana_signature(
         validate_solana_signature::Accounts {
@@ -177,9 +177,7 @@ pub fn eth_validate_record_v2_content(
     signature: Vec<u8>,
     expected_pubkey: Vec<u8>,
 ) -> Result<Instruction, SnsError> {
-    parse_sns_domain(domain)?;
-    let record_key = get_record_v2_key(domain, record)?;
-    let domain_key = get_domain_key(domain)?;
+    let (record_key, domain_key) = parse_sns_record_keys(domain, record)?;
 
     Ok(validate_ethereum_signature(
         validate_ethereum_signature::Accounts {
@@ -202,7 +200,7 @@ pub fn eth_validate_record_v2_content(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{derivation::get_domain_key, record::get_record_v2_key};
+    use crate::{derivation::get_sns_domain_key, record::get_record_v2_key};
     use solana_program::pubkey;
 
     fn fixture() -> (Pubkey, Pubkey, &'static str, Record) {
@@ -215,7 +213,8 @@ mod tests {
     /// variant adds an 8th verifier signer slot.
     fn assert_base_accounts(ix: &Instruction, payer: Pubkey, owner: Pubkey, domain: &str) {
         assert_eq!(ix.program_id, sns_records::ID);
-        let domain_key = get_domain_key(domain).unwrap();
+        let domain = parse_sns_domain(domain).unwrap();
+        let domain_key = get_sns_domain_key(&domain).unwrap().key;
         assert_eq!(ix.accounts[0].pubkey, system_program::ID);
         assert_eq!(ix.accounts[1].pubkey, spl_name_service::ID);
         assert_eq!(ix.accounts[2].pubkey, payer);
@@ -234,7 +233,7 @@ mod tests {
         assert_eq!(ix.accounts.len(), 7);
         assert_eq!(
             ix.accounts[3].pubkey,
-            get_record_v2_key(domain, record).unwrap()
+            get_record_v2_key(&parse_sns_domain(domain).unwrap(), record).unwrap()
         );
         assert_eq!(ix.data[0], 1); // AllocateAndPostRecord
     }

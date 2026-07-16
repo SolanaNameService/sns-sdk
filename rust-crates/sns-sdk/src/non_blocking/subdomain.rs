@@ -10,7 +10,7 @@ use spl_name_service::state::NameRecordHeader;
 use crate::{derivation::REVERSE_LOOKUP_CLASS, error::SnsError};
 
 #[cfg(feature = "subdomain")]
-use crate::derivation::get_domain_key;
+use crate::{derivation::get_sns_domain_key, tld::parse_supported_tld};
 #[cfg(feature = "subdomain")]
 use borsh::BorshDeserialize;
 
@@ -68,14 +68,14 @@ pub async fn get_subdomains(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::derivation::get_domain_key;
+    use crate::derivation::get_sns_domain_key;
     use dotenv::dotenv;
 
     #[tokio::test]
     async fn test_get_subdomains() {
         dotenv().ok();
         let client = RpcClient::new(std::env::var("RPC_URL").unwrap());
-        let parent = get_domain_key("bonfida.sol").unwrap();
+        let parent = get_sns_domain_key("bonfida").unwrap().key;
         let mut reverse = get_subdomains(&client, &parent).await.unwrap();
         reverse.sort();
         assert_eq!(reverse, vec!["dex", "naming", "test"]);
@@ -87,7 +87,8 @@ pub async fn get_sub_registrar_info(
     rpc_client: &RpcClient,
     domain: &str,
 ) -> Result<Registrar, SnsError> {
-    let key = get_domain_key(domain)?;
+    let (domain, _) = parse_supported_tld(domain)?;
+    let key = get_sns_domain_key(domain)?.key;
     let registrar_key = Registrar::find_key(&key, &SUB_REGISTRAR_PROGRAM_ID).0;
     let account = rpc_client.get_account_data(&registrar_key).await?;
     let expected_tag = SubRegistrarAccountTag::Registrar;

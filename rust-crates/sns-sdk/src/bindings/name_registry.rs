@@ -94,12 +94,12 @@ pub fn delete_name_registry(
 mod tests {
     use super::*;
     use crate::{
-        derivation::get_domain_key,
+        derivation::get_sns_domain_key,
         record::{get_record_v1_key, Record},
     };
     use solana_program::pubkey;
 
-    const DOMAIN: &str = "wallet-guide-9.sns";
+    const DOMAIN: &str = "wallet-guide-9";
     const OWNER: Pubkey = pubkey!("Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8");
     const NEW_OWNER: Pubkey = pubkey!("33m47vH6Eav6jr5Ry86XjhRft2jRBLDnDgPSHoquXi2Z");
 
@@ -109,7 +109,7 @@ mod tests {
 
     #[test]
     fn create_encodes_create_and_derives_record_key() {
-        let domain_key = get_domain_key(DOMAIN).unwrap();
+        let domain_key = get_sns_domain_key(DOMAIN).unwrap().key;
         let ix = create_name_registry(
             &record_name(),
             16,
@@ -150,7 +150,7 @@ mod tests {
 
     #[test]
     fn transfer_encodes_transfer() {
-        let key = get_domain_key(DOMAIN).unwrap();
+        let key = get_sns_domain_key(DOMAIN).unwrap().key;
         let ix = transfer_name_ownership(key, NEW_OWNER, OWNER, None).unwrap();
 
         assert_eq!(ix.data[0], 2); // Transfer
@@ -161,7 +161,7 @@ mod tests {
 
     #[test]
     fn delete_encodes_delete() {
-        let key = get_domain_key(DOMAIN).unwrap();
+        let key = get_sns_domain_key(DOMAIN).unwrap().key;
         let ix = delete_name_registry(key, OWNER, OWNER).unwrap();
 
         assert_eq!(ix.data[0], 3); // Delete
@@ -178,7 +178,7 @@ mod tests {
 mod simulate {
     use super::*;
     use crate::{
-        derivation::get_domain_key,
+        derivation::get_sns_domain_key,
         record::{get_record_v1_key, Record},
     };
     use dotenv::dotenv;
@@ -189,7 +189,7 @@ mod simulate {
     use solana_sdk::transaction::Transaction;
     use spl_name_service::state::NameRecordHeader;
 
-    const DOMAIN: &str = "wallet-guide-9.sns";
+    const DOMAIN: &str = "wallet-guide-9";
     const OWNER: Pubkey = pubkey!("Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8");
     const NEW_OWNER: Pubkey = pubkey!("33m47vH6Eav6jr5Ry86XjhRft2jRBLDnDgPSHoquXi2Z");
 
@@ -219,7 +219,7 @@ mod simulate {
     #[tokio::test]
     async fn create_update_delete_record() {
         let rpc = client();
-        let domain_key = get_domain_key(DOMAIN).unwrap();
+        let domain_key = get_sns_domain_key(DOMAIN).unwrap().key;
         let record_key = get_record_v1_key(DOMAIN, Record::Url).unwrap();
         let data = b"https://sns.id".to_vec();
         let lamports = rpc
@@ -247,7 +247,7 @@ mod simulate {
     #[tokio::test]
     async fn transfer_domain() {
         let rpc = client();
-        let domain_key = get_domain_key(DOMAIN).unwrap();
+        let domain_key = get_sns_domain_key(DOMAIN).unwrap().key;
         let ix = transfer_name_ownership(domain_key, NEW_OWNER, OWNER, None).unwrap();
         simulate_ok(&rpc, &[ix]).await;
     }

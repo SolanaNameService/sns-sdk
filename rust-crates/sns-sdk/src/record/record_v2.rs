@@ -316,7 +316,7 @@ pub fn serialize_record_v2_content(content: &str, record: Record) -> Result<Vec<
 mod test {
 
     use crate::{
-        derivation::{derive, get_domain_key},
+        derivation::{derive, get_sns_domain_key},
         record::{get_record_v2_key, CENTRAL_STATE_RECORD_V2},
     };
 
@@ -423,9 +423,9 @@ mod test {
 
     #[test]
     fn v2_record_key_for_subdomain_matches_domain_key_derivation() {
-        let domain = "dex.bonfida.sns";
+        let domain = "dex.bonfida";
         let record = Record::Url;
-        let domain_key = get_domain_key(domain).unwrap();
+        let domain_key = get_sns_domain_key(domain).unwrap().key;
         let expected = derive(
             &format!("\x02{}", record.as_str()),
             &domain_key,

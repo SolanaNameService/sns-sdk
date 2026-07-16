@@ -6,6 +6,7 @@ use crate::{
     blocking::resolve::{resolve_name_registry, resolve_name_registry_batch},
     error::SnsError,
     record::{get_record_key, Record, RecordVersion},
+    tld::parse_supported_tld,
 };
 
 pub fn get_record_v2(
@@ -13,6 +14,7 @@ pub fn get_record_v2(
     domain: &str,
     record: Record,
 ) -> Result<Option<(NameRecordHeader, Vec<u8>)>, SnsError> {
+    let (domain, _) = parse_supported_tld(domain)?;
     let record_key = get_record_key(domain, record, RecordVersion::V2)?;
     resolve_name_registry(rpc_client, &record_key)
 }
@@ -22,6 +24,7 @@ pub fn get_multiple_records_v2(
     domain: &str,
     records: &[Record],
 ) -> Result<Vec<Option<(NameRecordHeader, Vec<u8>)>>, SnsError> {
+    let (domain, _) = parse_supported_tld(domain)?;
     let pubkeys: Vec<Pubkey> = records
         .iter()
         .map(|r| get_record_key(domain, *r, RecordVersion::V2))
@@ -34,8 +37,8 @@ pub fn get_multiple_records_v2(
 mod tests {
     use super::*;
     use crate::{
-        blocking::nft::resolve_nft_owner, derivation::get_domain_key,
-        record::record_v2::decode_record_v2_fields,
+        blocking::nft::resolve_nft_owner, derivation::get_sns_domain_key,
+        record::record_v2::decode_record_v2_fields, tld::parse_supported_tld,
     };
     use dotenv::dotenv;
 
@@ -51,7 +54,8 @@ mod tests {
     }
 
     fn effective_domain_owner(rpc_client: &RpcClient, domain: &str) -> Pubkey {
-        let domain_key = get_domain_key(domain).unwrap();
+        let (domain, _) = parse_supported_tld(domain).unwrap();
+        let domain_key = get_sns_domain_key(domain).unwrap().key;
         let (domain_header, _) = resolve_name_registry(rpc_client, &domain_key)
             .unwrap()
             .unwrap();

@@ -6,12 +6,13 @@ use {
 
 use crate::{
     blocking::nft::resolve_nft_owner,
-    derivation::{get_domain_key, get_hashed_name, REVERSE_LOOKUP_CLASS},
+    derivation::{get_hashed_name, get_sns_domain_key, REVERSE_LOOKUP_CLASS},
     error::SnsError,
     record::{
         get_record_key, record_v1::check_sol_record_v1_data, record_v2::check_sol_record_v2_data,
         Record, RecordVersion,
     },
+    tld::parse_supported_tld,
 };
 
 /// Caller policy for the SNS-IP 5 registry-owner fallback when the owner is a PDA.
@@ -33,7 +34,8 @@ pub fn resolve(
     domain: &str,
     allow_pda: AllowPda,
 ) -> Result<Option<Pubkey>, SnsError> {
-    let domain_key = get_domain_key(domain)?;
+    let (domain, _) = parse_supported_tld(domain)?;
+    let domain_key = get_sns_domain_key(domain)?.key;
     let sol_v1_key = get_record_key(domain, Record::Sol, RecordVersion::V1)?;
     let sol_v2_key = get_record_key(domain, Record::Sol, RecordVersion::V2)?;
 

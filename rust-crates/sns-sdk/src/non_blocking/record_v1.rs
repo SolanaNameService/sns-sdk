@@ -5,6 +5,7 @@ use crate::{
     error::SnsError,
     non_blocking::resolve::resolve_name_registry,
     record::{get_record_key, Record, RecordVersion},
+    tld::parse_supported_tld,
 };
 
 pub async fn get_record(
@@ -12,6 +13,7 @@ pub async fn get_record(
     domain: &str,
     record: Record,
 ) -> Result<Option<(NameRecordHeader, Vec<u8>)>, SnsError> {
+    let (domain, _) = parse_supported_tld(domain)?;
     let key = get_record_key(domain, record, RecordVersion::V1)?;
     resolve_name_registry(rpc_client, &key).await
 }
