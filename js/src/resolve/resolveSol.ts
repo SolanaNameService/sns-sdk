@@ -19,9 +19,18 @@ import { getSrsDomainKeySync } from "../utils/getSrsDomainKeySync";
 import type { ResolveConfig } from "./types";
 
 const SRS_RECORD_DISCRIMINATOR = 2;
-const SRS_RECORD_HEADER_LENGTH = 75;
 const SRS_OWNER_TYPE_PUBKEY = 0;
 const SRS_OWNER_TYPE_TOKEN = 1;
+const SRS_ADDRESS_LENGTH = 32;
+const SRS_EXPIRY_LENGTH = 8;
+const SRS_RECORD_DISCRIMINATOR_OFFSET = 0;
+const SRS_RECORD_CLASS_OFFSET = SRS_RECORD_DISCRIMINATOR_OFFSET + 1;
+const SRS_RECORD_OWNER_TYPE_OFFSET =
+  SRS_RECORD_CLASS_OFFSET + SRS_ADDRESS_LENGTH;
+const SRS_RECORD_OWNER_OFFSET = SRS_RECORD_OWNER_TYPE_OFFSET + 1;
+const SRS_RECORD_FROZEN_OFFSET = SRS_RECORD_OWNER_OFFSET + SRS_ADDRESS_LENGTH;
+const SRS_RECORD_EXPIRY_OFFSET = SRS_RECORD_FROZEN_OFFSET + 1;
+const SRS_RECORD_HEADER_LENGTH = SRS_RECORD_EXPIRY_OFFSET + SRS_EXPIRY_LENGTH;
 
 const resolveSrsPubkeyOwner = async (
   connection: Connection,
@@ -142,17 +151,22 @@ export const resolveSol = async (
   if (
     !recordInfo.owner.equals(SRS_PROGRAM_ID) ||
     data.length < SRS_RECORD_HEADER_LENGTH ||
-    data[0] !== SRS_RECORD_DISCRIMINATOR
+    data[SRS_RECORD_DISCRIMINATOR_OFFSET] !== SRS_RECORD_DISCRIMINATOR
   ) {
     throw new RecordMalformed("SRS record is malformed");
   }
 
-  const recordClass = new PublicKey(data.subarray(1, 33));
+  const recordClass = new PublicKey(
+    data.subarray(
+      SRS_RECORD_CLASS_OFFSET,
+      SRS_RECORD_CLASS_OFFSET + SRS_ADDRESS_LENGTH,
+    ),
+  );
   if (!recordClass.equals(SOL_SRS_CLASS)) {
     throw new RecordMalformed("SRS record has an invalid class");
   }
 
-  const ownerType = data[33];
+  const ownerType = data[SRS_RECORD_OWNER_TYPE_OFFSET];
   if (
     ownerType !== SRS_OWNER_TYPE_PUBKEY &&
     ownerType !== SRS_OWNER_TYPE_TOKEN
@@ -160,12 +174,17 @@ export const resolveSol = async (
     throw new RecordMalformed("SRS record has an invalid owner type");
   }
 
-  const expiry = data.readBigInt64LE(67);
+  const expiry = data.readBigInt64LE(SRS_RECORD_EXPIRY_OFFSET);
   if (expiry <= BigInt(Math.floor(Date.now() / 1_000))) {
     throw new DomainExpired(`Domain ${domain} has expired`);
   }
 
-  const owner = new PublicKey(data.subarray(34, 66));
+  const owner = new PublicKey(
+    data.subarray(
+      SRS_RECORD_OWNER_OFFSET,
+      SRS_RECORD_OWNER_OFFSET + SRS_ADDRESS_LENGTH,
+    ),
+  );
   if (ownerType === SRS_OWNER_TYPE_TOKEN) {
     return resolveSrsTokenOwner(connection, record, owner, config);
   }
