@@ -6,6 +6,9 @@
     "dist"
   ],
   "type": "module",
+  "engines": {
+    "node": ">=24.0.0"
+  },
   "main": "./dist/cjs/index.cjs",
   "module": "./dist/esm/index.mjs",
   "types": "./dist/types/index.d.ts",
@@ -91,7 +94,7 @@
   },
   "dependencies": {
     "@scure/base": "^1.2.4",
-    "@solana-program/token": "^0.13.0",
+    "@solana-program/token": "^0.14.0",
     "borsh": "^2.0.0",
     "ipaddr.js": "^2.2.0",
     "punycode": "^2.3.1"
@@ -126,6 +129,6 @@
     "typescript-eslint": "^8.26.1"
   },
   "volta": {
-    "node": "20.18.0"
+    "node": "24.18.0"
   }
 }
