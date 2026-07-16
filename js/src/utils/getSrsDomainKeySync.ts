@@ -1,19 +1,8 @@
 import { sha256 } from "@noble/hashes/sha2";
 import { PublicKey } from "@solana/web3.js";
 
-import { SOL_REGISTRAR_PROGRAM_ID, SRS_PROGRAM_ID } from "../config";
-import { SRS_HASH_PREFIX } from "../constants";
-import { SOL_TLD } from "./tld";
-
-export const SRS_CENTRAL_STATE = PublicKey.findProgramAddressSync(
-  [Buffer.from("central_state")],
-  SOL_REGISTRAR_PROGRAM_ID,
-)[0];
-
-export const SOL_SRS_CLASS = PublicKey.findProgramAddressSync(
-  [Buffer.from("class"), SRS_CENTRAL_STATE.toBuffer(), Buffer.from(SOL_TLD)],
-  SRS_PROGRAM_ID,
-)[0];
+import { SRS_PROGRAM_ID } from "../config";
+import { SOL_SRS_CLASS, SRS_HASH_PREFIX } from "../constants";
 
 /**
  * Encodes a TLD-trimmed `.sol` domain name as the current SRS record seed.

@@ -18,6 +18,20 @@ export const SNS_HASH_PREFIX = "SPL Name Service";
 export const SRS_HASH_PREFIX = "SRS";
 
 /**
+ * The SRS registrar central state
+ */
+export const SRS_CENTRAL_STATE = new PublicKey(
+  "8K9XmpN6nKy3ERnMovnoj5cbqWKPiGYN8hCRRyW4TLQV",
+);
+
+/**
+ * The SRS class for `.sol` domains
+ */
+export const SOL_SRS_CLASS = new PublicKey(
+  "AjheAtCgSwEcEYd6xi6thcQW25ELWd7wKCx6SKBGUtMQ",
+);
+
+/**
  * The `.sns` TLD
  */
 export const SNS_ROOT_DOMAIN_ACCOUNT = new PublicKey(

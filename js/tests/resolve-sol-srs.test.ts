@@ -15,7 +15,8 @@ jest.mock("../src/config", () => ({
   SOL_SRS_RESOLUTION_ENABLED: true,
 }));
 
-import { SRS_PROGRAM_ID } from "../src/config";
+import { SOL_REGISTRAR_PROGRAM_ID, SRS_PROGRAM_ID } from "../src/config";
+import { SOL_SRS_CLASS, SRS_CENTRAL_STATE } from "../src/constants";
 import {
   CouldNotFindSrsOwner,
   DomainDoesNotExist,
@@ -25,11 +26,7 @@ import {
   UnsupportedTldError,
 } from "../src/error";
 import { resolve } from "../src/resolve";
-import {
-  getSrsDomainKeySync,
-  SOL_SRS_CLASS,
-  SRS_CENTRAL_STATE,
-} from "../src/utils/getSrsDomainKeySync";
+import { getSrsDomainKeySync } from "../src/utils/getSrsDomainKeySync";
 import * as tldUtils from "../src/utils/tld";
 
 const getSrsAddresses = (domain: string) => {
@@ -42,6 +39,30 @@ const getSrsAddresses = (domain: string) => {
     record,
   };
 };
+
+describe("precomputed SRS addresses", () => {
+  test("SRS_CENTRAL_STATE matches its canonical PDA", () => {
+    const [expected] = PublicKey.findProgramAddressSync(
+      [Buffer.from("central_state")],
+      SOL_REGISTRAR_PROGRAM_ID,
+    );
+
+    expect(SRS_CENTRAL_STATE.equals(expected)).toBe(true);
+  });
+
+  test("SOL_SRS_CLASS matches its canonical PDA", () => {
+    const [expected] = PublicKey.findProgramAddressSync(
+      [
+        Buffer.from("class"),
+        SRS_CENTRAL_STATE.toBuffer(),
+        Buffer.from(tldUtils.SOL_TLD),
+      ],
+      SRS_PROGRAM_ID,
+    );
+
+    expect(SOL_SRS_CLASS.equals(expected)).toBe(true);
+  });
+});
 
 interface SrsRecordOptions {
   domain?: string;

@@ -6,6 +6,7 @@ import {
 import { Connection, PublicKey } from "@solana/web3.js";
 
 import { SRS_PROGRAM_ID } from "../config";
+import { SOL_SRS_CLASS } from "../constants";
 import {
   CouldNotFindSrsOwner,
   DomainDoesNotExist,
@@ -13,10 +14,7 @@ import {
   PdaOwnerNotAllowed,
   RecordMalformed,
 } from "../error";
-import {
-  getSrsDomainKeySync,
-  SOL_SRS_CLASS,
-} from "../utils/getSrsDomainKeySync";
+import { getSrsDomainKeySync } from "../utils/getSrsDomainKeySync";
 
 import type { ResolveConfig } from "./types";
 
