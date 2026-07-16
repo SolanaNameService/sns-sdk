@@ -15,9 +15,9 @@ import {
 import { _verifyStalenessSync } from "../record/verifyRecordStaleness";
 import { RecordState } from "../states/record";
 import { Record } from "../types/record";
-import { deserializeRecordContent } from "../utils/deserializers/deserializeRecordContent";
 import { assertTldSupported } from "../utils/assertTldSupported";
-import { _getSnsDomainOwner } from "./getDomainOwner";
+import { deserializeRecordContent } from "../utils/deserializers/deserializeRecordContent";
+import { _getSnsDomainOwner } from "./getSnsDomainOwner";
 
 interface GetDomainRecordParams {
   rpc: Rpc<

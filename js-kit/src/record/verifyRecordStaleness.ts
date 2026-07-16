@@ -7,7 +7,7 @@ import {
 } from "@solana/kit";
 
 import { addressCodec } from "../codecs";
-import { _getSnsDomainOwner } from "../domain/getDomainOwner";
+import { _getSnsDomainOwner } from "../domain/getSnsDomainOwner";
 import { getRecordV2Address } from "../record/getRecordV2Address";
 import { RecordState } from "../states/record";
 import { Record } from "../types/record";
