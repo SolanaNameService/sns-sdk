@@ -31,10 +31,10 @@ export const setRecordRoaVerifier = async ({
   payer,
   verifier,
 }: RecordVerificationParams): Promise<Instruction> => {
-  _parseSnsDomain(domain);
+  const trimmedDomain = _parseSnsDomain(domain);
 
   const { domainAddress, parentAddress } = await _getRecordAndParentAddress({
-    domain,
+    domain: trimmedDomain,
     record,
   });
 

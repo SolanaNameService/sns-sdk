@@ -7,7 +7,7 @@ import {
   fetchEncodedAccount,
 } from "@solana/kit";
 
-import { getDomainAddress } from "../domain/getDomainAddress";
+import { getSnsDomainAddress } from "../domain/getSnsDomainAddress";
 import { RegistryState } from "../states/registry";
 import { getReverseAddress } from "../utils/getReverseAddress";
 import { _parseSnsSubdomain } from "../utils/parseSnsDomain";
@@ -44,10 +44,11 @@ export const createSubdomain = async ({
   feePayer,
 }: CreateSubdomainParams): Promise<Instruction[]> => {
   const ixs: Instruction[] = [];
-  const [sub] = _parseSnsSubdomain(subdomain);
+  const [sub, parent] = _parseSnsSubdomain(subdomain);
+  const trimmedSubdomain = `${sub}.${parent}`;
 
   const [{ domainAddress, parentAddress }, lamports] = await Promise.all([
-    getDomainAddress({ domain: subdomain }),
+    getSnsDomainAddress({ domain: trimmedSubdomain }),
     rpc
       .getMinimumBalanceForRentExemption(
         BigInt(space + RegistryState.HEADER_LEN)
@@ -68,7 +69,7 @@ export const createSubdomain = async ({
   ixs.push(ix_create);
 
   // Create the reverse name
-  const reverseKey = await getReverseAddress(subdomain);
+  const reverseKey = await getReverseAddress(trimmedSubdomain);
   const reverseAccount = await fetchEncodedAccount(rpc, reverseKey);
 
   if (!reverseAccount.exists) {

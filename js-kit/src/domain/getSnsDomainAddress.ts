@@ -5,9 +5,8 @@ import {
 import { InvalidInputError } from "../errors";
 import { RecordVersion } from "../types/record";
 import { _deriveAddress } from "../utils/deriveAddress";
-import { parseSupportedTld } from "../utils/tld";
 
-interface GetDomainAddressParams {
+interface GetSnsDomainAddressParams {
   domain: string;
   record?: RecordVersion;
 }
@@ -15,19 +14,15 @@ interface GetDomainAddressParams {
 /**
  * Derives the address of a domain, subdomain, or record account.
  *
- * `.sns` and `.sol` suffixes are stripped before deriving SNS account addresses.
- *
  * @param params Derivation parameters
- * @param params.domain Full domain name including a `.sns` or `.sol` suffix
+ * @param params.domain TLD-trimmed SNS domain name
  * @param params.record Optional record account version for record derivation
  * @returns Derived account address and metadata describing top-level, subdomain, or sub-record derivation.
  */
-export const getDomainAddress = async ({
+export const getSnsDomainAddress = async ({
   domain,
   record,
-}: GetDomainAddressParams) => {
-  [domain] = parseSupportedTld(domain);
-
+}: GetSnsDomainAddressParams) => {
   const recordClass =
     record === RecordVersion.V2 ? CENTRAL_STATE_DOMAIN_RECORDS : undefined;
   const recordPrefix =

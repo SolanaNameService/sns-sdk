@@ -1,7 +1,7 @@
 import { describe, expect, jest, test } from "@jest/globals";
 
 import { SYSTEM_PROGRAM_ADDRESS } from "../../src/constants/addresses";
-import { getDomainAddress } from "../../src/domain/getDomainAddress";
+import { getSnsDomainAddress } from "../../src/domain/getSnsDomainAddress";
 import { getDomainOwner } from "../../src/domain/getDomainOwner";
 import { getDomainRecord } from "../../src/domain/getDomainRecord";
 import { getDomainRecords } from "../../src/domain/getDomainRecords";
@@ -20,7 +20,7 @@ import { TEST_RPC } from "../constants";
 jest.setTimeout(60_000);
 
 describe("SNS domain reads", () => {
-  describe("getDomainAddress", () => {
+  describe("getSnsDomainAddress", () => {
     test.each([
       {
         domain: "sns-ip-5-wallet-1.sns",
@@ -31,7 +31,9 @@ describe("SNS domain reads", () => {
         address: "EzQAeEBXpZWpsZXcZRwV63RRr2RkwBVqdYN53tcbTDEm",
       },
     ])("$domain", async (item) => {
-      const { domainAddress } = await getDomainAddress({ domain: item.domain });
+      const { domainAddress } = await getSnsDomainAddress({
+        domain: item.domain.slice(0, -4),
+      });
       expect(domainAddress).toBe(item.address);
     });
   });
@@ -226,7 +228,9 @@ describe("SNS domain reads", () => {
         reverseAddress: "D8Nc3uhfxZbnxAcUrmWQAS5tStgmA5BHrjbRxjGwPaLS",
       },
     ])("$domain", async ({ domain, reverseAddress }) => {
-      await expect(getReverseAddress(domain)).resolves.toBe(reverseAddress);
+      await expect(getReverseAddress(domain.slice(0, -4))).resolves.toBe(
+        reverseAddress
+      );
     });
   });
 

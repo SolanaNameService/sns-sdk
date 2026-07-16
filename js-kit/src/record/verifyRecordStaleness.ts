@@ -11,6 +11,7 @@ import { getRecordV2Address } from "../record/getRecordV2Address";
 import { RecordState } from "../states/record";
 import { Record } from "../types/record";
 import { Validation } from "../types/validation";
+import { parseSupportedTld } from "../utils/tld";
 import { uint8ArraysEqual } from "../utils/uint8Array/uint8ArraysEqual";
 
 /**
@@ -56,9 +57,10 @@ export const verifyRecordStaleness = async ({
   domain,
   record,
 }: VerifyRecordStalenessParams): Promise<boolean> => {
+  const [trimmedDomain] = parseSupportedTld(domain);
   const [domainOwner, state] = await Promise.all([
     getDomainOwner({ rpc, domain }),
-    getRecordV2Address({ domain, record }).then((address) =>
+    getRecordV2Address({ domain: trimmedDomain, record }).then((address) =>
       RecordState.retrieve(rpc, address)
     ),
   ]);

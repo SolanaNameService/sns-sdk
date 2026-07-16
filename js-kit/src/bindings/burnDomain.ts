@@ -7,7 +7,7 @@ import {
   REVERSE_LOOKUP_CLASS,
   SYSTEM_PROGRAM_ADDRESS,
 } from "../constants/addresses";
-import { getDomainAddress } from "../domain/getDomainAddress";
+import { getSnsDomainAddress } from "../domain/getSnsDomainAddress";
 import { BurnDomainInstruction } from "../instructions/burnDomainInstruction";
 import { getReverseAddress } from "../utils/getReverseAddress";
 import { _parseSnsTopLevelDomain } from "../utils/parseSnsDomain";
@@ -32,9 +32,11 @@ export const burnDomain = async ({
   owner,
   refundAddress,
 }: BurnDomainParams): Promise<Instruction> => {
-  _parseSnsTopLevelDomain(domain);
+  const trimmedDomain = _parseSnsTopLevelDomain(domain);
 
-  const { domainAddress } = await getDomainAddress({ domain });
+  const { domainAddress } = await getSnsDomainAddress({
+    domain: trimmedDomain,
+  });
   const encoded = addressCodec.encode(domainAddress);
 
   const [pda] = await getProgramDerivedAddress({
@@ -47,7 +49,7 @@ export const burnDomain = async ({
     seeds: [encoded, Uint8Array.from([1, 1])],
   });
 
-  const reverseAddress = await getReverseAddress(domain);
+  const reverseAddress = await getReverseAddress(trimmedDomain);
 
   const ix = new BurnDomainInstruction().getInstruction(
     REGISTRY_PROGRAM_ADDRESS,

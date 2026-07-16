@@ -41,10 +41,10 @@ export const validateRecordRoaEthereum = async ({
   signature,
   expectedPubkey,
 }: ValidateRecordRoaEthereumParams): Promise<Instruction> => {
-  _parseSnsDomain(domain);
+  const trimmedDomain = _parseSnsDomain(domain);
 
   const { domainAddress, parentAddress } = await _getRecordAndParentAddress({
-    domain,
+    domain: trimmedDomain,
     record,
   });
 

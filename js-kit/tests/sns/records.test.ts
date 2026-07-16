@@ -54,14 +54,20 @@ describe("SNS record reads", () => {
 
   describe("getRecordV1Address", () => {
     test.each(domains)("$domain", async ({ domain, solRecordV1Address }) => {
-      const res = await getRecordV1Address({ domain, record: Record.SOL });
+      const res = await getRecordV1Address({
+        domain: domain.slice(0, -4),
+        record: Record.SOL,
+      });
       expect(res).toBe(solRecordV1Address);
     });
   });
 
   describe("getRecordV2Address", () => {
     test.each(domains)("$domain", async ({ domain, solRecordV2Address }) => {
-      const res = await getRecordV2Address({ domain, record: Record.SOL });
+      const res = await getRecordV2Address({
+        domain: domain.slice(0, -4),
+        record: Record.SOL,
+      });
       expect(res).toBe(solRecordV2Address);
     });
   });

@@ -1,7 +1,7 @@
 import { Address, GetAccountInfoApi, Instruction, Rpc } from "@solana/kit";
 
 import { NAME_PROGRAM_ADDRESS } from "../constants/addresses";
-import { getDomainAddress } from "../domain/getDomainAddress";
+import { getSnsDomainAddress } from "../domain/getSnsDomainAddress";
 import { InvalidSubdomainError } from "../errors";
 import { TransferInstruction } from "../instructions/transferInstruction";
 import { RegistryState } from "../states/registry";
@@ -33,13 +33,13 @@ export const transferSubdomain = async ({
   isParentOwnerSigner,
   currentOwner,
 }: TransferSubdomainParams): Promise<Instruction> => {
-  _parseSnsSubdomain(subdomain);
+  const [sub, parent] = _parseSnsSubdomain(subdomain);
 
   const {
     domainAddress,
     isSub,
     parentAddress: _parentAddress,
-  } = await getDomainAddress({ domain: subdomain });
+  } = await getSnsDomainAddress({ domain: `${sub}.${parent}` });
 
   if (!isSub || !_parentAddress) {
     throw new InvalidSubdomainError("The subdomain is not valid");

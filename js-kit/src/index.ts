@@ -30,7 +30,8 @@ export * from "./constants/pythFeeds";
 export * from "./constants/records";
 
 export * from "./domain/getAllSnsDomains";
-export * from "./domain/getDomainAddress";
+export * from "./domain/getSnsDomainAddress";
+export * from "./domain/getSrsDomainAddress";
 export * from "./domain/getDomainOwner";
 export * from "./domain/getDomainRecord";
 export * from "./domain/getDomainRecords";

@@ -28,10 +28,10 @@ import { RegistryState } from "../states/registry";
 import { Record } from "../types/record";
 import { Validation } from "../types/validation";
 import { checkAddressOnCurve } from "../utils/checkAddressOnCurve";
-import { SNS_TLD, SOL_TLD, getTld } from "../utils/tld";
+import { SNS_TLD, SOL_TLD, parseSupportedTld } from "../utils/tld";
 import { uint8ArrayToHex } from "../utils/uint8Array/uint8ArrayToHex";
 import { uint8ArraysEqual } from "../utils/uint8Array/uint8ArraysEqual";
-import { getDomainAddress } from "./getDomainAddress";
+import { getSnsDomainAddress } from "./getSnsDomainAddress";
 
 interface ResolveParams {
   rpc: Rpc<
@@ -93,7 +93,7 @@ const resolveSns = async ({
   domain,
   options,
 }: ResolveParamsWithOptions): Promise<Address> => {
-  const { domainAddress } = await getDomainAddress({ domain });
+  const { domainAddress } = await getSnsDomainAddress({ domain });
   const nftAddress = await NftState.getAddress(domainAddress);
   const solRecordV1Address = await getRecordV1Address({
     domain,
@@ -247,15 +247,8 @@ export const resolve = async ({
   domain,
   options = { allowPda: false },
 }: ResolveParams): Promise<Address> => {
-  const tld = getTld(domain);
-
-  if (!tld) {
-    throw new UnsupportedTldError(
-      `Domain "${domain}" is missing a supported TLD suffix (${SOL_TLD} or ${SNS_TLD})`
-    );
-  }
-
-  const params = { rpc, domain, options };
+  const [trimmedDomain, tld] = parseSupportedTld(domain);
+  const params = { rpc, domain: trimmedDomain, options };
 
   switch (tld) {
     case SNS_TLD:

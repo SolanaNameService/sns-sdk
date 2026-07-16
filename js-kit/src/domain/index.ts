@@ -1,5 +1,6 @@
 export * from "./getAllSnsDomains";
-export * from "./getDomainAddress";
+export * from "./getSnsDomainAddress";
+export * from "./getSrsDomainAddress";
 export * from "./getDomainOwner";
 export * from "./getDomainRecord";
 export * from "./getDomainRecords";

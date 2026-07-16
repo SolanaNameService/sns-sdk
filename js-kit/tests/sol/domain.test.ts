@@ -1,7 +1,6 @@
 import { describe, expect, jest, test } from "@jest/globals";
 
 import { SYSTEM_PROGRAM_ADDRESS } from "../../src/constants/addresses";
-import { getDomainAddress } from "../../src/domain/getDomainAddress";
 import { getDomainOwner } from "../../src/domain/getDomainOwner";
 import { getDomainRecord } from "../../src/domain/getDomainRecord";
 import { getDomainRecords } from "../../src/domain/getDomainRecords";
@@ -20,22 +19,6 @@ import { TEST_RPC } from "../constants";
 jest.setTimeout(60_000);
 
 describe("SOL domain reads", () => {
-  describe("getDomainAddress", () => {
-    test.each([
-      {
-        domain: "sns-ip-5-wallet-1.sol",
-        address: "6qJtQdAJvAiSfGXWAuHDteAes6vnFcxtHmLzw1TStCrd",
-      },
-      {
-        domain: "test.sns-ip-5-wallet-1.sol",
-        address: "EzQAeEBXpZWpsZXcZRwV63RRr2RkwBVqdYN53tcbTDEm",
-      },
-    ])("$domain", async (item) => {
-      const { domainAddress } = await getDomainAddress({ domain: item.domain });
-      expect(domainAddress).toBe(item.address);
-    });
-  });
-
   describe("getDomainOwner", () => {
     test.each([
       {
@@ -228,7 +211,9 @@ describe("SOL domain reads", () => {
         reverseAddress: "D8Nc3uhfxZbnxAcUrmWQAS5tStgmA5BHrjbRxjGwPaLS",
       },
     ])("$domain", async ({ domain, reverseAddress }) => {
-      await expect(getReverseAddress(domain)).resolves.toBe(reverseAddress);
+      await expect(getReverseAddress(domain.slice(0, -4))).resolves.toBe(
+        reverseAddress
+      );
     });
   });
 

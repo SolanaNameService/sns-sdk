@@ -31,7 +31,7 @@ import {
   USDC_MINT,
   VAULT_OWNER,
 } from "../src/constants/addresses";
-import { getDomainAddress } from "../src/domain/getDomainAddress";
+import { getSnsDomainAddress } from "../src/domain/getSnsDomainAddress";
 import {
   InvalidDomainError,
   InvalidSubdomainError,
@@ -132,9 +132,7 @@ describe("Bindings", () => {
     describe("createReverse", () => {
       const domain = randomBytes(10).toString("hex");
       test(domain, async () => {
-        const { domainAddress } = await getDomainAddress({
-          domain: `${domain}.sns`,
-        });
+        const { domainAddress } = await getSnsDomainAddress({ domain });
         const owner = "Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8" as Address;
 
         const ixs: Instruction[] = [];
@@ -149,8 +147,9 @@ describe("Bindings", () => {
     describe("setPrimaryDomain", () => {
       test("domain [wallet-guide-9.sns]", async () => {
         const domain = "wallet-guide-9.sns";
-        const domainAddress = (await getDomainAddress({ domain }))
-          .domainAddress;
+        const domainAddress = (
+          await getSnsDomainAddress({ domain: domain.slice(0, -4) })
+        ).domainAddress;
         const owner = "Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8" as Address;
 
         const ixs: Instruction[] = [];
@@ -163,8 +162,9 @@ describe("Bindings", () => {
 
       test("subdomain [sub-0.wallet-guide-9.sns]", async () => {
         const domain = "sub-0.wallet-guide-9.sns";
-        const domainAddress = (await getDomainAddress({ domain }))
-          .domainAddress;
+        const domainAddress = (
+          await getSnsDomainAddress({ domain: domain.slice(0, -4) })
+        ).domainAddress;
         const owner = "Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8" as Address;
 
         const ixs: Instruction[] = [];

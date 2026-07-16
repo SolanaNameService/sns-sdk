@@ -16,6 +16,7 @@ import { getRecordV2Address } from "../record/getRecordV2Address";
 import { RecordState } from "../states/record";
 import { Record } from "../types/record";
 import { Validation } from "../types/validation";
+import { parseSupportedTld } from "../utils/tld";
 import { uint8ArraysEqual } from "../utils/uint8Array/uint8ArraysEqual";
 
 /**
@@ -93,7 +94,11 @@ export const verifyRecordRightOfAssociation = async (
   record: Record,
   verifier?: ReadonlyUint8Array
 ) => {
-  const address = await getRecordV2Address({ domain, record });
+  const [trimmedDomain] = parseSupportedTld(domain);
+  const address = await getRecordV2Address({
+    domain: trimmedDomain,
+    record,
+  });
   const state = await RecordState.retrieve(rpc, address);
 
   verifier = verifier || _getDefaultVerifier({ record, state });

@@ -1,10 +1,11 @@
+import { SOL_SRS_RESOLUTION_ENABLED } from "../config";
 import { UnsupportedTldError } from "../errors";
 
 export const SOL_TLD = ".sol";
 export const SNS_TLD = ".sns";
-export const SUPPORTED_TLDS = [SNS_TLD, SOL_TLD] as const;
-
-export type SupportedTld = (typeof SUPPORTED_TLDS)[number];
+export type SupportedTld = typeof SNS_TLD | typeof SOL_TLD;
+export const SUPPORTED_TLDS: readonly SupportedTld[] =
+  SOL_SRS_RESOLUTION_ENABLED ? [SNS_TLD] : [SNS_TLD, SOL_TLD];
 
 /**
  * Returns the matching TLD from `supportedTlds` if `domain` ends with one,

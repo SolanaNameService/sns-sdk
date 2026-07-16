@@ -15,6 +15,7 @@ import { _verifyStalenessSync } from "../record/verifyRecordStaleness";
 import { RecordState } from "../states/record";
 import { Record } from "../types/record";
 import { deserializeRecordContent } from "../utils/deserializers/deserializeRecordContent";
+import { parseSupportedTld } from "../utils/tld";
 import { getDomainOwner } from "./getDomainOwner";
 
 interface GetDomainRecordParams {
@@ -57,9 +58,10 @@ export async function getDomainRecord({
   record,
   options = {},
 }: GetDomainRecordParams): Promise<Result> {
+  const [trimmedDomain] = parseSupportedTld(domain);
   const [domainOwner, state] = await Promise.all([
     getDomainOwner({ rpc, domain }),
-    getRecordV2Address({ domain, record }).then((address) =>
+    getRecordV2Address({ domain: trimmedDomain, record }).then((address) =>
       RecordState.retrieve(rpc, address)
     ),
   ]);

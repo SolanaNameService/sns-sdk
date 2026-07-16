@@ -12,7 +12,8 @@ import {
 } from "../constants/addresses";
 import { deserializeReverse } from "../utils/deserializers/deserializeReverse";
 import { getReverseAddressFromDomainAddress } from "../utils/getReverseAddressFromDomainAddress";
-import { getDomainAddress } from "./getDomainAddress";
+import { parseSupportedTld } from "../utils/tld";
+import { getSnsDomainAddress } from "./getSnsDomainAddress";
 
 interface GetSubdomainsParams {
   rpc: Rpc<GetProgramAccountsApi>;
@@ -39,7 +40,10 @@ export const getSubdomains = async ({
   rpc,
   domain,
 }: GetSubdomainsParams): Promise<Result[]> => {
-  const { domainAddress, isSub } = await getDomainAddress({ domain });
+  const [trimmedDomain] = parseSupportedTld(domain);
+  const { domainAddress, isSub } = await getSnsDomainAddress({
+    domain: trimmedDomain,
+  });
 
   if (isSub) return [];
 

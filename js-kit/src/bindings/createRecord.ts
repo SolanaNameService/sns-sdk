@@ -6,7 +6,7 @@ import {
   RECORDS_PROGRAM_ADDRESS,
   SYSTEM_PROGRAM_ADDRESS,
 } from "../constants/addresses";
-import { getDomainAddress } from "../domain/getDomainAddress";
+import { getSnsDomainAddress } from "../domain/getSnsDomainAddress";
 import { InvalidParentError } from "../errors";
 import { AllocateAndPostRecordInstruction } from "../instructions/allocateAndPostRecordInstruction";
 import { Record, RecordVersion } from "../types/record";
@@ -41,15 +41,17 @@ export const createRecord = async ({
   owner,
   payer,
 }: CreateRecordParams): Promise<Instruction> => {
-  _parseSnsDomain(domain);
+  const trimmedDomain = _parseSnsDomain(domain);
 
-  let { domainAddress, parentAddress, isSub } = await getDomainAddress({
-    domain: `${record}.${domain}`,
+  let { domainAddress, parentAddress, isSub } = await getSnsDomainAddress({
+    domain: `${record}.${trimmedDomain}`,
     record: RecordVersion.V2,
   });
 
   if (isSub) {
-    parentAddress = (await getDomainAddress({ domain })).domainAddress;
+    parentAddress = (
+      await getSnsDomainAddress({ domain: trimmedDomain })
+    ).domainAddress;
   }
 
   if (!parentAddress) {

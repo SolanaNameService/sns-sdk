@@ -6,7 +6,7 @@ import {
   RECORDS_PROGRAM_ADDRESS,
   SYSTEM_PROGRAM_ADDRESS,
 } from "../constants/addresses";
-import { getDomainAddress } from "../domain/getDomainAddress";
+import { getSnsDomainAddress } from "../domain/getSnsDomainAddress";
 import { InvalidParentError } from "../errors";
 import { ValidateSolanaSignatureInstruction } from "../instructions/validateSolanaSignatureInstruction";
 import { Record, RecordVersion } from "../types/record";
@@ -24,7 +24,7 @@ export interface RecordVerificationParams {
  * Derives the V2 record account and the domain account that owns that record.
  *
  * @param params Record derivation parameters
- * @param params.domain Full `.sns` domain or subdomain name
+ * @param params.domain TLD-trimmed SNS domain or subdomain name
  * @param params.record Record type
  * @returns Derived V2 record account address and owning domain/subdomain account address.
  * @throws InvalidParentError If the owning domain account cannot be resolved.
@@ -36,13 +36,13 @@ export const _getRecordAndParentAddress = async ({
   domain: string;
   record: Record;
 }) => {
-  let { domainAddress, isSub, parentAddress } = await getDomainAddress({
+  let { domainAddress, isSub, parentAddress } = await getSnsDomainAddress({
     domain: `${record}.${domain}`,
     record: RecordVersion.V2,
   });
 
   if (isSub) {
-    parentAddress = (await getDomainAddress({ domain })).domainAddress;
+    parentAddress = (await getSnsDomainAddress({ domain })).domainAddress;
   }
 
   if (!parentAddress) {
@@ -75,10 +75,10 @@ export const _buildValidateSolanaSignatureInstruction = async ({
 }: RecordVerificationParams & {
   staleness: boolean;
 }): Promise<Instruction> => {
-  _parseSnsDomain(domain);
+  const trimmedDomain = _parseSnsDomain(domain);
 
   const { domainAddress, parentAddress } = await _getRecordAndParentAddress({
-    domain,
+    domain: trimmedDomain,
     record,
   });
 

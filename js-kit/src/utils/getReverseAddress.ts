@@ -1,14 +1,14 @@
-import { getDomainAddress } from "../domain/getDomainAddress";
+import { getSnsDomainAddress } from "../domain/getSnsDomainAddress";
 import { getReverseAddressFromDomainAddress } from "./getReverseAddressFromDomainAddress";
 
 /**
- * Derives the reverse lookup account address for a full `.sns` or `.sol` domain.
+ * Derives the reverse lookup account address for a TLD-trimmed SNS domain.
  *
- * @param domain Full domain name including a `.sns` or `.sol` suffix
+ * @param domain TLD-trimmed SNS domain name
  * @returns The reverse lookup account address.
  */
 export const getReverseAddress = async (domain: string) => {
-  const { domainAddress, parentAddress } = await getDomainAddress({ domain });
+  const { domainAddress, parentAddress } = await getSnsDomainAddress({ domain });
 
   return getReverseAddressFromDomainAddress({
     domainAddress,

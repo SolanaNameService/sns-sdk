@@ -6,7 +6,8 @@ import {
 
 import { getSnsNftOwner } from "../nft/getSnsNftOwner";
 import { RegistryState } from "../states/registry";
-import { getDomainAddress } from "./getDomainAddress";
+import { parseSupportedTld } from "../utils/tld";
+import { getSnsDomainAddress } from "./getSnsDomainAddress";
 
 interface GetDomainOwnerParams {
   rpc: Rpc<GetAccountInfoApi & GetTokenLargestAccountsApi>;
@@ -23,7 +24,10 @@ interface GetDomainOwnerParams {
  * @returns The domain owner address.
  */
 export const getDomainOwner = async ({ rpc, domain }: GetDomainOwnerParams) => {
-  const { domainAddress } = await getDomainAddress({ domain });
+  const [trimmedDomain] = parseSupportedTld(domain);
+  const { domainAddress } = await getSnsDomainAddress({
+    domain: trimmedDomain,
+  });
   const [registry, nftOwner] = await Promise.all([
     RegistryState.retrieve(rpc, domainAddress),
     getSnsNftOwner({ rpc, domainAddress }),
