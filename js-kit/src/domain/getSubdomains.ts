@@ -2,6 +2,7 @@ import {
   Address,
   Base58EncodedBytes,
   GetProgramAccountsApi,
+  GetSlotApi,
   Rpc,
 } from "@solana/kit";
 
@@ -11,12 +12,12 @@ import {
   REVERSE_LOOKUP_CLASS,
 } from "../constants/addresses";
 import { deserializeReverse } from "../utils/deserializers/deserializeReverse";
+import { assertTldSupported } from "../utils/assertTldSupported";
 import { getReverseAddressFromDomainAddress } from "../utils/getReverseAddressFromDomainAddress";
-import { parseSupportedTld } from "../utils/tld";
 import { getSnsDomainAddress } from "./getSnsDomainAddress";
 
 interface GetSubdomainsParams {
-  rpc: Rpc<GetProgramAccountsApi>;
+  rpc: Rpc<GetProgramAccountsApi & GetSlotApi>;
   domain: string;
 }
 
@@ -40,7 +41,7 @@ export const getSubdomains = async ({
   rpc,
   domain,
 }: GetSubdomainsParams): Promise<Result[]> => {
-  const [trimmedDomain] = parseSupportedTld(domain);
+  const [trimmedDomain] = await assertTldSupported({ rpc, domain });
   const { domainAddress, isSub } = await getSnsDomainAddress({
     domain: trimmedDomain,
   });

@@ -1,15 +1,21 @@
 import {
   GetAccountInfoApi,
+  GetSlotApi,
   GetTokenLargestAccountsApi,
   Rpc,
 } from "@solana/kit";
 
 import { getSnsNftOwner } from "../nft/getSnsNftOwner";
 import { RegistryState } from "../states/registry";
-import { parseSupportedTld } from "../utils/tld";
+import { assertTldSupported } from "../utils/assertTldSupported";
 import { getSnsDomainAddress } from "./getSnsDomainAddress";
 
 interface GetDomainOwnerParams {
+  rpc: Rpc<GetAccountInfoApi & GetTokenLargestAccountsApi & GetSlotApi>;
+  domain: string;
+}
+
+interface GetSnsDomainOwnerParams {
   rpc: Rpc<GetAccountInfoApi & GetTokenLargestAccountsApi>;
   domain: string;
 }
@@ -23,14 +29,21 @@ interface GetDomainOwnerParams {
  * @param params.domain Full domain name including a `.sns` or `.sol` suffix
  * @returns The domain owner address.
  */
-export const getDomainOwner = async ({ rpc, domain }: GetDomainOwnerParams) => {
-  const [trimmedDomain] = parseSupportedTld(domain);
+export const _getSnsDomainOwner = async ({
+  rpc,
+  domain,
+}: GetSnsDomainOwnerParams) => {
   const { domainAddress } = await getSnsDomainAddress({
-    domain: trimmedDomain,
+    domain,
   });
   const [registry, nftOwner] = await Promise.all([
     RegistryState.retrieve(rpc, domainAddress),
     getSnsNftOwner({ rpc, domainAddress }),
   ]);
   return nftOwner || registry.owner;
+};
+
+export const getDomainOwner = async ({ rpc, domain }: GetDomainOwnerParams) => {
+  const [trimmedDomain] = await assertTldSupported({ rpc, domain });
+  return _getSnsDomainOwner({ rpc, domain: trimmedDomain });
 };

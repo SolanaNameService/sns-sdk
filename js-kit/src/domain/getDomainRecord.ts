@@ -1,6 +1,7 @@
 import {
   GetAccountInfoApi,
   GetMultipleAccountsApi,
+  GetSlotApi,
   GetTokenLargestAccountsApi,
   ReadonlyUint8Array,
   Rpc,
@@ -15,12 +16,15 @@ import { _verifyStalenessSync } from "../record/verifyRecordStaleness";
 import { RecordState } from "../states/record";
 import { Record } from "../types/record";
 import { deserializeRecordContent } from "../utils/deserializers/deserializeRecordContent";
-import { parseSupportedTld } from "../utils/tld";
-import { getDomainOwner } from "./getDomainOwner";
+import { assertTldSupported } from "../utils/assertTldSupported";
+import { _getSnsDomainOwner } from "./getDomainOwner";
 
 interface GetDomainRecordParams {
   rpc: Rpc<
-    GetAccountInfoApi & GetMultipleAccountsApi & GetTokenLargestAccountsApi
+    GetAccountInfoApi &
+      GetMultipleAccountsApi &
+      GetTokenLargestAccountsApi &
+      GetSlotApi
   >;
   domain: string;
   record: Record;
@@ -58,9 +62,9 @@ export async function getDomainRecord({
   record,
   options = {},
 }: GetDomainRecordParams): Promise<Result> {
-  const [trimmedDomain] = parseSupportedTld(domain);
+  const [trimmedDomain] = await assertTldSupported({ rpc, domain });
   const [domainOwner, state] = await Promise.all([
-    getDomainOwner({ rpc, domain }),
+    _getSnsDomainOwner({ rpc, domain: trimmedDomain }),
     getRecordV2Address({ domain: trimmedDomain, record }).then((address) =>
       RecordState.retrieve(rpc, address)
     ),

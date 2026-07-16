@@ -1,5 +1,6 @@
 import {
   GetAccountInfoApi,
+  GetSlotApi,
   GetTokenLargestAccountsApi,
   ReadonlyUint8Array,
   Rpc,
@@ -16,7 +17,7 @@ import { getRecordV2Address } from "../record/getRecordV2Address";
 import { RecordState } from "../states/record";
 import { Record } from "../types/record";
 import { Validation } from "../types/validation";
-import { parseSupportedTld } from "../utils/tld";
+import { assertTldSupported } from "../utils/assertTldSupported";
 import { uint8ArraysEqual } from "../utils/uint8Array/uint8ArraysEqual";
 
 /**
@@ -89,12 +90,12 @@ export const _verifyRoaSync = ({
  * @throws MissingVerifierError If no verifier is specified and no default verifier is found.
  */
 export const verifyRecordRightOfAssociation = async (
-  rpc: Rpc<GetAccountInfoApi & GetTokenLargestAccountsApi>,
+  rpc: Rpc<GetAccountInfoApi & GetTokenLargestAccountsApi & GetSlotApi>,
   domain: string,
   record: Record,
   verifier?: ReadonlyUint8Array
 ) => {
-  const [trimmedDomain] = parseSupportedTld(domain);
+  const [trimmedDomain] = await assertTldSupported({ rpc, domain });
   const address = await getRecordV2Address({
     domain: trimmedDomain,
     record,

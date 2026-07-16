@@ -2,6 +2,7 @@ import {
   Address,
   GetAccountInfoApi,
   GetMultipleAccountsApi,
+  GetSlotApi,
   GetTokenLargestAccountsApi,
   Rpc,
   fetchEncodedAccount,
@@ -28,14 +29,18 @@ import { RegistryState } from "../states/registry";
 import { Record } from "../types/record";
 import { Validation } from "../types/validation";
 import { checkAddressOnCurve } from "../utils/checkAddressOnCurve";
-import { SNS_TLD, SOL_TLD, parseSupportedTld } from "../utils/tld";
+import { assertTldSupported } from "../utils/assertTldSupported";
+import { SNS_TLD, SOL_TLD } from "../utils/tld";
 import { uint8ArrayToHex } from "../utils/uint8Array/uint8ArrayToHex";
 import { uint8ArraysEqual } from "../utils/uint8Array/uint8ArraysEqual";
 import { getSnsDomainAddress } from "./getSnsDomainAddress";
 
 interface ResolveParams {
   rpc: Rpc<
-    GetAccountInfoApi & GetMultipleAccountsApi & GetTokenLargestAccountsApi
+    GetAccountInfoApi &
+      GetMultipleAccountsApi &
+      GetTokenLargestAccountsApi &
+      GetSlotApi
   >;
   domain: string;
   options?: ResolveOptions;
@@ -247,7 +252,7 @@ export const resolve = async ({
   domain,
   options = { allowPda: false },
 }: ResolveParams): Promise<Address> => {
-  const [trimmedDomain, tld] = parseSupportedTld(domain);
+  const [trimmedDomain, tld] = await assertTldSupported({ rpc, domain });
   const params = { rpc, domain: trimmedDomain, options };
 
   switch (tld) {

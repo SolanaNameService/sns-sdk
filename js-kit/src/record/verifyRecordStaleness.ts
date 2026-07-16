@@ -1,17 +1,18 @@
 import {
   Address,
   GetAccountInfoApi,
+  GetSlotApi,
   GetTokenLargestAccountsApi,
   Rpc,
 } from "@solana/kit";
 
 import { addressCodec } from "../codecs";
-import { getDomainOwner } from "../domain/getDomainOwner";
+import { _getSnsDomainOwner } from "../domain/getDomainOwner";
 import { getRecordV2Address } from "../record/getRecordV2Address";
 import { RecordState } from "../states/record";
 import { Record } from "../types/record";
 import { Validation } from "../types/validation";
-import { parseSupportedTld } from "../utils/tld";
+import { assertTldSupported } from "../utils/assertTldSupported";
 import { uint8ArraysEqual } from "../utils/uint8Array/uint8ArraysEqual";
 
 /**
@@ -38,7 +39,7 @@ export const _verifyStalenessSync = ({
 };
 
 interface VerifyRecordStalenessParams {
-  rpc: Rpc<GetAccountInfoApi & GetTokenLargestAccountsApi>;
+  rpc: Rpc<GetAccountInfoApi & GetTokenLargestAccountsApi & GetSlotApi>;
   domain: string;
   record: Record;
 }
@@ -57,9 +58,9 @@ export const verifyRecordStaleness = async ({
   domain,
   record,
 }: VerifyRecordStalenessParams): Promise<boolean> => {
-  const [trimmedDomain] = parseSupportedTld(domain);
+  const [trimmedDomain] = await assertTldSupported({ rpc, domain });
   const [domainOwner, state] = await Promise.all([
-    getDomainOwner({ rpc, domain }),
+    _getSnsDomainOwner({ rpc, domain: trimmedDomain }),
     getRecordV2Address({ domain: trimmedDomain, record }).then((address) =>
       RecordState.retrieve(rpc, address)
     ),
