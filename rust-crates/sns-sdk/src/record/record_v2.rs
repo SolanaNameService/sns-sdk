@@ -5,7 +5,7 @@ use sns_records::state::{
 };
 use solana_program::pubkey;
 
-use super::{convert_u5_array, Record};
+use super::{decode_injective_address, Record};
 use crate::error::SnsError;
 use {
     bech32::ToBase32,
@@ -123,7 +123,7 @@ pub fn decode_record_v2_fields(record_data: &[u8]) -> Result<RecordV2Fields<'_>,
         return Err(SnsError::InvalidRecordData);
     }
 
-    let header = *bytemuck::from_bytes::<RecordHeader>(&record_data[..RecordHeader::LEN]);
+    let header = bytemuck::pod_read_unaligned::<RecordHeader>(&record_data[..RecordHeader::LEN]);
     let staleness_validation = Validation::try_from(header.staleness_validation)?;
     let roa_validation = Validation::try_from(header.right_of_association_validation)?;
 
@@ -276,17 +276,7 @@ pub fn serialize_record_v2_content(content: &str, record: Record) -> Result<Vec<
             let pubkey = Pubkey::from_str(content).map_err(|_| SnsError::InvalidPubkey)?;
             Ok(pubkey.to_bytes().to_vec())
         }
-        Record::Injective => {
-            if !content.starts_with("inj") {
-                return Err(SnsError::InvalidInjectiveAddress);
-            }
-            let (_, data, _) = bech32::decode(content)?;
-            let data = convert_u5_array(&data);
-            if data.len() != 20 {
-                return Err(SnsError::InvalidInjectiveAddress);
-            }
-            Ok(data)
-        }
+        Record::Injective => decode_injective_address(content),
         Record::Bsc | Record::Eth | Record::BASE => {
             if !content.starts_with("0x") {
                 return Err(SnsError::InvalidEvmAddress);
@@ -414,11 +404,68 @@ mod test {
     }
 
     #[test]
-    fn decode_record_v2_fields_rejects_truncated_buffer() {
-        // Header claims 32-byte staleness/roa/content but only 16 bytes follow.
-        let buf = build_v2_record(Validation::Solana, Validation::Solana, &[0u8; 16], &[], &[]);
-        let res = decode_record_v2_fields(&buf);
-        assert!(matches!(res, Err(SnsError::InvalidRecordData)));
+    fn decode_record_v2_fields_accepts_unaligned_input() {
+        let staleness_id = [0x11u8; 32];
+        let roa_id = [0x22u8; 32];
+        let content = [0x33u8; 32];
+        let record = build_v2_record(
+            Validation::Solana,
+            Validation::Solana,
+            &staleness_id,
+            &roa_id,
+            &content,
+        );
+        let alignment = std::mem::align_of::<RecordHeader>();
+        let mut storage = vec![0; alignment + record.len()];
+        let offset = (1..=alignment)
+            .find(|offset| storage[*offset..].as_ptr().align_offset(alignment) != 0)
+            .unwrap();
+        storage[offset..offset + record.len()].copy_from_slice(&record);
+        let unaligned = &storage[offset..offset + record.len()];
+        assert_ne!(unaligned.as_ptr().align_offset(alignment), 0);
+
+        let expected = decode_record_v2_fields(&record).unwrap();
+        let actual = decode_record_v2_fields(unaligned).unwrap();
+        assert_eq!(
+            actual.header.staleness_validation,
+            expected.header.staleness_validation
+        );
+        assert_eq!(
+            actual.header.right_of_association_validation,
+            expected.header.right_of_association_validation
+        );
+        assert_eq!(actual.header.content_length, expected.header.content_length);
+        assert_eq!(actual.staleness_id, expected.staleness_id);
+        assert_eq!(actual.roa_id, expected.roa_id);
+        assert_eq!(actual.content_bytes, expected.content_bytes);
+    }
+
+    #[test]
+    fn decode_record_v2_fields_rejects_invalid_layouts() {
+        let truncated_validation =
+            build_v2_record(Validation::Solana, Validation::Solana, &[0u8; 16], &[], &[]);
+        let mut truncated_content =
+            build_v2_record(Validation::None, Validation::None, &[], &[], &[0x44]);
+        truncated_content.pop();
+
+        for data in [
+            vec![0; RecordHeader::LEN - 1],
+            truncated_validation,
+            truncated_content,
+        ] {
+            assert!(matches!(
+                decode_record_v2_fields(&data),
+                Err(SnsError::InvalidRecordData)
+            ));
+        }
+
+        let mut invalid_validation =
+            build_v2_record(Validation::None, Validation::None, &[], &[], &[]);
+        invalid_validation[..2].copy_from_slice(&u16::MAX.to_le_bytes());
+        assert!(matches!(
+            decode_record_v2_fields(&invalid_validation),
+            Err(SnsError::RecordsError(_))
+        ));
     }
 
     #[test]

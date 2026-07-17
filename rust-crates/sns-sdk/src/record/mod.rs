@@ -4,7 +4,7 @@ use crate::{
 };
 use sns_records::state::validation::Validation;
 use solana_program::pubkey;
-use {bech32::u5, solana_program::pubkey::Pubkey};
+use {bech32::FromBase32, solana_program::pubkey::Pubkey};
 pub mod record_v1;
 pub mod record_v2;
 
@@ -175,29 +175,66 @@ pub fn get_record_v1_key(domain: &str, record: Record) -> Result<Pubkey, SnsErro
     get_record_key(domain, record, RecordVersion::V1)
 }
 
-pub fn convert_u5_array(u5_data: &[u5]) -> Vec<u8> {
-    let mut u8_data: Vec<u8> = Vec::new();
-    let mut buffer: u16 = 0;
-    let mut buffer_length: u8 = 0;
-    for u5 in u5_data {
-        buffer = (buffer << 5) | (u5.to_u8() as u16);
-        buffer_length += 5;
-        while buffer_length >= 8 {
-            u8_data.push((buffer >> (buffer_length - 8)) as u8);
-            buffer_length -= 8;
-        }
+pub(crate) fn decode_injective_address(content: &str) -> Result<Vec<u8>, SnsError> {
+    let (hrp, data, variant) = bech32::decode(content)?;
+    if hrp != "inj" || variant != bech32::Variant::Bech32 {
+        return Err(SnsError::InvalidInjectiveAddress);
     }
-    // Make sure there's no remaining data in the buffer
-    if buffer_length > 0 {
-        u8_data.push((buffer << (8 - buffer_length)) as u8);
+    let decoded = Vec::<u8>::from_base32(&data)?;
+    if decoded.len() != 20 {
+        return Err(SnsError::InvalidInjectiveAddress);
     }
-    u8_data
+    Ok(decoded)
 }
 
 #[cfg(test)]
 mod test {
     use super::*;
+    use bech32::ToBase32;
     use solana_sdk::pubkey;
+
+    type InjectiveSerializer = fn(&str, Record) -> Result<Vec<u8>, SnsError>;
+
+    fn assert_injective_serializer(
+        version: &str,
+        serialize: InjectiveSerializer,
+        valid: &str,
+        payload: &[u8; 20],
+    ) {
+        assert_eq!(
+            serialize(valid, Record::Injective).unwrap(),
+            payload,
+            "{version}"
+        );
+
+        for address in [
+            bech32::encode("injfoo", payload.to_base32(), bech32::Variant::Bech32).unwrap(),
+            bech32::encode("eth", payload.to_base32(), bech32::Variant::Bech32).unwrap(),
+            bech32::encode("inj", payload.to_base32(), bech32::Variant::Bech32m).unwrap(),
+            bech32::encode("inj", [0x2au8; 19].to_base32(), bech32::Variant::Bech32).unwrap(),
+            bech32::encode("inj", [0x2au8; 21].to_base32(), bech32::Variant::Bech32).unwrap(),
+        ] {
+            assert!(
+                matches!(
+                    serialize(&address, Record::Injective),
+                    Err(SnsError::InvalidInjectiveAddress)
+                ),
+                "{version}: {address}"
+            );
+        }
+
+        let mut invalid_checksum = valid.as_bytes().to_vec();
+        let last = invalid_checksum.last_mut().unwrap();
+        *last = if *last == b'q' { b'p' } else { b'q' };
+        let invalid_checksum = String::from_utf8(invalid_checksum).unwrap();
+        assert!(
+            matches!(
+                serialize(&invalid_checksum, Record::Injective),
+                Err(SnsError::Bech32(_))
+            ),
+            "{version}"
+        );
+    }
 
     #[test]
     fn test_get_record_key() {
@@ -217,6 +254,28 @@ mod test {
         assert_eq!(
             get_record_key(domain, Record::CNAME, RecordVersion::V2).unwrap(),
             v2
+        );
+    }
+
+    #[test]
+    fn injective_serializers_require_canonical_addresses() {
+        let payload = [0x2au8; 20];
+        let valid = bech32::encode("inj", payload.to_base32(), bech32::Variant::Bech32).unwrap();
+        assert_injective_serializer("v1", record_v1::serialize_record, &valid, &payload);
+        assert_injective_serializer(
+            "v2",
+            record_v2::serialize_record_v2_content,
+            &valid,
+            &payload,
+        );
+
+        assert_eq!(
+            record_v1::deserialize_record(&payload, Record::Injective, &Pubkey::default()).unwrap(),
+            valid
+        );
+        assert_eq!(
+            record_v2::deserialize_record_v2_content(&payload, Record::Injective).unwrap(),
+            valid
         );
     }
 }
