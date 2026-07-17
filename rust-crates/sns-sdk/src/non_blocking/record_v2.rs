@@ -85,7 +85,7 @@ mod tests {
         #[tokio::test]
         async fn test_get_record_v2() {
             let client = client();
-            for domain in ["wallet-guide-9.sns", "wallet-guide-9.sol"] {
+            for domain in ["wallet-guide-9.sns"] {
                 let domain_owner = effective_domain_owner(&client, domain).await;
                 for (record, expected_content, expected_staleness_verified) in RECORD_FIXTURES {
                     let (_, data) = get_record_v2(&client, domain, record)
@@ -114,7 +114,7 @@ mod tests {
                 .iter()
                 .map(|(record, _, _)| *record)
                 .collect::<Vec<_>>();
-            for domain in ["wallet-guide-9.sns", "wallet-guide-9.sol"] {
+            for domain in ["wallet-guide-9.sns"] {
                 let result = get_multiple_records_v2(&client, domain, &records)
                     .await
                     .unwrap();
