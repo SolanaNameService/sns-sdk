@@ -4139,6 +4139,7 @@ dependencies = [
 name = "sns-sdk"
 version = "2.0.0"
 dependencies = [
+ "async-trait",
  "bech32",
  "bonfida-utils",
  "borsh 0.10.4",
@@ -4153,6 +4154,7 @@ dependencies = [
  "num-traits",
  "punycode",
  "rand 0.8.5",
+ "serde_json",
  "sns-records",
  "sns-warp-common",
  "solana-account-decoder",

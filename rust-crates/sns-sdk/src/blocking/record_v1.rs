@@ -3,9 +3,9 @@ use spl_name_service::state::NameRecordHeader;
 
 use crate::{
     blocking::resolve::resolve_name_registry,
+    blocking::tld::assert_tld_supported,
     error::SnsError,
     record::{get_record_key, Record, RecordVersion},
-    tld::parse_supported_tld,
 };
 
 pub fn get_record(
@@ -13,7 +13,7 @@ pub fn get_record(
     domain: &str,
     record: Record,
 ) -> Result<Option<(NameRecordHeader, Vec<u8>)>, SnsError> {
-    let (domain, _) = parse_supported_tld(domain)?;
+    let (domain, _) = assert_tld_supported(rpc_client, domain)?;
     let key = get_record_key(domain, record, RecordVersion::V1)?;
     resolve_name_registry(rpc_client, &key)
 }

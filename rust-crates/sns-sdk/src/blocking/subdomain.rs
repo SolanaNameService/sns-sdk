@@ -10,7 +10,7 @@ use spl_name_service::state::NameRecordHeader;
 use crate::{derivation::REVERSE_LOOKUP_CLASS, error::SnsError};
 
 #[cfg(feature = "subdomain")]
-use crate::{derivation::get_sns_domain_key, tld::parse_supported_tld};
+use crate::{blocking::tld::assert_tld_supported, derivation::get_sns_domain_key};
 #[cfg(feature = "subdomain")]
 use borsh::BorshDeserialize;
 
@@ -62,7 +62,7 @@ pub fn get_subdomains(rpc_client: &RpcClient, parent: &Pubkey) -> Result<Vec<Str
 
 #[cfg(feature = "subdomain")]
 pub fn get_sub_registrar_info(rpc_client: &RpcClient, domain: &str) -> Result<Registrar, SnsError> {
-    let (domain, _) = parse_supported_tld(domain)?;
+    let (domain, _) = assert_tld_supported(rpc_client, domain)?;
     let key = get_sns_domain_key(domain)?.key;
     let registrar_key = Registrar::find_key(&key, &SUB_REGISTRAR_PROGRAM_ID).0;
     let account = rpc_client.get_account_data(&registrar_key)?;

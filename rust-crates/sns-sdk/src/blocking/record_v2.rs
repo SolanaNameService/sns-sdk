@@ -4,9 +4,9 @@ use spl_name_service::state::NameRecordHeader;
 
 use crate::{
     blocking::resolve::{resolve_name_registry, resolve_name_registry_batch},
+    blocking::tld::assert_tld_supported,
     error::SnsError,
     record::{get_record_key, Record, RecordVersion},
-    tld::parse_supported_tld,
 };
 
 pub fn get_record_v2(
@@ -14,7 +14,7 @@ pub fn get_record_v2(
     domain: &str,
     record: Record,
 ) -> Result<Option<(NameRecordHeader, Vec<u8>)>, SnsError> {
-    let (domain, _) = parse_supported_tld(domain)?;
+    let (domain, _) = assert_tld_supported(rpc_client, domain)?;
     let record_key = get_record_key(domain, record, RecordVersion::V2)?;
     resolve_name_registry(rpc_client, &record_key)
 }
@@ -24,7 +24,7 @@ pub fn get_multiple_records_v2(
     domain: &str,
     records: &[Record],
 ) -> Result<Vec<Option<(NameRecordHeader, Vec<u8>)>>, SnsError> {
-    let (domain, _) = parse_supported_tld(domain)?;
+    let (domain, _) = assert_tld_supported(rpc_client, domain)?;
     let pubkeys: Vec<Pubkey> = records
         .iter()
         .map(|r| get_record_key(domain, *r, RecordVersion::V2))

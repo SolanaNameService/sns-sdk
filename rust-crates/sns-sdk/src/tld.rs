@@ -2,12 +2,18 @@
 //!
 //! Mirrors the JS SDK v4 `utils/tld.ts` and `utils/parseSnsDomain.ts`:
 //!
-//! - Read / key-derivation APIs accept `.sns` or `.sol` (see [`parse_supported_tld`]).
-//!   `.sol` is treated as an alias of the `.sns` derivation path.
+//! - Read APIs accept the suffixes enabled by the current rollout state (see
+//!   [`parse_supported_tld`]).
 //! - Write APIs accept only canonical `.sns` names (see [`parse_sns_domain`] and
 //!   [`parse_sns_top_level_domain`]).
 
-use crate::error::SnsError;
+use {
+    crate::{config::SOL_SRS_RESOLUTION_ENABLED, error::SnsError},
+    std::{
+        collections::HashSet,
+        sync::{Mutex, OnceLock},
+    },
+};
 
 pub const SOL_TLD: &str = ".sol";
 pub const SNS_TLD: &str = ".sns";
@@ -18,7 +24,13 @@ pub enum Tld {
     Sol,
 }
 
-pub const SUPPORTED_TLDS: [Tld; 2] = [Tld::Sns, Tld::Sol];
+pub const SUPPORTED_TLDS: &[Tld] = if SOL_SRS_RESOLUTION_ENABLED {
+    &[Tld::Sns]
+} else {
+    &[Tld::Sns, Tld::Sol]
+};
+
+static ENDPOINTS_PAST_SOL_CUTOFF: OnceLock<Mutex<HashSet<String>>> = OnceLock::new();
 
 impl Tld {
     pub fn as_str(&self) -> &'static str {
@@ -44,6 +56,26 @@ pub fn parse_supported_tld(domain: &str) -> Result<(&str, Tld), SnsError> {
         .iter()
         .find_map(|&tld| domain.strip_suffix(tld.as_str()).map(|bare| (bare, tld)))
         .ok_or(SnsError::UnsupportedTld)
+}
+
+/// Returns whether an RPC endpoint has already reported a finalized slot at or
+/// after the legacy `.sol` cutoff.
+pub(crate) fn endpoint_is_past_sol_cutoff(endpoint: &str) -> bool {
+    ENDPOINTS_PAST_SOL_CUTOFF
+        .get_or_init(Default::default)
+        .lock()
+        .expect("SOL cutoff endpoint cache lock poisoned")
+        .contains(endpoint)
+}
+
+/// Caches an RPC endpoint that reported a finalized slot at or after the legacy
+/// `.sol` cutoff.
+pub(crate) fn mark_endpoint_past_sol_cutoff(endpoint: String) {
+    ENDPOINTS_PAST_SOL_CUTOFF
+        .get_or_init(Default::default)
+        .lock()
+        .expect("SOL cutoff endpoint cache lock poisoned")
+        .insert(endpoint);
 }
 
 /// Parses a writable `.sns` domain, allowing either `name.sns` or `sub.parent.sns`,
