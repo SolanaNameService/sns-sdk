@@ -4,6 +4,11 @@ use {
         error::SnsError,
     },
     solana_program::pubkey::Pubkey,
+    solana_sdk::account::Account,
+    spl_token_2022::{
+        extension::StateWithExtensions,
+        state::{Account as TokenAccount, AccountState, Mint},
+    },
     std::time::{SystemTime, UNIX_EPOCH},
 };
 
@@ -95,6 +100,43 @@ pub(crate) fn parse_srs_record(
     }
 }
 
+/// Derives the only valid Token-2022 mint for an SRS record.
+pub(crate) fn get_srs_token_mint(record: &Pubkey) -> Pubkey {
+    Pubkey::find_program_address(&[b"mint", record.as_ref()], &SRS_PROGRAM_ID).0
+}
+
+/// Validates an SRS Token-2022 mint, including extension-bearing accounts.
+pub(crate) fn validate_srs_token_mint(account: &Account) -> Result<(), SnsError> {
+    if account.owner != spl_token_2022::ID {
+        return Err(SnsError::CouldNotFindSrsOwner);
+    }
+    let mint = StateWithExtensions::<Mint>::unpack(&account.data)
+        .map_err(|_| SnsError::CouldNotFindSrsOwner)?;
+    if !mint.base.is_initialized || mint.base.decimals != 0 || mint.base.supply != 1 {
+        return Err(SnsError::CouldNotFindSrsOwner);
+    }
+    Ok(())
+}
+
+/// Validates an SRS Token-2022 holder account and returns its final owner.
+pub(crate) fn parse_srs_token_holder(account: &Account, mint: &Pubkey) -> Result<Pubkey, SnsError> {
+    if account.owner != spl_token_2022::ID {
+        return Err(SnsError::CouldNotFindSrsOwner);
+    }
+    let holder = StateWithExtensions::<TokenAccount>::unpack(&account.data)
+        .map_err(|_| SnsError::CouldNotFindSrsOwner)?;
+    if holder.base.mint != *mint
+        || holder.base.amount != 1
+        || !matches!(
+            holder.base.state,
+            AccountState::Initialized | AccountState::Frozen
+        )
+    {
+        return Err(SnsError::CouldNotFindSrsOwner);
+    }
+    Ok(holder.base.owner)
+}
+
 /// Builds an SRS record fixture for mode-specific resolver tests.
 #[cfg(test)]
 pub(crate) fn srs_record_data(owner: SrsRecordOwner, expiry: i64) -> Vec<u8> {
@@ -111,6 +153,86 @@ pub(crate) fn srs_record_data(owner: SrsRecordOwner, expiry: i64) -> Vec<u8> {
         .copy_from_slice(owner.as_ref());
     data[SRS_RECORD_EXPIRY_OFFSET..SRS_RECORD_HEADER_LENGTH].copy_from_slice(&expiry.to_le_bytes());
     data
+}
+
+/// Builds an extension-bearing Token-2022 mint fixture.
+#[cfg(test)]
+pub(crate) fn token_2022_mint_account(supply: u64, decimals: u8, is_initialized: bool) -> Account {
+    use {
+        solana_program::program_option::COption,
+        spl_token_2022::extension::{
+            mint_close_authority::MintCloseAuthority, BaseStateWithExtensionsMut, ExtensionType,
+            StateWithExtensionsMut,
+        },
+    };
+
+    let mut data =
+        vec![
+            0;
+            ExtensionType::try_calculate_account_len::<Mint>(&[ExtensionType::MintCloseAuthority,])
+                .unwrap()
+        ];
+    let mut mint = StateWithExtensionsMut::<Mint>::unpack_uninitialized(&mut data).unwrap();
+    mint.init_extension::<MintCloseAuthority>(true).unwrap();
+    mint.base = Mint {
+        mint_authority: COption::None,
+        supply,
+        decimals,
+        is_initialized,
+        freeze_authority: COption::None,
+    };
+    mint.pack_base();
+    mint.init_account_type().unwrap();
+    Account {
+        data,
+        owner: spl_token_2022::ID,
+        ..Account::default()
+    }
+}
+
+/// Builds an extension-bearing Token-2022 holder fixture.
+#[cfg(test)]
+pub(crate) fn token_2022_holder_account(
+    mint: Pubkey,
+    owner: Pubkey,
+    amount: u64,
+    state: AccountState,
+) -> Account {
+    use {
+        solana_program::program_option::COption,
+        spl_token_2022::extension::{
+            immutable_owner::ImmutableOwner, BaseStateWithExtensionsMut, ExtensionType,
+            StateWithExtensionsMut,
+        },
+    };
+
+    let mut data = vec![
+        0;
+        ExtensionType::try_calculate_account_len::<TokenAccount>(&[
+            ExtensionType::ImmutableOwner,
+        ])
+        .unwrap()
+    ];
+    let mut holder =
+        StateWithExtensionsMut::<TokenAccount>::unpack_uninitialized(&mut data).unwrap();
+    holder.init_extension::<ImmutableOwner>(true).unwrap();
+    holder.base = TokenAccount {
+        mint,
+        owner,
+        amount,
+        delegate: COption::None,
+        state,
+        is_native: COption::None,
+        delegated_amount: 0,
+        close_authority: COption::None,
+    };
+    holder.pack_base();
+    holder.init_account_type().unwrap();
+    Account {
+        data,
+        owner: spl_token_2022::ID,
+        ..Account::default()
+    }
 }
 
 #[cfg(test)]
@@ -158,7 +280,7 @@ mod tests {
     }
 
     #[test]
-    fn rejects_wrong_program_short_and_malformed_records() {
+    fn rejects_malformed_srs_records() {
         let owner = Pubkey::new_unique();
         let valid = record(SRS_OWNER_TYPE_PUBKEY, owner, NOW + 1);
         assert!(matches!(
@@ -223,5 +345,62 @@ mod tests {
             parse_srs_record(&SRS_PROGRAM_ID, &data, NOW).unwrap(),
             SrsRecordOwner::Pubkey(owner)
         );
+    }
+
+    #[test]
+    fn validates_extension_bearing_token_2022_mints() {
+        assert!(validate_srs_token_mint(&token_2022_mint_account(1, 0, true)).is_ok());
+
+        let mut mint_owned_by_wrong_program = token_2022_mint_account(1, 0, true);
+        mint_owned_by_wrong_program.owner = Pubkey::new_unique();
+        for invalid in [
+            mint_owned_by_wrong_program,
+            Account {
+                data: vec![0],
+                owner: spl_token_2022::ID,
+                ..Account::default()
+            },
+            token_2022_mint_account(1, 0, false),
+            token_2022_mint_account(1, 1, true),
+            token_2022_mint_account(2, 0, true),
+        ] {
+            assert!(matches!(
+                validate_srs_token_mint(&invalid),
+                Err(SnsError::CouldNotFindSrsOwner)
+            ));
+        }
+    }
+
+    #[test]
+    fn validates_extension_bearing_token_2022_holders() {
+        let mint = Pubkey::new_unique();
+        let owner = Pubkey::new_unique();
+        for state in [AccountState::Initialized, AccountState::Frozen] {
+            assert_eq!(
+                parse_srs_token_holder(&token_2022_holder_account(mint, owner, 1, state), &mint,)
+                    .unwrap(),
+                owner
+            );
+        }
+
+        let mut holder_owned_by_wrong_program =
+            token_2022_holder_account(mint, owner, 1, AccountState::Initialized);
+        holder_owned_by_wrong_program.owner = Pubkey::new_unique();
+        for invalid in [
+            holder_owned_by_wrong_program,
+            Account {
+                data: vec![0],
+                owner: spl_token_2022::ID,
+                ..Account::default()
+            },
+            token_2022_holder_account(Pubkey::new_unique(), owner, 1, AccountState::Initialized),
+            token_2022_holder_account(mint, owner, 0, AccountState::Initialized),
+            token_2022_holder_account(mint, owner, 1, AccountState::Uninitialized),
+        ] {
+            assert!(matches!(
+                parse_srs_token_holder(&invalid, &mint),
+                Err(SnsError::CouldNotFindSrsOwner)
+            ));
+        }
     }
 }

@@ -19,7 +19,10 @@ use crate::{
         get_record_key, record_v1::check_sol_record_v1_data, record_v2::check_sol_record_v2_data,
         Record, RecordVersion,
     },
-    resolve::{current_unix_timestamp, parse_srs_record, SrsRecordOwner},
+    resolve::{
+        current_unix_timestamp, get_srs_token_mint, parse_srs_record, parse_srs_token_holder,
+        validate_srs_token_mint, SrsRecordOwner,
+    },
     tld::SOL_TLD,
 };
 
@@ -129,8 +132,49 @@ fn resolve_srs(
         SrsRecordOwner::Pubkey(owner) => {
             resolve_owner_with_pda_policy(rpc_client, owner, allow_pda)
         }
-        SrsRecordOwner::Token(_) => Err(SnsError::CouldNotFindSrsOwner),
+        SrsRecordOwner::Token(mint) => {
+            resolve_srs_token_owner(rpc_client, &record_key, mint, allow_pda)
+        }
     }
+}
+
+/// Resolves a tokenized SRS record through its unique Token-2022 holder.
+fn resolve_srs_token_owner(
+    rpc_client: &RpcClient,
+    record: &Pubkey,
+    mint: Pubkey,
+    allow_pda: &AllowPda,
+) -> Result<Pubkey, SnsError> {
+    if mint != get_srs_token_mint(record) {
+        return Err(SnsError::RecordMalformed);
+    }
+
+    let mint_account = rpc_client
+        .get_account_with_commitment(&mint, rpc_client.commitment())?
+        .value
+        .ok_or(SnsError::CouldNotFindSrsOwner)?;
+    validate_srs_token_mint(&mint_account)?;
+
+    let mut unit_holders = rpc_client
+        .get_token_largest_accounts(&mint)?
+        .into_iter()
+        .filter(|account| account.amount.amount == "1");
+    let holder_key = unit_holders
+        .next()
+        .ok_or(SnsError::CouldNotFindSrsOwner)?
+        .address
+        .parse::<Pubkey>()
+        .map_err(|_| SnsError::CouldNotFindSrsOwner)?;
+    if unit_holders.next().is_some() {
+        return Err(SnsError::CouldNotFindSrsOwner);
+    }
+
+    let holder_account = rpc_client
+        .get_account_with_commitment(&holder_key, rpc_client.commitment())?
+        .value
+        .ok_or(SnsError::CouldNotFindSrsOwner)?;
+    let owner = parse_srs_token_holder(&holder_account, &mint)?;
+    resolve_owner_with_pda_policy(rpc_client, owner, allow_pda)
 }
 
 /// Applies the configured final-owner PDA policy.
@@ -259,10 +303,14 @@ mod tests {
     use super::*;
     use crate::{
         config::SOL_TLD_CUTOFF_SLOT,
-        derivation::{get_domain_mint, get_sns_domain_key, SRS_PROGRAM_ID},
-        resolve::{srs_record_data, SrsRecordOwner},
+        derivation::{get_domain_mint, get_sns_domain_key, get_srs_domain_key, SRS_PROGRAM_ID},
+        resolve::{
+            get_srs_token_mint, srs_record_data, token_2022_holder_account,
+            token_2022_mint_account, SrsRecordOwner,
+        },
         utils::test::{
-            account_response, generate_random_string, multiple_accounts_response, TestRpcSender,
+            account_response, generate_random_string, multiple_accounts_response,
+            token_largest_accounts_response, TestRpcSender,
         },
     };
     use borsh::BorshSerialize;
@@ -271,6 +319,7 @@ mod tests {
     use solana_client::{rpc_client::RpcClientConfig, rpc_request::RpcRequest};
     use solana_program::pubkey;
     use solana_sdk::account::Account;
+    use spl_token_2022::state::AccountState;
 
     const TEST_NOW: i64 = 1_000;
 
@@ -323,6 +372,43 @@ mod tests {
             owner: NAME_TOKENIZER_ID,
             ..Account::default()
         }
+    }
+
+    fn token_srs_test_client(
+        endpoint: &str,
+        domain: &str,
+        balances: &[(Pubkey, &str)],
+        holder_account: Option<&Account>,
+        owner_account: Option<&Account>,
+    ) -> (RpcClient, TestRpcSender) {
+        let record_key = get_srs_domain_key(domain).key;
+        let mint = get_srs_token_mint(&record_key);
+        let record = srs_account(SrsRecordOwner::Token(mint));
+        let mint_account = token_2022_mint_account(1, 0, true);
+        let mut responses = vec![
+            (RpcRequest::GetAccountInfo, account_response(Some(&record))),
+            (
+                RpcRequest::GetAccountInfo,
+                account_response(Some(&mint_account)),
+            ),
+            (
+                RpcRequest::GetTokenLargestAccounts,
+                token_largest_accounts_response(balances),
+            ),
+        ];
+        if let Some(holder_account) = holder_account {
+            responses.push((
+                RpcRequest::GetAccountInfo,
+                account_response(Some(holder_account)),
+            ));
+        }
+        if let Some(owner_account) = owner_account {
+            responses.push((
+                RpcRequest::GetAccountInfo,
+                account_response(Some(owner_account)),
+            ));
+        }
+        test_client(endpoint, responses)
     }
 
     // Resolver routing
@@ -425,7 +511,7 @@ mod tests {
     }
 
     #[test]
-    fn unsupported_tld_returns_before_any_rpc() {
+    fn rejects_unsupported_tld() {
         let (client, sender) = test_client("blocking-srs-unsupported", []);
         assert!(matches!(
             resolve_with_config(&client, "future.eth", AllowPda::Deny, true, TEST_NOW),
@@ -437,7 +523,7 @@ mod tests {
     // SRS owner handling
 
     #[test]
-    fn missing_srs_record_returns_domain_does_not_exist() {
+    fn rejects_missing_srs_record() {
         let (client, sender) = test_client("blocking-srs-missing", []);
         assert!(matches!(
             resolve_with_config(&client, "missing.sol", AllowPda::Deny, true, TEST_NOW),
@@ -447,11 +533,52 @@ mod tests {
     }
 
     #[test]
-    fn tokenized_srs_record_returns_could_not_find_srs_owner() {
+    fn rejects_noncanonical_srs_token_mint() {
         let account = srs_account(SrsRecordOwner::Token(Pubkey::new_unique()));
-        let (client, _) = test_client(
+        let (client, sender) = test_client(
             "blocking-srs-token",
             [(RpcRequest::GetAccountInfo, account_response(Some(&account)))],
+        );
+        assert!(matches!(
+            resolve_with_config(&client, "token.sol", AllowPda::Deny, true, TEST_NOW),
+            Err(SnsError::RecordMalformed)
+        ));
+        assert_eq!(sender.requests().len(), 1);
+    }
+
+    #[test]
+    fn resolves_initialized_and_frozen_srs_token_holders() {
+        let domain = "token";
+        let record_key = get_srs_domain_key(domain).key;
+        let mint = get_srs_token_mint(&record_key);
+        let holder_key = Pubkey::new_unique();
+        let owner = pubkey!("Fw1ETanDZafof7xEULsnq9UY6o71Tpds89tNwPkWLb1v");
+
+        for state in [AccountState::Initialized, AccountState::Frozen] {
+            let holder = token_2022_holder_account(mint, owner, 1, state);
+            let (client, _) = token_srs_test_client(
+                &format!("blocking-token-holder-{state:?}"),
+                domain,
+                &[(holder_key, "1"), (Pubkey::new_unique(), "0")],
+                Some(&holder),
+                None,
+            );
+            assert_eq!(
+                resolve_with_config(&client, "token.sol", AllowPda::Deny, true, TEST_NOW,).unwrap(),
+                owner
+            );
+        }
+    }
+
+    #[test]
+    fn rejects_missing_srs_token_mint() {
+        let domain = "token";
+        let record_key = get_srs_domain_key(domain).key;
+        let mint = get_srs_token_mint(&record_key);
+        let record = srs_account(SrsRecordOwner::Token(mint));
+        let (client, _) = test_client(
+            "blocking-token-missing-mint",
+            [(RpcRequest::GetAccountInfo, account_response(Some(&record)))],
         );
         assert!(matches!(
             resolve_with_config(&client, "token.sol", AllowPda::Deny, true, TEST_NOW),
@@ -460,7 +587,121 @@ mod tests {
     }
 
     #[test]
-    fn direct_srs_pda_is_rejected_by_default() {
+    fn rejects_zero_or_multiple_srs_token_holders() {
+        for (endpoint, balances) in [
+            ("blocking-token-no-holder", vec![]),
+            (
+                "blocking-token-multiple-holders",
+                vec![(Pubkey::new_unique(), "1"), (Pubkey::new_unique(), "1")],
+            ),
+        ] {
+            let (client, _) = token_srs_test_client(endpoint, "token", &balances, None, None);
+            assert!(matches!(
+                resolve_with_config(&client, "token.sol", AllowPda::Deny, true, TEST_NOW),
+                Err(SnsError::CouldNotFindSrsOwner)
+            ));
+        }
+    }
+
+    #[test]
+    fn rejects_missing_srs_token_holder() {
+        let (client, _) = token_srs_test_client(
+            "blocking-token-missing-holder-account",
+            "token",
+            &[(Pubkey::new_unique(), "1")],
+            None,
+            None,
+        );
+        assert!(matches!(
+            resolve_with_config(&client, "token.sol", AllowPda::Deny, true, TEST_NOW),
+            Err(SnsError::CouldNotFindSrsOwner)
+        ));
+    }
+
+    #[test]
+    fn applies_pda_policy_to_srs_token_holder() {
+        let domain = "token";
+        let mint = get_srs_token_mint(&get_srs_domain_key(domain).key);
+        let holder_key = Pubkey::new_unique();
+        let owner = Pubkey::find_program_address(&[b"token-holder"], &SRS_PROGRAM_ID).0;
+        let holder = token_2022_holder_account(mint, owner, 1, AccountState::Initialized);
+
+        let (client, _) = token_srs_test_client(
+            "blocking-token-pda-deny",
+            domain,
+            &[(holder_key, "1")],
+            Some(&holder),
+            None,
+        );
+        assert!(matches!(
+            resolve_with_config(&client, "token.sol", AllowPda::Deny, true, TEST_NOW),
+            Err(SnsError::PdaOwnerNotAllowed)
+        ));
+
+        let (client, _) = token_srs_test_client(
+            "blocking-token-pda-any",
+            domain,
+            &[(holder_key, "1")],
+            Some(&holder),
+            None,
+        );
+        assert_eq!(
+            resolve_with_config(&client, "token.sol", AllowPda::AllowAny, true, TEST_NOW).unwrap(),
+            owner
+        );
+
+        let allowed_program = Pubkey::new_unique();
+        let owner_account = Account {
+            owner: allowed_program,
+            ..Account::default()
+        };
+        let (client, _) = token_srs_test_client(
+            "blocking-token-pda-allowlisted",
+            domain,
+            &[(holder_key, "1")],
+            Some(&holder),
+            Some(&owner_account),
+        );
+        assert_eq!(
+            resolve_with_config(
+                &client,
+                "token.sol",
+                AllowPda::Allow(vec![allowed_program]),
+                true,
+                TEST_NOW,
+            )
+            .unwrap(),
+            owner
+        );
+    }
+
+    #[test]
+    fn propagates_srs_token_holder_lookup_errors() {
+        let domain = "token";
+        let record_key = get_srs_domain_key(domain).key;
+        let mint = get_srs_token_mint(&record_key);
+        let record = srs_account(SrsRecordOwner::Token(mint));
+        let mint_account = token_2022_mint_account(1, 0, true);
+        let sender = TestRpcSender::new("blocking-token-largest-error", json!(0))
+            .with_response(RpcRequest::GetAccountInfo, account_response(Some(&record)))
+            .with_response(
+                RpcRequest::GetAccountInfo,
+                account_response(Some(&mint_account)),
+            )
+            .with_error(RpcRequest::GetTokenLargestAccounts, "RPC unavailable");
+        let client =
+            RpcClient::new_sender(sender, RpcClientConfig::with_commitment(Default::default()));
+        let error =
+            resolve_with_config(&client, "token.sol", AllowPda::Deny, true, TEST_NOW).unwrap_err();
+        assert!(matches!(
+            error,
+            SnsError::SolanaClient(error)
+                if matches!(&error.kind, solana_client::client_error::ClientErrorKind::Custom(message) if message == "RPC unavailable")
+        ));
+    }
+
+    #[test]
+    fn rejects_direct_srs_pda_by_default() {
         let owner = Pubkey::find_program_address(&[b"owner"], &SRS_PROGRAM_ID).0;
         let record = srs_account(SrsRecordOwner::Pubkey(owner));
         let (client, sender) = test_client(
@@ -475,7 +716,7 @@ mod tests {
     }
 
     #[test]
-    fn direct_srs_pda_is_returned_when_any_pda_is_allowed() {
+    fn allows_direct_srs_pda_when_any_pda_is_allowed() {
         let owner = Pubkey::find_program_address(&[b"owner"], &SRS_PROGRAM_ID).0;
         let record = srs_account(SrsRecordOwner::Pubkey(owner));
         let (client, sender) = test_client(
@@ -490,7 +731,7 @@ mod tests {
     }
 
     #[test]
-    fn direct_srs_pda_is_returned_for_allowlisted_program() {
+    fn allows_direct_srs_pda_for_allowlisted_program() {
         let owner = Pubkey::find_program_address(&[b"owner"], &SRS_PROGRAM_ID).0;
         let record = srs_account(SrsRecordOwner::Pubkey(owner));
         let allowed_program = Pubkey::new_unique();
@@ -522,7 +763,7 @@ mod tests {
     }
 
     #[test]
-    fn direct_srs_pda_is_rejected_for_non_allowlisted_program() {
+    fn rejects_direct_srs_pda_for_non_allowlisted_program() {
         let owner = Pubkey::find_program_address(&[b"owner"], &SRS_PROGRAM_ID).0;
         let record = srs_account(SrsRecordOwner::Pubkey(owner));
         let owner_account = Account {
@@ -552,7 +793,7 @@ mod tests {
     }
 
     #[test]
-    fn direct_srs_pda_is_rejected_when_owner_account_is_missing() {
+    fn rejects_direct_srs_pda_when_account_is_missing() {
         let owner = Pubkey::find_program_address(&[b"owner"], &SRS_PROGRAM_ID).0;
         let record = srs_account(SrsRecordOwner::Pubkey(owner));
         let (client, _) = test_client(
@@ -577,7 +818,7 @@ mod tests {
     // SNS error behavior
 
     #[test]
-    fn missing_sns_domain_returns_domain_does_not_exist_without_slot_request() {
+    fn rejects_missing_sns_domain() {
         let (client, sender) = test_client("blocking-sns-missing-domain", []);
         assert!(matches!(
             resolve_with_config(&client, "missing.sns", AllowPda::Deny, true, TEST_NOW),
@@ -596,7 +837,7 @@ mod tests {
     /// An active tokenization record without a holder cannot fall back to SOL
     /// record V2, SOL record V1, or the name registry owner.
     #[test]
-    fn active_sns_nft_without_holder_returns_could_not_find_nft_owner() {
+    fn rejects_active_sns_nft_without_holder() {
         let domain = "active";
         let domain_key = get_sns_domain_key(domain).unwrap().key;
         let mint_key = get_domain_mint(&domain_key);

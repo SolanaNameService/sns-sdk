@@ -4165,6 +4165,7 @@ dependencies = [
  "spl-associated-token-account",
  "spl-name-service-2",
  "spl-token 7.0.0",
+ "spl-token-2022 7.0.0",
  "sub-registrar",
  "tokio",
 ]

@@ -6,7 +6,7 @@ pub mod test {
         serde_json::{json, Value},
         solana_account_decoder::{encode_ui_account, UiAccountEncoding},
         solana_client::{
-            client_error::Result as ClientResult,
+            client_error::{ClientError, ClientErrorKind, Result as ClientResult},
             rpc_request::RpcRequest,
             rpc_sender::{RpcSender, RpcTransportStats},
         },
@@ -33,7 +33,12 @@ pub mod test {
         endpoint: String,
         slot_response: Value,
         requests: Arc<Mutex<Vec<(RpcRequest, Value)>>>,
-        responses: Arc<Mutex<HashMap<RpcRequest, VecDeque<Value>>>>,
+        responses: Arc<Mutex<HashMap<RpcRequest, VecDeque<TestRpcResponse>>>>,
+    }
+
+    enum TestRpcResponse {
+        Value(Value),
+        Error(String),
     }
 
     impl TestRpcSender {
@@ -54,7 +59,18 @@ pub mod test {
                 .unwrap()
                 .entry(request)
                 .or_default()
-                .push_back(response);
+                .push_back(TestRpcResponse::Value(response));
+            self
+        }
+
+        /// Appends a deterministic client error for the given RPC request type.
+        pub fn with_error(self, request: RpcRequest, message: &str) -> Self {
+            self.responses
+                .lock()
+                .unwrap()
+                .entry(request)
+                .or_default()
+                .push_back(TestRpcResponse::Error(message.to_owned()));
             self
         }
 
@@ -77,6 +93,20 @@ pub mod test {
         json!({
             "context": { "slot": 1, "apiVersion": null },
             "value": accounts.iter().map(|account| account.map(account_value)).collect::<Vec<_>>()
+        })
+    }
+
+    /// Encodes raw token balances as a `getTokenLargestAccounts` response.
+    pub fn token_largest_accounts_response(accounts: &[(Pubkey, &str)]) -> Value {
+        json!({
+            "context": { "slot": 1, "apiVersion": null },
+            "value": accounts.iter().map(|(address, amount)| json!({
+                "address": address.to_string(),
+                "amount": amount,
+                "decimals": 0,
+                "uiAmount": amount.parse::<f64>().ok(),
+                "uiAmountString": amount
+            })).collect::<Vec<_>>()
         })
     }
 
@@ -105,7 +135,13 @@ pub mod test {
                 .get_mut(&request)
                 .and_then(VecDeque::pop_front)
             {
-                return Ok(response);
+                return match response {
+                    TestRpcResponse::Value(value) => Ok(value),
+                    TestRpcResponse::Error(message) => Err(ClientError::new_with_request(
+                        ClientErrorKind::Custom(message),
+                        request,
+                    )),
+                };
             }
             Ok(match request {
                 RpcRequest::GetSlot => self.slot_response.clone(),

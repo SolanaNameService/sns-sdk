@@ -23,6 +23,7 @@ solana-sdk = { workspace = true }
 solana-client = { workspace = true }
 solana-account-decoder = { workspace = true }
 spl-token = { workspace = true, features = ["no-entrypoint"] }
+spl-token-2022 = { workspace = true, features = ["no-entrypoint"] }
 spl-associated-token-account = { workspace = true, features = ["no-entrypoint"] }
 spl-name-service = { workspace = true, features = ["no-entrypoint"] }
 sns-records = { version = "0.2.0", features = ["no-entrypoint"] }

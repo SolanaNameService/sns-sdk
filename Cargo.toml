@@ -10,5 +10,6 @@ solana-client = "2.1.21"
 solana-program-test = "2.1.21"
 solana-account-decoder = "2.1.21"
 spl-token = "7.0.0"
+spl-token-2022 = "7.0.0"
 spl-associated-token-account = "7.0.0"
 spl-name-service = { package = "spl-name-service-2", version = "0.4.0" }
