@@ -74,7 +74,7 @@ pub fn get_sub_registrar_info(rpc_client: &RpcClient, domain: &str) -> Result<Re
     Ok(result)
 }
 
-#[cfg(test)]
+#[cfg(all(test, not(feature = "devnet")))]
 mod tests {
     use super::*;
     use crate::derivation::get_sns_domain_key;

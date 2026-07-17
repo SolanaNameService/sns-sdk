@@ -133,7 +133,7 @@ pub fn resolve_nft_owner(
     Ok(None)
 }
 
-#[cfg(test)]
+#[cfg(all(test, not(feature = "devnet")))]
 mod tests {
     use super::*;
     use dotenv::dotenv;

@@ -8,7 +8,10 @@ use {bech32::u5, solana_program::pubkey::Pubkey};
 pub mod record_v1;
 pub mod record_v2;
 
+#[cfg(not(feature = "devnet"))]
 pub const CENTRAL_STATE_RECORD_V2: Pubkey = pubkey!("2pMnqHvei2N5oDcVGCRdZx48gqti199wr5CsyTTafsbo");
+#[cfg(feature = "devnet")]
+pub const CENTRAL_STATE_RECORD_V2: Pubkey = pubkey!("9Wo9amAUKvrHXSSwg9HXY28miHH3sh2TQhxNgYiewkpg");
 
 #[derive(Copy, Clone, Debug)]
 pub enum Record {
@@ -198,8 +201,14 @@ mod test {
 
     #[test]
     fn test_get_record_key() {
+        #[cfg(not(feature = "devnet"))]
         let v1 = pubkey!("3RfzNCvEqEKZeohqVN16Z1oi6rw5TrANwqAo4hMx6njv");
+        #[cfg(feature = "devnet")]
+        let v1 = pubkey!("AiPAgK4QKZ3B9poxGyxVoS6W2U5v4R6Vsq4qU29Sez9X");
+        #[cfg(not(feature = "devnet"))]
         let v2 = pubkey!("6xdnfxf7URWom6oP7MMS39bFVEMMfufmFvJXFyd2xwoP");
+        #[cfg(feature = "devnet")]
+        let v2 = pubkey!("9ivrZAtBSviRfW6iVfpYihKPrpp162d4km4t6NiJiLHJ");
         let domain = "something";
         assert_eq!(
             get_record_key(domain, Record::CNAME, RecordVersion::V1).unwrap(),

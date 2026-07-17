@@ -149,21 +149,30 @@ mod tests {
     #[test]
     fn sns_main_domain() {
         let result = get_sns_domain_key("bonfida").unwrap().key;
+        #[cfg(not(feature = "devnet"))]
         let expected: Pubkey = pubkey!("Crf8hzfthWGbGbLTVCiqRqV5MVnbpHB1L9KQMd6gsinb");
+        #[cfg(feature = "devnet")]
+        let expected: Pubkey = pubkey!("4ep71Np8ynS8wyngmkKrowmB9uV72pNMhLCvF8x1Achu");
         assert_eq!(result, expected);
     }
 
     #[test]
     fn sns_sub_domain() {
         let result = get_sns_domain_key("dex.bonfida").unwrap().key;
+        #[cfg(not(feature = "devnet"))]
         let expected: Pubkey = pubkey!("HoFfFXqFHAC8RP3duuQNzag1ieUwJRBv1HtRNiWFq4Qu");
+        #[cfg(feature = "devnet")]
+        let expected: Pubkey = pubkey!("8kTNkVPtNEPphCNrzUrW5Dza2zbpH4sXeiLJegTxXWn");
         assert_eq!(result, expected);
     }
 
     #[test]
     fn sns_reverse_key() {
         let result = get_reverse_key("bonfida").unwrap();
+        #[cfg(not(feature = "devnet"))]
         let expected: Pubkey = pubkey!("DqgmWxe2PPrfy45Ja3UPyFGwcbRzkRuwXt3NyxjX8krg");
+        #[cfg(feature = "devnet")]
+        let expected: Pubkey = pubkey!("3LFXQPTbDE4be61QjCuG1t1CeVWHUttzbg9TE3A66NWm");
         assert_eq!(result, expected);
     }
 

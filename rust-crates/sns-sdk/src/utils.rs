@@ -1,8 +1,8 @@
 #[cfg(test)]
 pub mod test {
+    use rand::Rng;
     use {
         async_trait::async_trait,
-        rand::Rng,
         serde_json::{json, Value},
         solana_account_decoder::{encode_ui_account, UiAccountEncoding},
         solana_client::{

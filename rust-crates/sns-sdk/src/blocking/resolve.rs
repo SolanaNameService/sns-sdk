@@ -301,6 +301,8 @@ pub fn resolve_reverse_batch(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[cfg(not(feature = "devnet"))]
+    use crate::utils::test::generate_random_string;
     use crate::{
         config::SOL_TLD_CUTOFF_SLOT,
         derivation::{get_domain_mint, get_sns_domain_key, get_srs_domain_key, SRS_PROGRAM_ID},
@@ -309,11 +311,12 @@ mod tests {
             token_2022_mint_account, SrsRecordOwner,
         },
         utils::test::{
-            account_response, generate_random_string, multiple_accounts_response,
-            token_largest_accounts_response, TestRpcSender,
+            account_response, multiple_accounts_response, token_largest_accounts_response,
+            TestRpcSender,
         },
     };
     use borsh::BorshSerialize;
+    #[cfg(not(feature = "devnet"))]
     use dotenv::dotenv;
     use serde_json::{json, Value};
     use solana_client::{rpc_client::RpcClientConfig, rpc_request::RpcRequest};
@@ -857,6 +860,7 @@ mod tests {
 
     // RPC-backed integration tests
 
+    #[cfg(not(feature = "devnet"))]
     #[test]
     fn test_reverse() {
         dotenv().ok();
@@ -866,6 +870,7 @@ mod tests {
         assert_eq!(reverse.unwrap(), "bonfida");
     }
 
+    #[cfg(not(feature = "devnet"))]
     #[test]
     fn test_resolve() {
         dotenv().ok();
@@ -891,6 +896,7 @@ mod tests {
         assert!(res.is_err())
     }
 
+    #[cfg(not(feature = "devnet"))]
     #[test]
     fn resolve_sns_ip_5() {
         dotenv().ok();
@@ -970,6 +976,7 @@ mod tests {
         }
     }
 
+    #[cfg(not(feature = "devnet"))]
     #[test]
     fn resolve_sns_ip_5_pda_allowed() {
         dotenv().ok();
@@ -987,6 +994,7 @@ mod tests {
         }
     }
 
+    #[cfg(not(feature = "devnet"))]
     #[test]
     fn resolve_sns_ip_5_errors() {
         dotenv().ok();

@@ -23,7 +23,7 @@ pub async fn get_primary_domain(
     }
 }
 
-#[cfg(test)]
+#[cfg(all(test, not(feature = "devnet")))]
 mod tests {
     use super::*;
     use dotenv::dotenv;

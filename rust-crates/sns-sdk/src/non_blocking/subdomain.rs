@@ -65,7 +65,7 @@ pub async fn get_subdomains(
     Ok(results)
 }
 
-#[cfg(test)]
+#[cfg(all(test, not(feature = "devnet")))]
 mod tests {
     use super::*;
     use crate::derivation::get_sns_domain_key;

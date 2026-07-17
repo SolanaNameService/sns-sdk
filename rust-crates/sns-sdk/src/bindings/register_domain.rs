@@ -301,9 +301,13 @@ pub fn register_domain(
 #[cfg(test)]
 mod test {
     use super::*;
+    #[cfg(not(feature = "devnet"))]
     use crate::utils::test::generate_random_string;
+    #[cfg(not(feature = "devnet"))]
     use dotenv::dotenv;
+    #[cfg(not(feature = "devnet"))]
     use solana_client::rpc_client::RpcClient;
+    #[cfg(not(feature = "devnet"))]
     use solana_sdk::{message::Message, transaction::Transaction};
 
     #[test]
@@ -356,6 +360,7 @@ mod test {
         ));
     }
 
+    #[cfg(not(feature = "devnet"))]
     #[test]
     fn test_registration() {
         dotenv().ok();
@@ -381,6 +386,7 @@ mod test {
         )
     }
 
+    #[cfg(not(feature = "devnet"))]
     #[test]
     fn test_registration_ref() {
         dotenv().ok();

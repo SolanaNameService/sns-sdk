@@ -174,7 +174,7 @@ mod tests {
 /// Simulates the builders against mainnet, `sig_verify: false` so no keypair is needed. The
 /// create/update/delete trio runs in one transaction on a fresh V1 record under the test
 /// domain (so the record-exists precondition holds without committing). Needs `RPC_URL`.
-#[cfg(test)]
+#[cfg(all(test, not(feature = "devnet")))]
 mod simulate {
     use super::*;
     use crate::{

@@ -18,7 +18,7 @@ pub async fn get_record(
     resolve_name_registry(rpc_client, &key).await
 }
 
-#[cfg(test)]
+#[cfg(all(test, not(feature = "devnet")))]
 mod tests {
     use super::*;
     use crate::record::record_v1::deserialize_record;

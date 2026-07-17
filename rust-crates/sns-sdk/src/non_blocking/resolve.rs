@@ -320,6 +320,8 @@ pub async fn resolve_reverse_batch(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[cfg(not(feature = "devnet"))]
+    use crate::utils::test::generate_random_string;
     use crate::{
         config::SOL_TLD_CUTOFF_SLOT,
         derivation::{get_domain_mint, get_sns_domain_key, get_srs_domain_key, SRS_PROGRAM_ID},
@@ -328,18 +330,19 @@ mod tests {
             token_2022_mint_account, SrsRecordOwner,
         },
         utils::test::{
-            account_response, generate_random_string, multiple_accounts_response,
-            token_largest_accounts_response, TestRpcSender,
+            account_response, multiple_accounts_response, token_largest_accounts_response,
+            TestRpcSender,
         },
     };
     use borsh::BorshSerialize;
+    #[cfg(not(feature = "devnet"))]
     use dotenv::dotenv;
     use serde_json::{json, Value};
     use solana_client::{rpc_client::RpcClientConfig, rpc_request::RpcRequest};
     use solana_program::pubkey;
     use solana_sdk::account::Account;
-    use solana_sdk::signature::Keypair;
-    use solana_sdk::signer::Signer;
+    #[cfg(not(feature = "devnet"))]
+    use solana_sdk::{signature::Keypair, signer::Signer};
     use spl_token_2022::state::AccountState;
 
     const TEST_NOW: i64 = 1_000;
@@ -894,6 +897,7 @@ mod tests {
 
     // RPC-backed integration tests
 
+    #[cfg(not(feature = "devnet"))]
     #[tokio::test]
     async fn reverse() {
         dotenv().ok();
@@ -906,6 +910,7 @@ mod tests {
         assert!(reverse.unwrap().is_none());
     }
 
+    #[cfg(not(feature = "devnet"))]
     #[tokio::test]
     async fn test_resolve() {
         dotenv().ok();
@@ -936,6 +941,7 @@ mod tests {
         assert!(matches!(res, Err(SnsError::DomainDoesNotExist)));
     }
 
+    #[cfg(not(feature = "devnet"))]
     #[tokio::test]
     async fn resolve_sns_ip_5() {
         dotenv().ok();
@@ -1025,6 +1031,7 @@ mod tests {
     /// SNS-IP 5 §4.2 PDA gate: wallet-5 (V2 stale + PDA owner) and wallet-10 (no V1
     /// + PDA owner). Both should resolve to the registry owner when the caller
     /// explicitly allows the program owning the PDA.
+    #[cfg(not(feature = "devnet"))]
     #[tokio::test]
     async fn resolve_sns_ip_5_pda_allowed() {
         dotenv().ok();
@@ -1044,6 +1051,7 @@ mod tests {
         }
     }
 
+    #[cfg(not(feature = "devnet"))]
     #[tokio::test]
     async fn resolve_sns_ip_5_errors() {
         dotenv().ok();
@@ -1082,6 +1090,7 @@ mod tests {
         assert!(matches!(res, Err(SnsError::PdaOwnerNotAllowed)), "{res:?}");
     }
 
+    #[cfg(not(feature = "devnet"))]
     #[tokio::test]
     async fn batch_resolve_reverses() {
         dotenv().ok();
@@ -1101,6 +1110,7 @@ mod tests {
         )
     }
 
+    #[cfg(not(feature = "devnet"))]
     #[tokio::test]
     async fn test_resolve_registry() {
         dotenv().ok();

@@ -401,7 +401,7 @@ mod tests {
 /// Simulates each builder against mainnet, bundling `create_record` + the operation under
 /// test so the record-exists precondition holds without committing. `sig_verify: false`
 /// means no keypair is needed. Needs `RPC_URL` in the environment.
-#[cfg(test)]
+#[cfg(all(test, not(feature = "devnet")))]
 mod simulate {
     use super::*;
     use dotenv::dotenv;

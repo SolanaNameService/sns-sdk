@@ -31,7 +31,7 @@ pub fn get_sns_domains_for_owner(
     Ok(res.into_iter().map(|x| x.0).collect())
 }
 
-#[cfg(test)]
+#[cfg(all(test, not(feature = "devnet")))]
 mod tests {
     use super::*;
     use dotenv::dotenv;
