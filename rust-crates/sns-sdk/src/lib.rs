@@ -10,6 +10,7 @@ pub mod tld;
 mod utils;
 
 pub mod record;
+mod resolve;
 
 #[cfg(not(feature = "blocking"))]
 pub mod non_blocking;

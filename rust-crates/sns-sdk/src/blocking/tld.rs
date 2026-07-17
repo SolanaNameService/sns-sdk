@@ -195,10 +195,10 @@ mod tests {
     fn every_full_domain_read_skips_the_slot_for_sns() {
         let (client, sender) = test_client("blocking-sns-boundaries", Value::Null);
 
-        assert_eq!(
-            resolve(&client, "missing.sns", AllowPda::Deny).unwrap(),
-            None
-        );
+        assert!(matches!(
+            resolve(&client, "missing.sns", AllowPda::Deny),
+            Err(SnsError::DomainDoesNotExist)
+        ));
         assert_eq!(
             get_record(&client, "missing.sns", Record::Url).unwrap(),
             None

@@ -46,6 +46,10 @@ pub enum SnsError {
     SubdomainNotAllowed,
     InvalidDomainCasing,
     InvalidNameAccountData,
+    DomainDoesNotExist,
+    DomainExpired,
+    CouldNotFindSrsOwner,
+    CouldNotFindNftOwner,
 }
 
 impl From<ClientError> for SnsError {
