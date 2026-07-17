@@ -1,4 +1,4 @@
-use solana_account_decoder::UiAccountEncoding;
+use solana_account_decoder::{UiAccountEncoding, UiDataSliceConfig};
 use solana_client::{
     rpc_client::RpcClient,
     rpc_config::{RpcAccountInfoConfig, RpcProgramAccountsConfig},
@@ -23,6 +23,10 @@ pub fn get_sns_domains_for_owner(
         with_context: None,
         account_config: RpcAccountInfoConfig {
             encoding: Some(UiAccountEncoding::Base64),
+            data_slice: Some(UiDataSliceConfig {
+                offset: 0,
+                length: 0,
+            }),
             ..Default::default()
         },
         sort_results: None,
