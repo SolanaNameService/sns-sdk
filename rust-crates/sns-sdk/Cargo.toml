@@ -39,8 +39,6 @@ bech32 = "0.9.1"
 punycode = "0.4.1"
 futures = "0.3.28"
 bytemuck = "1.13.1"
-num-derive = "0.4.0"
-num-traits = "0.2.16"
 
 [dev-dependencies]
 async-trait = "0.1"

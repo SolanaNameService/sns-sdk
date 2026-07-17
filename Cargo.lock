@@ -4150,8 +4150,6 @@ dependencies = [
  "futures",
  "hex",
  "name-tokenizer",
- "num-derive 0.4.2",
- "num-traits",
  "punycode",
  "rand 0.8.5",
  "serde_json",
