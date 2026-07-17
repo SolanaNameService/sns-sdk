@@ -13,6 +13,8 @@ use crate::{derivation::REVERSE_LOOKUP_CLASS, error::SnsError};
 use crate::{derivation::get_sns_domain_key, non_blocking::tld::assert_tld_supported};
 #[cfg(feature = "subdomain")]
 use borsh::BorshDeserialize;
+#[cfg(feature = "subdomain")]
+use solana_sdk::account::Account;
 
 #[cfg(feature = "subdomain")]
 pub use sub_registrar::state::registry::Registrar;
@@ -90,11 +92,108 @@ pub async fn get_sub_registrar_info(
     let (domain, _) = assert_tld_supported(rpc_client, domain).await?;
     let key = get_sns_domain_key(domain)?.key;
     let registrar_key = Registrar::find_key(&key, &SUB_REGISTRAR_PROGRAM_ID).0;
-    let account = rpc_client.get_account_data(&registrar_key).await?;
-    let expected_tag = SubRegistrarAccountTag::Registrar;
-    if account[0] != expected_tag as u8 {
+    let account = rpc_client
+        .get_account_with_commitment(&registrar_key, rpc_client.commitment())
+        .await?
+        .value
+        .ok_or(SnsError::InvalidSubRegistrar)?;
+    deserialize_sub_registrar(&account)
+}
+
+#[cfg(feature = "subdomain")]
+fn deserialize_sub_registrar(account: &Account) -> Result<Registrar, SnsError> {
+    if account.owner != SUB_REGISTRAR_PROGRAM_ID
+        || account.data.first().copied() != Some(SubRegistrarAccountTag::Registrar as u8)
+    {
         return Err(SnsError::InvalidSubRegistrar);
     }
-    let result = Registrar::deserialize(&mut (&account as &[u8]))?;
-    Ok(result)
+    Registrar::deserialize(&mut account.data.as_slice()).map_err(|_| SnsError::InvalidSubRegistrar)
+}
+
+#[cfg(all(test, feature = "subdomain"))]
+mod sub_registrar_tests {
+    use {
+        super::*,
+        crate::utils::test::{account_response, TestRpcSender},
+        borsh::BorshSerialize,
+        serde_json::json,
+        solana_client::{rpc_client::RpcClientConfig, rpc_request::RpcRequest},
+    };
+
+    fn registrar_account(registrar: &Registrar) -> Account {
+        let mut data = Vec::new();
+        registrar.serialize(&mut data).unwrap();
+        Account {
+            data,
+            owner: SUB_REGISTRAR_PROGRAM_ID,
+            ..Account::default()
+        }
+    }
+
+    fn test_client(endpoint: &str, account: Option<&Account>) -> RpcClient {
+        let sender = TestRpcSender::new(endpoint, json!(0))
+            .with_response(RpcRequest::GetAccountInfo, account_response(account));
+        RpcClient::new_sender(sender, RpcClientConfig::with_commitment(Default::default()))
+    }
+
+    #[tokio::test]
+    async fn resolves_valid_sub_registrar() {
+        let registrar = Registrar {
+            tag: SubRegistrarAccountTag::Registrar,
+            authority: Pubkey::new_unique(),
+            domain_account: Pubkey::new_unique(),
+            ..Registrar::default()
+        };
+        let account = registrar_account(&registrar);
+        let client = test_client("nb-sub-registrar-valid", Some(&account));
+
+        assert_eq!(
+            get_sub_registrar_info(&client, "registrar.sns")
+                .await
+                .unwrap(),
+            registrar
+        );
+    }
+
+    #[tokio::test]
+    async fn rejects_invalid_sub_registrar_accounts() {
+        let registrar = Registrar {
+            tag: SubRegistrarAccountTag::Registrar,
+            ..Registrar::default()
+        };
+        let mut wrong_owner = registrar_account(&registrar);
+        wrong_owner.owner = Pubkey::new_unique();
+        let mut wrong_discriminator = registrar_account(&registrar);
+        wrong_discriminator.data[0] = SubRegistrarAccountTag::ClosedRegistrar as u8;
+
+        for (endpoint, account) in [
+            ("nb-sub-registrar-missing", None),
+            (
+                "nb-sub-registrar-empty",
+                Some(Account {
+                    owner: SUB_REGISTRAR_PROGRAM_ID,
+                    ..Account::default()
+                }),
+            ),
+            ("nb-sub-registrar-wrong-owner", Some(wrong_owner)),
+            (
+                "nb-sub-registrar-wrong-discriminator",
+                Some(wrong_discriminator),
+            ),
+            (
+                "nb-sub-registrar-malformed",
+                Some(Account {
+                    data: vec![SubRegistrarAccountTag::Registrar as u8],
+                    owner: SUB_REGISTRAR_PROGRAM_ID,
+                    ..Account::default()
+                }),
+            ),
+        ] {
+            let client = test_client(endpoint, account.as_ref());
+            assert!(matches!(
+                get_sub_registrar_info(&client, "registrar.sns").await,
+                Err(SnsError::InvalidSubRegistrar)
+            ));
+        }
+    }
 }

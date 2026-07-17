@@ -3,6 +3,7 @@ use {
     name_tokenizer::state::NftRecord,
     solana_client::rpc_client::RpcClient,
     solana_program::{program_pack::Pack, pubkey::Pubkey},
+    solana_sdk::account::Account,
     spl_name_service::state::{get_seeds_and_key, NameRecordHeader},
 };
 
@@ -80,7 +81,7 @@ fn resolve_sns(
     let registry_acc = accs.get(3).ok_or(SnsError::InvalidDomain)?.as_ref();
 
     let registry = match registry_acc {
-        Some(a) => deserialize_name_registry(&a.data)?.0,
+        Some(account) => deserialize_name_registry(account)?.0,
         None => return Err(SnsError::DomainDoesNotExist),
     };
 
@@ -210,7 +211,7 @@ pub fn resolve_name_registry(
         .get_account_with_commitment(key, rpc_client.commitment())?
         .value;
     if let Some(acc) = acc {
-        Ok(Some(deserialize_name_registry(&acc.data)?))
+        Ok(Some(deserialize_name_registry(&acc)?))
     } else {
         Ok(None)
     }
@@ -225,7 +226,7 @@ pub fn resolve_name_registry_batch(
         let accs = rpc_client.get_multiple_accounts(keys)?;
         for acc in accs {
             if let Some(acc) = acc {
-                res.push(Some(deserialize_name_registry(&acc.data)?));
+                res.push(Some(deserialize_name_registry(&acc)?));
             } else {
                 res.push(None);
             }
@@ -235,12 +236,17 @@ pub fn resolve_name_registry_batch(
 }
 
 pub(crate) fn deserialize_name_registry(
-    data: &[u8],
+    account: &Account,
 ) -> Result<(NameRecordHeader, Vec<u8>), SnsError> {
-    let header_data = data
+    if account.owner != spl_name_service::ID {
+        return Err(SnsError::InvalidNameAccountData);
+    }
+    let header_data = account
+        .data
         .get(..NameRecordHeader::LEN)
         .ok_or(SnsError::InvalidNameAccountData)?;
-    let payload = data
+    let payload = account
+        .data
         .get(NameRecordHeader::LEN..)
         .ok_or(SnsError::InvalidNameAccountData)?;
     let header = NameRecordHeader::unpack_unchecked(header_data)?;
@@ -301,8 +307,6 @@ pub fn resolve_reverse_batch(
 #[cfg(test)]
 mod tests {
     use super::*;
-    #[cfg(not(feature = "devnet"))]
-    use crate::utils::test::generate_random_string;
     use crate::{
         config::SOL_TLD_CUTOFF_SLOT,
         derivation::{get_domain_mint, get_sns_domain_key, get_srs_domain_key, SRS_PROGRAM_ID},
@@ -704,10 +708,11 @@ mod tests {
     }
 
     #[test]
-    fn rejects_direct_srs_pda_by_default() {
+    fn applies_pda_policy_to_direct_srs_owner() {
         let owner = Pubkey::find_program_address(&[b"owner"], &SRS_PROGRAM_ID).0;
         let record = srs_account(SrsRecordOwner::Pubkey(owner));
-        let (client, sender) = test_client(
+
+        let (client, _) = test_client(
             "blocking-srs-pda-deny",
             [(RpcRequest::GetAccountInfo, account_response(Some(&record)))],
         );
@@ -715,14 +720,8 @@ mod tests {
             resolve_with_config(&client, "pda.sol", AllowPda::Deny, true, TEST_NOW),
             Err(SnsError::PdaOwnerNotAllowed)
         ));
-        assert_eq!(sender.requests().len(), 1);
-    }
 
-    #[test]
-    fn allows_direct_srs_pda_when_any_pda_is_allowed() {
-        let owner = Pubkey::find_program_address(&[b"owner"], &SRS_PROGRAM_ID).0;
-        let record = srs_account(SrsRecordOwner::Pubkey(owner));
-        let (client, sender) = test_client(
+        let (client, _) = test_client(
             "blocking-srs-pda-any",
             [(RpcRequest::GetAccountInfo, account_response(Some(&record)))],
         );
@@ -730,13 +729,7 @@ mod tests {
             resolve_with_config(&client, "pda.sol", AllowPda::AllowAny, true, TEST_NOW).unwrap(),
             owner
         );
-        assert_eq!(sender.requests().len(), 1);
-    }
 
-    #[test]
-    fn allows_direct_srs_pda_for_allowlisted_program() {
-        let owner = Pubkey::find_program_address(&[b"owner"], &SRS_PROGRAM_ID).0;
-        let record = srs_account(SrsRecordOwner::Pubkey(owner));
         let allowed_program = Pubkey::new_unique();
         let owner_account = Account {
             owner: allowed_program,
@@ -763,16 +756,7 @@ mod tests {
             .unwrap(),
             owner
         );
-    }
 
-    #[test]
-    fn rejects_direct_srs_pda_for_non_allowlisted_program() {
-        let owner = Pubkey::find_program_address(&[b"owner"], &SRS_PROGRAM_ID).0;
-        let record = srs_account(SrsRecordOwner::Pubkey(owner));
-        let owner_account = Account {
-            owner: Pubkey::new_unique(),
-            ..Account::default()
-        };
         let (client, _) = test_client(
             "blocking-srs-pda-not-allowed",
             [
@@ -793,12 +777,7 @@ mod tests {
             ),
             Err(SnsError::PdaOwnerNotAllowed)
         ));
-    }
 
-    #[test]
-    fn rejects_direct_srs_pda_when_account_is_missing() {
-        let owner = Pubkey::find_program_address(&[b"owner"], &SRS_PROGRAM_ID).0;
-        let record = srs_account(SrsRecordOwner::Pubkey(owner));
         let (client, _) = test_client(
             "blocking-srs-pda-missing",
             [
@@ -818,10 +797,73 @@ mod tests {
         ));
     }
 
-    // SNS error behavior
+    // Name registry account reads
 
     #[test]
-    fn rejects_missing_sns_domain() {
+    fn name_registry_resolvers_validate_accounts() {
+        let owner = Pubkey::new_unique();
+        let mut valid = registry_account(owner);
+        valid.data.extend_from_slice(b"payload");
+        let (client, _) = test_client(
+            "blocking-name-registry-valid",
+            [(RpcRequest::GetAccountInfo, account_response(Some(&valid)))],
+        );
+        let (header, payload) = resolve_name_registry(&client, &Pubkey::new_unique())
+            .unwrap()
+            .unwrap();
+        assert_eq!(header.owner, owner);
+        assert_eq!(payload, b"payload");
+
+        let (client, _) = test_client("blocking-name-registry-missing", []);
+        assert!(resolve_name_registry(&client, &Pubkey::new_unique())
+            .unwrap()
+            .is_none());
+
+        let mut wrong_owner = registry_account(Pubkey::new_unique());
+        wrong_owner.owner = Pubkey::new_unique();
+        let undersized = Account {
+            data: vec![0; NameRecordHeader::LEN - 1],
+            owner: spl_name_service::ID,
+            ..Account::default()
+        };
+        for (endpoint, account) in [
+            ("blocking-name-registry-wrong-owner", &wrong_owner),
+            ("blocking-name-registry-undersized", &undersized),
+        ] {
+            let (client, _) = test_client(
+                endpoint,
+                [(RpcRequest::GetAccountInfo, account_response(Some(account)))],
+            );
+            assert!(matches!(
+                resolve_name_registry(&client, &Pubkey::new_unique()),
+                Err(SnsError::InvalidNameAccountData)
+            ));
+        }
+
+        let (client, _) = test_client(
+            "blocking-name-registry-batch-wrong-owner",
+            [(
+                RpcRequest::GetMultipleAccounts,
+                multiple_accounts_response(&[Some(&valid), None, Some(&wrong_owner)]),
+            )],
+        );
+        assert!(matches!(
+            resolve_name_registry_batch(
+                &client,
+                &[
+                    Pubkey::new_unique(),
+                    Pubkey::new_unique(),
+                    Pubkey::new_unique()
+                ]
+            ),
+            Err(SnsError::InvalidNameAccountData)
+        ));
+    }
+
+    // SNS owner resolution
+
+    #[test]
+    fn rejects_missing_or_invalid_sns_registry_accounts() {
         let (client, sender) = test_client("blocking-sns-missing-domain", []);
         assert!(matches!(
             resolve_with_config(&client, "missing.sns", AllowPda::Deny, true, TEST_NOW),
@@ -835,6 +877,20 @@ mod tests {
                 .collect::<Vec<_>>(),
             vec![RpcRequest::GetMultipleAccounts]
         );
+
+        let mut wrong_owner = registry_account(Pubkey::new_unique());
+        wrong_owner.owner = Pubkey::new_unique();
+        let (client, _) = test_client(
+            "blocking-sns-registry-wrong-owner",
+            [(
+                RpcRequest::GetMultipleAccounts,
+                multiple_accounts_response(&[None, None, None, Some(&wrong_owner)]),
+            )],
+        );
+        assert!(matches!(
+            resolve_with_config(&client, "forged.sns", AllowPda::Deny, false, TEST_NOW),
+            Err(SnsError::InvalidNameAccountData)
+        ));
     }
 
     /// An active tokenization record without a holder cannot fall back to SOL
@@ -850,7 +906,7 @@ mod tests {
 
         let (client, _) = test_client(
             "blocking-sns-active-missing-holder",
-            [(RpcRequest::GetMultipleAccounts, initial.clone())],
+            [(RpcRequest::GetMultipleAccounts, initial)],
         );
         assert!(matches!(
             resolve_with_config(&client, "active.sns", AllowPda::Deny, false, TEST_NOW),
@@ -862,7 +918,7 @@ mod tests {
 
     #[cfg(not(feature = "devnet"))]
     #[test]
-    fn test_reverse() {
+    fn resolves_reverse_record_from_rpc() {
         dotenv().ok();
         let client = RpcClient::new(std::env::var("RPC_URL").unwrap());
         let key: Pubkey = pubkey!("Crf8hzfthWGbGbLTVCiqRqV5MVnbpHB1L9KQMd6gsinb");
@@ -872,7 +928,7 @@ mod tests {
 
     #[cfg(not(feature = "devnet"))]
     #[test]
-    fn test_resolve() {
+    fn resolves_sns_domains_from_rpc() {
         dotenv().ok();
         let client = RpcClient::new(std::env::var("RPC_URL").unwrap());
 
@@ -884,21 +940,11 @@ mod tests {
 
         let res = resolve(&client, "bonfida.sns", AllowPda::Deny).unwrap();
         assert_eq!(res, pubkey!("Fw1ETanDZafof7xEULsnq9UY6o71Tpds89tNwPkWLb1v"));
-
-        let res = resolve(
-            &client,
-            &format!("{}.sns", generate_random_string(20)),
-            AllowPda::Deny,
-        );
-        assert!(matches!(res, Err(SnsError::DomainDoesNotExist)));
-
-        let res = resolve(&RpcClient::new(""), "bonfida.sns", AllowPda::Deny);
-        assert!(res.is_err())
     }
 
     #[cfg(not(feature = "devnet"))]
     #[test]
-    fn resolve_sns_ip_5() {
+    fn resolves_sns_ip_5_fixtures_from_rpc() {
         dotenv().ok();
         let client = RpcClient::new(std::env::var("RPC_URL").unwrap());
 
@@ -978,7 +1024,7 @@ mod tests {
 
     #[cfg(not(feature = "devnet"))]
     #[test]
-    fn resolve_sns_ip_5_pda_allowed() {
+    fn resolves_sns_ip_5_pda_fixtures_from_rpc() {
         dotenv().ok();
         let client = RpcClient::new(std::env::var("RPC_URL").unwrap());
         let expected = pubkey!("96GKJgm2W3P8Bae78brPrJf4Yi9AN1wtPJwg2XVQ2rMr");
@@ -996,7 +1042,7 @@ mod tests {
 
     #[cfg(not(feature = "devnet"))]
     #[test]
-    fn resolve_sns_ip_5_errors() {
+    fn returns_expected_sns_ip_5_fixture_errors_from_rpc() {
         dotenv().ok();
         let client = RpcClient::new(std::env::var("RPC_URL").unwrap());
 

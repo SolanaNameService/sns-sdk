@@ -224,9 +224,10 @@ mod tests {
             vec![None]
         );
         #[cfg(feature = "subdomain")]
-        assert!(get_sub_registrar_info(&client, "missing.sns")
-            .await
-            .is_err());
+        assert!(matches!(
+            get_sub_registrar_info(&client, "missing.sns").await,
+            Err(SnsError::InvalidSubRegistrar)
+        ));
 
         assert!(!sender
             .requests()
