@@ -3,11 +3,14 @@ import type { Hono } from "hono";
 
 import { toSnsDomain, toSolDomain } from "../utils/domain";
 import { getConnection, response, type Env } from "../utils/http";
+import { domainOrSubdomainWithoutTldSchema } from "../utils/schemas";
 
 export const registerResolveRoutes = (app: Hono<Env>) => {
   app.get("/resolve/:domain", async (c) => {
-    const { domain } = c.req.param();
     try {
+      const domain = domainOrSubdomainWithoutTldSchema.parse(
+        c.req.param("domain"),
+      );
       const res = await resolve(getConnection(c), toSnsDomain(domain));
       return c.json(response(true, res));
     } catch (err) {
@@ -17,8 +20,10 @@ export const registerResolveRoutes = (app: Hono<Env>) => {
   });
 
   app.get("/resolveSns/:domain", async (c) => {
-    const { domain } = c.req.param();
     try {
+      const domain = domainOrSubdomainWithoutTldSchema.parse(
+        c.req.param("domain"),
+      );
       const res = await resolve(getConnection(c), toSnsDomain(domain));
       return c.json(response(true, res));
     } catch (err) {
@@ -28,8 +33,10 @@ export const registerResolveRoutes = (app: Hono<Env>) => {
   });
 
   app.get("/resolveSol/:domain", async (c) => {
-    const { domain } = c.req.param();
     try {
+      const domain = domainOrSubdomainWithoutTldSchema.parse(
+        c.req.param("domain"),
+      );
       const res = await resolve(getConnection(c), toSolDomain(domain));
       return c.json(response(true, res));
     } catch (err) {

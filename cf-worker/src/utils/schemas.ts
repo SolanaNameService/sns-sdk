@@ -1,6 +1,9 @@
-import { Record, RecordVersion } from "@bonfida/spl-name-service";
+import { Record } from "@bonfida/spl-name-service";
 import { PublicKey } from "@solana/web3.js";
 import { z } from "zod";
+
+const MAX_BATCH_SIZE = 100;
+const MAX_DOMAIN_SPACE = 10_000;
 
 export const isPubkey = (x: string) => {
   try {
@@ -20,45 +23,53 @@ export const booleanSchema = z
   .union([z.boolean(), z.literal("true"), z.literal("false")])
   .transform((value) => value === true || value === "true");
 
-const recordVersionSchema = z.union([
-  z.literal(RecordVersion.V1),
-  z.literal(RecordVersion.V2),
-]);
-
-export const ownerParamSchema = z.object({
-  owner: publicKeySchema,
-});
-
-export const pubkeyParamSchema = z.object({
-  pubkey: publicKeySchema,
-});
-
-export const domainRecordParamSchema = z.object({
-  domain: z.string(),
-  record: z.enum(Record),
-});
+export const publicKeysCsvSchema = z
+  .string()
+  .transform((value) => value.split(",").map((key) => key.trim()))
+  .pipe(z.array(publicKeySchema).min(1).max(MAX_BATCH_SIZE));
 
 export const recordsQuerySchema = z.object({
   records: z
     .string()
     .transform((value) => value.split(",").map((record) => record.trim()))
-    .pipe(z.array(z.enum(Record)).min(1)),
+    .pipe(z.array(z.enum(Record)).min(1).max(MAX_BATCH_SIZE)),
 });
 
-export const domainKeyQuerySchema = z.object({
-  record: z
-    .preprocess((value) => {
-      if (value === undefined) return undefined;
-      const parsed = Number(value);
-      return Number.isNaN(parsed) ? value : parsed;
-    }, recordVersionSchema)
-    .optional(),
+export const domainWithoutTldSchema = (
+  allowedLabelLengths: readonly number[],
+) =>
+  z
+    .string()
+    .trim()
+    .toLowerCase()
+    .refine(
+      (domain) => {
+        const labels = domain.split(".");
+        return (
+          allowedLabelLengths.includes(labels.length) &&
+          labels.every((label) => label.length > 0)
+        );
+      },
+      { message: "Invalid domain" },
+    );
+
+export const topLevelDomainWithoutTldSchema = domainWithoutTldSchema([1]);
+
+export const subdomainWithoutTldSchema = domainWithoutTldSchema([2]);
+
+export const domainOrSubdomainWithoutTldSchema = domainWithoutTldSchema([
+  1, 2,
+]);
+
+export const domainRecordParamSchema = z.object({
+  domain: domainOrSubdomainWithoutTldSchema,
+  record: z.enum(Record),
 });
 
 export const registerQuerySchema = z.object({
   buyer: publicKeySchema,
-  domain: z.string(),
-  space: z.coerce.number().min(0),
+  domain: topLevelDomainWithoutTldSchema,
+  space: z.coerce.number().int().min(0).max(MAX_DOMAIN_SPACE),
   serialize: booleanSchema.optional(),
   referrer: publicKeySchema.optional(),
   mint: publicKeySchema.optional(),
@@ -66,6 +77,6 @@ export const registerQuerySchema = z.object({
 
 export const createSubdomainQuerySchema = z.object({
   owner: publicKeySchema,
-  subdomain: z.string(),
+  subdomain: subdomainWithoutTldSchema,
   serialize: booleanSchema.optional(),
 });

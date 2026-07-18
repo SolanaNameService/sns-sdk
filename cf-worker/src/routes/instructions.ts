@@ -5,7 +5,7 @@ import type { TransactionInstruction } from "@solana/web3.js";
 import type { Hono } from "hono";
 import { z } from "zod";
 
-import { toCanonicalSnsDomain } from "../utils/domain";
+import { toSnsDomain } from "../utils/domain";
 import { response, getConnection, type Env } from "../utils/http";
 import { buildInstructionResponse } from "../utils/instructions";
 import {
@@ -24,7 +24,7 @@ export const registerInstructionRoutes = (app: Hono<Env>) => {
       const ata = await getAssociatedTokenAddress(paymentMint, buyer, true);
       const connection = getConnection(c);
       const ixs = await registerDomain(
-        toCanonicalSnsDomain(domain),
+        toSnsDomain(domain),
         space,
         buyer,
         ata,
@@ -55,7 +55,7 @@ export const registerInstructionRoutes = (app: Hono<Env>) => {
       );
       const connection = getConnection(c);
       const ixs: TransactionInstruction[] = [];
-      const fullSubdomain = toCanonicalSnsDomain(subdomain);
+      const fullSubdomain = toSnsDomain(subdomain);
       const ix = await createSubdomain(connection, fullSubdomain, owner, 0);
       ixs.push(...ix);
 

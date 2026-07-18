@@ -1,18 +1,19 @@
 import {
   findSubdomains,
-  getDomainKeySync,
+  getSnsDomainKeySync,
   getMultiplePrimaryDomains,
   getPrimaryDomain,
   getReverseKeySync,
   getSnsDomainsForOwner,
   getSnsNftsForOwner,
+  NameRegistryState,
   reverseLookup,
   reverseLookupBatch,
+  SNS_ROOT_DOMAIN_ACCOUNT,
 } from "@bonfida/spl-name-service";
 import type { Context, Hono } from "hono";
 import { z } from "zod";
 
-import { toSnsDomain } from "../utils/domain";
 import {
   getConnection,
   isPrimaryDomainNotFoundError,
@@ -20,15 +21,15 @@ import {
   type Env,
 } from "../utils/http";
 import {
-  domainKeyQuerySchema,
-  ownerParamSchema,
-  pubkeyParamSchema,
+  domainOrSubdomainWithoutTldSchema,
   publicKeySchema,
+  publicKeysCsvSchema,
+  topLevelDomainWithoutTldSchema,
 } from "../utils/schemas";
 
 const primaryDomainHandler = async (c: Context<Env>) => {
   try {
-    const { owner } = ownerParamSchema.parse(c.req.param());
+    const owner = publicKeySchema.parse(c.req.param("owner"));
     const connection = getConnection(c);
     const res = await getPrimaryDomain(connection, owner);
     return c.json(
@@ -49,15 +50,15 @@ const primaryDomainHandler = async (c: Context<Env>) => {
 
 const multiplePrimaryDomainsHandler = async (c: Context<Env>) => {
   try {
-    const { owners } = c.req.param();
+    const ownerKeys = publicKeysCsvSchema.parse(c.req.param("owners"));
     const connection = getConnection(c);
-    const ownerKeys = owners
-      .split(",")
-      .map((owner: string) => publicKeySchema.parse(owner));
     const res = await getMultiplePrimaryDomains(connection, ownerKeys);
     return c.json(response(true, res));
   } catch (err) {
     console.log(err);
+    if (err instanceof z.ZodError) {
+      return c.json(response(false, "Invalid input"), 400);
+    }
     if (isPrimaryDomainNotFoundError(err)) {
       return c.json(response(true, null));
     }
@@ -68,9 +69,11 @@ const multiplePrimaryDomainsHandler = async (c: Context<Env>) => {
 export const registerDomainRoutes = (app: Hono<Env>) => {
   app.get("/domain-key/:domain", (c) => {
     try {
-      const { domain } = c.req.param();
-      const { record } = domainKeyQuerySchema.parse(c.req.query());
-      const res = getDomainKeySync(toSnsDomain(domain), record);
+      const domain = domainOrSubdomainWithoutTldSchema.parse(
+        c.req.param("domain"),
+      );
+
+      const res = getSnsDomainKeySync(domain);
       return c.json(response(true, res.pubkey.toBase58()));
     } catch (err) {
       console.log(err);
@@ -83,11 +86,15 @@ export const registerDomainRoutes = (app: Hono<Env>) => {
 
   app.get("/domains/:owner", async (c) => {
     try {
-      const { owner } = ownerParamSchema.parse(c.req.param());
+      const owner = publicKeySchema.parse(c.req.param("owner"));
       const connection = getConnection(c);
-      const res = await getSnsDomainsForOwner(connection, owner);
-      const revs = await reverseLookupBatch(connection, res);
-      const tokenized = await getSnsNftsForOwner(connection, owner);
+      const domainsPromise = getSnsDomainsForOwner(connection, owner);
+      const tokenizedPromise = getSnsNftsForOwner(connection, owner);
+      const res = await domainsPromise;
+      const [revs, tokenized] = await Promise.all([
+        reverseLookupBatch(connection, res),
+        tokenizedPromise,
+      ]);
 
       return c.json(
         response(
@@ -104,19 +111,7 @@ export const registerDomainRoutes = (app: Hono<Env>) => {
       );
     } catch (err) {
       console.log(err);
-      return c.json(response(false, "Invalid domain input"));
-    }
-  });
-
-  app.get("/reverse-key/:domain", (c) => {
-    try {
-      const { domain } = c.req.param();
-      const query = c.req.query("sub");
-      const res = getReverseKeySync(toSnsDomain(domain), query === "true");
-      return c.json(response(true, res.toBase58()));
-    } catch (err) {
-      console.log(err);
-      return c.json(response(false, "Invalid domain input"));
+      return c.json(response(false, "Invalid input"));
     }
   });
 
@@ -125,10 +120,30 @@ export const registerDomainRoutes = (app: Hono<Env>) => {
   app.get("/multiple-primary-domains/:owners", multiplePrimaryDomainsHandler);
   app.get("/multiple-favorite-domains/:owners", multiplePrimaryDomainsHandler);
 
+  app.get("/reverse-key/:domain", (c) => {
+    try {
+      const domain = domainOrSubdomainWithoutTldSchema.parse(
+        c.req.param("domain"),
+      );
+      const labels = domain.split(".");
+      const isSubdomain = labels.length === 2;
+      const res = getReverseKeySync(domain, isSubdomain);
+      return c.json(response(true, res.toBase58()));
+    } catch (err) {
+      console.log(err);
+      return c.json(response(false, "Invalid input"), 400);
+    }
+  });
+
   app.get("/reverse-lookup/:pubkey", async (c) => {
     try {
-      const { pubkey } = pubkeyParamSchema.parse(c.req.param());
-      const res = await reverseLookup(getConnection(c), pubkey);
+      const pubkey = publicKeySchema.parse(c.req.param("pubkey"));
+      const connection = getConnection(c);
+      const { registry } = await NameRegistryState.retrieve(connection, pubkey);
+      const parent = registry.parentName.equals(SNS_ROOT_DOMAIN_ACCOUNT)
+        ? undefined
+        : registry.parentName;
+      const res = await reverseLookup(connection, pubkey, parent);
       return c.json(response(true, res));
     } catch (err) {
       console.log(err);
@@ -138,10 +153,12 @@ export const registerDomainRoutes = (app: Hono<Env>) => {
 
   app.get("/subdomains/:parent", async (c) => {
     try {
-      const { parent } = c.req.param();
+      const parent = topLevelDomainWithoutTldSchema.parse(
+        c.req.param("parent"),
+      );
       const subs = await findSubdomains(
         getConnection(c),
-        getDomainKeySync(toSnsDomain(parent)).pubkey,
+        getSnsDomainKeySync(parent).pubkey,
       );
       return c.json(response(true, subs));
     } catch (err) {

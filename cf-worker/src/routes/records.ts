@@ -1,6 +1,6 @@
 import {
   getMultipleRecords,
-  getRecord as getRecordV4,
+  getRecord,
   getRecordV2Key,
   Record,
   type RecordResult,
@@ -15,7 +15,11 @@ import {
   response,
   type Env,
 } from "../utils/http";
-import { domainRecordParamSchema, recordsQuerySchema } from "../utils/schemas";
+import {
+  domainOrSubdomainWithoutTldSchema,
+  domainRecordParamSchema,
+  recordsQuerySchema,
+} from "../utils/schemas";
 
 const formatRecordResult = (res: RecordResult) => ({
   deserialized: res.deserializedContent,
@@ -31,7 +35,7 @@ export const registerRecordRoutes = (app: Hono<Env>) => {
   app.get("/record-key-v2/:domain/:record", (c) => {
     try {
       const { domain, record } = domainRecordParamSchema.parse(c.req.param());
-      const res = getRecordV2Key(toSnsDomain(domain), record);
+      const res = getRecordV2Key(domain, record);
       return c.json(response(true, res.toBase58()));
     } catch (err) {
       console.log(err);
@@ -42,19 +46,11 @@ export const registerRecordRoutes = (app: Hono<Env>) => {
     }
   });
 
-  app.get("/record-key/:domain/:record", (c) => {
-    return c.json(deprecatedEndpoint("/record-key-v2/:domain/:record"), 400);
-  });
-
-  app.get("/record/:domain/:record", (c) => {
-    return c.json(deprecatedEndpoint("/record-v2/:domain/:record"), 400);
-  });
-
   app.get("/record-v2/:domain/:record", async (c) => {
     try {
       const { domain, record } = domainRecordParamSchema.parse(c.req.param());
       const connection = getConnection(c);
-      const res = await getRecordV4(connection, toSnsDomain(domain), record, {
+      const res = await getRecord(connection, toSnsDomain(domain), record, {
         deserialize: true,
       });
 
@@ -70,7 +66,9 @@ export const registerRecordRoutes = (app: Hono<Env>) => {
 
   app.get("/records-v2/:domain", async (c) => {
     try {
-      const { domain } = c.req.param();
+      const domain = domainOrSubdomainWithoutTldSchema.parse(
+        c.req.param("domain"),
+      );
       const { records } = recordsQuerySchema.parse(c.req.query());
 
       const recordsV2 = await getMultipleRecords(
@@ -102,5 +100,13 @@ export const registerRecordRoutes = (app: Hono<Env>) => {
 
   app.get("/types/record", (c) => {
     return c.json(response(true, Record));
+  });
+
+  app.get("/record-key/:domain/:record", (c) => {
+    return c.json(deprecatedEndpoint("/record-key-v2/:domain/:record"), 400);
+  });
+
+  app.get("/record/:domain/:record", (c) => {
+    return c.json(deprecatedEndpoint("/record-v2/:domain/:record"), 400);
   });
 };
