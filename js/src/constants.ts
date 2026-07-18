@@ -205,7 +205,7 @@ export const METAPLEX_ID = new PublicKey(
 );
 
 export const DEFAULT_PYTH_PUSH_PROGRAM = new PublicKey(
-  "pythWSnswVUd12oZpeFP8e9CVaEqJg25g1Vtc2biRsT",
+  "pyt2F414BA6dPttK6RddPZUdHfapoBN24GL5wbrPCou",
 );
 
 export const PYTH_PULL_FEEDS = new Map<string, number[]>([
