@@ -12,11 +12,10 @@ import {
   SNS_ROOT_DOMAIN_ACCOUNT,
 } from "@bonfida/spl-name-service";
 import type { Context, Hono } from "hono";
-import { z } from "zod";
 
 import {
   getConnection,
-  isPrimaryDomainNotFoundError,
+  handleApiError,
   response,
   type Env,
 } from "../utils/http";
@@ -40,11 +39,7 @@ const primaryDomainHandler = async (c: Context<Env>) => {
       }),
     );
   } catch (err) {
-    console.log(err);
-    if (isPrimaryDomainNotFoundError(err)) {
-      return c.json(response(true, null));
-    }
-    return c.json(response(false, "Invalid domain input"));
+    return handleApiError(c, err, { primaryDomainNotFoundAsNull: true });
   }
 };
 
@@ -55,14 +50,7 @@ const multiplePrimaryDomainsHandler = async (c: Context<Env>) => {
     const res = await getMultiplePrimaryDomains(connection, ownerKeys);
     return c.json(response(true, res));
   } catch (err) {
-    console.log(err);
-    if (err instanceof z.ZodError) {
-      return c.json(response(false, "Invalid input"), 400);
-    }
-    if (isPrimaryDomainNotFoundError(err)) {
-      return c.json(response(true, null));
-    }
-    return c.json(response(false, "Invalid domain input"));
+    return handleApiError(c, err, { primaryDomainNotFoundAsNull: true });
   }
 };
 
@@ -76,11 +64,7 @@ export const registerDomainRoutes = (app: Hono<Env>) => {
       const res = getSnsDomainKeySync(domain);
       return c.json(response(true, res.pubkey.toBase58()));
     } catch (err) {
-      console.log(err);
-      if (err instanceof z.ZodError) {
-        return c.json(response(false, "Invalid input"), 400);
-      }
-      return c.json(response(false, "Internal error"), 500);
+      return handleApiError(c, err);
     }
   });
 
@@ -110,8 +94,7 @@ export const registerDomainRoutes = (app: Hono<Env>) => {
         ),
       );
     } catch (err) {
-      console.log(err);
-      return c.json(response(false, "Invalid input"));
+      return handleApiError(c, err);
     }
   });
 
@@ -130,8 +113,7 @@ export const registerDomainRoutes = (app: Hono<Env>) => {
       const res = getReverseKeySync(domain, isSubdomain);
       return c.json(response(true, res.toBase58()));
     } catch (err) {
-      console.log(err);
-      return c.json(response(false, "Invalid input"), 400);
+      return handleApiError(c, err);
     }
   });
 
@@ -146,8 +128,7 @@ export const registerDomainRoutes = (app: Hono<Env>) => {
       const res = await reverseLookup(connection, pubkey, parent);
       return c.json(response(true, res));
     } catch (err) {
-      console.log(err);
-      return c.json(response(false, "Invalid input"), 400);
+      return handleApiError(c, err, { resource: "Account" });
     }
   });
 
@@ -162,8 +143,7 @@ export const registerDomainRoutes = (app: Hono<Env>) => {
       );
       return c.json(response(true, subs));
     } catch (err) {
-      console.log(err);
-      return c.json(response(false, "Invalid input"), 400);
+      return handleApiError(c, err);
     }
   });
 };

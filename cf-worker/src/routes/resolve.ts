@@ -2,7 +2,12 @@ import { resolve } from "@bonfida/spl-name-service";
 import type { Hono } from "hono";
 
 import { toSnsDomain, toSolDomain } from "../utils/domain";
-import { getConnection, response, type Env } from "../utils/http";
+import {
+  getConnection,
+  handleApiError,
+  response,
+  type Env,
+} from "../utils/http";
 import { domainOrSubdomainWithoutTldSchema } from "../utils/schemas";
 
 export const registerResolveRoutes = (app: Hono<Env>) => {
@@ -14,8 +19,7 @@ export const registerResolveRoutes = (app: Hono<Env>) => {
       const res = await resolve(getConnection(c), toSnsDomain(domain));
       return c.json(response(true, res));
     } catch (err) {
-      console.log(err);
-      return c.json(response(false, "Domain not found"));
+      return handleApiError(c, err);
     }
   });
 
@@ -27,8 +31,7 @@ export const registerResolveRoutes = (app: Hono<Env>) => {
       const res = await resolve(getConnection(c), toSnsDomain(domain));
       return c.json(response(true, res));
     } catch (err) {
-      console.log(err);
-      return c.json(response(false, "Domain not found"));
+      return handleApiError(c, err);
     }
   });
 
@@ -40,8 +43,7 @@ export const registerResolveRoutes = (app: Hono<Env>) => {
       const res = await resolve(getConnection(c), toSolDomain(domain));
       return c.json(response(true, res));
     } catch (err) {
-      console.log(err);
-      return c.json(response(false, "Domain not found"));
+      return handleApiError(c, err);
     }
   });
 };

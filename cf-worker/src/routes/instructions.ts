@@ -3,10 +3,14 @@ import { getAssociatedTokenAddress } from "@solana/spl-token";
 import { PublicKey } from "@solana/web3.js";
 import type { TransactionInstruction } from "@solana/web3.js";
 import type { Hono } from "hono";
-import { z } from "zod";
 
 import { toSnsDomain } from "../utils/domain";
-import { response, getConnection, type Env } from "../utils/http";
+import {
+  getConnection,
+  handleApiError,
+  response,
+  type Env,
+} from "../utils/http";
 import { buildInstructionResponse } from "../utils/instructions";
 import {
   createSubdomainQuerySchema,
@@ -40,11 +44,7 @@ export const registerInstructionRoutes = (app: Hono<Env>) => {
 
       return c.json(response(true, result));
     } catch (err) {
-      console.log(err);
-      if (err instanceof z.ZodError) {
-        return c.json(response(false, "Invalid input"), 400);
-      }
-      return c.json(response(false, "Internal error"), 500);
+      return handleApiError(c, err);
     }
   });
 
@@ -68,11 +68,7 @@ export const registerInstructionRoutes = (app: Hono<Env>) => {
 
       return c.json(response(true, result));
     } catch (err) {
-      console.log(err);
-      if (err instanceof z.ZodError) {
-        return c.json(response(false, "Invalid input"), 400);
-      }
-      return c.json(response(false, "Internal error"), 500);
+      return handleApiError(c, err, { resource: "Domain" });
     }
   });
 };

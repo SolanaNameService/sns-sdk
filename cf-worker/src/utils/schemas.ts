@@ -42,16 +42,13 @@ export const domainWithoutTldSchema = (
     .string()
     .trim()
     .toLowerCase()
-    .refine(
-      (domain) => {
-        const labels = domain.split(".");
-        return (
-          allowedLabelLengths.includes(labels.length) &&
-          labels.every((label) => label.length > 0)
-        );
-      },
-      { message: "Invalid domain" },
-    );
+    .refine((domain) => {
+      const labels = domain.split(".");
+      return (
+        allowedLabelLengths.includes(labels.length) &&
+        labels.every((label) => label.length > 0)
+      );
+    });
 
 export const topLevelDomainWithoutTldSchema = domainWithoutTldSchema([1]);
 

@@ -6,12 +6,12 @@ import {
   type RecordResult,
 } from "@bonfida/spl-name-service";
 import type { Hono } from "hono";
-import { z } from "zod";
 
 import { toSnsDomain } from "../utils/domain";
 import {
   deprecatedEndpoint,
   getConnection,
+  handleApiError,
   response,
   type Env,
 } from "../utils/http";
@@ -38,11 +38,7 @@ export const registerRecordRoutes = (app: Hono<Env>) => {
       const res = getRecordV2Key(domain, record);
       return c.json(response(true, res.toBase58()));
     } catch (err) {
-      console.log(err);
-      if (err instanceof z.ZodError) {
-        return c.json(response(false, "Invalid input"), 400);
-      }
-      return c.json(response(false, "Internal error"), 500);
+      return handleApiError(c, err);
     }
   });
 
@@ -56,11 +52,7 @@ export const registerRecordRoutes = (app: Hono<Env>) => {
 
       return c.json(response(true, formatRecordResult(res)));
     } catch (err) {
-      console.log(err);
-      if (err instanceof z.ZodError) {
-        return c.json(response(false, "Invalid input"), 400);
-      }
-      return c.json(response(false, "Internal error"), 500);
+      return handleApiError(c, err, { resource: "Record" });
     }
   });
 
@@ -90,11 +82,7 @@ export const registerRecordRoutes = (app: Hono<Env>) => {
 
       return c.json(response(true, results));
     } catch (err) {
-      console.log(err);
-      if (err instanceof z.ZodError) {
-        return c.json(response(false, "Invalid input"), 400);
-      }
-      return c.json(response(false, "Internal error"), 500);
+      return handleApiError(c, err, { resource: "Domain" });
     }
   });
 
