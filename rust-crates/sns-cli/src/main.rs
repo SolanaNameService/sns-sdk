@@ -1,7 +1,8 @@
 use serde::Serialize;
 use sns_sdk::{
     bindings::register_domain::{register_domain, USDC_MINT},
-    derivation::ROOT_DOMAIN_ACCOUNT,
+    derivation::{get_sns_domain_key, DomainKeyWithParent, ROOT_DOMAIN_ACCOUNT},
+    error::SnsError,
     primary_domain::set_primary_domain::Accounts,
     tld::{parse_sns_domain, parse_sns_top_level_domain},
     NAME_OFFERS_PROGRAM_ID,
@@ -25,7 +26,6 @@ use {
     console::Term,
     indicatif::{ProgressBar, ProgressState, ProgressStyle},
     prettytable::{row, Table},
-    sns_sdk::derivation::get_domain_key,
     sns_sdk::non_blocking::{domain, nft, record_v2, resolve},
     sns_sdk::record::{record_v2::decode_record_v2_fields, Record},
     solana_client::nonblocking::rpc_client::RpcClient,
@@ -275,6 +275,11 @@ pub fn progress_bar(len: usize) -> ProgressBar {
 
 type CliResult = Result<(), Box<dyn std::error::Error>>;
 
+fn parse_sns_domain_key(domain: &str) -> Result<DomainKeyWithParent, SnsError> {
+    let domain_name = parse_sns_domain(domain)?;
+    get_sns_domain_key(&domain_name)
+}
+
 async fn process_domains(rpc_client: &RpcClient, owners: Vec<String>) -> CliResult {
     println!("Resolving domains...\n");
     let mut table = Table::new();
@@ -312,13 +317,14 @@ async fn process_resolve(rpc_client: &RpcClient, domains: Vec<String>) -> CliRes
     let pb = progress_bar(domains.len());
     for (idx, domain) in domains.into_iter().enumerate() {
         parse_sns_domain(&domain)?;
-        let row = match resolve::resolve(rpc_client, &domain, resolve::AllowPda::Deny).await? {
-            Some(owner) => row![
+        let row = match resolve::resolve(rpc_client, &domain, resolve::AllowPda::Deny).await {
+            Ok(owner) => row![
                 domain,
                 owner,
                 format!("https://explorer.solana.com/address/{owner}")
             ],
-            _ => row![domain, "Domain not found"],
+            Err(SnsError::DomainDoesNotExist) => row![domain, "Domain not found"],
+            Err(error) => return Err(error.into()),
         };
         table.add_row(row);
         pb.set_position(idx as u64);
@@ -339,8 +345,7 @@ async fn process_burn(
     table.add_row(row!["Domain", "Transaction", "Explorer"]);
     let pb = progress_bar(domains.len());
     for (idx, domain) in domains.into_iter().enumerate() {
-        parse_sns_domain(&domain)?;
-        let domain_key = get_domain_key(&domain)?;
+        let domain_key = parse_sns_domain_key(&domain)?.key;
         let keypair = read_keypair_file(keypair_path)?;
         let ix = spl_name_service::instruction::delete(
             spl_name_service::ID,
@@ -373,8 +378,7 @@ async fn process_transfer(
     table.add_row(row!["Domain", "Transaction", "Explorer"]);
     let pb = progress_bar(domains.len());
     for (idx, domain) in domains.into_iter().enumerate() {
-        parse_sns_domain(&domain)?;
-        let domain_key = get_domain_key(&domain)?;
+        let domain_key = parse_sns_domain_key(&domain)?.key;
         let keypair = read_keypair_file(owner_keypair)?;
         let ix = spl_name_service::instruction::transfer(
             spl_name_service::ID,
@@ -402,12 +406,11 @@ async fn process_lookup(rpc_client: &RpcClient, domains: Vec<String>) -> CliResu
     table.add_row(row!["Domain", "Domain key", "Parent", "Owner", "Data"]);
     let pb = progress_bar(domains.len());
     for (idx, domain) in domains.into_iter().enumerate() {
-        parse_sns_domain(&domain)?;
-        let sns_sdk::derivation::DomainKeyWithParent {
+        let DomainKeyWithParent {
             key: domain_key,
             parent,
             is_sub: _,
-        } = sns_sdk::derivation::get_domain_key_with_parent(&domain)?;
+        } = parse_sns_domain_key(&domain)?;
         let row = match resolve::resolve_name_registry(rpc_client, &domain_key).await? {
             Some((header, data)) => {
                 let data = display_registry_data(&data);
@@ -542,8 +545,7 @@ async fn process_set_primary_domain(
         }
     };
     let owner = owner_kind.owner();
-    parse_sns_domain(domain)?;
-    let domain_key = get_domain_key(domain)?;
+    let domain_key = parse_sns_domain_key(domain)?.key;
     let ix = sns_sdk::primary_domain::set_primary_domain_instruction(
         NAME_OFFERS_PROGRAM_ID,
         Accounts {
@@ -568,7 +570,7 @@ async fn process_set_primary_domain(
             println!("Primary domain set, txid: {sig}");
         }
         OwnerKind::Pubkey(_) => {
-            let mut tx = Transaction::new_with_payer(&[ix.clone()], Some(&owner));
+            let mut tx = Transaction::new_with_payer(std::slice::from_ref(&ix), Some(&owner));
             tx.message.recent_blockhash = blockhash;
 
             println!(
@@ -586,7 +588,7 @@ async fn process_record_v2_get(
     domain: &str,
     record_str: &str,
 ) -> CliResult {
-    parse_sns_domain(domain)?;
+    let domain_key = parse_sns_domain_key(domain)?.key;
     let record = parse_record_arg(record_str)?;
 
     let Some((_, data)) = record_v2::get_record_v2(rpc_client, domain, record).await? else {
@@ -594,7 +596,6 @@ async fn process_record_v2_get(
     };
 
     let parsed = decode_record_v2_fields(&data)?.parse_content(record)?;
-    let domain_key = get_domain_key(domain)?;
     let (domain_header, domain_data) = resolve::resolve_name_registry(rpc_client, &domain_key)
         .await?
         .ok_or_else(|| anyhow!("Domain not found"))?;
@@ -795,6 +796,53 @@ mod tests {
     use sns_sdk::bindings::register_domain::VAULT_OWNER;
     use solana_client::rpc_config::RpcSimulateTransactionConfig;
     use std::time::{SystemTime, UNIX_EPOCH};
+
+    #[test]
+    fn parse_sns_domain_key_uses_bare_name_derivation() {
+        for (full_domain, bare_name) in [
+            ("bonfida.sns", "bonfida"),
+            ("dex.bonfida.sns", "dex.bonfida"),
+        ] {
+            let actual = parse_sns_domain_key(full_domain).unwrap();
+            let expected = get_sns_domain_key(bare_name).unwrap();
+
+            assert_eq!(actual.key, expected.key);
+            assert_eq!(actual.parent, expected.parent);
+            assert_eq!(actual.is_sub, expected.is_sub);
+        }
+    }
+
+    #[test]
+    fn parse_sns_domain_key_rejects_noncanonical_inputs() {
+        for domain in ["bonfida", "bonfida.sol", "bonfida.eth"] {
+            assert!(matches!(
+                parse_sns_domain_key(domain),
+                Err(SnsError::UnsupportedTld)
+            ));
+        }
+        for domain in ["Bonfida.sns", " bonfida.sns"] {
+            assert!(matches!(
+                parse_sns_domain_key(domain),
+                Err(SnsError::InvalidDomainCasing)
+            ));
+        }
+        assert!(matches!(
+            parse_sns_domain_key("bonfida.sns "),
+            Err(SnsError::UnsupportedTld)
+        ));
+        for domain in [".sns", "bonfida..sns", "too.deep.bonfida.sns"] {
+            assert!(matches!(
+                parse_sns_domain_key(domain),
+                Err(SnsError::InvalidDomain)
+            ));
+        }
+    }
+
+    #[test]
+    fn display_reverse_domain_adds_sns_suffix_once() {
+        assert_eq!(display_reverse_domain("bonfida"), "bonfida.sns");
+        assert_eq!(display_reverse_domain("bonfida.sns"), "bonfida.sns");
+    }
 
     #[tokio::test]
     async fn register_instructions_simulate() {
