@@ -36,7 +36,7 @@ mod constants {
     pub const TRUMP_MINT: Pubkey = pubkey!("6p6xgHyF7AeE6TZkSmFsko444wqoP15icUSqi2jfGiPN");
 
     pub const DEFAULT_PYTH_PUSH_PROGRAM: Pubkey =
-        pubkey!("pythWSnswVUd12oZpeFP8e9CVaEqJg25g1Vtc2biRsT");
+        pubkey!("pyt2F414BA6dPttK6RddPZUdHfapoBN24GL5wbrPCou");
 
     pub const PYTH_PULL_FEEDS: [(Pubkey, [u8; 32]); 11] = [
         (
@@ -140,7 +140,7 @@ mod constants {
     pub const INJ_MINT: Pubkey = pubkey!("DL4ivZm3NVHWk9ZvtcqTchxoKArDK4rT3vbDx2gYVr7P");
 
     pub const DEFAULT_PYTH_PUSH_PROGRAM: Pubkey =
-        pubkey!("pythWSnswVUd12oZpeFP8e9CVaEqJg25g1Vtc2biRsT");
+        pubkey!("pyt2F414BA6dPttK6RddPZUdHfapoBN24GL5wbrPCou");
 
     pub const PYTH_PULL_FEEDS: [(Pubkey, [u8; 32]); 0] = [];
 
