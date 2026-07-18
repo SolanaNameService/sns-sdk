@@ -1,7 +1,7 @@
 import { Address } from "@solana/kit";
 
 export const PYTH_PROGRAM_ID =
-  "pythWSnswVUd12oZpeFP8e9CVaEqJg25g1Vtc2biRsT" as Address;
+  "pyt2F414BA6dPttK6RddPZUdHfapoBN24GL5wbrPCou" as Address;
 
 export const PYTH_FEEDS = new Map<string, number[]>([
   [
