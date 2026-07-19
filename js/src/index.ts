@@ -48,15 +48,7 @@ export * from "./utils/getSnsDomainsForOwner";
 export * from "./utils/getSnsNftsForOwner";
 export * from "./utils/reverseLookup";
 export * from "./utils/reverseLookupBatch";
-export {
-  getTld,
-  parseSnsTld,
-  parseSupportedTld,
-  SNS_TLD,
-  SOL_TLD,
-  SUPPORTED_TLDS,
-} from "./utils/tld";
-export type { SupportedTld } from "./utils/tld";
+export * from "./utils/tld";
 
 export * from "./instructions/burnInstruction";
 export * from "./instructions/createInstruction";

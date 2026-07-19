@@ -1,7 +1,8 @@
 import type { Connection } from "@solana/web3.js";
 
 import { SOL_TLD_CUTOFF_SLOT } from "../config";
-import { getTld, SOL_TLD, unsupportedTld } from "./tld";
+import { getTld, SOL_TLD } from "./tld";
+import { unsupportedTld } from "./unsupportedTld";
 
 const endpointsPastSolCutoff = new Set<string>();
 
