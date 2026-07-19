@@ -1,35 +1,35 @@
 import { Connection, PublicKey } from "@solana/web3.js";
-import { NAME_PROGRAM_ID, SNS_ROOT_DOMAIN_ACCOUNT } from "../constants";
+
+import { getSnsDomainKeysForOwner } from "./getSnsDomainKeysForOwner";
+import { reverseLookupBatch } from "./reverseLookupBatch";
+
+export interface SnsDomain {
+  domain: string;
+  key: PublicKey;
+}
 
 /**
- * Retrieves top-level `.sns` domain accounts owned by a wallet.
+ * Retrieves directly registry-owned top-level `.sns` domains for a wallet.
+ *
+ * Tokenized domains and subdomains are not included.
  *
  * @param connection Solana RPC connection
- * @param wallet Wallet to search domain accounts for
- * @returns Domain account public keys.
+ * @param wallet Wallet whose directly registry-owned domains are retrieved
+ * @returns Domain records containing the domain name and its name account
+ * public key
  */
 export async function getSnsDomainsForOwner(
   connection: Connection,
   wallet: PublicKey,
-): Promise<PublicKey[]> {
-  const filters = [
-    {
-      memcmp: {
-        offset: 32,
-        bytes: wallet.toBase58(),
-      },
-    },
-    {
-      memcmp: {
-        offset: 0,
-        bytes: SNS_ROOT_DOMAIN_ACCOUNT.toBase58(),
-      },
-    },
-  ];
-  const accounts = await connection.getProgramAccounts(NAME_PROGRAM_ID, {
-    filters,
-    // Only the public keys matter, not the data
-    dataSlice: { offset: 0, length: 0 },
-  });
-  return accounts.map((a) => a.pubkey);
+): Promise<SnsDomain[]> {
+  const keys = await getSnsDomainKeysForOwner(connection, wallet);
+  const names = await reverseLookupBatch(connection, keys);
+
+  return keys
+    .map((key, index) => {
+      const domain = names[index];
+
+      return domain ? { domain, key } : undefined;
+    })
+    .filter((entry): entry is SnsDomain => entry !== undefined);
 }

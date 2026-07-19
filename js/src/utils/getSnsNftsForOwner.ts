@@ -1,32 +1,44 @@
 import { Connection, PublicKey } from "@solana/web3.js";
+
 import { retrieveRecords } from "../nft/retrieveRecords";
 import { reverseLookupBatch } from "./reverseLookupBatch";
 
+export interface SnsNft {
+  domain: string;
+  key: PublicKey;
+  mint: PublicKey;
+}
+
 /**
- * Retrieves tokenized `.sns` domains owned by an owner.
+ * Retrieves tokenized `.sns` domains owned by a wallet.
  *
  * @param connection Solana RPC connection
  * @param owner Owner of the tokenized domains
- * @returns Tokenized domain records with name account, mint, and reverse name.
+ * @returns Tokenized domain records containing the domain name, its name
+ * account public key, and NFT mint public key
  */
 export const getSnsNftsForOwner = async (
   connection: Connection,
   owner: PublicKey,
-) => {
+): Promise<SnsNft[]> => {
   const nftRecords = await retrieveRecords(connection, owner);
 
   const names = await reverseLookupBatch(
     connection,
-    nftRecords.map((e) => e.nameAccount),
+    nftRecords.map((record) => record.nameAccount),
   );
 
-  return names
-    .map((e, idx) => {
-      return {
-        key: nftRecords[idx].nameAccount,
-        mint: nftRecords[idx].nftMint,
-        reverse: e,
-      };
+  return nftRecords
+    .map((record, index) => {
+      const domain = names[index];
+
+      return domain
+        ? {
+            domain,
+            key: record.nameAccount,
+            mint: record.nftMint,
+          }
+        : undefined;
     })
-    .filter((e) => !!e.reverse);
+    .filter((entry): entry is SnsNft => entry !== undefined);
 };

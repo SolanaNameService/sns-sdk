@@ -9,6 +9,7 @@ Use this changelog as a migration guide from v3 to v4. The main migration work i
 - use `.sns` domains for write APIs
 - account for the `.sol` support cutoff
 - update renamed bindings, utilities, and constants
+- update owner-domain queries and their return types
 - migrate records to the v4 record API
 
 ## 1. Domain suffix handling
@@ -162,7 +163,8 @@ Update imports and function calls using this map.
 | `updateNameRegistryData`     | `updateNameRegistry`        |
 | `createReverseName`          | `createReverse`             |
 | `getAllRegisteredDomains`    | `getAllSnsDomains`          |
-| `getAllDomains`              | `getSnsDomainsForOwner`     |
+| `getAllDomains`              | `getSnsDomainKeysForOwner`  |
+| `getDomainKeysWithReverses`  | `getSnsDomainsForOwner`     |
 | `getTokenizedDomains`        | `getSnsNftsForOwner`        |
 | `getDomainKeySync`           | `getSnsDomainKeySync`       |
 | `FavouriteDomain`            | `PrimaryDomain`             |
@@ -170,6 +172,47 @@ Update imports and function calls using this map.
 | `getMultipleFavoriteDomains` | `getMultiplePrimaryDomains` |
 | `ROOT_DOMAIN_ACCOUNT`        | `SNS_ROOT_DOMAIN_ACCOUNT`   |
 | `HASH_PREFIX`                | `SNS_HASH_PREFIX`           |
+
+### Domain queries by owner
+
+Owner domain queries are separated by the information they return.
+
+Use `getSnsDomainKeysForOwner` when only directly registry-owned top-level
+domain account keys are required:
+
+```ts
+const keys = await getSnsDomainKeysForOwner(connection, owner);
+// PublicKey[]
+```
+
+Use `getSnsDomainsForOwner` when domain names are also required:
+
+```ts
+const domains = await getSnsDomainsForOwner(connection, owner);
+// Array<{
+//   domain: string;
+//   key: PublicKey;
+// }>
+```
+
+`getSnsDomainsForOwner` replaces `getDomainKeysWithReverses`. Domains without
+a valid reverse lookup record are omitted.
+
+Tokenized domains are retrieved separately with `getSnsNftsForOwner`:
+
+```ts
+const nfts = await getSnsNftsForOwner(connection, owner);
+// Array<{
+//   domain: string;
+//   key: PublicKey;
+//   mint: PublicKey;
+// }>
+```
+
+The `getSnsNftsForOwner` result property previously named `reverse` is now
+named `domain`. Returned domain names do not include the `.sns` suffix.
+
+The `SnsDomain` and `SnsNft` result interfaces are exported by the package.
 
 ## 3. Registration migration
 
