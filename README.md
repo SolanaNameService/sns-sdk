@@ -104,22 +104,27 @@ The functions in this code are available in both blocking and non-blocking (asyn
 The SDK proxy is a Cloudflare worker that proxies the JS SDK via REST calls. It's meant to be used if you are programming in a language that is not supported. It currently supports the following endpoints:
 
 - `GET /resolve/:domain`: Resolves the current owner of `domain`
+- `GET /resolveSns/:domain`: Resolves the current owner of the `.sns` domain `domain`
+- `GET /resolveSol/:domain`: Resolves the current owner of the `.sol` domain `domain`
 - `GET /domain-key/:domain`: Returns the public key of the `domain` account
 - `GET /domains/:owner`: Returns the list of domains (public keys) owned by `owner`
 - `GET /reverse-key/:domain` Returns the key of the reverse account of `domain`
-- `GET /record-key/:domain/:record`: Returns the public key of the `record` of `domain`
-- `GET /record/:domain/:record`: Returns the content of the `record` of `domain`. The result is a base64 encoded buffer.
-- `GET /favorite-domain/:owner`: Returns the favorite domain of `owner`. If `owner` has not set up a favorite domain it returns `null`
+- `GET /record-key-v2/:domain/:record`: Returns the public key of the v2 `record` of `domain`
+- `GET /record-key/:domain/:record`: Deprecated. Use `/record-key-v2/:domain/:record`
+- `GET /record/:domain/:record`: Deprecated. Use `/record-v2/:domain/:record`
+- `GET /record-v2/:domain/:record`: Returns the content of the v2 `record` of `domain`. The result includes the deserialized value, staleness boolean (`stale`), right of association (`roa`) if applicable, and the record object made of its `header` and `data` (base64 encoded).
+- `GET /records-v2/:domain`: Returns a list of v2 records for `domain`. The `records` query parameter must be a comma-separated list of record types.
+- `GET /favorite-domain/:owner`: Returns the favorite domain of `owner`
+- `GET /primary-domain/:owner`: Returns the primary domain of `owner`
+- `GET /multiple-favorite-domains/:owners`: Returns the favorite domains for a comma-separated list of owners
+- `GET /multiple-primary-domains/:owners`: Returns the primary domains for a comma-separated list of owners
 - `GET /types/record`: Returns the list of supported records
 - `GET /reverse-lookup/:pubkey`: Returns the reverse lookup of `pubkey`
 - `GET /subdomains/:parent`: Returns all the subdomains of `parent`
-- `GET /register?buyer={buyer}&domain={domain}&space={space}&serialize={serialize}`: This endpoint can be used to register `domain` for `buyer`. Additionally, the `buyer` dans specify the `space` it wants to allocate for the `domain` account. In the case where `serialize` is `true` the endpoint will return the transaction serialized in the wire format base64 encoded. Otherwise it will return the instruction in the following format: `{ programId: string, keys: {isWritable: boolean, isSigner: boolean, pubkey: string}[], data: string }` where data is base64 encoded. This endpoint also supports the optional `mint` parameter to change the mint of the token used for registration (currently supports USDC, USDT, FIDA and wSOL), if `mint` is omitted it defaults to USDC.
-- `GET /twitter/get-handle-by-key/:key`: This endpoint can be used to fetch the Twitter handle of a given public key
-- `GET /twitter/get-key-by-handle/:handle`: This endpoint can be used to fetch the public key of a given Twitter handle
-- `GET /multiple-favorite-domains/:owners`: Returns the favorite domains for a list of owners that are comma separated
-- `GET /record-v2/:domain/:record`: Returns the content of the `record` (v2) of `domain`. The result is made of the deserialized value, staleness boolean (`stale`), right of association (`roa`) if applicable, and the record object made of its`header` and `data` (base64 encoded).
+- `GET /register?buyer={buyer}&domain={domain}&space={space}&serialize={serialize}`: This endpoint can be used to register `domain` for `buyer`. Additionally, the `buyer` can specify the `space` it wants to allocate for the `domain` account. In the case where `serialize` is `true` the endpoint will return the transaction serialized in the wire format base64 encoded. Otherwise it will return the instruction in the following format: `{ programId: string, keys: {isWritable: boolean, isSigner: boolean, pubkey: string}[], data: string }` where data is base64 encoded. This endpoint also supports the optional `mint` parameter to change the mint of the token used for registration (currently supports USDC, USDT, FIDA and wSOL), and the optional `referrer` parameter for the referrer. If `mint` is omitted it defaults to USDC.
+- `GET /create-subdomain?owner={owner}&subdomain={subdomain}&serialize={serialize}`: This endpoint can be used to create the subdomain `subdomain` for `owner`. In the case where `serialize` is `true` the endpoint will return the transaction serialized in the wire format base64 encoded. Otherwise it will return the instruction in the following format: `{ programId: string, keys: {isWritable: boolean, isSigner: boolean, pubkey: string}[], data: string }` where data is base64 encoded.
 
-NOTE: All endpoints capable of performing RPC calls currently support an optional `rpc` query parameter for specifying a custom RPC URL. In the future, this parameter will become mandatory, and the Cloudflare worker will exclusively proxy calls to a specified custom RPC URL.
+NOTE: All endpoints capable of performing RPC calls currently support an optional `rpc` query parameter for specifying a custom RPC URL.
 
 The SDK proxy is deployed at: https://sdk-proxy.sns.id/
 
