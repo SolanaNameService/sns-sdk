@@ -2,6 +2,7 @@ import {
   Address,
   Base58EncodedBytes,
   GetProgramAccountsApi,
+  GetSlotApi,
   Rpc,
 } from "@solana/kit";
 
@@ -11,11 +12,12 @@ import {
   REVERSE_LOOKUP_CLASS,
 } from "../constants/addresses";
 import { deserializeReverse } from "../utils/deserializers/deserializeReverse";
+import { assertTldSupported } from "../utils/assertTldSupported";
 import { getReverseAddressFromDomainAddress } from "../utils/getReverseAddressFromDomainAddress";
-import { getDomainAddress } from "./getDomainAddress";
+import { getSnsDomainAddress } from "./getSnsDomainAddress";
 
 interface GetSubdomainsParams {
-  rpc: Rpc<GetProgramAccountsApi>;
+  rpc: Rpc<GetProgramAccountsApi & GetSlotApi>;
   domain: string;
 }
 
@@ -25,18 +27,24 @@ interface Result {
 }
 
 /**
- * Retrieves all subdomains under the specified domain, including their owners.
+ * Retrieves subdomains under a parent domain, including their owners.
  *
- * @param params - An object containing the following properties:
- *   - `rpc`: An RPC interface implementing GetProgramAccountsApi.
- *   - `domain`: The domain whose subdomains are to be retrieved.
- * @returns A promise that resolves to an array of subdomain objects, each containing the subdomain name and owner address.
+ * Entries without reverse lookup data are omitted. Passing a subdomain returns
+ * an empty array.
+ *
+ * @param params Subdomain retrieval parameters
+ * @param params.rpc RPC client implementing program account lookup
+ * @param params.domain Full parent domain name including a `.sns` or `.sol` suffix
+ * @returns Subdomain names and owner addresses.
  */
 export const getSubdomains = async ({
   rpc,
   domain,
 }: GetSubdomainsParams): Promise<Result[]> => {
-  const { domainAddress, isSub } = await getDomainAddress({ domain });
+  const [trimmedDomain] = await assertTldSupported({ rpc, domain });
+  const { domainAddress, isSub } = await getSnsDomainAddress({
+    domain: trimmedDomain,
+  });
 
   if (isSub) return [];
 

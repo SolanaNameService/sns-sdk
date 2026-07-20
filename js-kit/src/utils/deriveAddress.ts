@@ -10,10 +10,10 @@ import { NAME_PROGRAM_ADDRESS } from "../constants/addresses";
 const HASH_PREFIX = "SPL Name Service";
 
 /**
- * Hashes a string using SHA-256.
+ * Hashes the SPL Name Service hash prefix plus an input string using SHA-256.
  *
- * @param {string} str - The string to be hashed.
- * @returns {Promise<Uint8Array>} A promise that resolves to the hashed value as a Uint8Array.
+ * @param str Input string to hash
+ * @returns Hash bytes.
  */
 export const _generateHash = async (str: string): Promise<Uint8Array> => {
   const data = utf8Codec.encode(HASH_PREFIX + str);
@@ -23,12 +23,12 @@ export const _generateHash = async (str: string): Promise<Uint8Array> => {
 };
 
 /**
- * Derives an address from a hash.
+ * Derives an SPL Name Service address from a hash.
  *
- * @param {Uint8Array} hash - The hash to derive the address from.
- * @param {Address} [parentAddress] - The optional parent address.
- * @param {Address} [classAddress] - The optional class address.
- * @returns {Promise<Address>} A promise that resolves to the derived address.
+ * @param hash Hash bytes used as the first PDA seed
+ * @param parentAddress Optional parent address seed
+ * @param classAddress Optional class address seed
+ * @returns The derived address.
  */
 export const _getAddressFromHash = async (
   hash: Uint8Array,
@@ -56,12 +56,12 @@ export const _getAddressFromHash = async (
  * optional class address. These addresses form part of the seeds for Program
  * Derived Address (PDA) derivation.
  *
- * @param {string} str - The input string to derive the address from.
- * @param {Address} [parentAddress] - The optional parent address.
- * @param {Address} [classAddress] - The optional class address.
- * @returns {Promise<Address>} A promise that resolves to the derived address.
+ * @param str Input string to derive the address from
+ * @param parentAddress Optional parent address seed
+ * @param classAddress Optional class address seed
+ * @returns The derived address.
  */
-export const deriveAddress = async (
+export const _deriveAddress = async (
   str: string,
   parentAddress?: Address,
   classAddress?: Address

@@ -3,7 +3,7 @@ import { Address, GetAccountInfoApi, Instruction, Rpc } from "@solana/kit";
 import { NAME_PROGRAM_ADDRESS } from "../constants/addresses";
 import { DeleteNameRegistryInstruction } from "../instructions/deleteNameRegistryInstruction";
 import { RegistryState } from "../states/registry";
-import { deriveAddress } from "../utils/deriveAddress";
+import { _deriveAddress } from "../utils/deriveAddress";
 
 interface DeleteNameRegistryParams {
   rpc: Rpc<GetAccountInfoApi>;
@@ -14,15 +14,19 @@ interface DeleteNameRegistryParams {
 }
 
 /**
- * Deletes a name registry and refunds the associated rent balance to the specified target.
+ * Deletes a raw SPL Name Registry account and refunds the associated rent
+ * balance to the specified target.
  *
- * @param params - An object containing the following properties:
- *   - `rpc`: An RPC interface implementing GetAccountInfoApi.
- *   - `name`: The name of the registry to be deleted.
- *   - `refundTarget`: The address to which the refunded rent balance will be sent.
- *   - `classAddress`: (Optional) The address of the class associated with the registry.
- *   - `parentAddress`: (Optional) The address of the parent registry.
- * @returns A promise which resolves to the delete name registry instruction.
+ * This low-level helper accepts a raw registry seed/name and does not parse
+ * `.sns` or `.sol` suffixes.
+ *
+ * @param params Deletion parameters
+ * @param params.rpc RPC client implementing account lookup
+ * @param params.name Raw registry seed/name whose account will be deleted
+ * @param params.refundAddress Address receiving the refunded rent balance
+ * @param params.classAddress Optional class address for the registry
+ * @param params.parentAddress Optional parent registry address
+ * @returns Transaction instruction.
  */
 export const deleteNameRegistry = async ({
   rpc,
@@ -31,7 +35,7 @@ export const deleteNameRegistry = async ({
   classAddress,
   parentAddress,
 }: DeleteNameRegistryParams): Promise<Instruction> => {
-  const domainAddress = await deriveAddress(name, parentAddress, classAddress);
+  const domainAddress = await _deriveAddress(name, parentAddress, classAddress);
 
   const owner =
     classAddress || (await RegistryState.retrieve(rpc, domainAddress)).owner;

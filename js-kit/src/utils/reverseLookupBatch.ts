@@ -10,13 +10,12 @@ interface ReverseLookupBatchParams {
 }
 
 /**
- * Perform a batch reverse lookup for given domain addresses.
+ * Performs reverse lookups for domain addresses.
  *
- * @param params - An object containing the following properties:
- *   - `rpc`: The RPC client to interact with the blockchain.
- *   - `addresses`: The domain addresses to perform the reverse lookup on.
- * @returns A promise that resolves to a list of human-readable domain names associated with the given addresses,
- *          or undefined if the data is not available.
+ * @param params Reverse lookup parameters
+ * @param params.rpc RPC client implementing multiple-account lookup
+ * @param params.domainAddresses Domain addresses to reverse look up
+ * @returns Human-readable domain names, or `undefined` when reverse account data is unavailable.
  */
 export async function reverseLookupBatch({
   rpc,

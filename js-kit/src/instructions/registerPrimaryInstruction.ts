@@ -1,7 +1,7 @@
-import { AccountRole, Address, AccountMeta, Instruction } from "@solana/kit";
+import { AccountMeta, AccountRole, Address, Instruction } from "@solana/kit";
 import { serialize } from "borsh";
 
-export class registerFavoriteInstruction {
+export class RegisterPrimaryInstruction {
   tag: number;
   static schema = {
     struct: {
@@ -14,13 +14,13 @@ export class registerFavoriteInstruction {
   }
 
   serialize(): Uint8Array {
-    return serialize(registerFavoriteInstruction.schema, this);
+    return serialize(RegisterPrimaryInstruction.schema, this);
   }
 
   getInstruction(
     programAddress: Address,
     nameAccount: Address,
-    favouriteAccount: Address,
+    primaryAccount: Address,
     owner: Address,
     systemProgram: Address,
     optParent?: Address
@@ -32,7 +32,7 @@ export class registerFavoriteInstruction {
         role: AccountRole.READONLY,
       },
       {
-        address: favouriteAccount,
+        address: primaryAccount,
         role: AccountRole.WRITABLE,
       },
       {

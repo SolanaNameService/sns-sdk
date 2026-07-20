@@ -3,7 +3,7 @@ import { serialize } from "borsh";
 
 import { DEFAULT_ADDRESS } from "../constants/addresses";
 
-export class createNameRegistryInstruction {
+export class CreateNameRegistryInstruction {
   tag: number;
   nameHash: Uint8Array;
   lamports: bigint;
@@ -26,7 +26,7 @@ export class createNameRegistryInstruction {
   }
 
   serialize(): Uint8Array {
-    return serialize(createNameRegistryInstruction.schema, this);
+    return serialize(CreateNameRegistryInstruction.schema, this);
   }
 
   getInstruction(

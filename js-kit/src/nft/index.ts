@@ -1,2 +1,2 @@
-export * from "./getNftMint";
-export * from "./getNftOwner";
+export * from "./getSnsNftMint";
+export * from "./getSnsNftOwner";

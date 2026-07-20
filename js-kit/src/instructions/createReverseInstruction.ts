@@ -1,7 +1,7 @@
 import { AccountRole, Address, AccountMeta, Instruction } from "@solana/kit";
 import { serialize } from "borsh";
 
-export class createReverseInstruction {
+export class CreateReverseInstruction {
   tag: number;
   domain: string;
   static schema = {
@@ -17,7 +17,7 @@ export class createReverseInstruction {
   }
 
   serialize(): Uint8Array {
-    return serialize(createReverseInstruction.schema, this);
+    return serialize(CreateReverseInstruction.schema, this);
   }
 
   getInstruction(

@@ -2,10 +2,10 @@ import { Address, GetAccountInfoApi, Instruction, Rpc } from "@solana/kit";
 
 import {
   NAME_OFFERS_ADDRESS,
-  ROOT_DOMAIN_ADDRESS,
+  SNS_ROOT_DOMAIN_ACCOUNT,
   SYSTEM_PROGRAM_ADDRESS,
 } from "../constants/addresses";
-import { registerFavoriteInstruction } from "../instructions/registerFavoriteInstruction";
+import { RegisterPrimaryInstruction } from "../instructions/registerPrimaryInstruction";
 import { PrimaryDomainState } from "../states/primaryDomain";
 import { RegistryState } from "../states/registry";
 
@@ -18,11 +18,14 @@ export interface SetPrimaryDomainParams {
 /**
  * Sets the primary domain for the specified owner.
  *
- * @param params - An object containing the following properties:
- *   - `rpc`: An RPC interface implementing GetAccountInfoApi.
- *   - `domainAddress`: The address of the domain to be set as primary.
- *   - `owner`: The address of the domain owner.
- * @returns A promise which resolves to the set primary domain instruction.
+ * This is an address-only API: `domainAddress` must be an already-derived SNS
+ * domain account.
+ *
+ * @param params Primary-domain registration parameters
+ * @param params.rpc RPC client implementing account lookup
+ * @param params.domainAddress SNS domain account address to set as primary
+ * @param params.owner Owner of the domain account
+ * @returns Transaction instruction.
  */
 export const setPrimaryDomain = async ({
   rpc,
@@ -35,11 +38,11 @@ export const setPrimaryDomain = async ({
   ]);
 
   const parent =
-    registry.parentName !== ROOT_DOMAIN_ADDRESS
+    registry.parentName !== SNS_ROOT_DOMAIN_ACCOUNT
       ? registry.parentName
       : undefined;
 
-  const ix = new registerFavoriteInstruction().getInstruction(
+  const ix = new RegisterPrimaryInstruction().getInstruction(
     NAME_OFFERS_ADDRESS,
     domainAddress,
     primaryAddress,

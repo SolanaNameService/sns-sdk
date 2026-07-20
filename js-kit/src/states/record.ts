@@ -8,7 +8,11 @@ import {
 } from "@solana/kit";
 import { Schema, deserialize } from "borsh";
 
-import { NoRecordDataError } from "../errors";
+import {
+  InvalidSerializedDataError,
+  InvalidValidationError,
+  NoRecordDataError,
+} from "../errors";
 import { Validation } from "../types/validation";
 
 export const NAME_REGISTRY_LEN = 96;
@@ -24,7 +28,7 @@ export const getValidationLength = (validation: Validation) => {
     case Validation.UnverifiedSolana:
       return 32;
     default:
-      throw new Error("Invalid validation enum");
+      throw new InvalidValidationError("Invalid validation enum");
   }
 };
 
@@ -65,17 +69,14 @@ export class RecordHeaderState {
     rpc: Rpc<GetAccountInfoApi>,
     address: Address
   ): Promise<RecordHeaderState> {
-    const recordHeaderAccount = await fetchEncodedAccount(rpc, address);
+    const recordAccount = await fetchEncodedAccount(rpc, address);
 
-    if (!recordHeaderAccount.exists) {
-      throw new Error("Record header account not found");
+    if (!recordAccount.exists) {
+      throw new NoRecordDataError("Record account not found");
     }
 
     return this.deserialize(
-      recordHeaderAccount.data.slice(
-        NAME_REGISTRY_LEN,
-        NAME_REGISTRY_LEN + this.LEN
-      )
+      recordAccount.data.slice(NAME_REGISTRY_LEN, NAME_REGISTRY_LEN + this.LEN)
     );
   }
 }
@@ -125,8 +126,14 @@ export class RecordState {
     const startOffset =
       getValidationLength(this.header.stalenessValidation) +
       getValidationLength(this.header.rightOfAssociationValidation);
+    const endOffset = startOffset + this.header.contentLength;
+    if (endOffset > this.data.length) {
+      throw new InvalidSerializedDataError(
+        "Record content length exceeds account data"
+      );
+    }
 
-    return this.data.slice(startOffset);
+    return this.data.slice(startOffset, endOffset);
   }
 
   getStalenessId(): Uint8Array {

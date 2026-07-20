@@ -3,21 +3,21 @@ import { Base58EncodedBytes, GetProgramAccountsApi, Rpc } from "@solana/kit";
 import { addressCodec, base64Codec } from "../codecs";
 import {
   NAME_PROGRAM_ADDRESS,
-  ROOT_DOMAIN_ADDRESS,
+  SNS_ROOT_DOMAIN_ACCOUNT,
 } from "../constants/addresses";
 
-interface GetAllDomainsParams {
+interface GetAllSnsDomainsParams {
   rpc: Rpc<GetProgramAccountsApi>;
 }
 
 /**
- * Retrieves the addresses of all .sol domains.
+ * Retrieves all top-level SNS domain accounts.
  *
- * @param params - An object containing the following properties:
- *   - `rpc`: An RPC interface implementing GetProgramAccountsApi.
- * @returns A promise that resolves to an array of objects representing domain addresses and owners.
+ * @param params Domain retrieval parameters
+ * @param params.rpc RPC client implementing program account lookup
+ * @returns Domain account addresses and owners.
  */
-export const getAllDomains = async ({ rpc }: GetAllDomainsParams) => {
+export const getAllSnsDomains = async ({ rpc }: GetAllSnsDomainsParams) => {
   const accounts = await rpc
     .getProgramAccounts(NAME_PROGRAM_ADDRESS, {
       encoding: "base64",
@@ -25,7 +25,7 @@ export const getAllDomains = async ({ rpc }: GetAllDomainsParams) => {
         {
           memcmp: {
             offset: 0n,
-            bytes: ROOT_DOMAIN_ADDRESS as string as Base58EncodedBytes,
+            bytes: SNS_ROOT_DOMAIN_ACCOUNT as string as Base58EncodedBytes,
             encoding: "base58",
           },
         },

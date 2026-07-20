@@ -7,10 +7,10 @@ import {
   fetchEncodedAccount,
 } from "@solana/kit";
 
-import { getDomainAddress } from "../domain/getDomainAddress";
-import { InvalidDomainError } from "../errors";
+import { getSnsDomainAddress } from "../domain/getSnsDomainAddress";
 import { RegistryState } from "../states/registry";
 import { getReverseAddress } from "../utils/getReverseAddress";
+import { _parseSnsSubdomain } from "../utils/parseSnsDomain";
 import { createNameRegistry } from "./createNameRegistry";
 import { createReverse } from "./createReverse";
 
@@ -23,17 +23,18 @@ interface CreateSubdomainParams {
 }
 
 /**
- * Creates a subdomain for the specified domain. This includes setting up the subdomain
- * registry and its reverse lookup record if not already existing.
+ * Builds the instructions to create a `.sns` subdomain.
  *
- * @param params - An object containing the following properties:
- *   - `rpc`: An RPC interface implementing GetAccountInfoApi and GetMinimumBalanceForRentExemptionApi.
- *   - `subdomain`: The subdomain to create, with or without .sol (e.g., something.sns.sol or something.sns).
- *   - `owner`: The address of the owner of the parent domain.
- *   - `space`: (Optional) The space in bytes allocated to the subdomain account (default: 2,000).
- *   - `feePayer`: (Optional) The address funding the subdomain creation (default: owner address).
- * @returns A promise that resolves to an array of instructions required to create the subdomain
- *   and its reverse lookup record.
+ * The subdomain registry instruction is always included. The reverse lookup
+ * instruction is included only when the reverse lookup account does not exist.
+ *
+ * @param params Subdomain creation parameters
+ * @param params.rpc RPC client implementing account and rent-exemption APIs
+ * @param params.subdomain Full `.sns` subdomain name
+ * @param params.owner New subdomain owner and parent owner for reverse lookup creation
+ * @param params.space Optional space in bytes allocated to the subdomain account. Defaults to 2,000
+ * @param params.feePayer Optional account funding subdomain creation. Defaults to `owner`
+ * @returns Transaction instructions.
  */
 export const createSubdomain = async ({
   rpc,
@@ -43,14 +44,11 @@ export const createSubdomain = async ({
   feePayer,
 }: CreateSubdomainParams): Promise<Instruction[]> => {
   const ixs: Instruction[] = [];
-  const sub = subdomain.split(".")[0];
-
-  if (!sub) {
-    throw new InvalidDomainError("The subdomain name is malformed");
-  }
+  const [sub, parent] = _parseSnsSubdomain(subdomain);
+  const trimmedSubdomain = `${sub}.${parent}`;
 
   const [{ domainAddress, parentAddress }, lamports] = await Promise.all([
-    getDomainAddress({ domain: subdomain }),
+    getSnsDomainAddress({ domain: trimmedSubdomain }),
     rpc
       .getMinimumBalanceForRentExemption(
         BigInt(space + RegistryState.HEADER_LEN)
@@ -71,7 +69,7 @@ export const createSubdomain = async ({
   ixs.push(ix_create);
 
   // Create the reverse name
-  const reverseKey = await getReverseAddress(subdomain);
+  const reverseKey = await getReverseAddress(trimmedSubdomain);
   const reverseAccount = await fetchEncodedAccount(rpc, reverseKey);
 
   if (!reverseAccount.exists) {

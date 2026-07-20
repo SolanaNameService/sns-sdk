@@ -6,10 +6,11 @@ import {
   RECORDS_PROGRAM_ADDRESS,
   SYSTEM_PROGRAM_ADDRESS,
 } from "../constants/addresses";
-import { getDomainAddress } from "../domain/getDomainAddress";
+import { getSnsDomainAddress } from "../domain/getSnsDomainAddress";
 import { InvalidParentError } from "../errors";
-import { deleteRecordInstruction } from "../instructions/deleteRecordInstruction";
+import { DeleteRecordInstruction } from "../instructions/deleteRecordInstruction";
 import { Record, RecordVersion } from "../types/record";
+import { _parseSnsDomain } from "../utils/parseSnsDomain";
 
 interface DeleteRecordParams {
   domain: string;
@@ -19,14 +20,14 @@ interface DeleteRecordParams {
 }
 
 /**
- * Deletes a record under the specified domain and refunds the rent to the payer.
+ * Builds an instruction to delete a V2 record for a `.sns` domain or subdomain.
  *
- * @param params - An object containing the following properties:
- *   - `domain`: The domain under which the record resides.
- *   - `record`: An enumeration representing the type of record to be deleted.
- *   - `owner`: The address of the domain's owner.
- *   - `payer`: The address funding the record deletion.
- * @returns A promise which resolves to the delete record instruction.
+ * @param params Record deletion parameters
+ * @param params.domain Full `.sns` domain or subdomain name
+ * @param params.record Record type
+ * @param params.owner Current owner of the domain
+ * @param params.payer Fee payer for the instruction
+ * @returns Transaction instruction.
  */
 export const deleteRecord = async ({
   domain,
@@ -34,20 +35,24 @@ export const deleteRecord = async ({
   owner,
   payer,
 }: DeleteRecordParams): Promise<Instruction> => {
-  let { domainAddress, parentAddress, isSub } = await getDomainAddress({
-    domain: `${record}.${domain}`,
+  const trimmedDomain = _parseSnsDomain(domain);
+
+  let { domainAddress, parentAddress, isSub } = await getSnsDomainAddress({
+    domain: `${record}.${trimmedDomain}`,
     record: RecordVersion.V2,
   });
 
   if (isSub) {
-    parentAddress = (await getDomainAddress({ domain })).domainAddress;
+    parentAddress = (
+      await getSnsDomainAddress({ domain: trimmedDomain })
+    ).domainAddress;
   }
 
   if (!parentAddress) {
     throw new InvalidParentError("Parent could not be found");
   }
 
-  const ix = new deleteRecordInstruction().getInstruction(
+  const ix = new DeleteRecordInstruction().getInstruction(
     RECORDS_PROGRAM_ADDRESS,
     SYSTEM_PROGRAM_ADDRESS,
     NAME_PROGRAM_ADDRESS,

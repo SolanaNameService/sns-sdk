@@ -43,13 +43,7 @@ export default {
       preserveModulesRoot: "src",
     },
   ],
-  external: [
-    "@solana/kit",
-    "@solana/addresses",
-    "@solana/codecs-core",
-    "@solana/codecs-strings",
-    "@solana/errors",
-  ],
+  external: ["@solana/kit"],
   plugins: [
     del({ targets: "dist" }),
     nodeResolve({

@@ -9,7 +9,10 @@ import {
 import { deserialize } from "borsh";
 
 import { addressCodec } from "../codecs";
-import { AccountDoesNotExistError } from "../errors";
+import {
+  AccountDoesNotExistError,
+  InvalidSerializedDataError,
+} from "../errors";
 
 export class RegistryState {
   parentName: Address;
@@ -48,7 +51,9 @@ export class RegistryState {
 
       return res;
     } catch {
-      throw new Error("Failed to deserialize RegistryState data");
+      throw new InvalidSerializedDataError(
+        "Failed to deserialize RegistryState data"
+      );
     }
   }
 

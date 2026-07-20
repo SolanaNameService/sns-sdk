@@ -12,10 +12,10 @@ import {
   DEFAULT_ADDRESS,
   NAME_OFFERS_ADDRESS,
   NAME_PROGRAM_ADDRESS,
-  ROOT_DOMAIN_ADDRESS,
+  SNS_ROOT_DOMAIN_ACCOUNT,
   TOKEN_PROGRAM_ADDRESS,
 } from "../constants/addresses";
-import { getNftMint } from "../nft/getNftMint";
+import { getSnsNftMint } from "../nft/getSnsNftMint";
 import { PrimaryDomainState } from "../states/primaryDomain";
 import { RegistryState } from "../states/registry";
 import { deserializeReverse } from "../utils/deserializers/deserializeReverse";
@@ -33,13 +33,16 @@ interface ValidPrimary {
 }
 
 /**
- * Batch retrieves the primary domains associated with a list of wallet addresses.
+ * Retrieves primary SNS domain names for multiple wallet addresses.
  *
- * @param params - An object containing the following properties:
- *   - `rpc`: An RPC interface implementing GetMultipleAccountsApi and GetTokenLargestAccountsApi.
- *   - `walletAddresses`: An array of wallet addresses for which primary domains are to be fetched.
- * @returns A promise resolving to an array of strings or undefined values, where each string represents
- *          the primary domain name if available and non-stale.
+ * Returned values are index-aligned with `walletAddresses`. Domain names omit
+ * the TLD suffix; subdomain primary names can include parent labels such as
+ * `sub.parent`.
+ *
+ * @param params Primary domain retrieval parameters
+ * @param params.rpc RPC client implementing multiple-account and token-largest-account APIs
+ * @param params.walletAddresses Wallet addresses whose primary domains are retrieved
+ * @returns Primary domain names, or `undefined` when no valid non-stale primary domain is found.
  */
 export const getPrimaryDomainsBatch = async ({
   rpc,
@@ -76,7 +79,7 @@ export const getPrimaryDomainsBatch = async ({
   const atasPromises: Promise<Address>[] = [];
 
   for (const { index, domainAddress, registry } of validPrimaries) {
-    const isSub = registry!.parentName !== ROOT_DOMAIN_ADDRESS;
+    const isSub = registry!.parentName !== SNS_ROOT_DOMAIN_ACCOUNT;
 
     parentRevAddressesPromises.push(
       isSub
@@ -92,7 +95,7 @@ export const getPrimaryDomainsBatch = async ({
       })
     );
     atasPromises.push(
-      getNftMint({ domainAddress })
+      getSnsNftMint({ domainAddress })
         .then((mint) =>
           findAssociatedTokenPda({
             mint,

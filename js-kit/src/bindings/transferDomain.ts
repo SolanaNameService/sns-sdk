@@ -1,55 +1,47 @@
 import { Address, GetAccountInfoApi, Instruction, Rpc } from "@solana/kit";
 
-import { NAME_PROGRAM_ADDRESS } from "../constants/addresses";
+import {
+  NAME_PROGRAM_ADDRESS,
+  SNS_ROOT_DOMAIN_ACCOUNT,
+} from "../constants/addresses";
 import { TransferInstruction } from "../instructions/transferInstruction";
 import { RegistryState } from "../states/registry";
-import { deriveAddress } from "../utils/deriveAddress";
+import { _deriveAddress } from "../utils/deriveAddress";
+import { _parseSnsTopLevelDomain } from "../utils/parseSnsDomain";
 
 interface TransferDomainParams {
   rpc: Rpc<GetAccountInfoApi>;
   domain: string;
   newOwner: Address;
-  classAddress?: Address;
-  parentAddress?: Address;
-  parentOwner?: Address;
 }
 
 /**
- * Transfers a domain to a new owner.
+ * Builds an instruction to transfer a top-level `.sns` domain.
  *
- * @param params - An object containing the following properties:
- *   - `rpc`: An RPC interface implementing GetAccountInfoApi.
- *   - `domain`: The name of the domain to be transferred.
- *   - `newOwner`: The address of the new owner of the domain.
- *   - `classAddress`: (Optional) The address of the class associated with the domain.
- *   - `parentAddress`: (Optional) The address of the parent domain.
- *   - `parentOwner`: (Optional) The address of the parent domain owner.
- * @returns A promise that resolves to the transfer domain instruction.
+ * @param params Transfer parameters
+ * @param params.rpc RPC client implementing account lookup
+ * @param params.domain Full `.sns` domain name
+ * @param params.newOwner New owner of the domain
+ * @returns Transaction instruction.
  */
 export const transferDomain = async ({
   rpc,
   domain,
   newOwner,
-  classAddress,
-  parentAddress,
-  parentOwner,
 }: TransferDomainParams): Promise<Instruction> => {
-  const domainAddress = await deriveAddress(
-    domain,
-    parentAddress,
-    classAddress
+  const trimmedDomain = _parseSnsTopLevelDomain(domain);
+
+  const domainAddress = await _deriveAddress(
+    trimmedDomain,
+    SNS_ROOT_DOMAIN_ACCOUNT
   );
 
-  const currentOwner =
-    classAddress || (await RegistryState.retrieve(rpc, domainAddress)).owner;
+  const currentOwner = (await RegistryState.retrieve(rpc, domainAddress)).owner;
 
   const transferInstr = new TransferInstruction({ newOwner }).getInstruction(
     NAME_PROGRAM_ADDRESS,
     domainAddress,
-    currentOwner,
-    classAddress,
-    parentAddress,
-    parentOwner
+    currentOwner
   );
 
   return transferInstr;

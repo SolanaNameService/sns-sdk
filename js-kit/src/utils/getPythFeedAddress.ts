@@ -8,12 +8,12 @@ interface GetPythFeedAddressParams {
 }
 
 /**
- * Retrieves the address of the Pyth feed for a specific shard and price feed.
+ * Derives the Pyth feed PDA for a shard and price feed.
  *
- * @param params - An object containing the following properties:
- *   - `shard`: The shard number associated with the Pyth feed.
- *   - `priceFeed`: An array representing the price feed data.
- * @returns A promise that resolves to the Pyth feed address.
+ * @param params Pyth feed derivation parameters
+ * @param params.shard Shard number associated with the Pyth feed
+ * @param params.priceFeed Feed ID bytes
+ * @returns The Pyth feed address.
  */
 export const getPythFeedAddress = async ({
   shard,

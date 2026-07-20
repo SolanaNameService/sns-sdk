@@ -1,5 +1,5 @@
 /**
- * List of SNS Records
+ * Supported SNS record identifiers.
  */
 export enum Record {
   IPFS = "IPFS",

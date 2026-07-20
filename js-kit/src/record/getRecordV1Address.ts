@@ -1,4 +1,4 @@
-import { getDomainAddress } from "../domain/getDomainAddress";
+import { getSnsDomainAddress } from "../domain/getSnsDomainAddress";
 import { Record, RecordVersion } from "../types/record";
 
 interface GetRecordV1AddressParams {
@@ -7,18 +7,20 @@ interface GetRecordV1AddressParams {
 }
 
 /**
- * Derives the address of a version 1 record.
+ * Derives the address of a V1 record account.
  *
- * @param params - An object containing the following properties:
- *   - `domain`: The domain under which the record resides.
- *   - `record`: The type of record to derive the address for.
- * @returns A promise that resolves to the derived record address.
+ * The V1 account is derived by prefixing the record label to the domain name.
+ *
+ * @param params Record address derivation parameters
+ * @param params.domain TLD-trimmed SNS domain name
+ * @param params.record Record type
+ * @returns The derived V1 record account address.
  */
 export const getRecordV1Address = async ({
   domain,
   record,
 }: GetRecordV1AddressParams) => {
-  const { domainAddress } = await getDomainAddress({
+  const { domainAddress } = await getSnsDomainAddress({
     domain: record + "." + domain,
     record: RecordVersion.V1,
   });

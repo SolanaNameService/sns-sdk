@@ -1,4 +1,4 @@
-import { AccountRole, Address, AccountMeta, Instruction } from "@solana/kit";
+import { AccountMeta, AccountRole, Address, Instruction } from "@solana/kit";
 import { serialize } from "borsh";
 
 export class UpdateNameRegistryInstruction {
@@ -14,10 +14,10 @@ export class UpdateNameRegistryInstruction {
     },
   };
 
-  constructor(obj: { offset: number; inputDat: Uint8Array }) {
+  constructor(obj: { offset: number; inputData: Uint8Array }) {
     this.tag = 1;
     this.offset = obj.offset;
-    this.inputData = obj.inputDat;
+    this.inputData = obj.inputData;
   }
 
   serialize(): Uint8Array {

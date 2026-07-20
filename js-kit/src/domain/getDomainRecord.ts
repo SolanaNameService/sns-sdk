@@ -1,6 +1,7 @@
 import {
   GetAccountInfoApi,
   GetMultipleAccountsApi,
+  GetSlotApi,
   GetTokenLargestAccountsApi,
   ReadonlyUint8Array,
   Rpc,
@@ -14,12 +15,16 @@ import {
 import { _verifyStalenessSync } from "../record/verifyRecordStaleness";
 import { RecordState } from "../states/record";
 import { Record } from "../types/record";
+import { assertTldSupported } from "../utils/assertTldSupported";
 import { deserializeRecordContent } from "../utils/deserializers/deserializeRecordContent";
-import { getDomainOwner } from "./getDomainOwner";
+import { _getSnsDomainOwner } from "./getSnsDomainOwner";
 
 interface GetDomainRecordParams {
   rpc: Rpc<
-    GetAccountInfoApi & GetMultipleAccountsApi & GetTokenLargestAccountsApi
+    GetAccountInfoApi &
+      GetMultipleAccountsApi &
+      GetTokenLargestAccountsApi &
+      GetSlotApi
   >;
   domain: string;
   record: Record;
@@ -40,16 +45,16 @@ interface Result {
 }
 
 /**
- * Retrieves a specific record under a domain, verifies its state, and optionally deserializes its content.
+ * Retrieves a V2 record under a domain, verifies it, and optionally deserializes its content.
  *
- * @param params - An object containing the following properties:
- *   - `rpc`: An RPC interface implementing GetAccountInfoApi, GetMultipleAccountsApi, and GetTokenLargestAccountsApi.
- *   - `domain`: The domain whose record is to be retrieved.
- *   - `record`: The type of record to retrieve.
- *   - `options`: (Optional) Additional options for processing:
- *       - `deserialize`: Whether to deserialize the record content.
- *       - `verifier`: A custom verifier for the record.
- * @returns A promise that resolves to the retrieved record, its verification status, and optionally its deserialized content.
+ * @param params Record retrieval parameters
+ * @param params.rpc RPC client implementing account, multiple-account, and token-largest-account APIs
+ * @param params.domain Full domain name including a `.sns` or `.sol` suffix
+ * @param params.record Record type to retrieve
+ * @param params.options Optional record processing options
+ * @param params.options.deserialize Whether to deserialize record content
+ * @param params.options.verifier Optional custom verifier for the record
+ * @returns The record type, retrieved V2 record state, verification result, and optional deserialized content.
  */
 export async function getDomainRecord({
   rpc,
@@ -57,9 +62,10 @@ export async function getDomainRecord({
   record,
   options = {},
 }: GetDomainRecordParams): Promise<Result> {
+  const [trimmedDomain] = await assertTldSupported({ rpc, domain });
   const [domainOwner, state] = await Promise.all([
-    getDomainOwner({ rpc, domain }),
-    getRecordV2Address({ domain, record }).then((address) =>
+    _getSnsDomainOwner({ rpc, domain: trimmedDomain }),
+    getRecordV2Address({ domain: trimmedDomain, record }).then((address) =>
       RecordState.retrieve(rpc, address)
     ),
   ]);
@@ -68,7 +74,7 @@ export async function getDomainRecord({
   const verified = {
     staleness: _verifyStalenessSync({ domainOwner, state }),
     ...(verifier && {
-      rightOfAssociation: _verifyRoaSync({ record, state, verifier }),
+      roa: _verifyRoaSync({ record, state, verifier }),
     }),
   };
 

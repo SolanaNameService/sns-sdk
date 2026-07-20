@@ -8,11 +8,11 @@ import {
 
 import {
   NAME_PROGRAM_ADDRESS,
-  ROOT_DOMAIN_ADDRESS,
+  SNS_ROOT_DOMAIN_ACCOUNT,
 } from "../constants/addresses";
 import { reverseLookupBatch } from "../utils/reverseLookupBatch";
 
-interface GetDomainsForAddressParams {
+interface GetSnsDomainsForAddressParams {
   rpc: Rpc<GetProgramAccountsApi & GetMultipleAccountsApi>;
   address: Address;
 }
@@ -23,17 +23,20 @@ interface Result {
 }
 
 /**
- * Retrieves the domains owned by the given address.
+ * Retrieves directly registry-owned top-level SNS domains for an address.
  *
- * @param params - An object containing the following properties:
- *   - `rpc`: An RPC interface implementing GetProgramAccountsApi and GetMultipleAccountsApi.
- *   - `address`: The address for which to retrieve associated domains.
- * @returns A promise resolving to an array of objects containing domain and domainAddress.
+ * Tokenized domains and subdomains are not included. Entries without reverse
+ * lookup results are omitted.
+ *
+ * @param params Domain retrieval parameters
+ * @param params.rpc RPC client implementing program account and multiple-account APIs
+ * @param params.address Address whose directly registry-owned SNS domains are retrieved
+ * @returns Domain records with names without a TLD suffix and domain addresses.
  */
-export const getDomainsForAddress = async ({
+export const getSnsDomainsForAddress = async ({
   rpc,
   address,
-}: GetDomainsForAddressParams): Promise<Result[]> => {
+}: GetSnsDomainsForAddressParams): Promise<Result[]> => {
   const results = await rpc
     .getProgramAccounts(NAME_PROGRAM_ADDRESS, {
       encoding: "base64",
@@ -48,7 +51,7 @@ export const getDomainsForAddress = async ({
         {
           memcmp: {
             offset: 0n,
-            bytes: ROOT_DOMAIN_ADDRESS as string as Base58EncodedBytes,
+            bytes: SNS_ROOT_DOMAIN_ACCOUNT as string as Base58EncodedBytes,
             encoding: "base58",
           },
         },

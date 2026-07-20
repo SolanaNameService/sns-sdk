@@ -6,10 +6,11 @@ import {
   RECORDS_PROGRAM_ADDRESS,
   SYSTEM_PROGRAM_ADDRESS,
 } from "../constants/addresses";
-import { getDomainAddress } from "../domain/getDomainAddress";
+import { getSnsDomainAddress } from "../domain/getSnsDomainAddress";
 import { InvalidParentError } from "../errors";
-import { allocateAndPostRecordInstruction } from "../instructions/allocateAndPostRecordInstruction";
+import { AllocateAndPostRecordInstruction } from "../instructions/allocateAndPostRecordInstruction";
 import { Record, RecordVersion } from "../types/record";
+import { _parseSnsDomain } from "../utils/parseSnsDomain";
 import { serializeRecordContent } from "../utils/serializers/serializeRecordContent";
 
 interface CreateRecordParams {
@@ -21,16 +22,17 @@ interface CreateRecordParams {
 }
 
 /**
- * Creates a record for the specified domain. The record data will be serialized
- * in compliance with the SNS-IP 1 guidelines.
+ * Builds an instruction to create a V2 record for a `.sns` domain or subdomain.
  *
- * @param params - An object containing the following properties:
- *   - `domain`: The domain under which the record will be created.
- *   - `record`: A record enum representing the type of record to be created.
- *   - `content`: The record content.
- *   - `owner`: The address of the domain's owner.
- *   - `payer`: The address funding the record creation.
- * @returns A promise which resolves to the create record instruction.
+ * Record content is serialized according to SNS-IP 1.
+ *
+ * @param params Record creation parameters
+ * @param params.domain Full `.sns` domain or subdomain name
+ * @param params.record Record type
+ * @param params.content Record content
+ * @param params.owner Current owner of the domain
+ * @param params.payer Fee payer for the instruction
+ * @returns Transaction instruction.
  */
 export const createRecord = async ({
   domain,
@@ -39,20 +41,24 @@ export const createRecord = async ({
   owner,
   payer,
 }: CreateRecordParams): Promise<Instruction> => {
-  let { domainAddress, parentAddress, isSub } = await getDomainAddress({
-    domain: `${record}.${domain}`,
+  const trimmedDomain = _parseSnsDomain(domain);
+
+  let { domainAddress, parentAddress, isSub } = await getSnsDomainAddress({
+    domain: `${record}.${trimmedDomain}`,
     record: RecordVersion.V2,
   });
 
   if (isSub) {
-    parentAddress = (await getDomainAddress({ domain })).domainAddress;
+    parentAddress = (
+      await getSnsDomainAddress({ domain: trimmedDomain })
+    ).domainAddress;
   }
 
   if (!parentAddress) {
     throw new InvalidParentError("Parent could not be found");
   }
 
-  const ix = new allocateAndPostRecordInstruction({
+  const ix = new AllocateAndPostRecordInstruction({
     record: `\x02${record}`,
     content: serializeRecordContent({ content, record }),
   }).getInstruction(

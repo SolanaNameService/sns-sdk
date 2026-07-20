@@ -15,13 +15,15 @@ interface DeserializeRecordContentParams {
 }
 
 /**
- * This function deserializes a buffer based on the type of record it corresponds to.
- * If the record is not properly serialized according to SNS-IP 1, this function will throw an error.
+ * Deserializes record content according to SNS-IP 1.
  *
- * @param params - An object containing the following properties:
- *   - `content`: The content to deserialize.
- *   - `record`: The type of record.
- * @returns The deserialized content as a string.
+ * `CNAME` and `TXT` content is punycode-decoded after UTF-8 deserialization.
+ *
+ * @param params Record deserialization parameters
+ * @param params.content Serialized record content
+ * @param params.record Record type
+ * @returns Deserialized record content.
+ * @throws InvalidRecordDataError If the record type or content is unsupported.
  */
 export const deserializeRecordContent = ({
   content,

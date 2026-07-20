@@ -7,7 +7,7 @@ import {
 } from "@solana/kit";
 import { serialize } from "borsh";
 
-export class allocateAndPostRecordInstruction {
+export class AllocateAndPostRecordInstruction {
   tag: number;
   record: string;
   content: ReadonlyUint8Array;
@@ -27,7 +27,7 @@ export class allocateAndPostRecordInstruction {
   }
 
   serialize(): Uint8Array {
-    return serialize(allocateAndPostRecordInstruction.schema, this);
+    return serialize(AllocateAndPostRecordInstruction.schema, this);
   }
 
   getInstruction(
