@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["rust-crates/*"]
+members = ["sns-sdk", "sns-cli"]
 
 [workspace.dependencies]
 solana-program = "2.1.21"
