@@ -4071,7 +4071,6 @@ name = "sns-cli"
 version = "3.0.0"
 dependencies = [
  "anyhow",
- "bincode",
  "clap",
  "console",
  "indicatif",

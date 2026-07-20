@@ -12,7 +12,6 @@ use solana_client::{
     rpc_config::{RpcAccountInfoConfig, RpcProgramAccountsConfig},
     rpc_filter::{Memcmp, RpcFilterType},
 };
-use solana_sdk::{bs58, signature::Keypair};
 use solana_sdk_ids::system_program;
 use std::{
     collections::{BTreeSet, HashMap},
@@ -84,9 +83,9 @@ enum Commands {
     SetPrimaryDomain {
         #[arg(
             required = true,
-            help = "The path to the wallet private key used to set the primary domain or an owner wallet"
+            help = "The path to the wallet private key used to set the primary domain"
         )]
-        owner: String,
+        owner_keypair: String,
         #[arg(required = true, help = "The .sns domain to set as primary domain")]
         domain: String,
         #[arg(long, short, help = "Optional custom RPC URL")]
@@ -510,41 +509,14 @@ async fn process_register(
     Ok(())
 }
 
-enum OwnerKind {
-    Keypair(Keypair),
-    Pubkey(Pubkey),
-}
-
-impl OwnerKind {
-    fn owner(&self) -> Pubkey {
-        match self {
-            OwnerKind::Keypair(keypair) => keypair.pubkey(),
-            OwnerKind::Pubkey(pk) => *pk,
-        }
-    }
-}
-
 async fn process_set_primary_domain(
     rpc_client: &RpcClient,
-    owner_keypair_path_or_address: &str,
+    owner_keypair_path: &str,
     domain: &str,
 ) -> CliResult {
     println!("Setting primary domain...");
-    let owner_kind = {
-        match read_keypair_file(owner_keypair_path_or_address) {
-            Ok(kp) => OwnerKind::Keypair(kp),
-            Err(e) => match Pubkey::from_str(owner_keypair_path_or_address) {
-                Ok(owner) => OwnerKind::Pubkey(owner),
-                Err(parse_pk_error) => {
-                    return Err(anyhow!(
-                    "Owner was not a valid keypair nor a valid address: {e:?}, {parse_pk_error:?}"
-                )
-                    .into())
-                }
-            },
-        }
-    };
-    let owner = owner_kind.owner();
+    let owner_keypair = read_keypair_file(owner_keypair_path)?;
+    let owner = owner_keypair.pubkey();
     let domain_key = parse_sns_domain_key(domain)?.key;
     let ix = sns_sdk::primary_domain::set_primary_domain_instruction(
         NAME_OFFERS_PROGRAM_ID,
@@ -557,28 +529,9 @@ async fn process_set_primary_domain(
         sns_sdk::primary_domain::set_primary_domain::Params {},
     );
     let blockhash = rpc_client.get_latest_blockhash().await?;
-
-    match owner_kind {
-        OwnerKind::Keypair(keypair) => {
-            let tx = Transaction::new_signed_with_payer(
-                &[ix],
-                Some(&keypair.pubkey()),
-                &[&keypair],
-                blockhash,
-            );
-            let sig = rpc_client.send_and_confirm_transaction(&tx).await?;
-            println!("Primary domain set, txid: {sig}");
-        }
-        OwnerKind::Pubkey(_) => {
-            let mut tx = Transaction::new_with_payer(std::slice::from_ref(&ix), Some(&owner));
-            tx.message.recent_blockhash = blockhash;
-
-            println!(
-                "base58 set primary domain tx: {}",
-                bs58::encode(bincode::serialize(&tx)?).into_string()
-            );
-        }
-    }
+    let tx = Transaction::new_signed_with_payer(&[ix], Some(&owner), &[&owner_keypair], blockhash);
+    let sig = rpc_client.send_and_confirm_transaction(&tx).await?;
+    println!("Primary domain set, txid: {sig}");
 
     Ok(())
 }
@@ -769,9 +722,11 @@ async fn main() {
             space,
             url,
         } => process_register(&get_rpc_client(url), &keypair_path, domains, space).await,
-        Commands::SetPrimaryDomain { owner, domain, url } => {
-            process_set_primary_domain(&get_rpc_client(url), &owner, &domain).await
-        }
+        Commands::SetPrimaryDomain {
+            owner_keypair,
+            domain,
+            url,
+        } => process_set_primary_domain(&get_rpc_client(url), &owner_keypair, &domain).await,
         Commands::RecordV2(RecordV2Command { cmd, url }) => match cmd {
             RecordV2SubCommand::Get { domain, record } => {
                 process_record_v2_get(&get_rpc_client(url), &domain, &record).await
