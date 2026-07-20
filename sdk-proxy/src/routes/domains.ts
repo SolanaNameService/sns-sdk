@@ -8,7 +8,6 @@ import {
   getSnsNftsForOwner,
   NameRegistryState,
   reverseLookup,
-  reverseLookupBatch,
   SNS_ROOT_DOMAIN_ACCOUNT,
 } from "@bonfida/spl-name-service";
 import type { Context, Hono } from "hono";
@@ -72,25 +71,18 @@ export const registerDomainRoutes = (app: Hono<Env>) => {
     try {
       const owner = publicKeySchema.parse(c.req.param("owner"));
       const connection = getConnection(c);
-      const domainsPromise = getSnsDomainsForOwner(connection, owner);
-      const tokenizedPromise = getSnsNftsForOwner(connection, owner);
-      const res = await domainsPromise;
-      const [revs, tokenized] = await Promise.all([
-        reverseLookupBatch(connection, res),
-        tokenizedPromise,
+      const [domains, nfts] = await Promise.all([
+        getSnsDomainsForOwner(connection, owner),
+        getSnsNftsForOwner(connection, owner),
       ]);
 
       return c.json(
         response(
           true,
-          res
-            .map((e, idx) => ({ key: e.toBase58(), domain: revs[idx] }))
-            .concat(
-              tokenized.map((e) => ({
-                key: e.key.toBase58(),
-                domain: e.reverse,
-              })),
-            ),
+          domains.concat(nfts).map((entry) => ({
+            domain: entry.domain,
+            key: entry.key.toBase58(),
+          })),
         ),
       );
     } catch (err) {
