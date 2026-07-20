@@ -38,6 +38,18 @@ pub enum SnsError {
     StaleRecord,
     UnverifiedRecord,
     InvalidSubRegistrar,
+    RecordMalformed,
+    WrongValidation,
+    InvalidRoa,
+    PdaOwnerNotAllowed,
+    UnsupportedTld,
+    SubdomainNotAllowed,
+    InvalidDomainCasing,
+    InvalidNameAccountData,
+    DomainDoesNotExist,
+    DomainExpired,
+    CouldNotFindSrsOwner,
+    CouldNotFindNftOwner,
 }
 
 impl From<ClientError> for SnsError {

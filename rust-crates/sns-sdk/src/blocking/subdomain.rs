@@ -1,6 +1,6 @@
 use solana_account_decoder::UiAccountEncoding;
-use solana_client::nonblocking::rpc_client::RpcClient;
 use solana_client::{
+    rpc_client::RpcClient,
     rpc_config::{RpcAccountInfoConfig, RpcProgramAccountsConfig},
     rpc_filter::{Memcmp, RpcFilterType},
 };
@@ -10,7 +10,7 @@ use spl_name_service::state::NameRecordHeader;
 use crate::{derivation::REVERSE_LOOKUP_CLASS, error::SnsError};
 
 #[cfg(feature = "subdomain")]
-use crate::{derivation::get_sns_domain_key, non_blocking::tld::assert_tld_supported};
+use crate::{blocking::tld::assert_tld_supported, derivation::get_sns_domain_key};
 #[cfg(feature = "subdomain")]
 use borsh::BorshDeserialize;
 #[cfg(feature = "subdomain")]
@@ -23,10 +23,7 @@ pub use sub_registrar::state::Tag as SubRegistrarAccountTag;
 #[cfg(feature = "subdomain")]
 pub use sub_registrar::ID as SUB_REGISTRAR_PROGRAM_ID;
 
-pub async fn get_subdomains(
-    rpc_client: &RpcClient,
-    parent: &Pubkey,
-) -> Result<Vec<String>, SnsError> {
+pub fn get_subdomains(rpc_client: &RpcClient, parent: &Pubkey) -> Result<Vec<String>, SnsError> {
     let config = RpcProgramAccountsConfig {
         filters: Some(vec![
             RpcFilterType::Memcmp(Memcmp::new_raw_bytes(0, parent.to_bytes().to_vec())),
@@ -42,9 +39,7 @@ pub async fn get_subdomains(
         },
         sort_results: None,
     };
-    let res = rpc_client
-        .get_program_accounts_with_config(&spl_name_service::ID, config)
-        .await?;
+    let res = rpc_client.get_program_accounts_with_config(&spl_name_service::ID, config)?;
 
     let mut results = Vec::with_capacity(res.len());
     for (_, acc) in res {
@@ -67,34 +62,13 @@ pub async fn get_subdomains(
     Ok(results)
 }
 
-#[cfg(all(test, not(feature = "devnet")))]
-mod tests {
-    use super::*;
-    use crate::derivation::get_sns_domain_key;
-    use dotenv::dotenv;
-
-    #[tokio::test]
-    async fn test_get_subdomains() {
-        dotenv().ok();
-        let client = RpcClient::new(std::env::var("RPC_URL").unwrap());
-        let parent = get_sns_domain_key("bonfida").unwrap().key;
-        let mut reverse = get_subdomains(&client, &parent).await.unwrap();
-        reverse.sort();
-        assert_eq!(reverse, vec!["dex", "naming", "test"]);
-    }
-}
-
 #[cfg(feature = "subdomain")]
-pub async fn get_sub_registrar_info(
-    rpc_client: &RpcClient,
-    domain: &str,
-) -> Result<Registrar, SnsError> {
-    let (domain, _) = assert_tld_supported(rpc_client, domain).await?;
+pub fn get_sub_registrar_info(rpc_client: &RpcClient, domain: &str) -> Result<Registrar, SnsError> {
+    let (domain, _) = assert_tld_supported(rpc_client, domain)?;
     let key = get_sns_domain_key(domain)?.key;
     let registrar_key = Registrar::find_key(&key, &SUB_REGISTRAR_PROGRAM_ID).0;
     let account = rpc_client
-        .get_account_with_commitment(&registrar_key, rpc_client.commitment())
-        .await?
+        .get_account_with_commitment(&registrar_key, rpc_client.commitment())?
         .value
         .ok_or(SnsError::InvalidSubRegistrar)?;
     deserialize_sub_registrar(&account)
@@ -136,8 +110,8 @@ mod sub_registrar_tests {
         RpcClient::new_sender(sender, RpcClientConfig::with_commitment(Default::default()))
     }
 
-    #[tokio::test]
-    async fn resolves_valid_sub_registrar() {
+    #[test]
+    fn resolves_valid_sub_registrar() {
         let registrar = Registrar {
             tag: SubRegistrarAccountTag::Registrar,
             authority: Pubkey::new_unique(),
@@ -145,18 +119,16 @@ mod sub_registrar_tests {
             ..Registrar::default()
         };
         let account = registrar_account(&registrar);
-        let client = test_client("nb-sub-registrar-valid", Some(&account));
+        let client = test_client("blocking-sub-registrar-valid", Some(&account));
 
         assert_eq!(
-            get_sub_registrar_info(&client, "registrar.sns")
-                .await
-                .unwrap(),
+            get_sub_registrar_info(&client, "registrar.sns").unwrap(),
             registrar
         );
     }
 
-    #[tokio::test]
-    async fn rejects_invalid_sub_registrar_accounts() {
+    #[test]
+    fn rejects_invalid_sub_registrar_accounts() {
         let registrar = Registrar {
             tag: SubRegistrarAccountTag::Registrar,
             ..Registrar::default()
@@ -167,21 +139,21 @@ mod sub_registrar_tests {
         wrong_discriminator.data[0] = SubRegistrarAccountTag::ClosedRegistrar as u8;
 
         for (endpoint, account) in [
-            ("nb-sub-registrar-missing", None),
+            ("blocking-sub-registrar-missing", None),
             (
-                "nb-sub-registrar-empty",
+                "blocking-sub-registrar-empty",
                 Some(Account {
                     owner: SUB_REGISTRAR_PROGRAM_ID,
                     ..Account::default()
                 }),
             ),
-            ("nb-sub-registrar-wrong-owner", Some(wrong_owner)),
+            ("blocking-sub-registrar-wrong-owner", Some(wrong_owner)),
             (
-                "nb-sub-registrar-wrong-discriminator",
+                "blocking-sub-registrar-wrong-discriminator",
                 Some(wrong_discriminator),
             ),
             (
-                "nb-sub-registrar-malformed",
+                "blocking-sub-registrar-malformed",
                 Some(Account {
                     data: vec![SubRegistrarAccountTag::Registrar as u8],
                     owner: SUB_REGISTRAR_PROGRAM_ID,
@@ -191,9 +163,26 @@ mod sub_registrar_tests {
         ] {
             let client = test_client(endpoint, account.as_ref());
             assert!(matches!(
-                get_sub_registrar_info(&client, "registrar.sns").await,
+                get_sub_registrar_info(&client, "registrar.sns"),
                 Err(SnsError::InvalidSubRegistrar)
             ));
         }
+    }
+}
+
+#[cfg(all(test, not(feature = "devnet")))]
+mod tests {
+    use super::*;
+    use crate::derivation::get_sns_domain_key;
+    use dotenv::dotenv;
+
+    #[test]
+    fn test_get_subdomains() {
+        dotenv().ok();
+        let client = RpcClient::new(std::env::var("RPC_URL").unwrap());
+        let parent = get_sns_domain_key("bonfida").unwrap().key;
+        let mut reverse = get_subdomains(&client, &parent).unwrap();
+        reverse.sort();
+        assert_eq!(reverse, vec!["dex", "naming", "test"]);
     }
 }

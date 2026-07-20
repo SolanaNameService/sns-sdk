@@ -7,8 +7,10 @@ use solana_sdk::instruction::Instruction;
 
 use crate::NAME_OFFERS_PROGRAM_ID;
 
-pub fn derive_favourite_domain_key(owner: &Pubkey) -> Pubkey {
+pub fn derive_primary_domain_key(owner: &Pubkey) -> Pubkey {
     Pubkey::find_program_address(
+        // Preserve the original on-chain PDA seed spelling for compatibility with
+        // existing primary-domain accounts.
         &[b"favourite_domain", &owner.to_bytes()],
         &NAME_OFFERS_PROGRAM_ID,
     )
@@ -21,19 +23,19 @@ pub enum Tag {
     _B,
     _C,
     _D,
-    FavouriteDomain = 4,
+    PrimaryDomain = 4,
 }
 
 #[derive(BorshDeserialize)]
-pub struct FavouriteDomain {
+pub struct PrimaryDomain {
     pub tag: Tag,
     pub name_account: Pubkey,
 }
 
-impl FavouriteDomain {
-    pub fn parse(mut buffer: &[u8]) -> Result<FavouriteDomain, std::io::Error> {
+impl PrimaryDomain {
+    pub fn parse(mut buffer: &[u8]) -> Result<PrimaryDomain, std::io::Error> {
         let s = Self::deserialize(&mut buffer)?;
-        if !matches!(s.tag, Tag::FavouriteDomain) {
+        if !matches!(s.tag, Tag::PrimaryDomain) {
             Err(std::io::Error::new(ErrorKind::InvalidData, ""))
         } else {
             Ok(s)
@@ -41,7 +43,7 @@ impl FavouriteDomain {
     }
 }
 
-pub mod register_favourite {
+pub mod set_primary_domain {
     use bonfida_utils::{BorshSize, InstructionsAccount};
     use borsh::{BorshDeserialize, BorshSerialize};
     use solana_sdk::pubkey::Pubkey;
@@ -53,22 +55,21 @@ pub mod register_favourite {
         #[cons(writable)]
         pub name: &'a T,
         #[cons(writable)]
-        pub favourite_domain: &'a T,
+        pub primary_domain: &'a T,
         #[cons(writable, signer)]
         pub owner: &'a T,
         pub system_program: &'a T,
     }
 
     #[derive(BorshDeserialize, BorshSerialize, BorshSize, Clone, Copy)]
-    #[cfg_attr(feature = "instruction_params_casting", derive(Zeroable, Pod))]
     #[repr(C)]
     pub struct Params {}
 }
 
-pub fn get_register_favourite_instruction(
+pub fn set_primary_domain_instruction(
     program_id: Pubkey,
-    accounts: register_favourite::Accounts<Pubkey>,
-    params: register_favourite::Params,
+    accounts: set_primary_domain::Accounts<Pubkey>,
+    params: set_primary_domain::Params,
 ) -> Instruction {
     accounts.get_instruction(program_id, 6, params)
 }

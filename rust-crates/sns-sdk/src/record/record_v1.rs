@@ -1,8 +1,7 @@
-use super::Record;
+use super::{decode_injective_address, Record};
 use crate::error::SnsError;
 use {
     bech32,
-    bech32::u5,
     bech32::ToBase32,
     ed25519_dalek,
     solana_program::pubkey::Pubkey,
@@ -20,6 +19,24 @@ pub fn check_sol_record(
     Ok(res)
 }
 
+pub(crate) fn check_sol_record_v1_data(
+    record_data: &[u8],
+    record_key: &Pubkey,
+    registry_owner: &Pubkey,
+) -> Result<Option<Pubkey>, SnsError> {
+    let payload = record_data.get(..96).ok_or(SnsError::InvalidRecordData)?;
+    let record = [&payload[..32], &record_key.to_bytes()].concat();
+    let sig = &payload[32..];
+    let encoded = hex::encode(record);
+    if check_sol_record(encoded.as_bytes(), sig, *registry_owner)? {
+        let bytes: [u8; 32] = payload[0..32]
+            .try_into()
+            .map_err(|_| SnsError::InvalidPubkey)?;
+        return Ok(Some(Pubkey::new_from_array(bytes)));
+    }
+    Ok(None)
+}
+
 pub fn get_record_size(record: Record) -> Option<usize> {
     match record {
         Record::Sol => Some(96),
@@ -35,83 +52,74 @@ pub fn deserialize_record(
     record: Record,
     record_key: &Pubkey,
 ) -> Result<String, SnsError> {
-    let size = get_record_size(record);
-
-    if size.is_none() {
+    let Some(size) = get_record_size(record) else {
         let des = String::from_utf8(data.to_vec())?
             .trim_end_matches('\0')
             .to_string();
         return Ok(des);
-    }
+    };
 
-    let size = size.unwrap();
     let idx = data
         .iter()
         .rposition(|&byte| byte != 0)
         .map_or(0, |pos| pos + 1);
 
-    // Old record UTF-8 encoded
-    if size != idx {
-        let address = String::from_utf8(data[0..idx].to_vec())?;
-        match record {
-            Record::Injective => {
-                let (prefix, data, _) = bech32::decode(&address)?;
-                if prefix == "inj" && data.len() == 32 {
-                    return Ok(address);
-                }
-            }
+    // Preserve legacy textual records before classifying fixed-width binary data.
+    if let Ok(address) = std::str::from_utf8(&data[..idx]) {
+        let valid_legacy = match record {
+            Record::Injective => decode_injective_address(address).is_ok(),
             Record::Eth | Record::Bsc => {
-                let prefix = address.get(0..2).ok_or(SnsError::InvalidRecordData)?;
-                let hex = address.get(2..).ok_or(SnsError::InvalidRecordData)?;
-                let decoded = hex::decode(hex)?;
-                if prefix == "0x" && decoded.len() == 20 {
-                    return Ok(address);
+                if let (Some(prefix), Some(hex)) = (address.get(..2), address.get(2..)) {
+                    prefix == "0x" && matches!(hex::decode(hex), Ok(decoded) if decoded.len() == 20)
+                } else {
+                    false
                 }
             }
-            Record::A => {
-                let des = address.parse::<Ipv4Addr>();
-                if des.is_ok() {
-                    return Ok(address);
-                }
-            }
-            Record::AAAA => {
-                let des = address.parse::<Ipv6Addr>();
-                if des.is_ok() {
-                    return Ok(address);
-                }
-            }
-            _ => {}
+            Record::A => address.parse::<Ipv4Addr>().is_ok(),
+            Record::AAAA => address.parse::<Ipv6Addr>().is_ok(),
+            _ => false,
+        };
+        if valid_legacy {
+            return Ok(address.to_string());
         }
-        return Err(SnsError::InvalidReverse);
     }
 
-    // Properly sized record
+    let payload = data.get(..size).ok_or(SnsError::InvalidRecordData)?;
+    if data[size..].iter().any(|byte| *byte != 0) {
+        return Err(SnsError::InvalidRecordData);
+    }
+
     match record {
         Record::Sol => {
-            let signature = data.get(32..).ok_or(SnsError::InvalidRecordData)?;
-            let dst = data.get(0..32).ok_or(SnsError::InvalidRecordData)?;
+            let signature = payload.get(32..96).ok_or(SnsError::InvalidRecordData)?;
+            let dst = payload.get(..32).ok_or(SnsError::InvalidRecordData)?;
             let expected = [dst, &record_key.to_bytes()].concat();
             let valid = check_sol_record(&expected, signature, *record_key)?;
             if valid {
-                let pubkey = Pubkey::new_from_array(dst.try_into().unwrap());
+                let bytes: [u8; 32] = dst.try_into().map_err(|_| SnsError::InvalidRecordData)?;
+                let pubkey = Pubkey::new_from_array(bytes);
                 return Ok(pubkey.to_string());
             }
         }
         Record::Eth | Record::Bsc => {
-            let des = format!("0x{}", hex::encode(data));
+            let des = format!("0x{}", hex::encode(payload));
             return Ok(des);
         }
         Record::Injective => {
-            let des = bech32::encode("inj", data.to_base32(), bech32::Variant::Bech32)?;
+            let des = bech32::encode("inj", payload.to_base32(), bech32::Variant::Bech32)?;
             return Ok(des);
         }
         Record::A => {
-            let bytes: [u8; 4] = data.try_into().unwrap();
+            let bytes: [u8; 4] = payload
+                .try_into()
+                .map_err(|_| SnsError::InvalidRecordData)?;
             let ip = Ipv4Addr::from(bytes);
             return Ok(ip.to_string());
         }
         Record::AAAA => {
-            let bytes: [u8; 16] = data.try_into().unwrap();
+            let bytes: [u8; 16] = payload
+                .try_into()
+                .map_err(|_| SnsError::InvalidRecordData)?;
             let ip = Ipv6Addr::from(bytes);
             return Ok(ip.to_string());
         }
@@ -145,17 +153,7 @@ pub fn serialize_record(content: &str, record: Record) -> Result<Vec<u8>, SnsErr
             }
             Ok(decoded)
         }
-        Record::Injective => {
-            if !content.starts_with("inj") {
-                return Err(SnsError::InvalidInjectiveAddress);
-            }
-            let (_, data, _) = bech32::decode(content)?;
-            let data = convert_u5_array(&data);
-            if data.len() != 20 {
-                return Err(SnsError::InvalidInjectiveAddress);
-            }
-            Ok(data)
-        }
+        Record::Injective => decode_injective_address(content),
         Record::A => {
             let ip = content
                 .parse::<Ipv4Addr>()
@@ -173,28 +171,10 @@ pub fn serialize_record(content: &str, record: Record) -> Result<Vec<u8>, SnsErr
     }
 }
 
-pub fn convert_u5_array(u5_data: &[u5]) -> Vec<u8> {
-    let mut u8_data: Vec<u8> = Vec::new();
-    let mut buffer: u16 = 0;
-    let mut buffer_length: u8 = 0;
-    for u5 in u5_data {
-        buffer = (buffer << 5) | (u5.to_u8() as u16);
-        buffer_length += 5;
-        while buffer_length >= 8 {
-            u8_data.push((buffer >> (buffer_length - 8)) as u8);
-            buffer_length -= 8;
-        }
-    }
-    // Make sure there's no remaining data in the buffer
-    if buffer_length > 0 {
-        u8_data.push((buffer << (8 - buffer_length)) as u8);
-    }
-    u8_data
-}
-
 #[cfg(test)]
 mod test {
     use super::*;
+    use ed25519_dalek::Signer;
     #[test]
     fn test_serialize_record() {
         let data = serialize_record(
@@ -215,12 +195,111 @@ mod test {
     }
 
     #[test]
-    fn test_convert_u5_array() {
-        let expected = [
-            252, 88, 186, 42, 192, 23, 216, 30, 185, 78, 79, 17, 90, 2, 196, 158, 19, 240, 30, 232,
-        ]
-        .to_vec();
-        let (_, data, _) = bech32::decode("inj1l3vt52kqzlvpaw2wfug45qkyncflq8hgr5nem7").unwrap();
-        assert_eq!(expected, convert_u5_array(&data))
+    fn deserialize_fixed_width_records_uses_exact_prefix() {
+        let ipv4 = vec![192, 168, 1, 0];
+        let ipv6 = vec![0x20, 0x01, 0x0d, 0xb8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        let evm = (0u8..20).collect::<Vec<_>>();
+        let injective = (1u8..=19).chain([0]).collect::<Vec<_>>();
+        let record_key = Pubkey::default();
+
+        for (record, data, expected) in [
+            (Record::A, ipv4, "192.168.1.0".to_string()),
+            (
+                Record::AAAA,
+                ipv6.clone(),
+                Ipv6Addr::from(<[u8; 16]>::try_from(ipv6.as_slice()).unwrap()).to_string(),
+            ),
+            (Record::Eth, evm.clone(), format!("0x{}", hex::encode(evm))),
+            (
+                Record::Injective,
+                injective.clone(),
+                bech32::encode("inj", injective.to_base32(), bech32::Variant::Bech32).unwrap(),
+            ),
+        ] {
+            assert_eq!(
+                deserialize_record(&data, record, &record_key).unwrap(),
+                expected
+            );
+            let mut padded = data;
+            padded.extend_from_slice(&[0; 8]);
+            assert_eq!(
+                deserialize_record(&padded, record, &record_key).unwrap(),
+                expected
+            );
+        }
+
+        let secret = ed25519_dalek::SecretKey::from_bytes(&[7u8; 32]).unwrap();
+        let public = ed25519_dalek::PublicKey::from(&secret);
+        let keypair = ed25519_dalek::Keypair { secret, public };
+        let record_key = Pubkey::new_from_array(keypair.public.to_bytes());
+        let destination = [9u8; 32];
+        let message = [destination.as_slice(), record_key.as_ref()].concat();
+        let mut signed = destination.to_vec();
+        signed.extend_from_slice(&keypair.sign(&message).to_bytes());
+        let expected = Pubkey::new_from_array(destination).to_string();
+        assert_eq!(
+            deserialize_record(&signed, Record::Sol, &record_key).unwrap(),
+            expected
+        );
+        signed.extend_from_slice(&[0; 8]);
+        assert_eq!(
+            deserialize_record(&signed, Record::Sol, &record_key).unwrap(),
+            expected
+        );
+    }
+
+    #[test]
+    fn deserialize_fixed_width_records_preserves_legacy_text() {
+        let record_key = Pubkey::default();
+        for (record, address) in [
+            (Record::A, "192.168.0.1"),
+            (Record::AAAA, "::1"),
+            (Record::Eth, "0x570eDC13f9D406a2b4E6477Ddf75D5E9cCF51cd6"),
+            (
+                Record::Injective,
+                "inj1l3vt52kqzlvpaw2wfug45qkyncflq8hgr5nem7",
+            ),
+        ] {
+            let mut data = address.as_bytes().to_vec();
+            data.extend_from_slice(&[0; 32]);
+            assert_eq!(
+                deserialize_record(&data, record, &record_key).unwrap(),
+                address
+            );
+        }
+    }
+
+    #[test]
+    fn deserialize_fixed_width_records_rejects_bad_lengths_without_panicking() {
+        let record_key = Pubkey::default();
+        for (record, width) in [
+            (Record::A, 4),
+            (Record::AAAA, 16),
+            (Record::Eth, 20),
+            (Record::Injective, 20),
+            (Record::Sol, 96),
+        ] {
+            for len in [width - 1, width, width + 1] {
+                let data = vec![0xff; len];
+                assert!(
+                    std::panic::catch_unwind(|| {
+                        let _ = deserialize_record(&data, record, &record_key);
+                    })
+                    .is_ok(),
+                    "{record:?} length {len}"
+                );
+            }
+
+            for data in [vec![0xff; width - 1], vec![0xff; width + 1]] {
+                assert!(
+                    matches!(
+                        deserialize_record(&data, record, &record_key),
+                        Err(SnsError::InvalidRecordData)
+                    ),
+                    "{record:?} length {}",
+                    data.len()
+                );
+            }
+        }
     }
 }
