@@ -1,7 +1,7 @@
 import { type Bech32DecodedWithArray, bech32 } from "@scure/base";
 import type { Address, ReadonlyUint8Array } from "@solana/kit";
-import { parse as parseIp } from "ipaddr.js";
-import { encode as encodePunycode } from "punycode/";
+import ipaddr from "ipaddr.js";
+import punycode from "punycode/punycode.js";
 
 import { addressCodec, utf8Codec } from "../../codecs";
 import { EVM_RECORDS, UTF8_ENCODED_RECORDS } from "../../constants/records";
@@ -45,7 +45,7 @@ export const serializeRecordContent = ({
   const utf8Encoded = UTF8_ENCODED_RECORDS.has(record);
   if (utf8Encoded) {
     if (record === Record.CNAME || record === Record.TXT) {
-      content = encodePunycode(content);
+      content = punycode.encode(content);
     }
     return utf8Codec.encode(content);
   } else if (record === Record.SOL) {
@@ -85,7 +85,7 @@ export const serializeRecordContent = ({
     let array: number[];
 
     try {
-      array = parseIp(content).toByteArray();
+      array = ipaddr.parse(content).toByteArray();
     } catch {
       throw new InvalidARecordError(
         "The record content must be a valid IPv4 address"
@@ -101,7 +101,7 @@ export const serializeRecordContent = ({
     let array: number[];
 
     try {
-      array = parseIp(content).toByteArray();
+      array = ipaddr.parse(content).toByteArray();
     } catch {
       throw new InvalidAAAARecordError(
         "The record content must be a valid IPv6 address"

@@ -1,81 +1,91 @@
-import babel from "@rollup/plugin-babel";
-import commonjs from "@rollup/plugin-commonjs";
-import { nodeResolve } from "@rollup/plugin-node-resolve";
-import terser from "@rollup/plugin-terser";
 import typescript from "@rollup/plugin-typescript";
+import { createRequire } from "node:module";
 import del from "rollup-plugin-delete";
 import { visualizer } from "rollup-plugin-visualizer";
 
+const require = createRequire(import.meta.url);
+const packageJson = require("./package.json");
+
+const externalPackages = new Set([
+  ...Object.keys(packageJson.dependencies ?? {}),
+  ...Object.keys(packageJson.peerDependencies ?? {}),
+]);
+
+const external = (id) => {
+  for (const packageName of externalPackages) {
+    if (id === packageName || id.startsWith(`${packageName}/`)) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
+const sharedOutput = {
+  dir: "dist",
+  sourcemap: true,
+  exports: "named",
+  preserveModules: true,
+  preserveModulesRoot: "src",
+  generatedCode: "es2015",
+};
+
 /**
- * @type {import('rollup').RollupOptions}
+ * @type {import("rollup").RollupOptions}
  */
 export default {
-  input: [
-    "src/index.ts",
-    "src/address/index.ts",
-    "src/bindings/index.ts",
-    "src/constants/index.ts",
-    "src/domain/index.ts",
-    "src/instructions/index.ts",
-    "src/nft/index.ts",
-    "src/record/index.ts",
-    "src/states/index.ts",
-    "src/types/index.ts",
-    "src/utils/index.ts",
-  ],
+  input: {
+    index: "src/index.ts",
+    "address/index": "src/address/index.ts",
+    "bindings/index": "src/bindings/index.ts",
+    codecs: "src/codecs.ts",
+    "constants/index": "src/constants/index.ts",
+    "domain/index": "src/domain/index.ts",
+    errors: "src/errors.ts",
+    "instructions/index": "src/instructions/index.ts",
+    "nft/index": "src/nft/index.ts",
+    "record/index": "src/record/index.ts",
+    "states/index": "src/states/index.ts",
+    "types/index": "src/types/index.ts",
+    "utils/index": "src/utils/index.ts",
+  },
+
+  external,
+
   output: [
     {
-      dir: "dist",
+      ...sharedOutput,
       format: "cjs",
-      sourcemap: true,
       entryFileNames: "cjs/[name].cjs",
-      exports: "named",
-      preserveModules: true,
-      preserveModulesRoot: "src",
+      chunkFileNames: "cjs/[name]-[hash].cjs",
+      plugins: [
+        visualizer({
+          filename: "stats-cjs.html",
+        }),
+      ],
     },
     {
-      dir: "dist",
+      ...sharedOutput,
       format: "esm",
-      sourcemap: true,
       entryFileNames: "esm/[name].mjs",
-      exports: "named",
-      preserveModules: true,
-      preserveModulesRoot: "src",
+      chunkFileNames: "esm/[name]-[hash].mjs",
+      plugins: [
+        visualizer({
+          filename: "stats-esm.html",
+        }),
+      ],
     },
   ],
-  external: ["@solana/kit"],
+
   plugins: [
-    del({ targets: "dist" }),
-    nodeResolve({
-      browser: true,
-      preferBuiltins: false,
-      dedupe: [
-        "@scure/base",
-        "@solana-program/token",
-        "borsh",
-        "ipaddr.js",
-        "punycode",
-      ],
+    del({
+      targets: "dist",
+      runOnce: true,
     }),
-    commonjs(),
     typescript({
       tsconfig: "./tsconfig.json",
-      declaration: true,
-      outDir: null,
-      declarationDir: "dist/types",
-    }),
-    babel({ babelHelpers: "bundled" }),
-    terser(),
-    visualizer({
-      gzipSize: true,
     }),
   ],
-  treeshake: {
-    moduleSideEffects: false,
-    preset: "smallest",
-  },
-  onwarn: function (warning, handler) {
-    if (warning.code === "THIS_IS_UNDEFINED") return;
-    handler(warning);
-  },
+
+  treeshake: true,
 };

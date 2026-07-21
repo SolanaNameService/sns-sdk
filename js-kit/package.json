@@ -104,10 +104,6 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",
-    "@rollup/plugin-babel": "^6.0.4",
-    "@rollup/plugin-commonjs": "^28.0.3",
-    "@rollup/plugin-node-resolve": "^16.0.1",
-    "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^12.1.2",
     "@solana/kit": "^6.9.0",
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
