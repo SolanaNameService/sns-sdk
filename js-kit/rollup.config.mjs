@@ -47,9 +47,27 @@ const input = {
   "utils/index": "src/utils/index.ts",
 };
 
-const declarationInput = Object.fromEntries(
-  Object.keys(input).map((name) => [name, `dist/types-internal/${name}.d.ts`])
-);
+const declarationEntries = Object.keys(input);
+
+const declarationConfigs = declarationEntries.map((name, index) => ({
+  input: `dist/types-internal/${name}.d.ts`,
+  external,
+  output: {
+    file: `dist/types/${name}.d.ts`,
+    format: "es",
+  },
+  plugins: [
+    dts(),
+    ...(index === declarationEntries.length - 1
+      ? [
+          del({
+            targets: "dist/types-internal",
+            hook: "writeBundle",
+          }),
+        ]
+      : []),
+  ],
+}));
 
 /**
  * @type {import("rollup").RollupOptions[]}
@@ -97,20 +115,5 @@ export default [
 
     treeshake: true,
   },
-  {
-    input: declarationInput,
-    external,
-    output: {
-      dir: "dist/types",
-      format: "es",
-      entryFileNames: "[name].d.ts",
-    },
-    plugins: [
-      dts(),
-      del({
-        targets: "dist/types-internal",
-        hook: "writeBundle",
-      }),
-    ],
-  },
+  ...declarationConfigs,
 ];
