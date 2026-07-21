@@ -5,6 +5,7 @@
   "files": [
     "dist"
   ],
+  "sideEffects": false,
   "type": "module",
   "engines": {
     "node": ">=24.0.0"
@@ -84,10 +85,13 @@
     "url": "git+https://github.com/SolanaNameService/sns-sdk.git"
   },
   "homepage": "https://sns.guide",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "rollup -c",
-    "prepack": "npm run build",
-    "prepublishOnly": "npm run build",
+    "prepack": "npm run check:package",
+    "prepublishOnly": "npm run test && npm run typecheck",
     "lint:fix": "eslint src/**/*.ts --fix",
     "prettier:fix": "prettier --write src/**/*.ts",
     "test": "jest ./tests",

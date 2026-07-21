@@ -87,6 +87,8 @@ export default [
         plugins: [
           visualizer({
             filename: "stats-cjs.html",
+            gzipSize: true,
+            brotliSize: true,
           }),
         ],
       },
@@ -98,6 +100,8 @@ export default [
         plugins: [
           visualizer({
             filename: "stats-esm.html",
+            gzipSize: true,
+            brotliSize: true,
           }),
         ],
       },
