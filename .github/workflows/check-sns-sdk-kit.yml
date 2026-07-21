@@ -89,5 +89,5 @@ jobs:
           # This is dangerous without the "check-permissions" job
           ref: ${{ github.event.pull_request.head.sha }}
       - uses: ./.github/actions/prepare-js-kit-env
-      - name: Build source code
-        run: npm run build
+      - name: Verify package
+        run: npm run check:package

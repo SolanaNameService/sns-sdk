@@ -91,7 +91,9 @@
     "lint:fix": "eslint src/**/*.ts --fix",
     "prettier:fix": "prettier --write src/**/*.ts",
     "test": "jest ./tests",
-    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false",
+    "verify:package": "node scripts/verify-package.mjs && tsc -p tests/package/tsconfig.bundler.json && tsc -p tests/package/tsconfig.nodenext.json",
+    "check:package": "npm run build && npm run verify:package"
   },
   "dependencies": {
     "@scure/base": "^1.2.4",
