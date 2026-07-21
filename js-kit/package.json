@@ -14,69 +14,69 @@
   "types": "./dist/types/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/esm/index.mjs",
-      "require": "./dist/cjs/index.cjs",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/cjs/index.cjs"
     },
     "./address": {
+      "types": "./dist/types/address/index.d.ts",
       "import": "./dist/esm/address/index.mjs",
-      "require": "./dist/cjs/address/index.cjs",
-      "types": "./dist/types/address/index.d.ts"
+      "require": "./dist/cjs/address/index.cjs"
     },
     "./bindings": {
+      "types": "./dist/types/bindings/index.d.ts",
       "import": "./dist/esm/bindings/index.mjs",
-      "require": "./dist/cjs/bindings/index.cjs",
-      "types": "./dist/types/bindings/index.d.ts"
+      "require": "./dist/cjs/bindings/index.cjs"
     },
     "./codecs": {
+      "types": "./dist/types/codecs.d.ts",
       "import": "./dist/esm/codecs.mjs",
-      "require": "./dist/cjs/codecs.cjs",
-      "types": "./dist/types/codecs.d.ts"
+      "require": "./dist/cjs/codecs.cjs"
     },
     "./constants": {
+      "types": "./dist/types/constants/index.d.ts",
       "import": "./dist/esm/constants/index.mjs",
-      "require": "./dist/cjs/constants/index.cjs",
-      "types": "./dist/types/constants/index.d.ts"
+      "require": "./dist/cjs/constants/index.cjs"
     },
     "./domain": {
+      "types": "./dist/types/domain/index.d.ts",
       "import": "./dist/esm/domain/index.mjs",
-      "require": "./dist/cjs/domain/index.cjs",
-      "types": "./dist/types/domain/index.d.ts"
+      "require": "./dist/cjs/domain/index.cjs"
     },
     "./errors": {
+      "types": "./dist/types/errors.d.ts",
       "import": "./dist/esm/errors.mjs",
-      "require": "./dist/cjs/errors.cjs",
-      "types": "./dist/types/errors.d.ts"
+      "require": "./dist/cjs/errors.cjs"
     },
     "./instructions": {
+      "types": "./dist/types/instructions/index.d.ts",
       "import": "./dist/esm/instructions/index.mjs",
-      "require": "./dist/cjs/instructions/index.cjs",
-      "types": "./dist/types/instructions/index.d.ts"
+      "require": "./dist/cjs/instructions/index.cjs"
     },
     "./nft": {
+      "types": "./dist/types/nft/index.d.ts",
       "import": "./dist/esm/nft/index.mjs",
-      "require": "./dist/cjs/nft/index.cjs",
-      "types": "./dist/types/nft/index.d.ts"
+      "require": "./dist/cjs/nft/index.cjs"
     },
     "./record": {
+      "types": "./dist/types/record/index.d.ts",
       "import": "./dist/esm/record/index.mjs",
-      "require": "./dist/cjs/record/index.cjs",
-      "types": "./dist/types/record/index.d.ts"
+      "require": "./dist/cjs/record/index.cjs"
     },
     "./states": {
+      "types": "./dist/types/states/index.d.ts",
       "import": "./dist/esm/states/index.mjs",
-      "require": "./dist/cjs/states/index.cjs",
-      "types": "./dist/types/states/index.d.ts"
+      "require": "./dist/cjs/states/index.cjs"
     },
     "./types": {
+      "types": "./dist/types/types/index.d.ts",
       "import": "./dist/esm/types/index.mjs",
-      "require": "./dist/cjs/types/index.cjs",
-      "types": "./dist/types/types/index.d.ts"
+      "require": "./dist/cjs/types/index.cjs"
     },
     "./utils": {
+      "types": "./dist/types/utils/index.d.ts",
       "import": "./dist/esm/utils/index.mjs",
-      "require": "./dist/cjs/utils/index.cjs",
-      "types": "./dist/types/utils/index.d.ts"
+      "require": "./dist/cjs/utils/index.cjs"
     }
   },
   "repository": {
@@ -90,7 +90,8 @@
     "prepublishOnly": "npm run build",
     "lint:fix": "eslint src/**/*.ts --fix",
     "prettier:fix": "prettier --write src/**/*.ts",
-    "test": "jest ./tests"
+    "test": "jest ./tests",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
     "@scure/base": "^1.2.4",
@@ -118,6 +119,7 @@
     "prettier": "^3.5.2",
     "rollup": "^4.35.0",
     "rollup-plugin-delete": "^3.0.1",
+    "rollup-plugin-dts": "^6.4.1",
     "rollup-plugin-visualizer": "^5.14.0",
     "ts-jest": "^29.2.6",
     "tslib": "^2.8.1",
