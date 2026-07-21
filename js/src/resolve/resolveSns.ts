@@ -1,3 +1,5 @@
+import { Buffer } from "buffer";
+
 import { Record as RecordV2, Validation } from "@bonfida/sns-records";
 import { ed25519 } from "@noble/curves/ed25519";
 import {

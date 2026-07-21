@@ -7,6 +7,8 @@ import { assertTldSupported } from "../utils/assertTldSupported";
 import { ETH_ROA_RECORDS, GUARDIANS } from "./const";
 import { getRecordV2Key } from "./getRecordV2Key";
 
+import type { Buffer } from "buffer";
+
 /**
  * Verifies a record's Right of Association validation.
  *

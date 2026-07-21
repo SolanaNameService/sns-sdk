@@ -1,3 +1,5 @@
+import { Buffer } from "buffer";
+
 import {
   TOKEN_2022_PROGRAM_ID,
   unpackAccount,

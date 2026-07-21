@@ -1,3 +1,5 @@
+import { Buffer } from "buffer";
+
 import { sha256 } from "@noble/hashes/sha2";
 import { PublicKey } from "@solana/web3.js";
 

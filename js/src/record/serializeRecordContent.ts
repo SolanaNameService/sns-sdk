@@ -1,9 +1,10 @@
-import { PublicKey } from "@solana/web3.js";
-import { encode as encodePunycode } from "punycode";
+import { Buffer } from "buffer";
+import ipaddr from "ipaddr.js";
+import punycode from "punycode/punycode.js";
+
 import { bech32 } from "@scure/base";
-import { parse as parseIp } from "ipaddr.js";
-import { check } from "../utils/check";
-import { Record } from "../types/record";
+import { PublicKey } from "@solana/web3.js";
+
 import {
   InvalidAAAARecordError,
   InvalidARecordError,
@@ -11,8 +12,9 @@ import {
   InvalidInjectiveAddressError,
   InvalidRecordInputError,
 } from "../error";
-import { Buffer } from "buffer";
-import { UTF8_ENCODED, EVM_RECORDS } from "./const";
+import { Record } from "../types/record";
+import { check } from "../utils/check";
+import { EVM_RECORDS, UTF8_ENCODED } from "./const";
 
 /**
  * Serializes record content according to SNS-IP 1.
@@ -28,7 +30,7 @@ export const serializeRecordContent = (
   const utf8Encoded = UTF8_ENCODED.has(record);
   if (utf8Encoded) {
     if (record === Record.CNAME || record === Record.TXT) {
-      content = encodePunycode(content);
+      content = punycode.encode(content);
     }
     return Buffer.from(content, "utf-8");
   } else if (record === Record.SOL) {
@@ -53,14 +55,14 @@ export const serializeRecordContent = (
     );
     return Buffer.from(decoded.bytes);
   } else if (record === Record.A) {
-    const array = parseIp(content).toByteArray();
+    const array = ipaddr.parse(content).toByteArray();
     check(
       array.length === 4,
       new InvalidARecordError("The record content must be 4 bytes long"),
     );
     return Buffer.from(array);
   } else if (record === Record.AAAA) {
-    const array = parseIp(content).toByteArray();
+    const array = ipaddr.parse(content).toByteArray();
     check(
       array.length === 16,
       new InvalidAAAARecordError("The record content must be 16 bytes long"),

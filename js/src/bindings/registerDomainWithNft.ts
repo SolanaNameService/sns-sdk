@@ -1,3 +1,5 @@
+import { Buffer } from "buffer";
+
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { PublicKey, SystemProgram, SYSVAR_RENT_PUBKEY } from "@solana/web3.js";
 

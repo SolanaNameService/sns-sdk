@@ -1,6 +1,6 @@
 {
   "name": "@bonfida/spl-name-service-beta",
-  "version": "4.0.0-beta.5",
+  "version": "4.0.0-beta.6",
   "publishConfig": {
     "access": "restricted"
   },
@@ -9,18 +9,19 @@
     "dist"
   ],
   "type": "module",
-  "main": "./dist/cjs/index.js",
-  "module": "./dist/esm/index.js",
+  "sideEffects": false,
+  "main": "./dist/cjs/index.cjs",
+  "module": "./dist/esm/index.mjs",
   "types": "./dist/esm/index.d.ts",
   "exports": {
     ".": {
       "import": {
         "types": "./dist/esm/index.d.ts",
-        "default": "./dist/esm/index.js"
+        "default": "./dist/esm/index.mjs"
       },
       "require": {
         "types": "./dist/cjs/index.d.ts",
-        "default": "./dist/cjs/index.js"
+        "default": "./dist/cjs/index.cjs"
       }
     }
   },
@@ -32,7 +33,6 @@
   "scripts": {
     "dev": "tsc && node --trace-warnings dist/test.js",
     "build": "rimraf dist && rollup -c && tsc --emitDeclarationOnly --declarationDir dist/cjs && tsc --emitDeclarationOnly --declarationDir dist/esm && node -p \"JSON.stringify({type: 'commonjs'})\" > ./dist/cjs/package.json",
-    "prepublish": "npm run build",
     "prepack": "npm run build",
     "lint": "npm run pretty && eslint .",
     "lint:fix": "npm run pretty:fix && eslint . --fix",
@@ -43,20 +43,12 @@
   "devDependencies": {
     "@bonfida/prettier-config": "^1.1.0",
     "@pythnetwork/client": "^2.22.1",
-    "@rollup/plugin-babel": "^6.0.4",
-    "@rollup/plugin-commonjs": "^25.0.8",
-    "@rollup/plugin-inject": "^5.0.5",
-    "@rollup/plugin-json": "^6.1.0",
-    "@rollup/plugin-node-resolve": "^15.3.1",
-    "@rollup/plugin-replace": "^5.0.7",
-    "@rollup/plugin-terser": "^1.0.0",
     "@rollup/plugin-typescript": "^11.1.6",
     "@tsconfig/recommended": "^1.0.8",
     "@types/bn.js": "^5.1.6",
     "@types/bs58": "^4.0.4",
     "@types/jest": "^29.5.14",
     "@types/node": "^20.17.50",
-    "babel-eslint": "^10.1.0",
     "dotenv": "^16.5.0",
     "eslint": "^8.57.1",
     "eslint-plugin-import": "^2.31.0",
@@ -65,7 +57,6 @@
     "prettier": "^3.5.3",
     "rimraf": "^6.1.2",
     "rollup": "^4.41.1",
-    "rollup-plugin-multi-input": "^1.5.0",
     "rollup-plugin-visualizer": "^5.14.0",
     "ts-jest": "^29.4.11",
     "ts-node": "^10.9.2",
@@ -76,6 +67,7 @@
   "dependencies": {
     "@bonfida/sns-records": "0.1.0",
     "@noble/curves": "^1.9.1",
+    "@noble/hashes": "^1.8.0",
     "@scure/base": "^1.2.5",
     "@solana/spl-token": "^0.4.14",
     "borsh": "2.0.0",

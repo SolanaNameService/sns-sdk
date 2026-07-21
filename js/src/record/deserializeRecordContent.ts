@@ -1,11 +1,14 @@
-import { Record } from "../types/record";
-import { InvalidRecordDataError } from "../error";
-import { PublicKey } from "@solana/web3.js";
-import { decode as decodePunnycode } from "punycode";
-import { bech32 } from "@scure/base";
-import { fromByteArray as ipFromByteArray } from "ipaddr.js";
+import ipaddr from "ipaddr.js";
+import punycode from "punycode/punycode.js";
 
-import { UTF8_ENCODED, EVM_RECORDS } from "./const";
+import { bech32 } from "@scure/base";
+import { PublicKey } from "@solana/web3.js";
+
+import { InvalidRecordDataError } from "../error";
+import { Record } from "../types/record";
+import { EVM_RECORDS, UTF8_ENCODED } from "./const";
+
+import type { Buffer } from "buffer";
 
 /**
  * Deserializes record content according to SNS-IP 1.
@@ -23,7 +26,7 @@ export const deserializeRecordContent = (
   if (utf8Encoded) {
     const decoded = content.toString("utf-8");
     if (record === Record.CNAME || record === Record.TXT) {
-      return decodePunnycode(decoded);
+      return punycode.decode(decoded);
     }
     return decoded;
   } else if (record === Record.SOL) {
@@ -33,7 +36,7 @@ export const deserializeRecordContent = (
   } else if (record === Record.Injective) {
     return bech32.encode("inj", bech32.toWords(content));
   } else if (record === Record.A || record === Record.AAAA) {
-    return ipFromByteArray([...content]).toString();
+    return ipaddr.fromByteArray([...content]).toString();
   } else {
     throw new InvalidRecordDataError("The record content is malformed");
   }

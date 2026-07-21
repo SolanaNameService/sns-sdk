@@ -1,92 +1,74 @@
+import { createRequire } from "node:module";
 import typescript from "@rollup/plugin-typescript";
-import commonjs from "@rollup/plugin-commonjs";
-import terser from "@rollup/plugin-terser";
-import json from "@rollup/plugin-json";
-import { nodeResolve } from "@rollup/plugin-node-resolve";
-import replace from "@rollup/plugin-replace";
-import babel from "@rollup/plugin-babel";
 import { visualizer } from "rollup-plugin-visualizer";
-import multiInput from "rollup-plugin-multi-input";
-import inject from "@rollup/plugin-inject";
 
-/**
- * @type {import('rollup').RollupOptions}
- */
+const require = createRequire(import.meta.url);
+const packageJson = require("./package.json");
+
+const externalPackages = new Set([
+  ...Object.keys(packageJson.dependencies ?? {}),
+  ...Object.keys(packageJson.peerDependencies ?? {}),
+]);
+
+const external = (id) => {
+  for (const packageName of externalPackages) {
+    if (id === packageName || id.startsWith(`${packageName}/`)) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
+const sharedOutput = {
+  sourcemap: true,
+  exports: "named",
+  preserveModules: true,
+  preserveModulesRoot: "src",
+  generatedCode: "es2015",
+};
+
 export default {
-  input: [
-    "src/index.ts",
-    "src/utils/**/*.ts",
-    "src/twitter/**/*.ts",
-    "src/resolve/**/*.ts",
-    "src/record/**/*.ts",
-    "src/nft/**/*.ts",
-    "src/bindings/**/*.ts",
-    "src/instructions/**/*.ts",
-  ],
+  input: "src/index.ts",
+
+  external,
+
   output: [
     {
+      ...sharedOutput,
       dir: "dist/esm",
       format: "esm",
-      sourcemap: true,
-      entryFileNames: "[name].js",
-      exports: "named",
-      preserveModules: true,
-      preserveModulesRoot: "src",
+      entryFileNames: "[name].mjs",
+      chunkFileNames: "[name]-[hash].mjs",
+      plugins: [
+        visualizer({
+          filename: "stats-esm.html",
+        }),
+      ],
     },
     {
+      ...sharedOutput,
       dir: "dist/cjs",
       format: "cjs",
-      sourcemap: true,
-      entryFileNames: "[name].js",
-      exports: "named",
-      preserveModules: true,
-      preserveModulesRoot: "src",
+      entryFileNames: "[name].cjs",
+      chunkFileNames: "[name]-[hash].cjs",
+      plugins: [
+        visualizer({
+          filename: "stats-cjs.html",
+        }),
+      ],
     },
   ],
-  external: [
-    "@solana/web3.js",
-    "@solana/buffer-layout-utils",
-    "@solana/buffer-layout",
-  ],
+
   plugins: [
-    multiInput(),
-    nodeResolve({
-      browser: true,
-      preferBuiltins: false,
-      dedupe: [
-        "borsh",
-        "@solana/spl-token",
-        "bn.js",
-        "buffer",
-        "@solana/buffer-layout-utils",
-        "@solana/buffer-layout",
-      ],
-    }),
-    commonjs(),
-    inject({
-      Buffer: ["buffer", "Buffer"],
-    }),
     typescript({
       tsconfig: "./tsconfig.json",
       declaration: false,
       outDir: null,
       declarationDir: null,
     }),
-    babel({ babelHelpers: "bundled" }),
-    json(),
-    replace({
-      "process.env.NODE_ENV": JSON.stringify("production"),
-      preventAssignment: false,
-    }),
-    terser(),
     visualizer(),
   ],
-  treeshake: {
-    moduleSideEffects: false,
-    preset: "smallest",
-  },
-  onwarn: function (warning, handler) {
-    if (warning.code === "THIS_IS_UNDEFINED") return;
-    handler(warning);
-  },
+
+  treeshake: true,
 };
