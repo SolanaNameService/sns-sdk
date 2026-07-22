@@ -2,15 +2,16 @@
 
 This is a breaking release of `@bonfida/spl-name-service`.
 
-Use this changelog as a migration guide from v3 to v4. The main migration work is:
+Use this changelog as a migration guide from v3 to v4.
 
-- pass explicit TLD suffixes to high-level domain APIs
-- pass TLD-trimmed names to low-level synchronous derivation helpers
-- use `.sns` domains for write APIs
-- account for the `.sol` support cutoff
-- update renamed bindings, utilities, and constants
-- update owner-domain queries and their return types
-- migrate records to the v4 record API
+## Table of contents
+
+1. [Domain suffix handling](#1-domain-suffix-handling)
+2. [Renamed public APIs](#2-renamed-public-apis)
+3. [Registration migration](#3-registration-migration)
+4. [Transfer migration](#4-transfer-migration)
+5. [Record migration](#5-record-migration)
+6. [Removed APIs and modules](#6-removed-apis-and-modules)
 
 ## 1. Domain suffix handling
 
@@ -374,7 +375,7 @@ Do not pass `.sol` domains to record write or validation APIs.
 
 For new code, prefer the high-level record APIs: `getRecord`, `getMultipleRecords`, `createRecord`, `updateRecord`, `deleteRecord`, `serializeRecordContent`, and `deserializeRecordContent`.
 
-## 6. Removed deprecated APIs and modules
+## 6. Removed APIs and modules
 
 The deprecated JS modules under `src/deprecated/*` were removed.
 
