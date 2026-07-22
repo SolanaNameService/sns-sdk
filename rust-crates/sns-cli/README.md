@@ -40,7 +40,7 @@ sns resolve --help
 
 ## Runtime Model
 
-The CLI needs network access to a Solana JSON-RPC endpoint. Set the `RPC_URL` environment variable, or use the command-local `-u <URL>` or `--url <URL>` option to override it for one invocation. The CLI does not read Solana CLI configuration.
+The CLI needs network access to a Solana JSON-RPC endpoint. It selects the endpoint in this order: the command-local `-u <URL>` or `--url <URL>` option, the `RPC_URL` environment variable, then the public mainnet endpoint. The CLI does not read Solana CLI configuration.
 
 Changing `--url` changes only the RPC transport. It does not change the mainnet program IDs, payment path, or explorer links compiled into this executable. A local keypair JSON file is required only for commands that sign and submit writes. Public-key inputs are base58-encoded Solana public keys.
 
@@ -54,7 +54,7 @@ All domain arguments are canonical, lowercase, suffixed `.sns` names, such as `m
 
 ### Resolve A Domain
 
-Resolve an owner using the endpoint configured in `RPC_URL`:
+Resolve an owner using the selected RPC endpoint:
 
 ```bash
 sns resolve mydomain.sns

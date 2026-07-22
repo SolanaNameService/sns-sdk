@@ -199,13 +199,17 @@ pub enum CountSubCommand {
     },
 }
 
-const RPC_URL: &str = "https://api.mainnet-beta.solana.com";
+const DEFAULT_RPC_URL: &str = "https://api.mainnet-beta.solana.com";
+
+fn select_rpc_url(cli_url: Option<String>, env_url: Option<String>) -> String {
+    cli_url
+        .or_else(|| env_url.filter(|url| !url.trim().is_empty()))
+        .unwrap_or_else(|| DEFAULT_RPC_URL.to_string())
+}
 
 fn get_rpc_client(url: Option<String>) -> RpcClient {
-    match url {
-        Some(url) => RpcClient::new(url),
-        _ => RpcClient::new(RPC_URL.to_string()),
-    }
+    let env_url = std::env::var("RPC_URL").ok();
+    RpcClient::new(select_rpc_url(url, env_url))
 }
 
 fn display_reverse_domain(domain: &str) -> String {
