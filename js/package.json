@@ -147,9 +147,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Bonfida/sns-sdk"
+    "url": "https://github.com/SolanaNameService/sns-sdk"
   },
-  "homepage": "https://guide.sns.id",
+  "homepage": "https://dev.sns.id",
   "scripts": {
     "dev": "tsc && node --trace-warnings dist/test.js",
     "build": "rollup -c",

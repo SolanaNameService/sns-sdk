@@ -84,7 +84,7 @@
     "type": "git",
     "url": "git+https://github.com/SolanaNameService/sns-sdk.git"
   },
-  "homepage": "https://guide.sns.id",
+  "homepage": "https://dev.sns.id",
   "publishConfig": {
     "access": "public"
   },

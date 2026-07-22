@@ -28,8 +28,6 @@ The proxy exposes selected [`@bonfida/spl-name-service`](../js/) operations over
 
 All application endpoints are `GET` requests. There is no application authentication, and CORS is permissive (`Access-Control-Allow-Origin: *`). The Worker accepts `OPTIONS` through its CORS middleware; framework-generated `404` and `405` responses are not guaranteed to use the API envelope below.
 
-`GET /` is a service-root exception: it returns the plain-text message `Visit https://github.com/Bonfida/sns-sdk`, rather than an API JSON envelope.
-
 Domain path and query values are **TLD-less**. Supply `mydomain`, not `mydomain.sns`; routes append `.sns` unless their name explicitly says `Sol`. Values are trimmed and lowercased and must contain either one label (`mydomain`) or two non-empty labels (`sub.mydomain`). A value such as `mydomain.sns` is accepted as a two-label input and is treated as `mydomain.sns.sns` on an SNS route; do not include a final TLD in a proxy domain value. Registration and subdomain-listing inputs have stricter one-label and two-label requirements, respectively.
 
 `owner`, `buyer`, `pubkey`, `referrer`, `mint`, and CSV owner values are base58 Solana public keys. Every RPC-backed route accepts an optional `rpc` query parameter. A non-empty `rpc` takes precedence over the Worker `RPC_URL` binding; RPC connections use `processed` commitment. Deterministic derivation and type routes do not need an RPC endpoint.

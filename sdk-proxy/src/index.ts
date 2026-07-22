@@ -12,7 +12,9 @@ const app = new Hono<Env>();
 
 app.use("*", logger());
 app.use("/*", cors({ origin: "*" }));
-app.get("/", async (c) => c.text("Visit https://github.com/Bonfida/sns-sdk"));
+app.get("/", async (c) =>
+  c.text("Visit https://github.com/SolanaNameService/sns-sdk"),
+);
 
 registerResolveRoutes(app);
 registerDomainRoutes(app);

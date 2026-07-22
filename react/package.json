@@ -15,10 +15,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Bonfida/sns-sdk.git",
+    "url": "https://github.com/SolanaNameService/sns-sdk.git",
     "directory": "react"
   },
-  "homepage": "https://github.com/Bonfida/sns-sdk/blob/main/react/README.md",
+  "homepage": "https://dev.sns.id",
   "scripts": {
     "build": "rollup -c",
     "typecheck": "tsc --noEmit",

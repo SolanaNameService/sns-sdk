@@ -3,7 +3,7 @@ name = "sns-cli"
 version = "3.0.0"
 edition = "2021"
 homepage = "https://www.sns.id/"
-repository = "https://github.com/Bonfida/sns-sdk"
+repository = "https://github.com/SolanaNameService/sns-sdk"
 description = "A utility CLI for interacting with the Solana Name Service"
 license = "MIT"
 
