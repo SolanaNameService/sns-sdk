@@ -60,7 +60,7 @@ function Resolve() {
 ### Read Verified Records
 
 ```tsx
-import { Record } from "@bonfida/spl-name-service";
+import { Record } from "@bonfida/spl-name-service/record";
 import { useRecords } from "@bonfida/sns-react";
 import type { Connection } from "@solana/web3.js";
 

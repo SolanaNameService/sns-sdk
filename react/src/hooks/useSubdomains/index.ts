@@ -1,6 +1,9 @@
 import type { Options } from "../../types";
 import { useQuery } from "@tanstack/react-query";
-import { findSubdomains, getSnsDomainKeySync } from "@bonfida/spl-name-service";
+import {
+  findSubdomains,
+  getSnsDomainKeySync,
+} from "@bonfida/spl-name-service/domain";
 import type { Connection } from "@solana/web3.js";
 
 /**

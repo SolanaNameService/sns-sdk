@@ -1,4 +1,4 @@
-import { getSnsDomainKeySync } from "@bonfida/spl-name-service";
+import { getSnsDomainKeySync } from "@bonfida/spl-name-service/domain";
 import { Connection, PublicKey } from "@solana/web3.js";
 import { act } from "react";
 

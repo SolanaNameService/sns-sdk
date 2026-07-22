@@ -1,4 +1,4 @@
-import { Record } from "@bonfida/spl-name-service";
+import { Record } from "@bonfida/spl-name-service/record";
 import { Connection } from "@solana/web3.js";
 
 import { useProfilePic } from "../src/hooks/useProfilePic";

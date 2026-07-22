@@ -2,7 +2,7 @@ import {
   getMultipleRecords,
   type Record,
   type RecordResult,
-} from "@bonfida/spl-name-service";
+} from "@bonfida/spl-name-service/record";
 import type { Connection } from "@solana/web3.js";
 import { useQuery } from "@tanstack/react-query";
 

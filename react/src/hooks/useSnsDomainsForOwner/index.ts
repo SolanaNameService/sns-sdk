@@ -1,7 +1,7 @@
 import {
   getSnsDomainsForOwner,
   type SnsDomain,
-} from "@bonfida/spl-name-service";
+} from "@bonfida/spl-name-service/address";
 import type { Connection, PublicKey } from "@solana/web3.js";
 import { useQuery } from "@tanstack/react-query";
 

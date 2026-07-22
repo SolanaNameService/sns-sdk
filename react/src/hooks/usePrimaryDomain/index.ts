@@ -1,7 +1,5 @@
-import {
-  getPrimaryDomain,
-  PrimaryDomainNotFoundError,
-} from "@bonfida/spl-name-service";
+import { getPrimaryDomain } from "@bonfida/spl-name-service";
+import { PrimaryDomainNotFoundError } from "@bonfida/spl-name-service/errors";
 import type { Connection, PublicKey } from "@solana/web3.js";
 import { useQuery } from "@tanstack/react-query";
 

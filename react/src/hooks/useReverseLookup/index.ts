@@ -1,6 +1,6 @@
 import type { Options } from "../../types";
 import { useQuery } from "@tanstack/react-query";
-import { reverseLookup } from "@bonfida/spl-name-service";
+import { reverseLookup } from "@bonfida/spl-name-service/domain";
 import type { Connection, PublicKey } from "@solana/web3.js";
 
 /**

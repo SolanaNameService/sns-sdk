@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { resolve } from "@bonfida/spl-name-service";
+import { resolve } from "@bonfida/spl-name-service/domain";
 import type { Connection, PublicKey } from "@solana/web3.js";
 import type { Options } from "../../types";
 

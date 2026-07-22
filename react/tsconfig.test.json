@@ -4,7 +4,21 @@
     "module": "CommonJS",
     "moduleResolution": "Node",
     "jsx": "react-jsx",
-    "verbatimModuleSyntax": false
+    "verbatimModuleSyntax": false,
+    "paths": {
+      "@bonfida/spl-name-service/address": [
+        "./node_modules/@bonfida/spl-name-service/dist/cjs/address/index.d.cts"
+      ],
+      "@bonfida/spl-name-service/domain": [
+        "./node_modules/@bonfida/spl-name-service/dist/cjs/domain/index.d.cts"
+      ],
+      "@bonfida/spl-name-service/errors": [
+        "./node_modules/@bonfida/spl-name-service/dist/cjs/errors.d.cts"
+      ],
+      "@bonfida/spl-name-service/record": [
+        "./node_modules/@bonfida/spl-name-service/dist/cjs/record/index.d.cts"
+      ]
+    }
   },
   "include": ["src/**/*.ts", "tests/**/*.ts", "tests/**/*.tsx"]
 }
