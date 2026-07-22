@@ -2,15 +2,20 @@
 
 This is a breaking release of `sns-sdk`.
 
-Use this changelog as a migration guide from v1 to v2. The main migration work is:
+Use this changelog as a migration guide from v1 to v2.
 
-- pass full domain names with an explicit suffix to read APIs, and use `.sns` (bare names are rejected)
-- move key derivation from `get_domain_key` / `get_domain_key_with_parent` to `get_sns_domain_key`
-- update renamed resolve, record, primary-domain, and NFT helpers, and fix the imports they moved to
-- switch resolution to the new `resolve` return type (`Pubkey` instead of `Option<Pubkey>`)
-- switch V2 record parsing to `decode_record_v2_fields(...).parse_content(record)`
-- switch registration to the synchronous `bindings::register_domain::register_domain` builder that returns `Vec<Instruction>`
-- plan for the `.sol` read cutoff: migrate SNS owner and record lookups to `.sns`
+## Table of contents
+
+1. [Domain suffix handling](#1-domain-suffix-handling)
+2. [.sol resolution transition](#2-sol-resolution-transition)
+3. [Renamed public APIs](#3-renamed-public-apis)
+4. [Blocking and non-blocking modules](#4-blocking-and-non-blocking-modules)
+5. [Resolve migration](#5-resolve-migration)
+6. [Record migration](#6-record-migration)
+7. [Domain registration migration](#7-domain-registration-migration)
+8. [Tokenized domain migration](#8-tokenized-domain-migration)
+9. [Primary domain migration](#9-primary-domain-migration)
+10. [Removed APIs](#10-removed-apis)
 
 ## 1. Domain suffix handling
 
@@ -128,7 +133,7 @@ name.sol before cutoff           -> legacy SNS-backed fallback
 name.sol at/after cutoff         -> unsupported
 ```
 
-Native .sol resolution backed by the SRS registrar is expected in a future SDK update.
+Native .sol resolution backed by the SRS registrar will be enabled in a future SDK update.
 
 ## 3. Renamed public APIs
 
