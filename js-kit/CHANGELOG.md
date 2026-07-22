@@ -2,24 +2,24 @@
 
 This is a breaking release of `@solana-name-service/sns-sdk-kit`.
 
-Use this changelog as a migration guide from v0.10.0 to v1.0.0. The main migration work is:
+Use this changelog as a migration guide from v0.10.0 to v1.0.0.
 
-- pass explicit `.sns` or `.sol` suffixes to read APIs
-- use canonical lowercase `.sns` domains for write APIs
-- update renamed public APIs and instruction builders
-- migrate record validation helpers to the new explicit names
-- remove the `rpc` parameter from `registerDomain` calls
-- remove imports of deleted unused error exports
+## Table of contents
+
+1. [Domain suffix handling](#1-domain-suffix-handling)
+2. [Renamed public APIs](#2-renamed-public-apis)
+3. [Record reads and validation](#3-record-reads-and-validation)
+4. [Instruction builders](#4-instruction-builders)
 
 ## 1. Domain suffix handling
 
-v1 standardizes domain inputs across the SDK. Public domain APIs no longer accept ambiguous bare names like `mydomain` unless they are low-level raw name-registry APIs.
+v1 standardizes domain inputs across the SDK. High-level domain APIs require full suffixed names, while low-level address derivation and raw name-registry APIs continue to use TLD-trimmed or raw names.
 
-### Read APIs
+### High-level read APIs
 
-Read and key-derivation APIs now require a full domain name with a supported suffix.
+High-level read APIs now require a full domain name with a supported suffix.
 
-Action required: update any bare domain strings passed to read APIs to include `.sns` or `.sol`.
+Action required: update any bare domain strings passed to high-level read APIs to include `.sns` or `.sol`.
 
 Use:
 
@@ -30,18 +30,15 @@ Use:
 "sub.mydomain.sol";
 ```
 
-Do not use:
-
-```ts
-"mydomain";
-"sub.mydomain";
-```
-
 Bare names now throw an unsupported TLD error.
 
-Read APIs accept both `.sns` and `.sol`. In v1, `.sol` is an alias for the `.sns` derivation and resolution path for compatibility. There is no separate `.sol` implementation in this release.
+This applies to:
 
-This applies to read and key-derivation APIs such as `resolve`, `getDomainAddress`, `getDomainOwner`, `getDomainRecord`, `getDomainRecords`, `getSubdomains`, `getRecordV1Address`, and `getRecordV2Address`.
+- `resolve`
+- `getDomainOwner`
+- `getDomainRecord`
+- `getDomainRecords`
+- `getSubdomains`
 
 Example:
 
@@ -49,9 +46,45 @@ Example:
 await resolve({ rpc, domain: "mydomain.sns" });
 await resolve({ rpc, domain: "mydomain.sol" });
 
-await getDomainAddress({ domain: "sub.mydomain.sns" });
-await getDomainAddress({ domain: "sub.mydomain.sol" });
+await getDomainOwner({ rpc, domain: "mydomain.sns" });
+await getSubdomains({ rpc, domain: "mydomain.sns" });
 ```
+
+Before finalized slot `452825395`, high-level `.sol` reads use the legacy SNS-backed compatibility path. At or after that slot, `.sol` reads throw `UnsupportedTldError`.
+
+Native SRS-backed `.sol` resolution is not enabled in this release.
+
+### Address derivation APIs
+
+Low-level address derivation APIs continue to require TLD-trimmed names. They derive account addresses and do not perform RPC-based TLD support or cutoff checks.
+
+This applies to:
+
+- `getSnsDomainAddress`
+- `getRecordV1Address`
+- `getRecordV2Address`
+- `getSrsDomainAddress`
+
+Example:
+
+```ts
+await getSnsDomainAddress({ domain: "mydomain" });
+await getSnsDomainAddress({ domain: "sub.mydomain" });
+
+await getRecordV1Address({
+  domain: "mydomain",
+  record: Record.SOL,
+});
+
+await getRecordV2Address({
+  domain: "sub.mydomain",
+  record: Record.Url,
+});
+
+await getSrsDomainAddress({ domain: "mydomain" });
+```
+
+`getSnsDomainAddress`, `getRecordV1Address`, and `getRecordV2Address` derive accounts in the SNS account model. `getSrsDomainAddress` derives an SRS address only; it does not enable high-level SRS resolution.
 
 ### Write APIs
 
@@ -224,9 +257,3 @@ The unused create instruction variants were removed:
 - `createV2Instruction`
 
 For new code, prefer the binding helpers such as `registerDomain`, `transferDomain`, `createSubdomain`, `createRecord`, `updateRecord`, and `deleteRecord` unless you need to compose instructions manually.
-
-## 5. Removed unused error exports
-
-Unused error classes and their matching `ErrorType` enum members were removed from the public error surface. These errors were only re-exported and were not used by the SDK implementation or tests.
-
-Most applications are unaffected unless they imported these unused error symbols directly. If your application did, remove those imports or replace them with application-specific errors.
