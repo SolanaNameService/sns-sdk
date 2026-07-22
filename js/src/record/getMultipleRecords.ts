@@ -1,11 +1,11 @@
-import { Record as SnsRecord, Validation } from "@bonfida/sns-records";
+import { Record as SnsRecord } from "@bonfida/sns-records";
 import { Connection, PublicKey } from "@solana/web3.js";
 
 import { NameRegistryState } from "../state";
 import { Record } from "../types/record";
 import { assertTldSupported } from "../utils/assertTldSupported";
 import { getSnsDomainKeySync } from "../utils/getSnsDomainKeySync";
-import { ETH_ROA_RECORDS, GUARDIANS, SELF_SIGNED } from "./const";
+import { ETH_ROA_RECORDS, GUARDIANS, SELF_SIGNED, Validation } from "./const";
 import { deserializeRecordContent } from "./deserializeRecordContent";
 import { getRecordV2Key } from "./getRecordV2Key";
 

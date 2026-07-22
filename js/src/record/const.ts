@@ -1,6 +1,12 @@
 import { Record } from "../types/record";
 import { PublicKey } from "@solana/web3.js";
-export { Validation } from "@bonfida/sns-records";
+
+export enum Validation {
+  None = 0,
+  Solana = 1,
+  Ethereum = 2,
+  UnverifiedSolana = 3,
+}
 
 /**
  * A map that associates each record type with a public key, known as guardians.

@@ -21,13 +21,25 @@ The SDK has a peer dependency on `@solana/web3.js` `^1.98.2`. Supply a web3.js C
 
 Read APIs fetch and decode account data. Mutation bindings return `TransactionInstruction`, `Promise<TransactionInstruction>`, or `Promise<TransactionInstruction[]>`. Add the returned instruction(s) to a transaction, set its fee payer and recent blockhash, collect the signatures required by its account metas, and submit that transaction through your application.
 
+### Subpath Imports
+
+While the root entry point remains available, applications can also use subpath imports:
+
+```ts
+import { getPrimaryDomain } from "@bonfida/spl-name-service/address";
+import { resolve } from "@bonfida/spl-name-service/domain";
+import { getMultipleRecords, Record } from "@bonfida/spl-name-service/record";
+```
+
+Supported subpaths are `address`, `bindings`, `constants`, `domain`, `errors`, `instructions`, `nft`, `record`, `states`, `twitter`, `types`, and `utils`.
+
 ## Quick Start
 
 ### Resolve A Domain
 
 ```ts
 import { Connection } from "@solana/web3.js";
-import { resolve } from "@bonfida/spl-name-service";
+import { resolve } from "@bonfida/spl-name-service/domain";
 
 const connection = new Connection(process.env.RPC_URL!);
 const owner = await resolve(connection, "mydomain.sns");
@@ -39,7 +51,7 @@ console.log(owner.toBase58());
 
 ```ts
 import { Connection, PublicKey } from "@solana/web3.js";
-import { getPrimaryDomain } from "@bonfida/spl-name-service";
+import { getPrimaryDomain } from "@bonfida/spl-name-service/address";
 
 const connection = new Connection(process.env.RPC_URL!);
 const wallet = new PublicKey("<WALLET_ADDRESS>");
@@ -52,7 +64,7 @@ console.log(`${primaryDomain.reverse}.sns`, primaryDomain.stale);
 
 ```ts
 import { Connection, PublicKey } from "@solana/web3.js";
-import { getSnsDomainsForOwner } from "@bonfida/spl-name-service";
+import { getSnsDomainsForOwner } from "@bonfida/spl-name-service/address";
 
 const connection = new Connection(process.env.RPC_URL!);
 const wallet = new PublicKey("<WALLET_ADDRESS>");

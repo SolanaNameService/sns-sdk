@@ -12,6 +12,7 @@ Use this changelog as a migration guide from v3 to v4.
 4. [Transfer migration](#4-transfer-migration)
 5. [Record migration](#5-record-migration)
 6. [Removed APIs and modules](#6-removed-apis-and-modules)
+7. [Package entrypoints and subpaths](#7-package-entrypoints-and-subpaths)
 
 ## 1. Domain suffix handling
 
@@ -389,3 +390,16 @@ The following legacy exports were also removed or replaced:
 - `resolveSolRecordV1`
 - `resolveSolRecordV2`
 - legacy per-record helper exports such as `getUrlRecord`, `getDiscordRecord`, `getGithubRecord`, and similar helpers
+
+## 7. Package entrypoints and subpaths
+
+The root entry point remains fully supported, but V4 introduces curated category subpaths. You can now use subpath imports to target specific modules:
+
+```ts
+import { getPrimaryDomain } from "@bonfida/spl-name-service/address";
+import { resolve } from "@bonfida/spl-name-service/domain";
+import { getRecord, Record } from "@bonfida/spl-name-service/record";
+```
+
+The available subpath entrypoints are:
+`address`, `bindings`, `constants`, `domain`, `errors`, `instructions`, `nft`, `record`, `states`, `twitter`, `types`, and `utils`.

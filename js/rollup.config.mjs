@@ -1,5 +1,8 @@
 import { createRequire } from "node:module";
+
 import typescript from "@rollup/plugin-typescript";
+import del from "rollup-plugin-delete";
+import { dts } from "rollup-plugin-dts";
 import { visualizer } from "rollup-plugin-visualizer";
 
 const require = createRequire(import.meta.url);
@@ -12,15 +15,29 @@ const externalPackages = new Set([
 
 const external = (id) => {
   for (const packageName of externalPackages) {
-    if (id === packageName || id.startsWith(`${packageName}/`)) {
-      return true;
-    }
+    if (id === packageName || id.startsWith(`${packageName}/`)) return true;
   }
-
   return false;
 };
 
+const input = {
+  index: "src/index.ts",
+  "address/index": "src/address/index.ts",
+  "bindings/index": "src/bindings/index.ts",
+  constants: "src/constants.ts",
+  "domain/index": "src/domain/index.ts",
+  errors: "src/error.ts",
+  "instructions/index": "src/instructions/index.ts",
+  "nft/index": "src/nft/index.ts",
+  "record/index": "src/record/index.ts",
+  "states/index": "src/states/index.ts",
+  "twitter/index": "src/twitter/index.ts",
+  "types/index": "src/types/index.ts",
+  "utils/index": "src/utils/index.ts",
+};
+
 const sharedOutput = {
+  dir: "dist",
   sourcemap: true,
   exports: "named",
   preserveModules: true,
@@ -28,47 +45,62 @@ const sharedOutput = {
   generatedCode: "es2015",
 };
 
-export default {
-  input: "src/index.ts",
-
+const declarationEntries = Object.entries(input);
+const declarationConfigs = declarationEntries.map(([name, source], index) => ({
+  input: `dist/types-internal/${source.replace(/^src\//, "").replace(/\.ts$/, ".d.ts")}`,
   external,
-
   output: [
     {
-      ...sharedOutput,
-      dir: "dist/esm",
-      format: "esm",
-      entryFileNames: "[name].mjs",
-      chunkFileNames: "[name]-[hash].mjs",
-      plugins: [
-        visualizer({
-          filename: "stats-esm.html",
-        }),
-      ],
+      file: `dist/esm/${name}.d.ts`,
+      format: "es",
     },
     {
-      ...sharedOutput,
-      dir: "dist/cjs",
-      format: "cjs",
-      entryFileNames: "[name].cjs",
-      chunkFileNames: "[name]-[hash].cjs",
-      plugins: [
-        visualizer({
-          filename: "stats-cjs.html",
-        }),
-      ],
+      file: `dist/cjs/${name}.d.cts`,
+      format: "es",
     },
   ],
-
   plugins: [
-    typescript({
-      tsconfig: "./tsconfig.json",
-      declaration: false,
-      outDir: null,
-      declarationDir: null,
-    }),
-    visualizer(),
+    dts(),
+    ...(index === declarationEntries.length - 1
+      ? [
+          del({
+            targets: "dist/types-internal",
+            hook: "writeBundle",
+          }),
+        ]
+      : []),
   ],
+}));
 
-  treeshake: true,
-};
+export default [
+  {
+    input,
+    external,
+    output: [
+      {
+        ...sharedOutput,
+        format: "esm",
+        entryFileNames: "esm/[name].mjs",
+        chunkFileNames: "esm/[name]-[hash].mjs",
+        plugins: [visualizer({ filename: "stats-esm.html" })],
+      },
+      {
+        ...sharedOutput,
+        format: "cjs",
+        entryFileNames: "cjs/[name].cjs",
+        chunkFileNames: "cjs/[name]-[hash].cjs",
+        plugins: [visualizer({ filename: "stats-cjs.html" })],
+      },
+    ],
+    plugins: [
+      del({
+        targets: "dist",
+        runOnce: true,
+      }),
+      typescript({ tsconfig: "./tsconfig.json" }),
+      visualizer(),
+    ],
+    treeshake: true,
+  },
+  ...declarationConfigs,
+];

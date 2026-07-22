@@ -1,6 +1,6 @@
 import { Buffer } from "buffer";
 
-import { Record as RecordV2, Validation } from "@bonfida/sns-records";
+import { Record as RecordV2 } from "@bonfida/sns-records";
 import { ed25519 } from "@noble/curves/ed25519";
 import {
   Connection,
@@ -19,6 +19,7 @@ import {
 import { NAME_TOKENIZER_ID } from "../nft/const";
 import { retrieveNftOwnerV2 } from "../nft/retrieveNftOwnerV2";
 import { NftRecord, Tag } from "../nft/state";
+import { Validation } from "../record/const";
 import { getRecordV1Key } from "../record/getRecordV1Key";
 import { getRecordV2Key } from "../record/getRecordV2Key";
 import { NameRegistryState } from "../state";

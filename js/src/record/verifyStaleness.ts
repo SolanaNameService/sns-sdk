@@ -1,10 +1,11 @@
-import { Record as SnsRecord, Validation } from "@bonfida/sns-records";
+import { Record as SnsRecord } from "@bonfida/sns-records";
 import { Connection, PublicKey } from "@solana/web3.js";
 
 import { NameRegistryState } from "../state";
 import { Record } from "../types/record";
 import { assertTldSupported } from "../utils/assertTldSupported";
 import { getSnsDomainKeySync } from "../utils/getSnsDomainKeySync";
+import { Validation } from "./const";
 import { getRecordV2Key } from "./getRecordV2Key";
 
 /**

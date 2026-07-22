@@ -1,13 +1,10 @@
 import { Buffer } from "buffer";
 
-import {
-  SNS_RECORDS_ID,
-  validateEthSignature,
-  Validation,
-} from "@bonfida/sns-records";
+import { SNS_RECORDS_ID, validateEthSignature } from "@bonfida/sns-records";
 import { PublicKey } from "@solana/web3.js";
 
 import { NAME_PROGRAM_ID } from "../constants";
+import { Validation } from "../record/const";
 import { Record } from "../types/record";
 import { _parseSnsDomain } from "../utils/parseSnsDomain";
 import { _getRecordAndParentKey } from "./recordValidation";

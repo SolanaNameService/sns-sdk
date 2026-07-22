@@ -3,11 +3,7 @@ import type { Connection, PublicKey } from "@solana/web3.js";
 import { SOL_SRS_RESOLUTION_ENABLED } from "../config";
 import { UnsupportedTldError } from "../error";
 import { assertTldSupported } from "../utils/assertTldSupported";
-import {
-  parseSupportedTld,
-  SNS_TLD,
-  SOL_TLD,
-} from "../utils/tld";
+import { parseSupportedTld, SNS_TLD, SOL_TLD } from "../utils/tld";
 import { resolveSns } from "./resolveSns";
 import { resolveSol } from "./resolveSol";
 
