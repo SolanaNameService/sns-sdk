@@ -1,108 +1,184 @@
-<h1 align="center">SNS React</h1>
-<br />
-
 <p align="center">
-<img width="250" src="https://v2.sns.id/assets/logo/brand.svg"/>
+  <img width="200" src="https://www.sns.id/assets/logo/brand.svg" alt="SNS logo" />
 </p>
 
-<p align="center">
-<a href="https://twitter.com/sns">
-<img src="https://img.shields.io/twitter/url?label=SNS&style=social&url=https%3A%2F%2Ftwitter.com%2Fsns">
-</a>
-</p>
+# SNS React
 
-<div style="display: flex; justify-content: center; align-items: center;">
-<a style="margin:0 5px" href="https://www.npmjs.com/package/@bonfida/sns-react"><img src="https://img.shields.io/npm/v/@bonfida/sns-react.svg?style=flat"></a>
-<a style="margin:0 5px" href="https://www.npmjs.com/package/@bonfida/sns-react"><img src="https://img.shields.io/npm/dm/@bonfida/sns-react.svg"></a>
-<a style="margin:0 5px" href="https://github.com/SolanaNameService/sns-sdk"><img src="https://img.shields.io/github/stars/SolanaNameService/sns-sdk"></a>
-<a style="margin:0 5px" href="https://github.com/SolanaNameService/sns-sdk"><img src="https://img.shields.io/github/issues/SolanaNameService/sns-sdk"></a>
-</div>
+[![npm](https://img.shields.io/npm/v/@bonfida%2Fsns-react)](https://www.npmjs.com/package/@bonfida/sns-react)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE.md)
 
-This library provides a set of reusable React hooks to help make your components more efficient and easier to read.
+React Query hooks for the Solana Name Service JavaScript SDK v4. The package provides a focused set of read helpers with stable cache keys and safe record handling.
 
-<br />
-<h2 align="center">Installation</h2>
-<br />
+## Installation
+
+Install SNS React with its peers:
 
 ```bash
-npm install @bonfida/sns-react
+npm install @bonfida/sns-react @bonfida/spl-name-service@^4.0.0 @solana/web3.js@^1.98.2 @tanstack/react-query@^5.0.0 react
 ```
 
-or
+SNS React supports React 18 and 19. The SNS JS SDK is a peer dependency so the application and hooks use one compatible v4 SDK instance.
 
-```bash
-yarn add @bonfida/sns-react
+## Setup
+
+Create a TanStack Query client near the application root:
+
+```tsx
+import type { PropsWithChildren } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
+
+export function AppProviders({ children }: PropsWithChildren) {
+  return (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  );
+}
 ```
 
-<br />
-<h2 align="center">Peer Dependencies</h2>
-<br />
+Pass a web3.js `Connection` to each hook. SNS React does not create a global RPC client or wallet provider.
 
-This library depends on the following peer dependencies:
+## Quick Start
 
-- `@tanstack/react-query`
-- `@solana/web3.js`
+### Resolve A Domain
 
-It utilizes React Query version 5, making all `useQuery` functionalities available (with the exception of `queryFn`) across all hooks. If you're not already using `@tanstack/react-query`, you'll need to install it, then initialize a query client and encapsulate your application with a provider. For more information, visit the [Tanstack Query documentation](https://tanstack.com/query/latest).
+```tsx
+import { useResolve } from "@bonfida/sns-react";
+import { Connection } from "@solana/web3.js";
 
-<br />
-<h2 align="center">Available hooks</h2>
-<br />
+const connection = new Connection(process.env.RPC_URL!);
 
-Below is a brief description of the hooks available in this library. Detailed usage and API guides are available in each hook's respective documentation.
+function Resolve() {
+  const target = useResolve(connection, "example.sns");
 
-### `useDomainOwner`
+  if (target.isPending) return <p>Loading...</p>;
+  if (target.isError) return <p>{target.error.message}</p>;
+  return <p>{target.data.toBase58()}</p>;
+}
+```
 
-This hook can be used to resolve the owner of a domain name.
+### Read Verified Records
 
-### `useDomainsForOwner`
+```tsx
+import { Record } from "@bonfida/spl-name-service";
+import { useRecords } from "@bonfida/sns-react";
+import type { Connection } from "@solana/web3.js";
 
-This hook can be used to retrieve all the domains owned by a wallet
+function Records({ connection }: { connection: Connection }) {
+  const records = useRecords(
+    connection,
+    "example.sns",
+    [Record.Url, Record.Email],
+    { deserialize: true },
+  );
 
-### `useDomainSize`
+  return (
+    <ul>
+      {records.data?.map((record, index) => (
+        <li key={index}>{record?.deserializedContent ?? "Unavailable"}</li>
+      ))}
+    </ul>
+  );
+}
+```
 
-This hook can be used to retrive the size of a domain name account
+`useRecords` preserves request order. An entry is `undefined` when the account is missing or fails a required verification check.
+
+## Domain Inputs
+
+| Hook                                        | Input                                    | Notes                                                            |
+| ------------------------------------------- | ---------------------------------------- | ---------------------------------------------------------------- |
+| `useResolve`, `useRecords`, `useProfilePic` | Full domain such as `example.sns`        | Inherits JS v4 support for `.sns` and transitional `.sol` reads. |
+| `useSubdomains`                             | TLD-trimmed SNS parent such as `example` | Passed to v4 `getSnsDomainKeySync`. Do not include `.sns`.       |
+| `useSnsDomainsForOwner`, `usePrimaryDomain` | Wallet `PublicKey`                       | Nullish input disables the query.                                |
+| `useReverseLookup`                          | Domain account `PublicKey`               | Nullish input disables the query.                                |
+
+High-level `.sol` reads use the JS SDK compatibility path only before finalized slot `452825395`. At or after that slot they throw `UnsupportedTldError`. SNS React does not extend that support.
+
+## Record Safety
+
+JS SDK v4 `getMultipleRecords` verifies record staleness and Right of Association (ROA). SNS React returns a record only when:
+
+```ts
+result.verified.staleness === true && result.verified.roa !== false;
+```
+
+`verified.roa` can be absent when the record type has no applicable ROA verifier. That is not a failed check. `verified.roa === false` is rejected.
+
+`useProfilePic` uses the same checks and returns verified, deserialized content or `null`.
+
+## API Reference
+
+### `useResolve`
+
+Resolves a full domain to its effective owner with v4 `resolve`.
+
+```ts
+useResolve(connection, domain, queryOptions?)
+```
+
+### `useSnsDomainsForOwner`
+
+Returns sorted v4 `SnsDomain[]` values with `{ domain, key }`. Results include directly registry-owned top-level domains with valid reverse records. Tokenized domains and subdomains are not included.
+
+```ts
+useSnsDomainsForOwner(connection, ownerPublicKey, queryOptions?)
+```
 
 ### `usePrimaryDomain`
 
-This hook can be used to retrieve the primary domain of a wallet if it exists. Previously known as `useFavoriteDomain`.
+Returns the native v4 `{ domain, reverse, stale }` result. A missing primary domain returns `null`; RPC and other SDK errors remain query errors.
 
-### `useProfilePic`
-
-This hook can be used to retrieve the profile picture of a domain name if it exists
-
-### `useRecords`
-
-This hook can be used to retrieve the content of multiple records v1 (deperecated)
-
-### `useRecordsV2`
-
-This hook can be used to retrieve the content of multiple records v2
-
-### `useReverseLookup`
-
-This hook can be used to retrieve the reverse of domain name from this public key
+```ts
+usePrimaryDomain(connection, ownerPublicKey, queryOptions?)
+```
 
 ### `useSubdomains`
 
-This hook can be used to retrieve the subdomains of .sol domain name
+Derives a parent account from a TLD-trimmed SNS name and returns its human-readable subdomains.
 
-### `useSuggestions`
+```ts
+useSubdomains(connection, "example", queryOptions?)
+```
 
-This hook can be used to generate unregistered domain suggestions related to the given domain
+### `useReverseLookup`
 
-### `useTopDomainsSales`
+Returns the reverse name for a domain account key.
 
-This hook can be used to retrieve the top domain sales for a given time window
+```ts
+useReverseLookup(connection, domainKey, queryOptions?)
+```
 
-<br />
-<h2 align="center">Contributing</h2>
-<br />
+### `useRecords`
 
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+Fetches, optionally deserializes, verifies, and filters multiple v4 records.
 
-<br />
-<h2 align="center">License</h2>
-<br />
+```ts
+useRecords(
+  connection,
+  domain,
+  records,
+  { deserialize?: boolean },
+  queryOptions?,
+)
+```
 
-SNS React is an open-source project licensed under [MIT](/LICENSE.md). Feel free to explore, expand, and improve!
+### `useProfilePic`
+
+Returns safe `Record.Pic` content or `null`.
+
+```ts
+useProfilePic(connection, domain, queryOptions?)
+```
+
+## Documentation
+
+- [Developer documentation](https://dev.sns.id/)
+- [SNS React v4 changelog](./CHANGELOG.md)
+- [JS SDK v4 README](../js/README.md)
+- [SDK monorepo overview](../README.md)
+- [SNS guide](https://guide.sns.id/)
+
+## License
+
+SNS React is licensed under the [MIT License](./LICENSE.md).
