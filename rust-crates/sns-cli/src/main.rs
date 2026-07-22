@@ -47,6 +47,25 @@ struct Cli {
     command: Commands,
 }
 
+const MIN_REGISTRATION_SPACE: u32 = 1_000;
+const MAX_REGISTRATION_SPACE: u32 = 10_000;
+
+fn parse_registration_space(value: &str) -> Result<u32, String> {
+    let space = value.parse::<u32>().map_err(|_| {
+        format!(
+            "Registration space must be an integer between {MIN_REGISTRATION_SPACE} and {MAX_REGISTRATION_SPACE} bytes"
+        )
+    })?;
+
+    if !(MIN_REGISTRATION_SPACE..=MAX_REGISTRATION_SPACE).contains(&space) {
+        return Err(format!(
+            "Registration space must be between {MIN_REGISTRATION_SPACE} and {MAX_REGISTRATION_SPACE} bytes"
+        ));
+    }
+
+    Ok(space)
+}
+
 #[derive(Debug, Subcommand)]
 enum Commands {
     #[command(
@@ -71,9 +90,11 @@ enum Commands {
         keypair_path: String,
         #[arg(
             required = true,
-            help = "The space to allocate for each domain (1kB to 10kB"
+            value_name = "BYTES",
+            value_parser = parse_registration_space,
+            help = "The number of bytes to allocate for each domain (1000 to 10000 inclusive)"
         )]
-        space: u64,
+        space: u32,
         #[arg(required = true, help = "The list of .sns domains to register")]
         domains: Vec<String>,
         #[arg(long, short, help = "Optional custom RPC URL")]
@@ -464,10 +485,6 @@ fn validate_registration_domain(domain: &str) -> Result<(), Box<dyn std::error::
     Ok(())
 }
 
-fn validate_registration_space(space: u64) -> Result<u32, Box<dyn std::error::Error>> {
-    Ok(u32::try_from(space).map_err(|_| anyhow!("Registration space must fit in a u32 value"))?)
-}
-
 fn build_register_instructions(domain: &str, space: u32, buyer: &Pubkey) -> InstructionResult {
     let buyer_token_account = get_associated_token_address(buyer, &USDC_MINT);
     Ok(register_domain(
@@ -484,10 +501,9 @@ async fn process_register(
     rpc_client: &RpcClient,
     keypair_path: &str,
     domains: Vec<String>,
-    space: u64,
+    space: u32,
 ) -> CliResult {
     let keypair = read_keypair_file(keypair_path)?;
-    let space = validate_registration_space(space)?;
     for domain in &domains {
         validate_registration_domain(domain)?;
     }

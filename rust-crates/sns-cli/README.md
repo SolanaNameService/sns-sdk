@@ -113,7 +113,7 @@ sns resolve mydomain.sns
 sns register [--url <URL>] <KEYPAIR_PATH> <SPACE> <DOMAIN>...
 ```
 
-Arguments: a signing keypair JSON path, allocation `SPACE` as an unsigned integer that fits in `u32`, and one or more eligible top-level `.sns` domains. The CLI does not enforce the 1-10 KiB range stated in its generated help; the registration program determines whether the requested allocation is accepted. `--url` selects the RPC endpoint.
+Arguments: a signing keypair JSON path, allocation `SPACE` between 1,000 and 10,000 bytes inclusive, and one or more eligible top-level `.sns` domains. `--url` selects the RPC endpoint.
 
 Output: after each submitted registration, a table row containing `Domain`, transaction signature, and a mainnet-oriented Explorer transaction link.
 
