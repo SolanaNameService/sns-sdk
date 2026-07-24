@@ -5,7 +5,10 @@ mod output;
 mod rpc;
 
 use clap::Parser;
-use cli::{Cli, Commands, CountCommand, RecordV2Command, RecordV2SubCommand};
+use cli::{
+    Cli, Commands, CountCommand, RecordV2Command, RecordV2SubCommand, SubRegistrarCommand,
+    SubRegistrarSubCommand,
+};
 use commands::{
     count::process_count_command,
     domains::{process_domains, process_lookup, process_resolve, process_reverse_lookup},
@@ -48,9 +51,11 @@ async fn run() -> commands::CliResult {
                 process_record_v2_get(&rpc_client, &domain, &record).await
             }
         },
-        Commands::GetSubRegistrarInfo { domain } => {
-            process_sub_registrar_info(&rpc_client, &domain).await
-        }
+        Commands::SubRegistrar(SubRegistrarCommand { cmd }) => match cmd {
+            SubRegistrarSubCommand::Get { domain } => {
+                process_sub_registrar_info(&rpc_client, &domain).await
+            }
+        },
         Commands::Count(CountCommand { cmd }) => process_count_command(&rpc_client, cmd).await,
     }
 }

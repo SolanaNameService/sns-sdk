@@ -81,7 +81,7 @@ sns domains <OWNER_PUBKEY>
 | `reverse-lookup`           | Find the reverse name for an account key       | Read only            |
 | `domains`                  | List directly owned top-level registry domains | Read only            |
 | `record-v2 get`            | Fetch and validate a V2 record                 | Read only            |
-| `get-sub-registrar-info`   | Print sub-registrar information                | Read only            |
+| `sub-registrar get`        | Print sub-registrar information                | Read only            |
 | `count registered-domains` | Count root SNS registry accounts               | Read only            |
 | `count sub-domains`        | Count subdomains and optionally rank parents   | Read only            |
 
@@ -214,12 +214,12 @@ pic SHDW POINT BSC INJ backpack A AAAA CNAME TXT BASE bio
 
 For convenience, the CLI also recognizes case-insensitive aliases for `EMAIL`, `URL`, `DISCORD`, `GITHUB`, `REDDIT`, `TWITTER`, `TELEGRAM`, `PIC`, `BACKPACK`, `BIO`, and `INJECTIVE` (for `INJ`).
 
-### `get-sub-registrar-info`
+### `sub-registrar get`
 
-**`get-sub-registrar-info`** — print sub-registrar information.
+**`sub-registrar get`** — print sub-registrar information.
 
 ```text
-sns [--url <URL>] get-sub-registrar-info <DOMAIN>
+sns [--url <URL>] sub-registrar get <DOMAIN>
 ```
 
 Arguments: one canonical `.sns` domain. `--url` selects the RPC endpoint.

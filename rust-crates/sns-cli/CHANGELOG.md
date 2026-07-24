@@ -10,6 +10,7 @@ Use this changelog as a migration guide from v2.1.0 to v3.0.0.
 2. [Resolution behavior](#2-resolution-behavior)
 3. [Primary-domain command migration](#3-primary-domain-command-migration)
 4. [Record command migration](#4-record-command-migration)
+5. [Sub-registrar command migration](#5-sub-registrar-command-migration)
 
 ## 1. Canonical `.sns` domain inputs
 
@@ -47,7 +48,7 @@ This applies to:
 - `burn`
 - `lookup`
 - `record-v2 get`
-- `get-sub-registrar-info`
+- `sub-registrar get`
 
 Before:
 
@@ -153,3 +154,24 @@ The following commands were removed without CLI replacements:
 
 **Action required:** Rename V2 reads to `record-v2 get` and pass canonical
 `.sns` domains. V1 records have been deprecated and should not longer be used.
+
+## 5. Sub-registrar command migration
+
+During unreleased v3 development, the sub-registrar inspection command was
+finalized as a nested command group:
+
+```text
+sns get-sub-registrar-info <DOMAIN>
+```
+
+becomes:
+
+```text
+sns sub-registrar get <DOMAIN.sns>
+```
+
+The old top-level spelling is no longer accepted. The command retains its
+diagnostic Rust debug output, which is not a stable machine-readable schema.
+
+**Action required:** Update scripts to use `sub-registrar get` and canonical
+`.sns` domains.

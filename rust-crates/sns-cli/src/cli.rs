@@ -114,10 +114,7 @@ pub(crate) enum Commands {
         owners: Vec<String>,
     },
     RecordV2(RecordV2Command),
-    GetSubRegistrarInfo {
-        #[arg(required = true, help = "The .sns domain to get information for")]
-        domain: String,
-    },
+    SubRegistrar(SubRegistrarCommand),
     Count(CountCommand),
 }
 
@@ -135,6 +132,21 @@ pub(crate) enum RecordV2SubCommand {
         domain: String,
         #[clap(long, help = "The record to fetch")]
         record: String,
+    },
+}
+
+#[derive(Debug, Args)]
+pub(crate) struct SubRegistrarCommand {
+    #[command(subcommand)]
+    pub(crate) cmd: SubRegistrarSubCommand,
+}
+
+#[derive(Debug, Subcommand)]
+pub(crate) enum SubRegistrarSubCommand {
+    #[command(about = "Get sub-registrar information")]
+    Get {
+        #[arg(required = true, help = "The .sns domain to get information for")]
+        domain: String,
     },
 }
 
@@ -198,5 +210,14 @@ mod tests {
         assert!(
             matches!(nested.command, Commands::RecordV2(RecordV2Command { cmd: RecordV2SubCommand::Get { domain, record } }) if domain == "bonfida.sns" && record == "url")
         );
+    }
+
+    #[test]
+    fn sub_registrar_get_replaces_legacy_top_level_command() {
+        let cli = Cli::try_parse_from(["sns", "sub-registrar", "get", "bonfida.sns"]).unwrap();
+        assert!(
+            matches!(cli.command, Commands::SubRegistrar(SubRegistrarCommand { cmd: SubRegistrarSubCommand::Get { domain } }) if domain == "bonfida.sns")
+        );
+        assert!(Cli::try_parse_from(["sns", "get-sub-registrar-info", "bonfida.sns"]).is_err());
     }
 }
