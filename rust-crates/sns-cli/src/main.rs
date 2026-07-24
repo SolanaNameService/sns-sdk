@@ -18,47 +18,40 @@ use rpc::get_rpc_client;
 
 #[tokio::main]
 async fn main() {
-    let args = Cli::parse();
-    let res = match args.command {
-        Commands::Resolve { domain, url } => process_resolve(&get_rpc_client(url), domain).await,
-        Commands::Domains { owners, url } => process_domains(&get_rpc_client(url), owners).await,
+    let Cli { url, command } = Cli::parse();
+    let rpc_client = get_rpc_client(url);
+    let res = match command {
+        Commands::Resolve { domain } => process_resolve(&rpc_client, domain).await,
+        Commands::Domains { owners } => process_domains(&rpc_client, owners).await,
         Commands::Burn {
             domain,
             keypair_path,
-            url,
-        } => process_burn(&get_rpc_client(url), &keypair_path, domain).await,
+        } => process_burn(&rpc_client, &keypair_path, domain).await,
         Commands::Transfer {
             domain,
             owner_keypair,
             new_owner,
-            url,
-        } => process_transfer(&get_rpc_client(url), domain, &owner_keypair, &new_owner).await,
-        Commands::Lookup { domain, url } => process_lookup(&get_rpc_client(url), domain).await,
-        Commands::ReverseLookup { key, url } => {
-            process_reverse_lookup(&get_rpc_client(url), &key).await
-        }
+        } => process_transfer(&rpc_client, domain, &owner_keypair, &new_owner).await,
+        Commands::Lookup { domain } => process_lookup(&rpc_client, domain).await,
+        Commands::ReverseLookup { key } => process_reverse_lookup(&rpc_client, &key).await,
         Commands::Register {
             domains,
             keypair_path,
             space,
-            url,
-        } => process_register(&get_rpc_client(url), &keypair_path, domains, space).await,
+        } => process_register(&rpc_client, &keypair_path, domains, space).await,
         Commands::SetPrimaryDomain {
             owner_keypair,
             domain,
-            url,
-        } => process_set_primary_domain(&get_rpc_client(url), &owner_keypair, &domain).await,
-        Commands::RecordV2(RecordV2Command { cmd, url }) => match cmd {
+        } => process_set_primary_domain(&rpc_client, &owner_keypair, &domain).await,
+        Commands::RecordV2(RecordV2Command { cmd }) => match cmd {
             RecordV2SubCommand::Get { domain, record } => {
-                process_record_v2_get(&get_rpc_client(url), &domain, &record).await
+                process_record_v2_get(&rpc_client, &domain, &record).await
             }
         },
-        Commands::GetSubRegistrarInfo { url, domain } => {
-            process_sub_registrar_info(&get_rpc_client(url), &domain).await
+        Commands::GetSubRegistrarInfo { domain } => {
+            process_sub_registrar_info(&rpc_client, &domain).await
         }
-        Commands::Count(CountCommand { cmd, url }) => {
-            process_count_command(&get_rpc_client(url), cmd).await
-        }
+        Commands::Count(CountCommand { cmd }) => process_count_command(&rpc_client, cmd).await,
     };
 
     if let Err(err) = res {

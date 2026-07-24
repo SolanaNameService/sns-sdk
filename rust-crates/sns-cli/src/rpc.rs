@@ -12,3 +12,25 @@ pub(crate) fn get_rpc_client(url: Option<String>) -> RpcClient {
     let env_url = std::env::var("RPC_URL").ok();
     RpcClient::new(select_rpc_url(url, env_url))
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn select_rpc_url_prefers_cli_then_nonempty_environment_then_default() {
+        assert_eq!(
+            select_rpc_url(
+                Some("https://cli.example".into()),
+                Some("https://env.example".into())
+            ),
+            "https://cli.example"
+        );
+        assert_eq!(
+            select_rpc_url(None, Some("https://env.example".into())),
+            "https://env.example"
+        );
+        assert_eq!(select_rpc_url(None, Some("  ".into())), DEFAULT_RPC_URL);
+        assert_eq!(select_rpc_url(None, None), DEFAULT_RPC_URL);
+    }
+}

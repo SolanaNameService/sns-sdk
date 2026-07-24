@@ -4,6 +4,8 @@ use clap::{Args, Parser, Subcommand};
 #[command(name = "sns")]
 #[command(about = "Solana Name Service CLI", long_about = None)]
 pub(crate) struct Cli {
+    #[arg(global = true, long, short, help = "Optional custom RPC URL")]
+    pub(crate) url: Option<String>,
     #[command(subcommand)]
     pub(crate) command: Commands,
 }
@@ -36,8 +38,6 @@ pub(crate) enum Commands {
     Resolve {
         #[arg(required = true, help = "The list of .sns domains to resolve")]
         domain: Vec<String>,
-        #[arg(long, short, help = "Optional custom RPC URL")]
-        url: Option<String>,
     },
     #[command(
         arg_required_else_help = true,
@@ -53,8 +53,6 @@ pub(crate) enum Commands {
         space: u32,
         #[arg(required = true, help = "The list of .sns domains to register")]
         domains: Vec<String>,
-        #[arg(long, short, help = "Optional custom RPC URL")]
-        url: Option<String>,
     },
     #[command(arg_required_else_help = true, about = "Set a primary domain")]
     SetPrimaryDomain {
@@ -65,8 +63,6 @@ pub(crate) enum Commands {
         owner_keypair: String,
         #[arg(required = true, help = "The .sns domain to set as primary domain")]
         domain: String,
-        #[arg(long, short, help = "Optional custom RPC URL")]
-        url: Option<String>,
     },
     #[command(
         arg_required_else_help = true,
@@ -82,8 +78,6 @@ pub(crate) enum Commands {
         new_owner: String,
         #[arg(required = true, help = "The list of .sns domains to transfer")]
         domain: Vec<String>,
-        #[arg(long, short, help = "Optional custom RPC URL")]
-        url: Option<String>,
     },
     #[command(
         arg_required_else_help = true,
@@ -97,8 +91,6 @@ pub(crate) enum Commands {
         keypair_path: String,
         #[arg(required = true, help = "The list of .sns domains to burn")]
         domain: Vec<String>,
-        #[arg(long, short, help = "Optional custom RPC URL")]
-        url: Option<String>,
     },
     #[command(
         arg_required_else_help = true,
@@ -107,30 +99,22 @@ pub(crate) enum Commands {
     Lookup {
         #[arg(required = true, help = "The list of .sns domains to fetch")]
         domain: Vec<String>,
-        #[arg(long, short, help = "Optional custom RPC URL")]
-        url: Option<String>,
     },
     #[command(arg_required_else_help = true, about = "Perform a reverse lookup")]
     ReverseLookup {
         #[arg(required = true, help = "The public key (base58 encoded) to lookup")]
         key: String,
-        #[arg(long, short, help = "Optional custom RPC URL")]
-        url: Option<String>,
     },
     #[command(
         arg_required_else_help = true,
         about = "Fetch all the domain names owned for the specified wallets"
     )]
     Domains {
-        #[arg(long, short, help = "Optional custom RPC URL")]
-        url: Option<String>,
         #[arg(required = true, help = "The list of wallets")]
         owners: Vec<String>,
     },
     RecordV2(RecordV2Command),
     GetSubRegistrarInfo {
-        #[arg(long, short, help = "Optional custom RPC URL")]
-        url: Option<String>,
         #[arg(required = true, help = "The .sns domain to get information for")]
         domain: String,
     },
@@ -141,8 +125,6 @@ pub(crate) enum Commands {
 pub(crate) struct RecordV2Command {
     #[command(subcommand)]
     pub(crate) cmd: RecordV2SubCommand,
-    #[arg(long, short, help = "Optional custom RPC URL")]
-    pub(crate) url: Option<String>,
 }
 
 #[derive(Debug, Subcommand)]
@@ -160,8 +142,6 @@ pub(crate) enum RecordV2SubCommand {
 pub(crate) struct CountCommand {
     #[command(subcommand)]
     pub(crate) cmd: CountSubCommand,
-    #[arg(long, short, help = "Optional custom RPC URL")]
-    pub(crate) url: Option<String>,
 }
 
 #[derive(Debug, Subcommand)]
@@ -173,4 +153,50 @@ pub(crate) enum CountSubCommand {
         #[clap(long, help = "Print the top n domains by number of subdomains")]
         top_domains: Option<usize>,
     },
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn global_url_accepts_root_command_and_nested_placements() {
+        let root = Cli::try_parse_from([
+            "sns",
+            "--url",
+            "https://root.example",
+            "resolve",
+            "bonfida.sns",
+        ])
+        .unwrap();
+        assert_eq!(root.url.as_deref(), Some("https://root.example"));
+        assert!(matches!(root.command, Commands::Resolve { domain } if domain == ["bonfida.sns"]));
+
+        let former_local = Cli::try_parse_from([
+            "sns",
+            "resolve",
+            "--url",
+            "https://command.example",
+            "bonfida.sns",
+        ])
+        .unwrap();
+        assert_eq!(former_local.url.as_deref(), Some("https://command.example"));
+
+        let nested = Cli::try_parse_from([
+            "sns",
+            "record-v2",
+            "get",
+            "--domain",
+            "bonfida.sns",
+            "--record",
+            "url",
+            "--url",
+            "https://nested.example",
+        ])
+        .unwrap();
+        assert_eq!(nested.url.as_deref(), Some("https://nested.example"));
+        assert!(
+            matches!(nested.command, Commands::RecordV2(RecordV2Command { cmd: RecordV2SubCommand::Get { domain, record } }) if domain == "bonfida.sns" && record == "url")
+        );
+    }
 }

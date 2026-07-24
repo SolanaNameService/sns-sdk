@@ -40,7 +40,7 @@ sns resolve --help
 
 ## Runtime Model
 
-The CLI needs network access to a Solana JSON-RPC endpoint. It selects the endpoint in this order: the command-local `-u <URL>` or `--url <URL>` option, the `RPC_URL` environment variable, then the public mainnet endpoint. The CLI does not read Solana CLI configuration.
+The CLI needs network access to a Solana JSON-RPC endpoint. It selects the endpoint in this order: the global `-u <URL>` or `--url <URL>` option, the `RPC_URL` environment variable, then the public mainnet endpoint. The CLI does not read Solana CLI configuration. Global options may appear before a command or after a nested subcommand.
 
 Changing `--url` changes only the RPC transport. It does not change the mainnet program IDs, payment path, or explorer links compiled into this executable. A local keypair JSON file is required only for commands that sign and submit writes. Public-key inputs are base58-encoded Solana public keys.
 
@@ -87,14 +87,14 @@ sns domains <OWNER_PUBKEY>
 
 ## Command Reference
 
-Options in brackets are optional. `<DOMAIN>...` and similar ellipses mean one or more positional values. For nested commands, `--url` belongs to the parent group and must appear before the nested command: `sns record-v2 --url <URL> get ...` and `sns count --url <URL> registered-domains`.
+Options in brackets are optional. `<DOMAIN>...` and similar ellipses mean one or more positional values. `--url` is global and may appear before a command or after a nested subcommand, for example `sns --url <URL> record-v2 get ...` or `sns record-v2 get --url <URL> ...`.
 
 ### `resolve`
 
 **`resolve`** — resolve a domain's effective owner.
 
 ```text
-sns resolve [--url <URL>] <DOMAIN>...
+sns [--url <URL>] resolve <DOMAIN>...
 ```
 
 Arguments: one or more canonical `.sns` domain names. `--url` selects the RPC endpoint.
@@ -110,7 +110,7 @@ sns resolve mydomain.sns
 **`register`** — register top-level domains.
 
 ```text
-sns register [--url <URL>] <KEYPAIR_PATH> <SPACE> <DOMAIN>...
+sns [--url <URL>] register <KEYPAIR_PATH> <SPACE> <DOMAIN>...
 ```
 
 Arguments: a signing keypair JSON path, allocation `SPACE` between 1,000 and 10,000 bytes inclusive, and one or more eligible top-level `.sns` domains. `--url` selects the RPC endpoint.
@@ -122,7 +122,7 @@ Output: after each submitted registration, a table row containing `Domain`, tran
 **`set-primary-domain`** — set an owner's primary domain.
 
 ```text
-sns set-primary-domain [--url <URL>] <OWNER_KEYPAIR> <DOMAIN>
+sns [--url <URL>] set-primary-domain <OWNER_KEYPAIR> <DOMAIN>
 ```
 
 Arguments: the owner's signing keypair JSON path and one canonical `.sns` domain. `--url` selects the RPC endpoint.
@@ -134,7 +134,7 @@ Output: `Primary domain set, txid: <SIGNATURE>` after submission.
 **`transfer`** — transfer domains to another public key.
 
 ```text
-sns transfer [--url <URL>] <OWNER_KEYPAIR_PATH> <NEW_OWNER_PUBKEY> <DOMAIN>...
+sns [--url <URL>] transfer <OWNER_KEYPAIR_PATH> <NEW_OWNER_PUBKEY> <DOMAIN>...
 ```
 
 Arguments: the current owner's signing keypair JSON path, the recipient's base58 public key, and one or more canonical `.sns` domains. `--url` selects the RPC endpoint.
@@ -146,7 +146,7 @@ Output: a table of `Domain`, submitted transaction signature, and a mainnet-orie
 **`burn`** — delete domain registry accounts.
 
 ```text
-sns burn [--url <URL>] <KEYPAIR_PATH> <DOMAIN>...
+sns [--url <URL>] burn <KEYPAIR_PATH> <DOMAIN>...
 ```
 
 Arguments: the current owner's signing keypair JSON path and one or more canonical `.sns` domains. `--url` selects the RPC endpoint.
@@ -158,7 +158,7 @@ Output: a table of `Domain`, submitted transaction signature, and a mainnet-orie
 **`lookup`** — inspect raw name-registry accounts.
 
 ```text
-sns lookup [--url <URL>] <DOMAIN>...
+sns [--url <URL>] lookup <DOMAIN>...
 ```
 
 Arguments: one or more canonical `.sns` domains. `--url` selects the RPC endpoint.
@@ -170,7 +170,7 @@ Output: a table containing `Domain`, derived `Domain key`, `Parent`, raw name-re
 **`reverse-lookup`** — find the reverse name for an account key.
 
 ```text
-sns reverse-lookup [--url <URL>] <PUBLIC_KEY>
+sns [--url <URL>] reverse-lookup <PUBLIC_KEY>
 ```
 
 Arguments: one base58 public key. `--url` selects the RPC endpoint.
@@ -182,7 +182,7 @@ Output: a `Public key` and `Reverse` table when a reverse record exists; otherwi
 **`domains`** — list directly owned top-level registry domains.
 
 ```text
-sns domains [--url <URL>] <OWNER_PUBKEY>...
+sns [--url <URL>] domains <OWNER_PUBKEY>...
 ```
 
 Arguments: one or more base58 owner public keys. `--url` selects the RPC endpoint.
@@ -198,10 +198,10 @@ sns domains 11111111111111111111111111111111
 **`record-v2 get`** — fetch and validate a V2 record.
 
 ```text
-sns record-v2 [--url <URL>] get --domain <DOMAIN> --record <RECORD>
+sns [--url <URL>] record-v2 get --domain <DOMAIN> --record <RECORD>
 ```
 
-Arguments: parent `--url` selects the RPC endpoint; `--domain` is a canonical `.sns` domain and `--record` is a record label.
+Arguments: global `--url` selects the RPC endpoint; `--domain` is a canonical `.sns` domain and `--record` is a record label.
 
 Output: a table with `Domain`, canonical `Record`, parsed `Content`, `Staleness Verified`, and `RoA Verified`. Missing records and missing domains are errors. `Staleness Verified` is `true` only when the record's staleness validation succeeds against the effective owner and current registry data. `RoA Verified` is `true` or `false` only for records with a right-of-association validation policy; otherwise it is `N/A`.
 
@@ -219,7 +219,7 @@ For convenience, the CLI also recognizes case-insensitive aliases for `EMAIL`, `
 **`get-sub-registrar-info`** — print sub-registrar information.
 
 ```text
-sns get-sub-registrar-info [--url <URL>] <DOMAIN>
+sns [--url <URL>] get-sub-registrar-info <DOMAIN>
 ```
 
 Arguments: one canonical `.sns` domain. `--url` selects the RPC endpoint.
@@ -231,10 +231,10 @@ Output: the retrieved sub-registrar information in Rust debug formatting. This o
 **`count registered-domains`** — count root SNS registry accounts.
 
 ```text
-sns count [--url <URL>] registered-domains
+sns [--url <URL>] count registered-domains
 ```
 
-Arguments: parent `--url` selects the RPC endpoint; the nested command has no arguments.
+Arguments: global `--url` selects the RPC endpoint; the nested command has no arguments.
 
 Output: one decimal number, the count of root SNS registry accounts.
 
@@ -243,10 +243,10 @@ Output: one decimal number, the count of root SNS registry accounts.
 **`count sub-domains`** — count subdomains and optionally rank parents.
 
 ```text
-sns count [--url <URL>] sub-domains [--top-domains <N>]
+sns [--url <URL>] count sub-domains [--top-domains <N>]
 ```
 
-Arguments: parent `--url` selects the RPC endpoint. `--top-domains <N>` optionally requests the top `N` parent account keys ordered by subdomain count.
+Arguments: global `--url` selects the RPC endpoint. `--top-domains <N>` optionally requests the top `N` parent account keys ordered by subdomain count.
 
 Output: pretty-printed JSON with `number_of_domains`, `number_of_subdomains`, `number_of_domains_with_subdomains`, and, when requested, `top_domains` as `[parent_account_key, count]` pairs.
 
