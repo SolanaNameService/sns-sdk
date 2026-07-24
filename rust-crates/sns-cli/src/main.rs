@@ -6,16 +6,18 @@ mod rpc;
 
 use clap::Parser;
 use cli::{
-    Cli, Commands, CountCommand, RecordV2Command, RecordV2SubCommand, SubRegistrarCommand,
-    SubRegistrarSubCommand,
+    Cli, Commands, CountCommand, PrimaryDomainCommand, PrimaryDomainSubCommand, RecordV2Command,
+    RecordV2SubCommand, SubRegistrarCommand, SubRegistrarSubCommand,
 };
 use commands::{
+    burn::process_burn,
     count::process_count_command,
     domains::{process_domains, process_lookup, process_resolve, process_reverse_lookup},
-    ownership::{process_burn, process_set_primary_domain, process_transfer},
+    primary_domain::{process_get_primary_domain, process_set_primary_domain},
     record_v2::{process_record_v2_get, process_record_v2_set},
     registration::process_register,
     sub_registrar::process_sub_registrar_info,
+    transfer::process_transfer,
 };
 use rpc::get_rpc_client;
 use std::process::ExitCode;
@@ -42,10 +44,15 @@ async fn run() -> commands::CliResult {
             keypair_path,
             space,
         } => process_register(&rpc_client, &keypair_path, domains, space).await,
-        Commands::SetPrimaryDomain {
-            owner_keypair,
-            domain,
-        } => process_set_primary_domain(&rpc_client, &owner_keypair, &domain).await,
+        Commands::PrimaryDomain(PrimaryDomainCommand { cmd }) => match cmd {
+            PrimaryDomainSubCommand::Get { owner } => {
+                process_get_primary_domain(&rpc_client, &owner).await
+            }
+            PrimaryDomainSubCommand::Set {
+                owner_keypair,
+                domain,
+            } => process_set_primary_domain(&rpc_client, &owner_keypair, &domain).await,
+        },
         Commands::RecordV2(RecordV2Command { cmd }) => match cmd {
             RecordV2SubCommand::Get { domain, record } => {
                 process_record_v2_get(&rpc_client, &domain, record).await

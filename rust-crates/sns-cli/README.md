@@ -48,7 +48,7 @@ Changing `--url` changes only the RPC transport. It does not change the mainnet 
 
 All domain arguments are canonical, lowercase, suffixed `.sns` names, such as `mydomain.sns` or the one-level subdomain `team.mydomain.sns`. Bare names, `.sol` names, uppercase names, whitespace, empty labels, and names deeper than one subdomain are rejected.
 
-`register` accepts top-level names only and further limits the label to lowercase letters, digits, hyphens, and underscores. The other domain commands accept a top-level name or one-level subdomain when their underlying operation supports it. This CLI has no `.sol` compatibility or write path.
+`register` and `primary-domain set` accept top-level names only. Registration further limits the label to lowercase letters, digits, hyphens, and underscores. Other domain commands accept a top-level name or one-level subdomain when their underlying operation supports it. This CLI has no `.sol` compatibility or write path.
 
 ## Read-Only Quick Start
 
@@ -74,7 +74,8 @@ sns domains <OWNER_PUBKEY>
 | -------------------------- | ---------------------------------------------- | -------------------- |
 | `resolve`                  | Resolve a domain's effective owner             | Read only            |
 | `register`                 | Register top-level domains                     | Signs and submits    |
-| `set-primary-domain`       | Set an owner's primary domain                  | Signs and submits    |
+| `primary-domain get`       | Get an owner's primary domain                  | Read only            |
+| `primary-domain set`       | Set an owner's primary domain                  | Signs and submits    |
 | `transfer`                 | Transfer domains to another public key         | Signs and submits    |
 | `burn`                     | Delete domain registry accounts                | Signs and submits    |
 | `lookup`                   | Inspect raw name-registry accounts             | Read only            |
@@ -118,17 +119,38 @@ Arguments: a signing keypair JSON path, allocation `SPACE` between 1,000 and 10,
 
 Output: after each submitted registration, a table row containing `Domain`, transaction signature, and a mainnet-oriented Explorer transaction link.
 
-### `set-primary-domain`
+### `primary-domain get`
 
-**`set-primary-domain`** — set an owner's primary domain.
+**`primary-domain get`** — get a wallet's configured primary domain.
 
 ```text
-sns [--url <URL>] set-primary-domain <OWNER_KEYPAIR> <DOMAIN>
+sns [--url <URL>] primary-domain get <OWNER_PUBKEY>
 ```
 
-Arguments: the owner's signing keypair JSON path and one canonical `.sns` domain. `--url` selects the RPC endpoint.
+Arguments: the requested owner's base58 public key. Global `--url` selects the RPC endpoint and may also appear after the nested subcommand and its positional argument.
 
-Output: `Primary domain set, txid: <SIGNATURE>` after submission.
+Output: `No primary domain set` with a successful exit status when the wallet has no configured primary domain. Otherwise, a one-row table contains `Requested Owner`, readable `.sns` `Domain`, `Name Account`, and `Stale`.
+
+`Requested Owner` is the input wallet, not a claim about current ownership. `Stale` is `true` when that wallet differs from the effective domain owner: the NFT holder for a tokenized domain, or the raw name-registry owner otherwise. Missing or malformed selected registries and reverse records are errors rather than “not set” results.
+
+### `primary-domain set`
+
+**`primary-domain set`** — set an owner's primary domain.
+
+```text
+sns [--url <URL>] primary-domain set <OWNER_KEYPAIR> <DOMAIN>
+```
+
+Arguments: the owner's signing keypair JSON path and one canonical top-level `.sns` domain. Subdomains are rejected. Global `--url` selects the RPC endpoint and may also appear after the nested subcommand and its positional arguments.
+
+Before submitting, the command requires the selected registry to exist, to be top-level, and to have a raw registry owner equal to the signer. Effective NFT ownership does not authorize this operation. The signer is also the transaction fee payer.
+
+Output after successful preflight and submission:
+
+```text
+Setting primary domain...
+Primary domain set, txid: <SIGNATURE>
+```
 
 ### `transfer`
 
@@ -271,7 +293,7 @@ Output: pretty-printed JSON with `number_of_domains`, `number_of_subdomains`, `n
 
 ## Write Safety
 
-`register`, `transfer`, and `burn` process their domain lists sequentially. They are not atomic: an earlier transaction may succeed before a later item fails. `burn` deletes the name-registry account, is destructive, and has no prompt or dry-run mode. `record-v2 set` submits one create or update transaction after its preflight checks.
+`register`, `transfer`, and `burn` process their domain lists sequentially. They are not atomic: an earlier transaction may succeed before a later item fails. `burn` deletes the name-registry account, is destructive, and has no prompt or dry-run mode. `primary-domain set` and `record-v2 set` each submit one transaction after their preflight checks.
 
 Registration builds the default mainnet USDC payment path. Treat all keypair paths as sensitive credentials.
 

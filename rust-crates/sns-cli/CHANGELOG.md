@@ -43,7 +43,7 @@ This applies to:
 
 - `resolve`
 - `register`
-- `set-primary-domain`
+- `primary-domain set` (top-level `.sns` domains only)
 - `transfer`
 - `burn`
 - `lookup`
@@ -105,15 +105,39 @@ There is no v3 CLI replacement for the public-key-only unsigned-transaction
 workflow. Applications that require offline or external signing must construct
 the transaction outside this CLI.
 
+The top-level `set-primary-domain` command is now grouped under `primary-domain`:
+
+```text
+Before: sns set-primary-domain <OWNER_KEYPAIR> <DOMAIN.sns>
+After:  sns primary-domain set <OWNER_KEYPAIR> <DOMAIN.sns>
+```
+
+The old top-level command is removed without an alias. `primary-domain set`
+accepts only canonical top-level `.sns` domains and preflights that the signer
+is the raw owner of the selected registry. Tokenized/NFT ownership does not
+substitute for raw registry ownership.
+
+The new read-only command reports a wallet's configured primary domain:
+
+```bash
+sns primary-domain get <OWNER_PUBKEY>
+```
+
+It reports the requested owner, readable domain, selected name account, and
+whether the selection is stale against NFT ownership or, for a non-tokenized
+domain, raw registry ownership. A wallet with no configured selection returns
+`No primary domain set` successfully; malformed selected state remains an
+error.
+
 Use:
 
 ```bash
-sns set-primary-domain owner.json mydomain.sns
+sns primary-domain set owner.json mydomain.sns
 ```
 
-**Action required:** Rename the command, pass a canonical `.sns` domain, and
-provide the owner keypair. Move public-key-only unsigned-transaction workflows
-outside this CLI.
+**Action required:** Use `primary-domain set`, pass a canonical top-level `.sns`
+domain, and provide the raw registry owner's keypair. Move public-key-only
+unsigned-transaction workflows outside this CLI.
 
 ## 4. Record command migration
 

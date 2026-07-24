@@ -78,16 +78,8 @@ pub(crate) enum Commands {
         #[arg(required = true, help = "The list of .sns domains to register")]
         domains: Vec<String>,
     },
-    #[command(arg_required_else_help = true, about = "Set a primary domain")]
-    SetPrimaryDomain {
-        #[arg(
-            required = true,
-            help = "The path to the wallet private key used to set the primary domain"
-        )]
-        owner_keypair: String,
-        #[arg(required = true, help = "The .sns domain to set as primary domain")]
-        domain: String,
-    },
+    #[command(arg_required_else_help = true, about = "Get or set a primary domain")]
+    PrimaryDomain(PrimaryDomainCommand),
     #[command(
         arg_required_else_help = true,
         about = "Transfer a list of domains to a new owner"
@@ -103,10 +95,7 @@ pub(crate) enum Commands {
         #[arg(required = true, help = "The list of .sns domains to transfer")]
         domain: Vec<String>,
     },
-    #[command(
-        arg_required_else_help = true,
-        about = "⛔️ Burn a list of domain names"
-    )]
+    #[command(arg_required_else_help = true, about = "Burn a list of domain names")]
     Burn {
         #[arg(
             required = true,
@@ -140,6 +129,34 @@ pub(crate) enum Commands {
     RecordV2(RecordV2Command),
     SubRegistrar(SubRegistrarCommand),
     Count(CountCommand),
+}
+
+#[derive(Debug, Args)]
+pub(crate) struct PrimaryDomainCommand {
+    #[command(subcommand)]
+    pub(crate) cmd: PrimaryDomainSubCommand,
+}
+
+#[derive(Debug, Subcommand)]
+pub(crate) enum PrimaryDomainSubCommand {
+    #[command(about = "Get an owner's primary domain")]
+    Get {
+        #[arg(
+            required = true,
+            help = "The wallet public key whose primary domain should be fetched"
+        )]
+        owner: String,
+    },
+    #[command(about = "Set a primary domain")]
+    Set {
+        #[arg(
+            required = true,
+            help = "The path to the wallet private key used to set the primary domain"
+        )]
+        owner_keypair: String,
+        #[arg(required = true, help = "The .sns domain to set as primary domain")]
+        domain: String,
+    },
 }
 
 #[derive(Debug, Args)]
@@ -262,6 +279,85 @@ mod tests {
             matches!(cli.command, Commands::SubRegistrar(SubRegistrarCommand { cmd: SubRegistrarSubCommand::Get { domain } }) if domain == "bonfida.sns")
         );
         assert!(Cli::try_parse_from(["sns", "get-sub-registrar-info", "bonfida.sns"]).is_err());
+    }
+
+    #[test]
+    fn primary_domain_get_and_set_replace_legacy_top_level_command() {
+        let get = Cli::try_parse_from([
+            "sns",
+            "primary-domain",
+            "get",
+            "11111111111111111111111111111111",
+        ])
+        .unwrap();
+        assert!(matches!(
+            get.command,
+            Commands::PrimaryDomain(PrimaryDomainCommand {
+                cmd: PrimaryDomainSubCommand::Get { owner }
+            }) if owner == "11111111111111111111111111111111"
+        ));
+
+        let set =
+            Cli::try_parse_from(["sns", "primary-domain", "set", "owner.json", "example.sns"])
+                .unwrap();
+        assert!(matches!(
+            set.command,
+            Commands::PrimaryDomain(PrimaryDomainCommand {
+                cmd: PrimaryDomainSubCommand::Set {
+                    owner_keypair,
+                    domain
+                }
+            }) if owner_keypair == "owner.json" && domain == "example.sns"
+        ));
+
+        assert!(
+            Cli::try_parse_from(["sns", "set-primary-domain", "owner.json", "example.sns"])
+                .is_err()
+        );
+    }
+
+    #[test]
+    fn primary_domain_requires_all_operands() {
+        assert!(Cli::try_parse_from(["sns", "primary-domain", "get"]).is_err());
+        assert!(Cli::try_parse_from(["sns", "primary-domain", "set"]).is_err());
+        assert!(Cli::try_parse_from(["sns", "primary-domain", "set", "owner.json"]).is_err());
+    }
+
+    #[test]
+    fn primary_domain_accepts_global_url_at_nested_placements() {
+        let root = Cli::try_parse_from([
+            "sns",
+            "--url",
+            "https://root.example",
+            "primary-domain",
+            "get",
+            "11111111111111111111111111111111",
+        ])
+        .unwrap();
+        assert_eq!(root.url.as_deref(), Some("https://root.example"));
+
+        let get = Cli::try_parse_from([
+            "sns",
+            "primary-domain",
+            "get",
+            "11111111111111111111111111111111",
+            "--url",
+            "https://get.example",
+        ])
+        .unwrap();
+        assert_eq!(get.url.as_deref(), Some("https://get.example"));
+
+        let set = Cli::try_parse_from([
+            "sns",
+            "primary-domain",
+            "set",
+            "owner.json",
+            "example.sns",
+            "--url",
+            "https://set.example",
+        ])
+        .unwrap();
+        assert_eq!(set.url.as_deref(), Some("https://set.example"));
     }
 
     #[test]
