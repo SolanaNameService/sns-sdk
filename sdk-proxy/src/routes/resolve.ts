@@ -1,7 +1,11 @@
-import { resolve } from "@bonfida/spl-name-service";
+import {
+  resolve,
+  SNS_TLD,
+  SOL_TLD,
+  UnsupportedTldError,
+} from "@bonfida/spl-name-service";
 import type { Hono } from "hono";
 
-import { toSnsDomain, toSolDomain } from "../utils/domain";
 import {
   getConnection,
   handleApiError,
@@ -13,34 +17,15 @@ import { domainOrSubdomainWithoutTldSchema } from "../utils/schemas";
 export const registerResolveRoutes = (app: Hono<Env>) => {
   app.get("/resolve/:domain", async (c) => {
     try {
-      const domain = domainOrSubdomainWithoutTldSchema.parse(
-        c.req.param("domain"),
-      );
-      const res = await resolve(getConnection(c), toSnsDomain(domain));
-      return c.json(response(true, res));
-    } catch (err) {
-      return handleApiError(c, err);
-    }
-  });
+      const domain = c.req.param("domain").trim().toLowerCase();
+      const tld = [SNS_TLD, SOL_TLD].find((value) => domain.endsWith(value));
 
-  app.get("/resolveSns/:domain", async (c) => {
-    try {
-      const domain = domainOrSubdomainWithoutTldSchema.parse(
-        c.req.param("domain"),
-      );
-      const res = await resolve(getConnection(c), toSnsDomain(domain));
-      return c.json(response(true, res));
-    } catch (err) {
-      return handleApiError(c, err);
-    }
-  });
+      if (!tld) {
+        throw new UnsupportedTldError("Domain has an unsupported TLD suffix");
+      }
 
-  app.get("/resolveSol/:domain", async (c) => {
-    try {
-      const domain = domainOrSubdomainWithoutTldSchema.parse(
-        c.req.param("domain"),
-      );
-      const res = await resolve(getConnection(c), toSolDomain(domain));
+      domainOrSubdomainWithoutTldSchema.parse(domain.slice(0, -tld.length));
+      const res = await resolve(getConnection(c), domain);
       return c.json(response(true, res));
     } catch (err) {
       return handleApiError(c, err);

@@ -13,54 +13,33 @@ v1.0.0.
 
 ## 1. Domain inputs and resolution
 
-Proxy domain path and query values are TLD-less. Supply one label for a
-top-level domain or two labels for a subdomain:
+In v1, `/resolve/:domain` requires a full domain name ending in `.sns` or
+`.sol`, such as `mydomain.sns`, `sub.mydomain.sns`, or `mydomain.sol`.
 
-```text
-mydomain
-sub.mydomain
-```
+All other routes that accept a domain assume an `.sns` domain and require a
+name without the suffix, such as `mydomain` or `sub.mydomain`. The proxy appends
+`.sns` internally.
 
-Do not include a final suffix:
+Domain values are trimmed and lowercased. They may contain one non-empty label
+(`mydomain`) or two non-empty labels (`sub.mydomain`). Registration requires one
+label, while subdomain creation requires two.
 
-```text
-mydomain.sns
-mydomain.sol
-```
+Before v1, `/resolve/:domain` accepted a name without a suffix and resolved it
+as an `.sns` domain. Update resolution requests as follows:
 
-Values are trimmed and lowercased before use. SNS routes append `.sns`
-internally, so a value such as `mydomain.sns` on a route that accepts two
-labels is interpreted as `mydomain.sns.sns`; the proxy does not strip the
-supplied suffix.
+| Pre-v1 request          | v1 request                  |
+| ----------------------- | --------------------------- |
+| `/resolve/mydomain`     | `/resolve/mydomain.sns`     |
+| `/resolve/sub.mydomain` | `/resolve/sub.mydomain.sns` |
 
-This contract applies to resolution, domain and reverse-key derivation,
-record routes, registration, subdomain creation, and subdomain listing.
-Registration accepts exactly one TLD-less label. Subdomain creation accepts
-exactly two TLD-less labels.
+A bare name or any suffix other than `.sns` or `.sol` returns
+`400 Unsupported TLD`. The `.sol` path uses the legacy SNS-backed resolution
+path only while the selected RPC endpoint reports a finalized slot below
+`452,825,395`. At or after that slot, `.sol` resolution returns
+`400 Unsupported TLD` until SRS-backed `.sol` resolution is enabled in a future
+SDK release.
 
-### Resolution routes
-
-The legacy `/resolve/:domain` route passed its domain value directly to the
-underlying SDK. In v1, the route determines the TLD explicitly:
-
-| Route                      | Resolved name      |
-| -------------------------- | ------------------ |
-| `/resolve/mydomain`        | `mydomain.sns`     |
-| `/resolveSns/mydomain`     | `mydomain.sns`     |
-| `/resolveSol/mydomain`     | `mydomain.sol`     |
-| `/resolve/sub.mydomain`    | `sub.mydomain.sns` |
-| `/resolveSol/sub.mydomain` | `sub.mydomain.sol` |
-
-`/resolve` is functionally equivalent to `/resolveSns`: both resolve the
-TLD-less input as an `.sns` domain through the SPL Name Service registry.
-`/resolve` remains available for backward compatibility.
-
-`/resolveSol` uses the legacy SNS-backed resolution path only while the
-selected RPC endpoint reports a finalized slot below `452,825,395`. At or
-after that slot, `.sol` resolution returns `400 Unsupported TLD` until
-SRS-backed `.sol` resolution is enabled in a future SDK release.
-
-**Action required:** Use `/resolve` or `/resolveSns` to resolve `.sns` domains.
+**Action required:** Add `.sns` or `.sol` to existing `/resolve` path values.
 
 ## 2. Updated endpoints
 

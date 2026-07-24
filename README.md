@@ -120,11 +120,13 @@ See the [CLI guide](./rust-crates/sns-cli/README.md) for runtime configuration, 
 
 > **Experimental:** The REST proxy is provided for integrations that cannot use a native SDK. Its availability and API may change.
 
-All application routes use `GET`. Domain path and query values omit the final TLD, so use `mydomain` for `mydomain.sns`.
+- All application routes use `GET`.
+- The `/resolve/:domain` route requires a full domain name ending in `.sns` or `.sol`, for example `mydomain.sns` or `mydomain.sol`.
+- All other routes that accept a domain name assume an `.sns` domain and require a TLD-less value. Pass `mydomain` or `sub.mydomain`, not `mydomain.sns`.
 
 Available endpoints:
 
-- **Resolution:** `/resolve/:domain`, `/resolveSns/:domain`, `/resolveSol/:domain`
+- **Resolution:** `/resolve/:domain`
 - **Domains and ownership:** `/domain-key/:domain`, `/domains/:owner`, `/primary-domain/:owner`, `/multiple-primary-domains/:owners`, `/reverse-key/:domain`, `/reverse-lookup/:pubkey`, `/subdomains/:parent`
 - **Compatibility aliases:** `/favorite-domain/:owner`, `/multiple-favorite-domains/:owners`
 - **Records:** `/types/record`, `/record-key-v2/:domain/:record`, `/record-v2/:domain/:record`, `/records-v2/:domain?records=<csv>`

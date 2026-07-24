@@ -26,11 +26,17 @@ The proxy exposes selected [`@bonfida/spl-name-service`](../js/) operations over
 
 ## Request Conventions
 
-All application endpoints are `GET` requests. There is no application authentication, and CORS is permissive (`Access-Control-Allow-Origin: *`). The Worker accepts `OPTIONS` through its CORS middleware; framework-generated `404` and `405` responses are not guaranteed to use the API envelope below.
+All application endpoints use `GET`.
 
-Domain path and query values are **TLD-less**. Supply `mydomain`, not `mydomain.sns`; routes append `.sns` unless their name explicitly says `Sol`. Values are trimmed and lowercased and must contain either one label (`mydomain`) or two non-empty labels (`sub.mydomain`). A value such as `mydomain.sns` is accepted as a two-label input and is treated as `mydomain.sns.sns` on an SNS route; do not include a final TLD in a proxy domain value. Registration and subdomain-listing inputs have stricter one-label and two-label requirements, respectively.
+The `/resolve/:domain` route requires a full domain name ending in `.sns` or `.sol`, such as `mydomain.sns`, `sub.mydomain.sns`, or `mydomain.sol`.
 
-`owner`, `buyer`, `pubkey`, `referrer`, `mint`, and CSV owner values are base58 Solana public keys. Every RPC-backed route accepts an optional `rpc` query parameter. A non-empty `rpc` takes precedence over the Worker `RPC_URL` binding; RPC connections use `processed` commitment. Deterministic derivation and type routes do not need an RPC endpoint.
+All other routes that accept a domain assume an `.sns` domain and require a name without the suffix, such as `mydomain` or `sub.mydomain`. The proxy appends `.sns` internally.
+
+Domain values are trimmed and lowercased. They may contain one non-empty label (`mydomain`) or two non-empty labels (`sub.mydomain`). Registration requires one label, while subdomain creation requires two.
+
+Public-key parameters—including `owner`, `buyer`, `pubkey`, `referrer`, and `mint`—must be valid base58 Solana public keys.
+
+RPC-backed routes accept an optional `rpc` query parameter. When provided, it takes precedence over the proxy’s configured RPC endpoint.
 
 ## Responses And Errors
 
@@ -84,31 +90,21 @@ type RecordResult = {
 
 ## Resolution
 
-- **`GET /resolve/:domain`** — resolves `:domain.sns`.
+- **`GET /resolve/:domain`** — resolves a full `.sns` or `.sol` domain through the same dispatcher as the JavaScript SDK.
 
   ```http
   GET /resolve/:domain
   ```
 
-  Inputs: TLD-less domain or subdomain; optional `rpc`. Result: resolved owner public key.
-
-- **`GET /resolveSns/:domain`** — explicit SNS alias with the same behavior as `/resolve`.
+  Inputs: normalized full domain or subdomain ending in `.sns` or `.sol`; optional `rpc`. A missing or different suffix returns `400 Unsupported TLD`. Result: resolved owner public key.
 
   ```http
-  GET /resolveSns/:domain
+  GET /resolve/mydomain.sns
+  GET /resolve/sub.mydomain.sns
+  GET /resolve/mydomain.sol
   ```
 
-  Inputs: TLD-less domain or subdomain; optional `rpc`. Result: resolved owner public key.
-
-- **`GET /resolveSol/:domain`** — resolves `:domain.sol`; subject to the transition rule below.
-
-  ```http
-  GET /resolveSol/:domain
-  ```
-
-  Inputs: TLD-less domain or subdomain; optional `rpc`. Result: resolved owner public key.
-
-`/resolveSol/:domain` uses the legacy SNS-backed path only while the selected RPC reports a finalized slot below `452,825,395`. At or after that slot, `.sol` is rejected as unsupported. SRS-backed `.sol` resolution is expected to be enabled in a future update.
+For `.sol`, the JavaScript SDK uses the legacy SNS-backed path only while the selected RPC reports a finalized slot below `452,825,395`. At or after that slot, `.sol` is rejected as unsupported. SRS-backed `.sol` resolution is expected to be enabled in a future update.
 
 ## Domain And Key Queries
 
