@@ -81,6 +81,7 @@ sns domains <OWNER_PUBKEY>
 | `reverse-lookup`           | Find the reverse name for an account key       | Read only            |
 | `domains`                  | List directly owned top-level registry domains | Read only            |
 | `record-v2 get`            | Fetch and validate a V2 record                 | Read only            |
+| `record-v2 set`            | Create or update a V2 record                   | Signs and submits    |
 | `sub-registrar get`        | Print sub-registrar information                | Read only            |
 | `count registered-domains` | Count root SNS registry accounts               | Read only            |
 | `count sub-domains`        | Count subdomains and optionally rank parents   | Read only            |
@@ -214,6 +215,24 @@ pic SHDW POINT BSC INJ backpack A AAAA CNAME TXT BASE bio
 
 For convenience, the CLI also recognizes case-insensitive aliases for `EMAIL`, `URL`, `DISCORD`, `GITHUB`, `REDDIT`, `TWITTER`, `TELEGRAM`, `PIC`, `BACKPACK`, `BIO`, and `INJECTIVE` (for `INJ`).
 
+### `record-v2 set`
+
+**`record-v2 set`** — create a missing V2 record or overwrite an existing V2 record.
+
+```text
+sns [--url <URL>] record-v2 set --keypair <KEYPAIR_PATH> --domain <DOMAIN> --record <RECORD> --content <CONTENT> [--force]
+```
+
+Arguments: `--keypair` is the signing keypair and fee/rent payer. It must equal the raw on-chain owner of the domain registry, which can differ from the effective holder of a tokenized/NFT domain. `--domain` is a canonical `.sns` domain; `--record` accepts the same labels and aliases as `record-v2 get`; `--content` is validated according to the selected record type before the keypair is loaded or RPC requests are made. `--force` explicitly permits an update to clear existing or unreadable validation metadata.
+
+Output: after confirmation, a table row with `Domain`, canonical `Record`, `Action` (`Created` or `Updated`), transaction signature, and a mainnet-oriented Explorer link. Success output is written to stdout; validation warnings and errors are written to stderr.
+
+The command checks only for the derived V2 record account. A missing V2 record is created even if a legacy V1 record exists; V1 data is neither read nor migrated. Creating a record or growing an existing account can charge additional rent to the payer. The existence check is advisory: if another writer changes the record before submission, the transaction fails and the CLI does not retry the opposite instruction.
+
+Updating replaces the complete V2 payload. If the existing record contains validation metadata, or if that metadata cannot be decoded, the CLI refuses the update before transaction submission. Rerun with `--force` to acknowledge the loss; the CLI then prints a warning before sending the transaction.
+
+Quote shell-sensitive content. Representative typed inputs include a base58 public key for `SOL`, a `0x` 20-byte hexadecimal address for `ETH`, `BSC`, or `BASE`, IP literals for `A` and `AAAA`, an `inj...` Bech32 address for `INJ`, and quoted text for `TXT`, `CNAME`, `url`, or `bio`. URL and email records are stored as UTF-8 text and are not semantically validated as URLs or email addresses.
+
 ### `sub-registrar get`
 
 **`sub-registrar get`** — print sub-registrar information.
@@ -252,7 +271,7 @@ Output: pretty-printed JSON with `number_of_domains`, `number_of_subdomains`, `n
 
 ## Write Safety
 
-`register`, `transfer`, and `burn` process their domain lists sequentially. They are not atomic: an earlier transaction may succeed before a later item fails. `burn` deletes the name-registry account, is destructive, and has no prompt or dry-run mode.
+`register`, `transfer`, and `burn` process their domain lists sequentially. They are not atomic: an earlier transaction may succeed before a later item fails. `burn` deletes the name-registry account, is destructive, and has no prompt or dry-run mode. `record-v2 set` submits one create or update transaction after its preflight checks.
 
 Registration builds the default mainnet USDC payment path. Treat all keypair paths as sensitive credentials.
 

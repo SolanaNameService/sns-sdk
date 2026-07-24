@@ -1,4 +1,28 @@
 use clap::{Args, Parser, Subcommand};
+use sns_sdk::record::Record;
+
+pub(crate) fn parse_record_arg(record: &str) -> Result<Record, String> {
+    if let Ok(record) = Record::try_from_str(record) {
+        return Ok(record);
+    }
+
+    let normalized = match record.to_ascii_uppercase().as_str() {
+        "EMAIL" => "email",
+        "URL" => "url",
+        "DISCORD" => "discord",
+        "GITHUB" => "github",
+        "REDDIT" => "reddit",
+        "TWITTER" => "twitter",
+        "TELEGRAM" => "telegram",
+        "PIC" => "pic",
+        "BACKPACK" => "backpack",
+        "BIO" => "bio",
+        "INJECTIVE" => "INJ",
+        _ => record,
+    };
+
+    Record::try_from_str(normalized).map_err(|err| format!("{err:?}"))
+}
 
 #[derive(Debug, Parser)]
 #[command(name = "sns")]
@@ -130,8 +154,27 @@ pub(crate) enum RecordV2SubCommand {
     Get {
         #[clap(long, help = "The .sns domain of the record to fetch")]
         domain: String,
-        #[clap(long, help = "The record to fetch")]
-        record: String,
+        #[arg(long, value_parser = parse_record_arg, help = "The record to fetch")]
+        record: Record,
+    },
+    #[command(about = "Create or update a V2 record content")]
+    Set {
+        #[arg(
+            long,
+            help = "The path to the keypair that owns and pays for the record"
+        )]
+        keypair: String,
+        #[arg(long, help = "The canonical .sns domain of the record to set")]
+        domain: String,
+        #[arg(long, value_parser = parse_record_arg, help = "The record to set")]
+        record: Record,
+        #[arg(long, allow_hyphen_values = true, help = "The content of the record")]
+        content: String,
+        #[arg(
+            long,
+            help = "Allow an update to clear existing or unreadable validation metadata"
+        )]
+        force: bool,
     },
 }
 
@@ -208,7 +251,7 @@ mod tests {
         .unwrap();
         assert_eq!(nested.url.as_deref(), Some("https://nested.example"));
         assert!(
-            matches!(nested.command, Commands::RecordV2(RecordV2Command { cmd: RecordV2SubCommand::Get { domain, record } }) if domain == "bonfida.sns" && record == "url")
+            matches!(nested.command, Commands::RecordV2(RecordV2Command { cmd: RecordV2SubCommand::Get { domain, record } }) if domain == "bonfida.sns" && record.as_str() == "url")
         );
     }
 
@@ -219,5 +262,60 @@ mod tests {
             matches!(cli.command, Commands::SubRegistrar(SubRegistrarCommand { cmd: SubRegistrarSubCommand::Get { domain } }) if domain == "bonfida.sns")
         );
         assert!(Cli::try_parse_from(["sns", "get-sub-registrar-info", "bonfida.sns"]).is_err());
+    }
+
+    #[test]
+    fn record_parser_accepts_aliases_for_get_and_set() {
+        let get = Cli::try_parse_from([
+            "sns",
+            "record-v2",
+            "get",
+            "--domain",
+            "bonfida.sns",
+            "--record",
+            "URL",
+        ])
+        .unwrap();
+        assert!(matches!(
+            get.command,
+            Commands::RecordV2(RecordV2Command {
+                cmd: RecordV2SubCommand::Get { record, .. }
+            }) if record.as_str() == "url"
+        ));
+
+        let set = Cli::try_parse_from([
+            "sns",
+            "record-v2",
+            "set",
+            "--keypair",
+            "owner.json",
+            "--domain",
+            "bonfida.sns",
+            "--record",
+            "INJECTIVE",
+            "--content",
+            "inj1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqe2hm49",
+            "--force",
+        ])
+        .unwrap();
+        assert!(matches!(
+            set.command,
+            Commands::RecordV2(RecordV2Command {
+                cmd: RecordV2SubCommand::Set { record, force, .. }
+            }) if record.as_str() == "INJ" && force
+        ));
+
+        assert!(Cli::try_parse_from([
+            "sns",
+            "record-v2",
+            "set",
+            "--keypair",
+            "owner.json",
+            "--domain",
+            "bonfida.sns",
+            "--record",
+            "url",
+        ])
+        .is_err());
     }
 }

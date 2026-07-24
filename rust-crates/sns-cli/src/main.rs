@@ -13,7 +13,7 @@ use commands::{
     count::process_count_command,
     domains::{process_domains, process_lookup, process_resolve, process_reverse_lookup},
     ownership::{process_burn, process_set_primary_domain, process_transfer},
-    record_v2::process_record_v2_get,
+    record_v2::{process_record_v2_get, process_record_v2_set},
     registration::process_register,
     sub_registrar::process_sub_registrar_info,
 };
@@ -48,7 +48,16 @@ async fn run() -> commands::CliResult {
         } => process_set_primary_domain(&rpc_client, &owner_keypair, &domain).await,
         Commands::RecordV2(RecordV2Command { cmd }) => match cmd {
             RecordV2SubCommand::Get { domain, record } => {
-                process_record_v2_get(&rpc_client, &domain, &record).await
+                process_record_v2_get(&rpc_client, &domain, record).await
+            }
+            RecordV2SubCommand::Set {
+                keypair,
+                domain,
+                record,
+                content,
+                force,
+            } => {
+                process_record_v2_set(&rpc_client, &keypair, &domain, record, &content, force).await
             }
         },
         Commands::SubRegistrar(SubRegistrarCommand { cmd }) => match cmd {

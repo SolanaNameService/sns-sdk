@@ -48,6 +48,7 @@ This applies to:
 - `burn`
 - `lookup`
 - `record-v2 get`
+- `record-v2 set`
 - `sub-registrar get`
 
 Before:
@@ -116,8 +117,9 @@ outside this CLI.
 
 ## 4. Record command migration
 
-The legacy `record` command family was removed. `record-v2 get` is a read-only
-command for V2 records only.
+The legacy `record` command family was removed. The `record-v2` group handles
+V2 records only: `get` reads and validates a record, and `set` creates or
+updates one.
 
 Update the former V2 read form:
 
@@ -147,13 +149,28 @@ tool for existing V1-record workflows.
 validation policy. A missing record or missing domain now returns an error
 instead of printing an empty table.
 
-The following commands were removed without CLI replacements:
+Use the new V2 setter with named options:
 
-- `record set`
+```bash
+sns record-v2 set --keypair owner.json --domain mydomain.sns --record url --content https://example.com
+```
+
+The v2.1.0 `sns record set` command wrote legacy V1 records. Its V2 set branch
+(`sns record --v2 set`) was unimplemented. The v3 setter writes only V2 accounts and
+does not migrate or overwrite V1 records. It checks whether the V2 account
+exists, then submits one SDK create or update instruction; it does not use the
+old V1 delete-and-recreate resize flow.
+
+Updates that would clear existing or unreadable validation metadata stop before
+transaction submission. Pass `--force` to acknowledge the loss and continue.
+
+The following command remains removed without a CLI replacement:
+
 - `record system-dump`
 
-**Action required:** Rename V2 reads to `record-v2 get` and pass canonical
-`.sns` domains. V1 records have been deprecated and should not longer be used.
+**Action required:** Rename V2 reads to `record-v2 get`, use `record-v2 set`
+for new V2 writes, and pass canonical `.sns` domains. V1 records have been
+deprecated and should no longer be used.
 
 ## 5. Sub-registrar command migration
 
