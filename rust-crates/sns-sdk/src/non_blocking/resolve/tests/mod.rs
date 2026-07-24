@@ -100,6 +100,7 @@ fn token_srs_test_client(
 }
 
 mod name_registry;
+mod reverse;
 mod routing;
 #[cfg(not(feature = "devnet"))]
 mod rpc;

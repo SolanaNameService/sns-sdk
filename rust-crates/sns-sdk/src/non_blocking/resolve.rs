@@ -10,7 +10,7 @@ use {
 use crate::{
     config::SOL_SRS_RESOLUTION_ENABLED,
     derivation::{
-        get_hashed_name, get_sns_domain_key, get_srs_domain_key, NAME_TOKENIZER_ID,
+        derive_reverse, get_hashed_name, get_sns_domain_key, get_srs_domain_key, NAME_TOKENIZER_ID,
         REVERSE_LOOKUP_CLASS,
     },
     error::SnsError,
@@ -276,15 +276,27 @@ pub async fn resolve_reverse(
     rpc_client: &RpcClient,
     key: &Pubkey,
 ) -> Result<Option<String>, SnsError> {
-    let hashed = get_hashed_name(&key.to_string());
-    let (key, _) = get_seeds_and_key(
-        &spl_name_service::ID,
-        hashed,
-        Some(&REVERSE_LOOKUP_CLASS),
-        None,
-    );
-    if let Some((_, data)) = resolve_name_registry(rpc_client, &key).await? {
-        Ok(Some(deserialize_reverse(&data)?))
+    resolve_reverse_with_parent(rpc_client, key, None).await
+}
+
+/// Resolves a reverse record using an optional parent name account.
+///
+/// `None` is for top-level domains, `Some(parent)` is for subdomains, and returned names are TLD-less.
+pub async fn resolve_reverse_with_parent(
+    rpc_client: &RpcClient,
+    key: &Pubkey,
+    parent: Option<&Pubkey>,
+) -> Result<Option<String>, SnsError> {
+    let reverse_key = derive_reverse(key, parent);
+    if let Some((_, data)) = resolve_name_registry(rpc_client, &reverse_key).await? {
+        let reverse = deserialize_reverse(&data)?;
+        if parent.is_some() {
+            Ok(Some(
+                reverse.strip_prefix('\0').unwrap_or(&reverse).to_owned(),
+            ))
+        } else {
+            Ok(Some(reverse))
+        }
     } else {
         Ok(None)
     }
