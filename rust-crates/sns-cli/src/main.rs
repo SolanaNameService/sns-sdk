@@ -15,12 +15,12 @@ use commands::{
     sub_registrar::process_sub_registrar_info,
 };
 use rpc::get_rpc_client;
+use std::process::ExitCode;
 
-#[tokio::main]
-async fn main() {
+async fn run() -> commands::CliResult {
     let Cli { url, command } = Cli::parse();
     let rpc_client = get_rpc_client(url);
-    let res = match command {
+    match command {
         Commands::Resolve { domain } => process_resolve(&rpc_client, domain).await,
         Commands::Domains { owners } => process_domains(&rpc_client, owners).await,
         Commands::Burn {
@@ -52,9 +52,16 @@ async fn main() {
             process_sub_registrar_info(&rpc_client, &domain).await
         }
         Commands::Count(CountCommand { cmd }) => process_count_command(&rpc_client, cmd).await,
-    };
+    }
+}
 
-    if let Err(err) = res {
-        eprintln!("Error: {err:?}")
+#[tokio::main]
+async fn main() -> ExitCode {
+    match run().await {
+        Ok(()) => ExitCode::SUCCESS,
+        Err(err) => {
+            eprintln!("Error: {err:?}");
+            ExitCode::FAILURE
+        }
     }
 }

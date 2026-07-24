@@ -262,7 +262,7 @@ Registration builds the default mainnet USDC payment path. Treat all keypair pat
 
 - Both `count` commands call `getProgramAccounts`; on public RPCs this can be expensive, slow, or rejected. Progress displays, tables, debug output, and Explorer/naming-site links are presentation conveniences, not stable APIs. Explorer transaction and address links are mainnet-oriented even if `--url` points elsewhere.
 
-- The current `main` function prints handler errors but does not explicitly set a nonzero process exit status. Automation should inspect stderr/output and not rely solely on a zero exit code to mean the operation succeeded.
+- Command-handler failures print an `Error:` message to stderr and return a nonzero process exit status. Human-readable tables and debug-formatted errors remain presentation output rather than a stable machine schema.
 
 For SNS integration guidance, see [developer documentation](https://dev.sns.id/), the [repository overview](../../README.md), and the [Rust SDK guide](../sns-sdk/README.md).
 
