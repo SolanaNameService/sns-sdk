@@ -1,0 +1,50 @@
+---
+displayed_sidebar: docsSidebar
+title: get_record_from_mint
+description: Query active name-tokenizer records for a mint.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Tokenized domains](../tokenized-domains.mdx) / `get_record_from_mint`
+
+# Function: `get_record_from_mint()`
+
+```rust
+pub async fn get_record_from_mint(
+    rpc_client: &RpcClient,
+    mint: &Pubkey,
+) -> Result<Vec<(Pubkey, solana_sdk::account::Account)>, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/non_blocking/nft.rs" line={19} label="rust-crates/sns-sdk/src/non_blocking/nft.rs:19" />
+
+Queries the Name Tokenizer program for active records whose mint field matches `mint`. It returns raw program-account keys and account data without deserializing or limiting the result count.
+
+## Parameters
+
+| Parameter    | Type         | Description                                           |
+| ------------ | ------------ | ----------------------------------------------------- |
+| `rpc_client` | `&RpcClient` | Non-blocking Solana RPC client.                       |
+| `mint`       | `&Pubkey`    | Token mint to match in active name-tokenizer records. |
+
+## Returns
+
+`Result<Vec<(Pubkey, solana_sdk::account::Account)>, SnsError>` containing each matching name-tokenizer account and its raw Solana account data.
+
+## Errors
+
+- `SnsError::SolanaClient` when the program-account query fails.
+
+## Example
+
+```rust
+use sns_sdk::non_blocking::nft::get_record_from_mint;
+
+let records = get_record_from_mint(&client, &mint).await?;
+for (key, account) in records {
+    println!("{key}: {} bytes", account.data.len());
+}
+```
+
+## Related APIs
+
+- [`get_nft_records`](./get-nft-records.mdx)

@@ -1,0 +1,25 @@
+---
+displayed_sidebar: docsSidebar
+title: SnsNftDomain
+description: A tokenized SNS domain returned by NFT ownership queries.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Tokenized domains](../tokenized-domains.mdx) / `SnsNftDomain`
+
+# Struct: `SnsNftDomain`
+
+```rust
+pub struct SnsNftDomain {
+    pub reverse: String,
+    pub key: Pubkey,
+    pub mint: Pubkey,
+}
+```
+
+| Field     | Description                 |
+| --------- | --------------------------- |
+| `reverse` | TLD-less SNS reverse name   |
+| `key`     | SNS name-account public key |
+| `mint`    | Name-tokenizer NFT mint     |
+
+This type is returned by `get_sns_nfts_for_owner` in both client modes.

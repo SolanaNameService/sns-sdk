@@ -1,0 +1,33 @@
+---
+displayed_sidebar: docsSidebar
+title: serialize_record
+description: Encode content for a legacy SNS record.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Record V1 codecs](../record-v1.mdx) / `serialize_record`
+
+# Function: `serialize_record()`
+
+```rust
+pub fn serialize_record(content: &str, record: Record) -> Result<Vec<u8>, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/record/record_v1.rs" line={132} label="record_v1.rs:132" />
+
+Encodes variable records as text, punycodes `CNAME` and `TXT`, and converts fixed address forms to bytes. V1 SOL creation is unsupported.
+
+## Parameters
+
+`content` is the human-readable value and `record` selects its V1 encoding.
+
+## Returns
+
+Encoded bytes. Invalid addresses return their matching `SnsError`; `Record::Sol` returns `SnsError::SolRecordNotSupported`.
+
+## Example
+
+```rust
+use sns_sdk::record::{record_v1::serialize_record, Record};
+
+let bytes = serialize_record("192.168.0.1", Record::A)?;
+```

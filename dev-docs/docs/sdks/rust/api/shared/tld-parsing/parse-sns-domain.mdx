@@ -1,0 +1,32 @@
+---
+displayed_sidebar: docsSidebar
+title: parse_sns_domain
+description: Parse a canonical writable .sns name or one-level subdomain.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [TLD parsing](../tld-parsing.mdx) / `parse_sns_domain`
+
+# Function: `parse_sns_domain()`
+
+```rust
+pub fn parse_sns_domain(domain: &str) -> Result<String, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/tld.rs" line={87} label="tld.rs:87" />
+
+Validates a lowercase, whitespace-free `.sns` name with one or two non-empty labels and returns its suffix-trimmed form.
+
+## Parameters
+
+`domain`: `name.sns` or `sub.parent.sns` in canonical casing.
+
+## Returns
+
+The bare name. Bare or `.sol` names return `UnsupportedTld`; casing, empty-label, and depth violations return their corresponding `SnsError`.
+
+## Example
+
+```rust
+use sns_sdk::tld::parse_sns_domain;
+assert_eq!(parse_sns_domain("sub.example.sns")?, "sub.example");
+```

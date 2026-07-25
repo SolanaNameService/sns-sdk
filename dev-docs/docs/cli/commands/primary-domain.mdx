@@ -1,0 +1,65 @@
+---
+title: primary-domain
+description: Get or set a wallet's primary SNS domain with SNS CLI v3.
+---
+
+The `primary-domain` command group reads a wallet's configured primary domain or signs and submits a transaction to select one.
+
+## `primary-domain get`
+
+### Usage
+
+```text
+sns [--url <URL>] primary-domain get <OWNER_PUBKEY>
+```
+
+### Arguments
+
+#### `<OWNER_PUBKEY>`
+
+Required. Base58 public key of the wallet whose primary domain should be fetched.
+
+### Options
+
+#### `-u, --url <URL>`
+
+Use this RPC endpoint instead of `RPC_URL` or the default public mainnet-beta endpoint at `https://api.mainnet-beta.solana.com`. This global option may appear before `primary-domain` or after the nested subcommand.
+
+### Output
+
+Prints `No primary domain set` and exits successfully when the wallet has no configured selection. Otherwise, prints a one-row table with `Requested Owner`, readable `.sns` `Domain`, `Name Account`, and `Stale`.
+
+`Requested Owner` is the input wallet. `Stale` compares that wallet with the NFT holder for a tokenized domain or the raw registry owner otherwise. Missing or malformed selected registries and reverse records are errors.
+
+## `primary-domain set`
+
+### Usage
+
+```text
+sns [--url <URL>] primary-domain set <OWNER_KEYPAIR> <DOMAIN>
+```
+
+### Arguments
+
+#### `<OWNER_KEYPAIR>`
+
+Required. Path to the domain owner's Solana keypair JSON file. This keypair signs and pays for the transaction.
+
+#### `<DOMAIN>`
+
+Required. One canonical lowercase top-level `.sns` domain. Subdomains are rejected.
+
+### Options
+
+#### `-u, --url <URL>`
+
+Use this RPC endpoint instead of `RPC_URL` or the default public mainnet-beta endpoint at `https://api.mainnet-beta.solana.com`. This global option may appear before `primary-domain` or after the nested subcommand.
+
+### Output
+
+Before submission, the command requires the registry to exist, to be top-level, and to have a raw owner equal to the signer. NFT ownership does not authorize this setter. After preflight and confirmation, the command prints:
+
+```text
+Setting primary domain...
+Primary domain set, txid: <SIGNATURE>
+```

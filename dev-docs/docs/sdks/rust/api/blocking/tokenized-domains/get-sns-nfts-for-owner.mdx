@@ -1,0 +1,55 @@
+---
+displayed_sidebar: docsSidebar
+title: get_sns_nfts_for_owner
+description: List tokenized SNS domains held by a wallet.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Tokenized domains](../tokenized-domains.mdx) / `get_sns_nfts_for_owner`
+
+# Function: `get_sns_nfts_for_owner()`
+
+```rust
+pub fn get_sns_nfts_for_owner(
+    rpc_client: &RpcClient,
+    owner: &Pubkey,
+) -> Result<Vec<SnsNftDomain>, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/blocking/nft.rs" line={76} label="rust-crates/sns-sdk/src/blocking/nft.rs:76" />
+
+Finds the wallet's token records, reverse-resolves their SNS name accounts, and returns only records with reverse data. Each `SnsNftDomain` contains a TLD-less `reverse`, name-account `key`, and NFT `mint`; entries without reverse data are omitted.
+
+## Availability
+
+Requires the `blocking` feature.
+
+## Parameters
+
+| Parameter    | Type                                    | Description                                                         |
+| ------------ | --------------------------------------- | ------------------------------------------------------------------- |
+| `rpc_client` | `&solana_client::rpc_client::RpcClient` | Blocking client used for token, record, and reverse-record queries. |
+| `owner`      | `&Pubkey`                               | Wallet whose tokenized SNS domains are requested.                   |
+
+## Returns
+
+`Result<Vec<SnsNftDomain>, SnsError>` containing domains with reverse data, in the order of the token records that produced them.
+
+## Errors
+
+- `SnsError::SolanaClient` when a required token, record, or reverse-record query fails.
+- `SnsError::InvalidNameAccountData` when a fetched reverse account is malformed or has the wrong owner.
+- `SnsError::InvalidReverse` when a reverse payload is malformed or not UTF-8.
+
+## Example
+
+```rust
+use sns_sdk::blocking::nft::get_sns_nfts_for_owner;
+use solana_client::rpc_client::RpcClient;
+use solana_program::pubkey::Pubkey;
+
+let client = RpcClient::new(std::env::var("RPC_URL")?);
+let owner: Pubkey = std::env::var("OWNER")?.parse()?;
+for domain in get_sns_nfts_for_owner(&client, &owner)? {
+    println!("{}.sns", domain.reverse);
+}
+```

@@ -1,0 +1,18 @@
+---
+displayed_sidebar: docsSidebar
+title: Record instructions
+description: Build V2 record create, update, delete, verifier, and validation instructions.
+---
+
+These local builders create unsigned SNS Records V2 instructions for a full canonical lowercase `.sns` domain. They derive the record and domain keys, serialize content where needed, and leave transaction signing and submission to the caller.
+
+## APIs
+
+| API                                                                                      | Description                                        |
+| ---------------------------------------------------------------------------------------- | -------------------------------------------------- |
+| [`create_record_v2_instruction`](./record-instructions/create-record-v2-instruction)     | Allocates and posts a V2 record.                   |
+| [`update_record_v2_instruction`](./record-instructions/update-record-v2-instruction)     | Replaces V2 record content.                        |
+| [`delete_record_v2`](./record-instructions/delete-record-v2)                             | Deletes a V2 record and refunds rent to the payer. |
+| [`write_roa_record_v2`](./record-instructions/write-roa-record-v2)                       | Writes a Right-of-Association identifier.          |
+| [`validate_record_v2_content`](./record-instructions/validate-record-v2-content)         | Validates staleness or RoA with a Solana verifier. |
+| [`eth_validate_record_v2_content`](./record-instructions/eth-validate-record-v2-content) | Validates RoA using an Ethereum signature.         |

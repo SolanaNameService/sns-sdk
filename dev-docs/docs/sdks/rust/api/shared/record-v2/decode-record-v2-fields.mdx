@@ -1,0 +1,33 @@
+---
+displayed_sidebar: docsSidebar
+title: decode_record_v2_fields
+description: Decode the fields of an SNS Record V2 payload.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Record V2 codecs and verification](../record-v2.mdx) / `decode_record_v2_fields`
+
+# Function: `decode_record_v2_fields()`
+
+```rust
+pub fn decode_record_v2_fields(record_data: &[u8]) -> Result<RecordV2Fields<'_>, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/record/record_v2.rs" line={121} label="record_v2.rs:121" />
+
+Decodes the header, validation kinds, staleness ID, RoA ID, and content slice from on-chain V2 bytes.
+
+## Parameters
+
+`record_data`: raw V2 account data.
+
+## Returns
+
+Borrowed `RecordV2Fields`. Invalid header, validation, or lengths return `SnsError::InvalidRecordData` or propagated validation errors.
+
+## Example
+
+```rust
+use sns_sdk::record::record_v2::decode_record_v2_fields;
+
+let fields = decode_record_v2_fields(&account.data)?;
+```

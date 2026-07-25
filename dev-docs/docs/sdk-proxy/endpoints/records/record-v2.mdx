@@ -1,0 +1,88 @@
+---
+title: "GET /record-v2/:domain/:record"
+description: Retrieve and verify one SNS V2 record.
+---
+
+Return one V2 record with decoded content, verification state, and base64 raw data.
+
+## Request
+
+```http
+GET /record-v2/:domain/:record
+```
+
+## Path parameters
+
+### `domain`
+
+Required. A TLD-less top-level domain or one-level subdomain. The route trims whitespace, converts the value to lowercase, and reads the corresponding `.sns` record.
+
+### `record`
+
+Required. One exact supported record value from [`GET /types/record`](/docs/sdk-proxy/endpoints/records/types-record).
+
+## Query parameters
+
+### `rpc`
+
+Optional. A non-empty Solana RPC URL that overrides the proxy Worker's `RPC_URL` binding for this request.
+
+## Response
+
+A successful request returns `200 OK`:
+
+```ts
+type RecordV2Response = {
+  s: "ok";
+  result: {
+    deserialized?: string;
+    stale: boolean;
+    roa?: boolean;
+    record: {
+      header: {
+        stalenessValidation: number;
+        rightOfAssociationValidation: number;
+        contentLength: number;
+      };
+      data: string;
+    };
+  };
+};
+```
+
+`deserialized` is present when the record type supports decoding. `stale` is `true` when staleness verification fails. `roa` is omitted when Right of Association verification does not apply. `record.data` contains the complete raw record bytes encoded as base64.
+
+## Example
+
+```bash
+curl "https://sdk-proxy.sns.id/record-v2/bonfida/url"
+```
+
+```json
+{
+  "s": "ok",
+  "result": {
+    "deserialized": "https://example.com",
+    "stale": false,
+    "roa": true,
+    "record": {
+      "header": {
+        "stalenessValidation": 1,
+        "rightOfAssociationValidation": 1,
+        "contentLength": 19
+      },
+      "data": "<BASE64_RECORD_DATA>"
+    }
+  }
+}
+```
+
+## Errors
+
+| Status | `result`              | When                                               |
+| ------ | --------------------- | -------------------------------------------------- |
+| `400`  | `Invalid input`       | The domain shape or exact record value is invalid. |
+| `404`  | `Record not found`    | The domain or requested record account is absent.  |
+| `422`  | `Record is malformed` | Record data or validation metadata is malformed.   |
+| `502`  | `RPC unavailable`     | The selected RPC returns a JSON-RPC error.         |
+| `500`  | `Internal error`      | No RPC is configured, or another failure occurs.   |

@@ -1,0 +1,33 @@
+---
+displayed_sidebar: docsSidebar
+title: eth_validate_record_v2_content
+description: Build an Ethereum-signature validation instruction for a V2 record.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Record instructions](../record-instructions.mdx) / `eth_validate_record_v2_content`
+
+# Function: `eth_validate_record_v2_content()`
+
+```rust
+pub fn eth_validate_record_v2_content(domain: &str, record: Record, owner: Pubkey, payer: Pubkey, signature: Vec<u8>, expected_pubkey: Vec<u8>) -> Result<Instruction, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/bindings/record_v2.rs" line={172} label="record_v2.rs:172" />
+
+Builds a V2 Ethereum RoA validation instruction. The program checks the supplied 65-byte secp256k1 `signature` against the supplied 20-byte Ethereum `expected_pubkey`; no on-chain verifier signer is used.
+
+## Parameters
+
+`domain` is canonical lowercase `.sns`; `record` identifies the account; `owner` authorizes it; `payer` funds it.
+
+## Returns
+
+An unsigned `Instruction`, or domain-key derivation errors through `SnsError`.
+
+## Example
+
+```rust
+use sns_sdk::{bindings::record_v2::eth_validate_record_v2_content, record::Record};
+
+let instruction = eth_validate_record_v2_content("example.sns", Record::Eth, owner, payer, signature, address)?;
+```

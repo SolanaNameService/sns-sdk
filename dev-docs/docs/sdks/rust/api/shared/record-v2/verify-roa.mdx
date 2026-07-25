@@ -1,0 +1,27 @@
+---
+displayed_sidebar: docsSidebar
+title: ParsedRecordV2::verify_roa
+description: Verify the Right-of-Association proof of a V2 record.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Record V2 codecs and verification](../record-v2.mdx) / `ParsedRecordV2::verify_roa`
+
+# Method: `ParsedRecordV2::verify_roa()`
+
+```rust
+pub fn verify_roa(&self) -> Result<(), SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/record/record_v2.rs" line={72} label="record_v2.rs:72" />
+
+Verifies that the stored validation type and RoA identifier match the rules for the parsed record type.
+
+## Returns
+
+`()` when the proof is valid. A mismatched validation or ID returns `SnsError::UnverifiedRecord`; content serialization errors can propagate.
+
+## Example
+
+```rust
+parsed.verify_roa()?;
+```

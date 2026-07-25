@@ -1,0 +1,10 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#07130e"/>
+  <circle cx="1000" cy="110" r="280" fill="#123222"/>
+  <circle cx="1080" cy="590" r="340" fill="#0c2418"/>
+  <rect x="72" y="72" width="12" height="118" rx="6" fill="#b4fc75"/>
+  <text x="120" y="130" fill="#b4fc75" font-family="Arial, sans-serif" font-size="34" font-weight="700">SOLANA NAME SERVICE</text>
+  <text x="72" y="310" fill="#f6fff8" font-family="Arial, sans-serif" font-size="82" font-weight="700">Developer</text>
+  <text x="72" y="405" fill="#f6fff8" font-family="Arial, sans-serif" font-size="82" font-weight="700">Documentation</text>
+  <text x="76" y="500" fill="#a7c9b3" font-family="Arial, sans-serif" font-size="32">SDKs · CLI · Proxy · React Hooks · Migration</text>
+</svg>

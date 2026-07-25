@@ -1,0 +1,90 @@
+---
+title: "GET /create-subdomain"
+description: Build instructions or an unsigned transaction for SNS subdomain creation.
+---
+
+Build a one-level `.sns` subdomain creation without signing or submitting a transaction.
+
+## Request
+
+```http
+GET /create-subdomain
+```
+
+## Query parameters
+
+### `owner`
+
+Required. Base58 public key of the parent-domain owner creating the subdomain. This key is also the transaction fee payer.
+
+### `subdomain`
+
+Required. Exactly two TLD-less labels, such as `team.bonfida`. The value is trimmed and converted to lowercase.
+
+### `serialize`
+
+Optional. `true` returns a base64-encoded unsigned legacy transaction. Omitted or `false` returns instruction objects.
+
+### `rpc`
+
+Optional. A non-empty Solana RPC URL that overrides the proxy Worker's `RPC_URL` binding for this request.
+
+## Response
+
+A successful request returns `200 OK`:
+
+```ts
+type SerializedInstruction = {
+  programId: string;
+  keys: Array<{
+    isSigner: boolean;
+    isWritable: boolean;
+    pubkey: string;
+  }>;
+  data: string;
+};
+
+type CreateSubdomainResponse = {
+  s: "ok";
+  result: SerializedInstruction[] | string;
+};
+```
+
+Instruction-object responses use base58 public keys and base64 data. With `serialize=true`, the string is a base64 unsigned legacy transaction whose fee payer is `owner` and whose recent blockhash comes from the selected RPC.
+
+The route requests zero bytes of subdomain data allocation. It also adds reverse-record instructions when the reverse account does not exist. The proxy never signs, sends, relays, or confirms the returned transaction.
+
+## Example
+
+```bash
+curl --get "https://sdk-proxy.sns.id/create-subdomain" \
+  --data-urlencode "owner=<OWNER_PUBLIC_KEY>" \
+  --data-urlencode "subdomain=team.bonfida"
+```
+
+```json
+{
+  "s": "ok",
+  "result": [
+    {
+      "programId": "<PROGRAM_ID>",
+      "keys": [
+        {
+          "isSigner": true,
+          "isWritable": true,
+          "pubkey": "<ACCOUNT_PUBLIC_KEY>"
+        }
+      ],
+      "data": "<BASE64_DATA>"
+    }
+  ]
+}
+```
+
+## Errors
+
+| Status | `result`          | When                                             |
+| ------ | ----------------- | ------------------------------------------------ |
+| `400`  | `Invalid input`   | `owner`, `subdomain`, or `serialize` is invalid. |
+| `502`  | `RPC unavailable` | The selected RPC returns a JSON-RPC error.       |
+| `500`  | `Internal error`  | No RPC is configured, or another failure occurs. |

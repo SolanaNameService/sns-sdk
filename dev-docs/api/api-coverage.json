@@ -1,0 +1,1087 @@
+{
+  "schemaVersion": 1,
+  "requiredProducts": ["rust"],
+  "entries": [
+    {
+      "id": "rust.domain-registration.register-domain",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "register_domain",
+      "source": "rust-crates/sns-sdk/src/bindings/register_domain.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/domain-registration/register-domain.mdx"
+      }
+    },
+    {
+      "id": "rust.domain-registration.get-register-instruction",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "get_register_instruction",
+      "source": "rust-crates/sns-sdk/src/bindings/register_domain.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/domain-registration/get-register-instruction.mdx"
+      }
+    },
+    {
+      "id": "rust.domain-registration.get-pyth-feed-account-key",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "get_pyth_feed_account_key",
+      "source": "rust-crates/sns-sdk/src/bindings/register_domain.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/domain-registration/get-pyth-feed-account-key.mdx"
+      }
+    },
+    {
+      "id": "rust.derivation.get-srs-domain-key",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "get_srs_domain_key",
+      "source": "rust-crates/sns-sdk/src/derivation.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/derivation/get-srs-domain-key.mdx"
+      }
+    },
+    {
+      "id": "rust.derivation.get-sns-domain-key",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "get_sns_domain_key",
+      "source": "rust-crates/sns-sdk/src/derivation.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/derivation/get-sns-domain-key.mdx"
+      }
+    },
+    {
+      "id": "rust.derivation.get-reverse-key",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "get_reverse_key",
+      "source": "rust-crates/sns-sdk/src/derivation.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/derivation/get-reverse-key.mdx"
+      }
+    },
+    {
+      "id": "rust.derivation.get-prefix",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "get_prefix",
+      "source": "rust-crates/sns-sdk/src/derivation.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/derivation/get-prefix.mdx"
+      }
+    },
+    {
+      "id": "rust.derivation.get-hashed-name",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "get_hashed_name",
+      "source": "rust-crates/sns-sdk/src/derivation.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/derivation/get-hashed-name.mdx"
+      }
+    },
+    {
+      "id": "rust.derivation.get-domain-mint",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "get_domain_mint",
+      "source": "rust-crates/sns-sdk/src/derivation.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/derivation/get-domain-mint.mdx"
+      }
+    },
+    {
+      "id": "rust.derivation.derive",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "derive",
+      "source": "rust-crates/sns-sdk/src/derivation.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/derivation/derive.mdx"
+      }
+    },
+    {
+      "id": "rust.derivation.derive-reverse",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "derive_reverse",
+      "source": "rust-crates/sns-sdk/src/derivation.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/derivation/derive-reverse.mdx"
+      }
+    },
+    {
+      "id": "rust.tld.parse-sns-top-level-domain",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "parse_sns_top_level_domain",
+      "source": "rust-crates/sns-sdk/src/tld.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/tld-parsing/parse-sns-top-level-domain.mdx"
+      }
+    },
+    {
+      "id": "rust.tld.parse-sns-domain",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "parse_sns_domain",
+      "source": "rust-crates/sns-sdk/src/tld.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/tld-parsing/parse-sns-domain.mdx"
+      }
+    },
+    {
+      "id": "rust.tld.parse-supported-tld",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "parse_supported_tld",
+      "source": "rust-crates/sns-sdk/src/tld.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/tld-parsing/parse-supported-tld.mdx"
+      }
+    },
+    {
+      "id": "rust.record-types.get-record-v2-key",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "get_record_v2_key",
+      "source": "rust-crates/sns-sdk/src/record/mod.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/record-types/get-record-v2-key.mdx"
+      }
+    },
+    {
+      "id": "rust.record-types.get-record-v1-key",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "get_record_v1_key",
+      "source": "rust-crates/sns-sdk/src/record/mod.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/record-types/get-record-v1-key.mdx"
+      }
+    },
+    {
+      "id": "rust.record-types.get-record-key",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "get_record_key",
+      "source": "rust-crates/sns-sdk/src/record/mod.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/record-types/get-record-key.mdx"
+      }
+    },
+    {
+      "id": "rust.record-types.get-record-class",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "get_record_class",
+      "source": "rust-crates/sns-sdk/src/record/mod.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/record-types/get-record-class.mdx"
+      }
+    },
+    {
+      "id": "rust.record-types.try-from-str",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "Record::try_from_str",
+      "source": "rust-crates/sns-sdk/src/record/mod.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/record-types/try-from-str.mdx"
+      }
+    },
+    {
+      "id": "rust.record-types.as-str",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "Record::as_str",
+      "source": "rust-crates/sns-sdk/src/record/mod.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/record-types/as-str.mdx"
+      }
+    },
+    {
+      "id": "rust.primary-domain.set-primary-domain-instruction",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "set_primary_domain_instruction",
+      "source": "rust-crates/sns-sdk/src/primary_domain.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/primary-domains/set-primary-domain-instruction.mdx"
+      }
+    },
+    {
+      "id": "rust.primary-domain.parse",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "PrimaryDomain::parse",
+      "source": "rust-crates/sns-sdk/src/primary_domain.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/primary-domains/parse.mdx"
+      }
+    },
+    {
+      "id": "rust.primary-domain.derive-primary-domain-key",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "derive_primary_domain_key",
+      "source": "rust-crates/sns-sdk/src/primary_domain.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/primary-domains/derive-primary-domain-key.mdx"
+      }
+    },
+    {
+      "id": "rust.record-v2.serialize-record-v2-content",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "serialize_record_v2_content",
+      "source": "rust-crates/sns-sdk/src/record/record_v2.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/record-v2/serialize-record-v2-content.mdx"
+      }
+    },
+    {
+      "id": "rust.record-v2.deserialize-record-v2-content",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "deserialize_record_v2_content",
+      "source": "rust-crates/sns-sdk/src/record/record_v2.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/record-v2/deserialize-record-v2-content.mdx"
+      }
+    },
+    {
+      "id": "rust.record-v2.verify-roa",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "ParsedRecordV2::verify_roa",
+      "source": "rust-crates/sns-sdk/src/record/record_v2.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/record-v2/verify-roa.mdx"
+      }
+    },
+    {
+      "id": "rust.record-v2.verify-staleness",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "ParsedRecordV2::verify_staleness",
+      "source": "rust-crates/sns-sdk/src/record/record_v2.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/record-v2/verify-staleness.mdx"
+      }
+    },
+    {
+      "id": "rust.record-v2.parse-content",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "RecordV2Fields::parse_content",
+      "source": "rust-crates/sns-sdk/src/record/record_v2.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/record-v2/parse-content.mdx"
+      }
+    },
+    {
+      "id": "rust.record-v2.decode-record-v2-fields",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "decode_record_v2_fields",
+      "source": "rust-crates/sns-sdk/src/record/record_v2.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/record-v2/decode-record-v2-fields.mdx"
+      }
+    },
+    {
+      "id": "rust.record-v1.check-sol-record",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "check_sol_record",
+      "source": "rust-crates/sns-sdk/src/record/record_v1.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/record-v1/check-sol-record.mdx"
+      }
+    },
+    {
+      "id": "rust.record-v1.serialize-record",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "serialize_record",
+      "source": "rust-crates/sns-sdk/src/record/record_v1.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/record-v1/serialize-record.mdx"
+      }
+    },
+    {
+      "id": "rust.record-v1.deserialize-record",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "deserialize_record",
+      "source": "rust-crates/sns-sdk/src/record/record_v1.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/record-v1/deserialize-record.mdx"
+      }
+    },
+    {
+      "id": "rust.record-v1.get-record-size",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "get_record_size",
+      "source": "rust-crates/sns-sdk/src/record/record_v1.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/record-v1/get-record-size.mdx"
+      }
+    },
+    {
+      "id": "rust.record-instructions.eth-validate-record-v2-content",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "eth_validate_record_v2_content",
+      "source": "rust-crates/sns-sdk/src/bindings/record_v2.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/record-instructions/eth-validate-record-v2-content.mdx"
+      }
+    },
+    {
+      "id": "rust.record-instructions.write-roa-record-v2",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "write_roa_record_v2",
+      "source": "rust-crates/sns-sdk/src/bindings/record_v2.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/record-instructions/write-roa-record-v2.mdx"
+      }
+    },
+    {
+      "id": "rust.record-instructions.validate-record-v2-content",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "validate_record_v2_content",
+      "source": "rust-crates/sns-sdk/src/bindings/record_v2.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/record-instructions/validate-record-v2-content.mdx"
+      }
+    },
+    {
+      "id": "rust.record-instructions.delete-record-v2",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "delete_record_v2",
+      "source": "rust-crates/sns-sdk/src/bindings/record_v2.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/record-instructions/delete-record-v2.mdx"
+      }
+    },
+    {
+      "id": "rust.record-instructions.update-record-v2-instruction",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "update_record_v2_instruction",
+      "source": "rust-crates/sns-sdk/src/bindings/record_v2.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/record-instructions/update-record-v2-instruction.mdx"
+      }
+    },
+    {
+      "id": "rust.record-instructions.create-record-v2-instruction",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "create_record_v2_instruction",
+      "source": "rust-crates/sns-sdk/src/bindings/record_v2.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/record-instructions/create-record-v2-instruction.mdx"
+      }
+    },
+    {
+      "id": "rust.name-registry.create-name-registry",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "create_name_registry",
+      "source": "rust-crates/sns-sdk/src/bindings/name_registry.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/name-registry-instructions/create-name-registry.mdx"
+      }
+    },
+    {
+      "id": "rust.name-registry.update-name-registry-data",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "update_name_registry_data",
+      "source": "rust-crates/sns-sdk/src/bindings/name_registry.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/name-registry-instructions/update-name-registry-data.mdx"
+      }
+    },
+    {
+      "id": "rust.name-registry.transfer-name-ownership",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "transfer_name_ownership",
+      "source": "rust-crates/sns-sdk/src/bindings/name_registry.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/name-registry-instructions/transfer-name-ownership.mdx"
+      }
+    },
+    {
+      "id": "rust.name-registry.delete-name-registry",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "delete_name_registry",
+      "source": "rust-crates/sns-sdk/src/bindings/name_registry.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/name-registry-instructions/delete-name-registry.mdx"
+      }
+    },
+    {
+      "id": "rust.non-blocking.resolve",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "resolve",
+      "source": "rust-crates/sns-sdk/src/non_blocking/resolve.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/non-blocking/domain-resolution/resolve.mdx"
+      }
+    },
+    {
+      "id": "rust.non-blocking.resolve-name-registry",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "resolve_name_registry",
+      "source": "rust-crates/sns-sdk/src/non_blocking/resolve.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/non-blocking/name-registries/resolve-name-registry.mdx"
+      }
+    },
+    {
+      "id": "rust.non-blocking.resolve-name-registry-batch",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "resolve_name_registry_batch",
+      "source": "rust-crates/sns-sdk/src/non_blocking/resolve.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/non-blocking/name-registries/resolve-name-registry-batch.mdx"
+      }
+    },
+    {
+      "id": "rust.non-blocking.resolve-reverse",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "resolve_reverse",
+      "source": "rust-crates/sns-sdk/src/non_blocking/resolve.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/non-blocking/reverse-lookup/resolve-reverse.mdx"
+      }
+    },
+    {
+      "id": "rust.non-blocking.resolve-reverse-with-parent",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "resolve_reverse_with_parent",
+      "source": "rust-crates/sns-sdk/src/non_blocking/resolve.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/non-blocking/reverse-lookup/resolve-reverse-with-parent.mdx"
+      }
+    },
+    {
+      "id": "rust.non-blocking.resolve-reverse-batch",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "resolve_reverse_batch",
+      "source": "rust-crates/sns-sdk/src/non_blocking/resolve.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/non-blocking/reverse-lookup/resolve-reverse-batch.mdx"
+      }
+    },
+    {
+      "id": "rust.non-blocking.get-sns-domains-for-owner",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "get_sns_domains_for_owner",
+      "source": "rust-crates/sns-sdk/src/non_blocking/domain.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/non-blocking/wallet-domains/get-sns-domains-for-owner.mdx"
+      }
+    },
+    {
+      "id": "rust.non-blocking.get-primary-domain",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "get_primary_domain",
+      "source": "rust-crates/sns-sdk/src/non_blocking/primary_domain.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/non-blocking/primary-domains/get-primary-domain.mdx"
+      }
+    },
+    {
+      "id": "rust.non-blocking.get-record",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "get_record",
+      "source": "rust-crates/sns-sdk/src/non_blocking/record_v1.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/non-blocking/record-v1/get-record.mdx"
+      }
+    },
+    {
+      "id": "rust.non-blocking.get-record-v2",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "get_record_v2",
+      "source": "rust-crates/sns-sdk/src/non_blocking/record_v2.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/non-blocking/record-v2/get-record-v2.mdx"
+      }
+    },
+    {
+      "id": "rust.non-blocking.get-multiple-records-v2",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "get_multiple_records_v2",
+      "source": "rust-crates/sns-sdk/src/non_blocking/record_v2.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/non-blocking/record-v2/get-multiple-records-v2.mdx"
+      }
+    },
+    {
+      "id": "rust.non-blocking.get-subdomains",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "get_subdomains",
+      "source": "rust-crates/sns-sdk/src/non_blocking/subdomain.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/non-blocking/subdomains/get-subdomains.mdx"
+      }
+    },
+    {
+      "id": "rust.non-blocking.get-sub-registrar-info",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "get_sub_registrar_info",
+      "source": "rust-crates/sns-sdk/src/non_blocking/subdomain.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/non-blocking/sub-registrars/get-sub-registrar-info.mdx"
+      }
+    },
+    {
+      "id": "rust.non-blocking.get-record-from-mint",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "get_record_from_mint",
+      "source": "rust-crates/sns-sdk/src/non_blocking/nft.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/non-blocking/tokenized-domains/get-record-from-mint.mdx"
+      }
+    },
+    {
+      "id": "rust.non-blocking.get-nft-records",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "get_nft_records",
+      "source": "rust-crates/sns-sdk/src/non_blocking/nft.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/non-blocking/tokenized-domains/get-nft-records.mdx"
+      }
+    },
+    {
+      "id": "rust.non-blocking.get-sns-nfts-for-owner",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "get_sns_nfts_for_owner",
+      "source": "rust-crates/sns-sdk/src/non_blocking/nft.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/non-blocking/tokenized-domains/get-sns-nfts-for-owner.mdx"
+      }
+    },
+    {
+      "id": "rust.non-blocking.resolve-nft-owner",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "resolve_nft_owner",
+      "source": "rust-crates/sns-sdk/src/non_blocking/nft.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/non-blocking/tokenized-domains/resolve-nft-owner.mdx"
+      }
+    },
+    {
+      "id": "rust.blocking.resolve",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "resolve",
+      "source": "rust-crates/sns-sdk/src/blocking/resolve.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/blocking/domain-resolution/resolve.mdx"
+      }
+    },
+    {
+      "id": "rust.blocking.resolve-name-registry",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "resolve_name_registry",
+      "source": "rust-crates/sns-sdk/src/blocking/resolve.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/blocking/name-registries/resolve-name-registry.mdx"
+      }
+    },
+    {
+      "id": "rust.blocking.resolve-name-registry-batch",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "resolve_name_registry_batch",
+      "source": "rust-crates/sns-sdk/src/blocking/resolve.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/blocking/name-registries/resolve-name-registry-batch.mdx"
+      }
+    },
+    {
+      "id": "rust.blocking.resolve-reverse",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "resolve_reverse",
+      "source": "rust-crates/sns-sdk/src/blocking/resolve.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/blocking/reverse-lookup/resolve-reverse.mdx"
+      }
+    },
+    {
+      "id": "rust.blocking.resolve-reverse-with-parent",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "resolve_reverse_with_parent",
+      "source": "rust-crates/sns-sdk/src/blocking/resolve.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/blocking/reverse-lookup/resolve-reverse-with-parent.mdx"
+      }
+    },
+    {
+      "id": "rust.blocking.resolve-reverse-batch",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "resolve_reverse_batch",
+      "source": "rust-crates/sns-sdk/src/blocking/resolve.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/blocking/reverse-lookup/resolve-reverse-batch.mdx"
+      }
+    },
+    {
+      "id": "rust.blocking.get-sns-domains-for-owner",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "get_sns_domains_for_owner",
+      "source": "rust-crates/sns-sdk/src/blocking/domain.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/blocking/wallet-domains/get-sns-domains-for-owner.mdx"
+      }
+    },
+    {
+      "id": "rust.blocking.get-primary-domain",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "get_primary_domain",
+      "source": "rust-crates/sns-sdk/src/blocking/primary_domain.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/blocking/primary-domains/get-primary-domain.mdx"
+      }
+    },
+    {
+      "id": "rust.blocking.get-record",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "get_record",
+      "source": "rust-crates/sns-sdk/src/blocking/record_v1.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/blocking/record-v1/get-record.mdx"
+      }
+    },
+    {
+      "id": "rust.blocking.get-record-v2",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "get_record_v2",
+      "source": "rust-crates/sns-sdk/src/blocking/record_v2.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/blocking/record-v2/get-record-v2.mdx"
+      }
+    },
+    {
+      "id": "rust.blocking.get-multiple-records-v2",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "get_multiple_records_v2",
+      "source": "rust-crates/sns-sdk/src/blocking/record_v2.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/blocking/record-v2/get-multiple-records-v2.mdx"
+      }
+    },
+    {
+      "id": "rust.blocking.get-subdomains",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "get_subdomains",
+      "source": "rust-crates/sns-sdk/src/blocking/subdomain.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/blocking/subdomains/get-subdomains.mdx"
+      }
+    },
+    {
+      "id": "rust.blocking.get-sub-registrar-info",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "get_sub_registrar_info",
+      "source": "rust-crates/sns-sdk/src/blocking/subdomain.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/blocking/sub-registrars/get-sub-registrar-info.mdx"
+      }
+    },
+    {
+      "id": "rust.blocking.get-record-from-mint",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "get_record_from_mint",
+      "source": "rust-crates/sns-sdk/src/blocking/nft.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/blocking/tokenized-domains/get-record-from-mint.mdx"
+      }
+    },
+    {
+      "id": "rust.blocking.get-nft-records",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "get_nft_records",
+      "source": "rust-crates/sns-sdk/src/blocking/nft.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/blocking/tokenized-domains/get-nft-records.mdx"
+      }
+    },
+    {
+      "id": "rust.blocking.get-sns-nfts-for-owner",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "get_sns_nfts_for_owner",
+      "source": "rust-crates/sns-sdk/src/blocking/nft.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/blocking/tokenized-domains/get-sns-nfts-for-owner.mdx"
+      }
+    },
+    {
+      "id": "rust.blocking.resolve-nft-owner",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "resolve_nft_owner",
+      "source": "rust-crates/sns-sdk/src/blocking/nft.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/blocking/tokenized-domains/resolve-nft-owner.mdx"
+      }
+    },
+
+    {
+      "id": "cli.resolve",
+      "product": "cli",
+      "kind": "cli-command",
+      "command": "resolve",
+      "source": "rust-crates/sns-cli/src/cli.rs",
+      "target": { "path": "dev-docs/docs/cli/commands/resolve.mdx" }
+    },
+    {
+      "id": "cli.register",
+      "product": "cli",
+      "kind": "cli-command",
+      "command": "register",
+      "source": "rust-crates/sns-cli/src/cli.rs",
+      "target": { "path": "dev-docs/docs/cli/commands/register.mdx" }
+    },
+    {
+      "id": "cli.primary-domain",
+      "product": "cli",
+      "kind": "cli-command",
+      "command": "primary-domain",
+      "source": "rust-crates/sns-cli/src/cli.rs",
+      "target": { "path": "dev-docs/docs/cli/commands/primary-domain.mdx" }
+    },
+    {
+      "id": "cli.transfer",
+      "product": "cli",
+      "kind": "cli-command",
+      "command": "transfer",
+      "source": "rust-crates/sns-cli/src/cli.rs",
+      "target": { "path": "dev-docs/docs/cli/commands/transfer.mdx" }
+    },
+    {
+      "id": "cli.burn",
+      "product": "cli",
+      "kind": "cli-command",
+      "command": "burn",
+      "source": "rust-crates/sns-cli/src/cli.rs",
+      "target": { "path": "dev-docs/docs/cli/commands/burn.mdx" }
+    },
+    {
+      "id": "cli.lookup",
+      "product": "cli",
+      "kind": "cli-command",
+      "command": "lookup",
+      "source": "rust-crates/sns-cli/src/cli.rs",
+      "target": { "path": "dev-docs/docs/cli/commands/lookup.mdx" }
+    },
+    {
+      "id": "cli.reverse-lookup",
+      "product": "cli",
+      "kind": "cli-command",
+      "command": "reverse-lookup",
+      "source": "rust-crates/sns-cli/src/cli.rs",
+      "target": { "path": "dev-docs/docs/cli/commands/reverse-lookup.mdx" }
+    },
+    {
+      "id": "cli.domains",
+      "product": "cli",
+      "kind": "cli-command",
+      "command": "domains",
+      "source": "rust-crates/sns-cli/src/cli.rs",
+      "target": { "path": "dev-docs/docs/cli/commands/domains.mdx" }
+    },
+    {
+      "id": "cli.record-v2",
+      "product": "cli",
+      "kind": "cli-command",
+      "command": "record-v2",
+      "source": "rust-crates/sns-cli/src/cli.rs",
+      "target": { "path": "dev-docs/docs/cli/commands/record-v2.mdx" }
+    },
+    {
+      "id": "cli.sub-registrar",
+      "product": "cli",
+      "kind": "cli-command",
+      "command": "sub-registrar",
+      "source": "rust-crates/sns-cli/src/cli.rs",
+      "target": {
+        "path": "dev-docs/docs/cli/commands/sub-registrar.mdx"
+      }
+    },
+    {
+      "id": "proxy.root",
+      "product": "sdk-proxy",
+      "kind": "proxy-route",
+      "method": "GET",
+      "route": "/",
+      "status": "root",
+      "source": "sdk-proxy/src/index.ts",
+      "target": {
+        "path": "dev-docs/docs/sdk-proxy/endpoints/general/root.mdx"
+      }
+    },
+    {
+      "id": "proxy.resolve",
+      "product": "sdk-proxy",
+      "kind": "proxy-route",
+      "method": "GET",
+      "route": "/resolve/:domain",
+      "status": "current",
+      "source": "sdk-proxy/src/routes/resolve.ts",
+      "target": {
+        "path": "dev-docs/docs/sdk-proxy/endpoints/resolution/resolve.mdx"
+      }
+    },
+    {
+      "id": "proxy.domain-key",
+      "product": "sdk-proxy",
+      "kind": "proxy-route",
+      "method": "GET",
+      "route": "/domain-key/:domain",
+      "status": "current",
+      "source": "sdk-proxy/src/routes/domains.ts",
+      "target": {
+        "path": "dev-docs/docs/sdk-proxy/endpoints/domains/domain-key.mdx"
+      }
+    },
+    {
+      "id": "proxy.domains",
+      "product": "sdk-proxy",
+      "kind": "proxy-route",
+      "method": "GET",
+      "route": "/domains/:owner",
+      "status": "current",
+      "source": "sdk-proxy/src/routes/domains.ts",
+      "target": {
+        "path": "dev-docs/docs/sdk-proxy/endpoints/domains/domains.mdx"
+      }
+    },
+    {
+      "id": "proxy.primary-domain",
+      "product": "sdk-proxy",
+      "kind": "proxy-route",
+      "method": "GET",
+      "route": "/primary-domain/:owner",
+      "status": "current",
+      "source": "sdk-proxy/src/routes/domains.ts",
+      "target": {
+        "path": "dev-docs/docs/sdk-proxy/endpoints/domains/primary-domain.mdx"
+      }
+    },
+    {
+      "id": "proxy.favorite-domain",
+      "product": "sdk-proxy",
+      "kind": "proxy-route",
+      "method": "GET",
+      "route": "/favorite-domain/:owner",
+      "status": "alias",
+      "source": "sdk-proxy/src/routes/domains.ts",
+      "target": {
+        "path": "dev-docs/docs/sdk-proxy/endpoints/domains/favorite-domain.mdx"
+      }
+    },
+    {
+      "id": "proxy.multiple-primary-domains",
+      "product": "sdk-proxy",
+      "kind": "proxy-route",
+      "method": "GET",
+      "route": "/multiple-primary-domains/:owners",
+      "status": "current",
+      "source": "sdk-proxy/src/routes/domains.ts",
+      "target": {
+        "path": "dev-docs/docs/sdk-proxy/endpoints/domains/multiple-primary-domains.mdx"
+      }
+    },
+    {
+      "id": "proxy.multiple-favorite-domains",
+      "product": "sdk-proxy",
+      "kind": "proxy-route",
+      "method": "GET",
+      "route": "/multiple-favorite-domains/:owners",
+      "status": "alias",
+      "source": "sdk-proxy/src/routes/domains.ts",
+      "target": {
+        "path": "dev-docs/docs/sdk-proxy/endpoints/domains/multiple-favorite-domains.mdx"
+      }
+    },
+    {
+      "id": "proxy.reverse-key",
+      "product": "sdk-proxy",
+      "kind": "proxy-route",
+      "method": "GET",
+      "route": "/reverse-key/:domain",
+      "status": "current",
+      "source": "sdk-proxy/src/routes/domains.ts",
+      "target": {
+        "path": "dev-docs/docs/sdk-proxy/endpoints/domains/reverse-key.mdx"
+      }
+    },
+    {
+      "id": "proxy.reverse-lookup",
+      "product": "sdk-proxy",
+      "kind": "proxy-route",
+      "method": "GET",
+      "route": "/reverse-lookup/:pubkey",
+      "status": "current",
+      "source": "sdk-proxy/src/routes/domains.ts",
+      "target": {
+        "path": "dev-docs/docs/sdk-proxy/endpoints/domains/reverse-lookup.mdx"
+      }
+    },
+    {
+      "id": "proxy.subdomains",
+      "product": "sdk-proxy",
+      "kind": "proxy-route",
+      "method": "GET",
+      "route": "/subdomains/:parent",
+      "status": "current",
+      "source": "sdk-proxy/src/routes/domains.ts",
+      "target": {
+        "path": "dev-docs/docs/sdk-proxy/endpoints/domains/subdomains.mdx"
+      }
+    },
+    {
+      "id": "proxy.record-key-v2",
+      "product": "sdk-proxy",
+      "kind": "proxy-route",
+      "method": "GET",
+      "route": "/record-key-v2/:domain/:record",
+      "status": "current",
+      "source": "sdk-proxy/src/routes/records.ts",
+      "target": {
+        "path": "dev-docs/docs/sdk-proxy/endpoints/records/record-key-v2.mdx"
+      }
+    },
+    {
+      "id": "proxy.record-v2",
+      "product": "sdk-proxy",
+      "kind": "proxy-route",
+      "method": "GET",
+      "route": "/record-v2/:domain/:record",
+      "status": "current",
+      "source": "sdk-proxy/src/routes/records.ts",
+      "target": {
+        "path": "dev-docs/docs/sdk-proxy/endpoints/records/record-v2.mdx"
+      }
+    },
+    {
+      "id": "proxy.records-v2",
+      "product": "sdk-proxy",
+      "kind": "proxy-route",
+      "method": "GET",
+      "route": "/records-v2/:domain",
+      "status": "current",
+      "source": "sdk-proxy/src/routes/records.ts",
+      "target": {
+        "path": "dev-docs/docs/sdk-proxy/endpoints/records/records-v2.mdx"
+      }
+    },
+    {
+      "id": "proxy.types-record",
+      "product": "sdk-proxy",
+      "kind": "proxy-route",
+      "method": "GET",
+      "route": "/types/record",
+      "status": "types",
+      "source": "sdk-proxy/src/routes/records.ts",
+      "target": {
+        "path": "dev-docs/docs/sdk-proxy/endpoints/records/types-record.mdx"
+      }
+    },
+    {
+      "id": "proxy.record-key-deprecated",
+      "product": "sdk-proxy",
+      "kind": "proxy-route",
+      "method": "GET",
+      "route": "/record-key/:domain/:record",
+      "status": "deprecated",
+      "source": "sdk-proxy/src/routes/records.ts",
+      "target": {
+        "path": "dev-docs/docs/sdk-proxy/endpoints/records/record-key.mdx"
+      }
+    },
+    {
+      "id": "proxy.record-deprecated",
+      "product": "sdk-proxy",
+      "kind": "proxy-route",
+      "method": "GET",
+      "route": "/record/:domain/:record",
+      "status": "deprecated",
+      "source": "sdk-proxy/src/routes/records.ts",
+      "target": {
+        "path": "dev-docs/docs/sdk-proxy/endpoints/records/record.mdx"
+      }
+    },
+    {
+      "id": "proxy.register",
+      "product": "sdk-proxy",
+      "kind": "proxy-route",
+      "method": "GET",
+      "route": "/register",
+      "status": "current",
+      "source": "sdk-proxy/src/routes/instructions.ts",
+      "target": {
+        "path": "dev-docs/docs/sdk-proxy/endpoints/instructions/register.mdx"
+      }
+    },
+    {
+      "id": "proxy.create-subdomain",
+      "product": "sdk-proxy",
+      "kind": "proxy-route",
+      "method": "GET",
+      "route": "/create-subdomain",
+      "status": "current",
+      "source": "sdk-proxy/src/routes/instructions.ts",
+      "target": {
+        "path": "dev-docs/docs/sdk-proxy/endpoints/instructions/create-subdomain.mdx"
+      }
+    }
+  ]
+}

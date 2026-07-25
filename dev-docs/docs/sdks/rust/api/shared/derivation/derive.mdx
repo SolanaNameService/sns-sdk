@@ -1,0 +1,37 @@
+---
+displayed_sidebar: docsSidebar
+title: derive
+description: Derive a raw SPL Name Service account from explicit relationships.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Address derivation](../derivation.mdx) / `derive`
+
+# Function: `derive()`
+
+```rust
+pub fn derive(domain: &str, parent: &Pubkey, name_class: Option<Pubkey>) -> Pubkey
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/derivation.rs" line={62} label="derivation.rs:62" />
+
+Derives a raw SPL Name Service account from a raw label, parent, and optional class. It does not normalize a domain or query RPC.
+
+## Parameters
+
+| Parameter    | Type             | Description                                          |
+| ------------ | ---------------- | ---------------------------------------------------- |
+| `domain`     | `&str`           | Raw label, including any record or subdomain prefix. |
+| `parent`     | `&Pubkey`        | Parent name account.                                 |
+| `name_class` | `Option<Pubkey>` | Optional name class account.                         |
+
+## Returns
+
+The derived name-account `Pubkey`.
+
+## Example
+
+```rust
+use sns_sdk::derivation::{derive, ROOT_DOMAIN_ACCOUNT};
+
+let key = derive("example", &ROOT_DOMAIN_ACCOUNT, None);
+```

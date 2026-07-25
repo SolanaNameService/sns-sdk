@@ -1,0 +1,49 @@
+---
+displayed_sidebar: docsSidebar
+title: get_nft_records
+description: Find active Name Tokenizer records held by a wallet.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Tokenized domains](../tokenized-domains.mdx) / `get_nft_records`
+
+# Function: `get_nft_records()`
+
+```rust
+pub fn get_nft_records(rpc_client: &RpcClient, owner: &Pubkey) -> Result<Vec<NftRecord>, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/blocking/nft.rs" line={42} label="rust-crates/sns-sdk/src/blocking/nft.rs:42" />
+
+Finds the owner's SPL Token accounts with amount one, looks up each mint's first active Name Tokenizer record, and deserializes valid records. Token accounts, record lookups, and record deserialization failures are skipped rather than returned as errors.
+
+## Availability
+
+Requires the `blocking` feature.
+
+## Parameters
+
+| Parameter    | Type                                    | Description                                                 |
+| ------------ | --------------------------------------- | ----------------------------------------------------------- |
+| `rpc_client` | `&solana_client::rpc_client::RpcClient` | Blocking client used for token and Name Tokenizer queries.  |
+| `owner`      | `&Pubkey`                               | Wallet whose unit-balance SPL Token accounts are inspected. |
+
+## Returns
+
+`Result<Vec<NftRecord>, SnsError>` containing successfully deserialized records in the order of qualifying token accounts returned by RPC.
+
+## Errors
+
+Returns `SnsError::SolanaClient` only when the initial SPL Token program query fails. Per-mint lookup failures are intentionally ignored.
+
+## Example
+
+```rust
+use sns_sdk::blocking::nft::get_nft_records;
+use solana_client::rpc_client::RpcClient;
+use solana_program::pubkey::Pubkey;
+
+let client = RpcClient::new(std::env::var("RPC_URL")?);
+let owner: Pubkey = std::env::var("OWNER")?.parse()?;
+let records = get_nft_records(&client, &owner)?;
+println!("{} token records", records.len());
+```

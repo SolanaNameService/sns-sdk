@@ -1,0 +1,36 @@
+---
+displayed_sidebar: docsSidebar
+title: get_reverse_key
+description: Derive an SNS reverse-lookup account from a TLD-trimmed name.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Address derivation](../derivation.mdx) / `get_reverse_key`
+
+# Function: `get_reverse_key()`
+
+```rust
+pub fn get_reverse_key(domain: &str) -> Result<Pubkey, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/derivation.rs" line={135} label="derivation.rs:135" />
+
+Derives the SNS reverse-lookup account after deriving the domain account. A subdomain uses its parent as the reverse account parent.
+
+## Parameters
+
+| Parameter | Type   | Description                                   |
+| --------- | ------ | --------------------------------------------- |
+| `domain`  | `&str` | TLD-trimmed top-level or one-level subdomain. |
+
+## Returns
+
+The derived reverse `Pubkey`. More than two labels return `SnsError::InvalidDomain`.
+
+## Example
+
+```rust
+use sns_sdk::derivation::get_reverse_key;
+
+let reverse_key = get_reverse_key("example")?;
+println!("{reverse_key}");
+```

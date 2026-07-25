@@ -1,0 +1,46 @@
+---
+title: Rust SDK installation
+description: Install Rust SDK v2 and configure asynchronous or blocking RPC access.
+---
+
+Install Rust SDK v2 in an application that uses the Solana 2.1 client stack.
+
+## Install the crate
+
+The default build exposes asynchronous RPC APIs under `sns_sdk::non_blocking`:
+
+```toml
+[dependencies]
+sns-sdk = "2"
+solana-client = "2.1"
+solana-sdk = "2.1"
+tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
+```
+
+For synchronous RPC APIs, disable default features and enable `blocking`:
+
+```toml
+[dependencies]
+sns-sdk = { version = "2", default-features = false, features = ["blocking"] }
+solana-client = "2.1"
+solana-sdk = "2.1"
+```
+
+The default `subdomain` feature enables sub-registrar APIs. Add it alongside `blocking` when a synchronous application uses those APIs.
+
+## RPC Configuration
+
+Set an application-owned `RPC_URL` environment variable, then create the RPC client used by SDK operations:
+
+```rust
+use solana_client::nonblocking::rpc_client::RpcClient;
+
+let rpc_url = std::env::var("RPC_URL")?;
+let client = RpcClient::new(rpc_url);
+```
+
+For a blocking build, import `solana_client::rpc_client::RpcClient` instead.
+
+## Next
+
+Continue to the [Rust SDK Quickstart](/docs/sdks/rust/quickstart) to resolve a domain and query domain data.

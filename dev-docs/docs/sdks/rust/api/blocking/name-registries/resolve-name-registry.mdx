@@ -1,0 +1,54 @@
+---
+displayed_sidebar: docsSidebar
+title: resolve_name_registry
+description: Read one SPL Name Service account with the blocking Rust client.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Name registries](../name-registries.mdx) / `resolve_name_registry`
+
+# Function: `resolve_name_registry()`
+
+```rust
+pub fn resolve_name_registry(
+    rpc_client: &RpcClient,
+    key: &Pubkey,
+) -> Result<Option<(NameRecordHeader, Vec<u8>)>, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/blocking/resolve.rs" line={206} label="rust-crates/sns-sdk/src/blocking/resolve.rs:206" />
+
+Fetches one SPL Name Service account and splits its validated `NameRecordHeader` from the remaining payload bytes.
+
+## Availability
+
+Requires the `blocking` feature.
+
+## Parameters
+
+| Parameter    | Type                                    | Description                                |
+| ------------ | --------------------------------------- | ------------------------------------------ |
+| `rpc_client` | `&solana_client::rpc_client::RpcClient` | Blocking client used to fetch the account. |
+| `key`        | `&Pubkey`                               | Name-registry account public key.          |
+
+## Returns
+
+`Result<Option<(NameRecordHeader, Vec<u8>)>, SnsError>`. `Some` contains the header and payload without header bytes; `None` means the account is absent.
+
+## Errors
+
+- `SnsError::InvalidNameAccountData` when a present account has the wrong owner or insufficient header data.
+- `SnsError::BorshError` when the header cannot be unpacked.
+- `SnsError::SolanaClient` for RPC failures.
+
+## Example
+
+```rust
+use sns_sdk::{blocking::resolve::resolve_name_registry, derivation::get_sns_domain_key};
+use solana_client::rpc_client::RpcClient;
+
+let client = RpcClient::new(std::env::var("RPC_URL")?);
+let key = get_sns_domain_key("example")?.key;
+if let Some((header, payload)) = resolve_name_registry(&client, &key)? {
+    println!("{} bytes owned by {}", payload.len(), header.owner);
+}
+```

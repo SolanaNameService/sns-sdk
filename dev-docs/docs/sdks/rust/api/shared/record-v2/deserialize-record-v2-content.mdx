@@ -1,0 +1,32 @@
+---
+displayed_sidebar: docsSidebar
+title: deserialize_record_v2_content
+description: Decode SNS Record V2 content for its record type.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Record V2 codecs and verification](../record-v2.mdx) / `deserialize_record_v2_content`
+
+# Function: `deserialize_record_v2_content()`
+
+```rust
+pub fn deserialize_record_v2_content(content: &[u8], record: Record) -> Result<String, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/record/record_v2.rs" line={190} label="record_v2.rs:190" />
+
+Decodes UTF-8, punycode, public-key, Bech32, EVM address, or IP content according to `record`.
+
+## Parameters
+
+`content` is encoded V2 content and `record` selects the expected encoding.
+
+## Returns
+
+The decoded value, or codec errors through `SnsError`.
+
+## Example
+
+```rust
+use sns_sdk::record::{record_v2::deserialize_record_v2_content, Record};
+let value = deserialize_record_v2_content(b"https://example.com", Record::Url)?;
+```

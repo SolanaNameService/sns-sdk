@@ -1,0 +1,60 @@
+---
+title: Migration guide
+description: Upgrade your SNS SDK and display existing SNS domains with .sns.
+---
+
+This migration enables resolution for .sns domains. At slot <code><CutoffSlot /></code>, resolution for .sol domains will be temporarily paused in preparation for the upcoming transition to the [Solana Record Service (SRS)](https://records.solana.com/docs). Support for resolving SRS-based .sol domains will be added in a future SDK update.
+
+Migrating requires two changes:
+
+- Upgrade the SDK used by your application.
+- Replace `.sol` with `.sns` wherever your frontend displays existing SNS domains.
+
+## Upgrade your SDK
+
+| Integration             | Guide                                           |
+| ----------------------- | ----------------------------------------------- |
+| JavaScript SDK v3 to v4 | [JavaScript SDK v4](/docs/migration/javascript) |
+| JS Kit SDK v0.10 to v1  | [JS Kit SDK v1](/docs/migration/js-kit)         |
+| Rust SDK v1 to v2       | [Rust SDK v2](/docs/migration/rust)             |
+
+Choose your SDK guide for installation, API changes, and migration checks.
+
+## Update displayed domains
+
+Search the frontend for hard-coded `.sol` suffixes, including formatters, components, and cached display values.
+
+### Does your app display primary domains or domains owned by a wallet?
+
+Check the frontend code that formats domain names returned by primary-domain or wallet-domain lookups, such as `getPrimaryDomain` and `getSnsDomainsForOwner` or their equivalents.
+
+Update each displayed value based on its current format:
+
+- Append `.sns` to a TLD-less name.
+- Replace an existing `.sol` display suffix with `.sns`.
+- Leave a name that already ends in `.sns` unchanged.
+
+For example:
+
+```ts title="Before"
+const displayedDomain = `${domain}.sol`;
+```
+
+```ts title="After"
+const displayedDomain = `${domain}.sns`;
+```
+
+### Does your app display images for tokenized domains?
+
+Use the image below instead of the image URL provided in the domain NFT metadata, as the metadata artwork may still display the .sol suffix.
+
+<img
+  src="/img/sns-nft-image.png"
+  alt="SNS NFT image"
+  style={{
+    display: "block",
+    width: "320px",
+    maxWidth: "100%",
+    height: "auto",
+  }}
+/>

@@ -1,0 +1,45 @@
+---
+displayed_sidebar: docsSidebar
+title: resolve_name_registry_batch
+description: Read multiple SPL Name Service accounts in input order.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Name registries](../name-registries.mdx) / `resolve_name_registry_batch`
+
+# Function: `resolve_name_registry_batch()`
+
+```rust
+pub async fn resolve_name_registry_batch(
+    rpc_client: &RpcClient,
+    keys: &[Pubkey],
+) -> Result<Vec<Option<(NameRecordHeader, Vec<u8>)>>, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/non_blocking/resolve.rs" line={256} label="rust-crates/sns-sdk/src/non_blocking/resolve.rs:256" />
+
+Reads name-registry accounts in RPC batches of 100 keys. Results preserve the input order, and every present payload excludes the `NameRecordHeader` bytes.
+
+## Parameters
+
+| Parameter    | Type         | Description                             |
+| ------------ | ------------ | --------------------------------------- |
+| `rpc_client` | `&RpcClient` | Non-blocking Solana RPC client.         |
+| `keys`       | `&[Pubkey]`  | Name-registry account keys to retrieve. |
+
+## Returns
+
+`Result<Vec<Option<(NameRecordHeader, Vec<u8>)>>, SnsError>`. Each element corresponds to the key at the same input index; missing accounts are `None`.
+
+## Errors
+
+- `SnsError::InvalidNameAccountData` when any present account is not a valid name-registry account.
+- `SnsError::SolanaClient` when an RPC request fails.
+
+## Example
+
+```rust
+use sns_sdk::non_blocking::resolve::resolve_name_registry_batch;
+
+let accounts = resolve_name_registry_batch(&client, &account_keys).await?;
+assert_eq!(accounts.len(), account_keys.len());
+```

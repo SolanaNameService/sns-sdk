@@ -1,0 +1,51 @@
+---
+displayed_sidebar: docsSidebar
+title: get_nft_records
+description: Retrieve valid name-tokenizer records for a wallet's one-token SPL accounts.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Tokenized domains](../tokenized-domains.mdx) / `get_nft_records`
+
+# Function: `get_nft_records()`
+
+```rust
+pub async fn get_nft_records(
+    rpc_client: &RpcClient,
+    owner: &Pubkey,
+) -> Result<Vec<NftRecord>, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/non_blocking/nft.rs" line={44} label="rust-crates/sns-sdk/src/non_blocking/nft.rs:44" />
+
+Finds legacy SPL Token accounts owned by `owner` with amount one, then queries the Name Tokenizer program for each mint. Invalid token-account data, mints without a first matching record, and malformed records are omitted rather than returned as errors.
+
+## Parameters
+
+| Parameter    | Type         | Description                                                   |
+| ------------ | ------------ | ------------------------------------------------------------- |
+| `rpc_client` | `&RpcClient` | Non-blocking Solana RPC client.                               |
+| `owner`      | `&Pubkey`    | Wallet owner whose one-token legacy SPL accounts are queried. |
+
+## Returns
+
+`Result<Vec<NftRecord>, SnsError>` containing successfully resolved `NftRecord` values. Result order follows the RPC token-account result order after omitted entries are removed.
+
+## Errors
+
+- `SnsError::SolanaClient` when the token-account query or a name-tokenizer query fails.
+
+## Example
+
+```rust
+use sns_sdk::non_blocking::nft::get_nft_records;
+
+let records = get_nft_records(&client, &owner).await?;
+for record in records {
+    println!("{} -> {}", record.name_account, record.nft_mint);
+}
+```
+
+## Related APIs
+
+- [`get_sns_nfts_for_owner`](./get-sns-nfts-for-owner.mdx)
+- [`get_record_from_mint`](./get-record-from-mint.mdx)

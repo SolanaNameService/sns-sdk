@@ -1,0 +1,116 @@
+name: Check developer documentation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "dev-docs/**"
+      - "js/src/**"
+      - "js/package.json"
+      - "js/package-lock.json"
+      - "js/tsconfig.json"
+      - "js/README.md"
+      - "js/CHANGELOG.md"
+      - "js-kit/src/**"
+      - "js-kit/package.json"
+      - "js-kit/package-lock.json"
+      - "js-kit/tsconfig.json"
+      - "js-kit/README.md"
+      - "js-kit/CHANGELOG.md"
+      - "react/src/**"
+      - "react/package.json"
+      - "react/package-lock.json"
+      - "react/tsconfig.json"
+      - "react/README.md"
+      - "react/CHANGELOG.md"
+      - "rust-crates/sns-sdk/**"
+      - "rust-crates/sns-cli/**"
+      - "sdk-proxy/src/**"
+      - "sdk-proxy/package.json"
+      - "sdk-proxy/README.md"
+      - "README.md"
+      - ".github/workflows/check-dev-docs.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "dev-docs/**"
+      - "js/src/**"
+      - "js/package.json"
+      - "js/package-lock.json"
+      - "js/tsconfig.json"
+      - "js/README.md"
+      - "js/CHANGELOG.md"
+      - "js-kit/src/**"
+      - "js-kit/package.json"
+      - "js-kit/package-lock.json"
+      - "js-kit/tsconfig.json"
+      - "js-kit/README.md"
+      - "js-kit/CHANGELOG.md"
+      - "react/src/**"
+      - "react/package.json"
+      - "react/package-lock.json"
+      - "react/tsconfig.json"
+      - "react/README.md"
+      - "react/CHANGELOG.md"
+      - "rust-crates/sns-sdk/**"
+      - "rust-crates/sns-cli/**"
+      - "sdk-proxy/src/**"
+      - "sdk-proxy/package.json"
+      - "sdk-proxy/README.md"
+      - "README.md"
+      - ".github/workflows/check-dev-docs.yml"
+  workflow_dispatch:
+
+jobs:
+  docs:
+    name: Build Docusaurus site
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.18.0
+          cache: npm
+          cache-dependency-path: |
+            dev-docs/package-lock.json
+            js/package-lock.json
+            js-kit/package-lock.json
+            react/package-lock.json
+
+      - name: Install documentation dependencies
+        run: npm ci
+        working-directory: dev-docs
+
+      - name: Install SDK dependencies for API generation
+        run: npm ci
+        working-directory: js
+
+      - name: Install JS Kit dependencies for API generation
+        run: npm ci
+        working-directory: js-kit
+
+      - name: Install React dependencies for API generation
+        run: npm ci
+        working-directory: react
+
+      - name: Generate TypeScript API references
+        run: npm run api:generate
+        working-directory: dev-docs
+
+      - name: Verify generated references are current
+        run: |
+          git diff --exit-code -- \
+            dev-docs/docs/sdks/javascript/api \
+            dev-docs/docs/sdks/js-kit/api \
+            dev-docs/docs/react-hooks/api
+
+      - name: Run documentation checks
+        run: npm run check
+        working-directory: dev-docs
+
+      - name: Build production site
+        run: npm run build
+        working-directory: dev-docs

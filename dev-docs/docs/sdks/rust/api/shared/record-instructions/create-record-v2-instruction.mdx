@@ -1,0 +1,33 @@
+---
+displayed_sidebar: docsSidebar
+title: create_record_v2_instruction
+description: Build an instruction that allocates and posts a V2 record.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Record instructions](../record-instructions.mdx) / `create_record_v2_instruction`
+
+# Function: `create_record_v2_instruction()`
+
+```rust
+pub fn create_record_v2_instruction(domain: &str, record: Record, content: &str, owner: Pubkey, payer: Pubkey) -> Result<Instruction, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/bindings/record_v2.rs" line={33} label="record_v2.rs:33" />
+
+Derives V2 record and domain keys, serializes `content`, and builds an allocate-and-post instruction.
+
+## Parameters
+
+`domain` must be a canonical lowercase `.sns` name; `record` selects its encoding; `owner` owns the domain and `payer` funds the instruction.
+
+## Returns
+
+An unsigned `Instruction`. Domain parsing and content-serialization failures return `SnsError`.
+
+## Example
+
+```rust
+use sns_sdk::{bindings::record_v2::create_record_v2_instruction, record::Record};
+
+let instruction = create_record_v2_instruction("example.sns", Record::Url, "https://example.com", owner, payer)?;
+```

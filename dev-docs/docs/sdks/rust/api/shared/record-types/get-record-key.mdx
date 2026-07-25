@@ -1,0 +1,32 @@
+---
+displayed_sidebar: docsSidebar
+title: get_record_key
+description: Derive an SNS record account for an explicit version.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Record types and keys](../record-types.mdx) / `get_record_key`
+
+# Function: `get_record_key()`
+
+```rust
+pub fn get_record_key(domain: &str, record: Record, record_version: RecordVersion) -> Result<Pubkey, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/record/mod.rs" line={156} label="record/mod.rs:156" />
+
+Derives a record account from a TLD-trimmed domain, record label, version prefix, and version class.
+
+## Parameters
+
+`domain` is a top-level or one-level subdomain without suffix; `record` and `record_version` select the account.
+
+## Returns
+
+The derived `Pubkey`; invalid label depth returns `SnsError::InvalidDomain`.
+
+## Example
+
+```rust
+use sns_sdk::record::{get_record_key, Record, RecordVersion};
+let key = get_record_key("example", Record::Url, RecordVersion::V2)?;
+```

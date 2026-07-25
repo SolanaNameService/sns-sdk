@@ -1,0 +1,33 @@
+---
+displayed_sidebar: docsSidebar
+title: validate_record_v2_content
+description: Build a Solana-signature validation instruction for a V2 record.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Record instructions](../record-instructions.mdx) / `validate_record_v2_content`
+
+# Function: `validate_record_v2_content()`
+
+```rust
+pub fn validate_record_v2_content(staleness: bool, domain: &str, record: Record, owner: Pubkey, payer: Pubkey, verifier: Pubkey) -> Result<Instruction, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/bindings/record_v2.rs" line={141} label="record_v2.rs:141" />
+
+Builds a validation instruction using a Solana verifier signer. `staleness = true` validates the staleness ID; `false` validates the Right-of-Association ID.
+
+## Parameters
+
+`domain` is canonical lowercase `.sns`; `record` identifies the account; `owner` and `payer` authorize and fund it; `verifier` must sign the submitted validation transaction.
+
+## Returns
+
+An unsigned `Instruction`, or domain-key derivation errors through `SnsError`.
+
+## Example
+
+```rust
+use sns_sdk::{bindings::record_v2::validate_record_v2_content, record::Record};
+
+let instruction = validate_record_v2_content(true, "example.sns", Record::Url, owner, payer, verifier)?;
+```

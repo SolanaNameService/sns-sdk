@@ -1,0 +1,55 @@
+---
+displayed_sidebar: docsSidebar
+title: get_subdomains
+description: List child labels for an SNS parent account with the blocking Rust client.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Subdomains](../subdomains.mdx) / `get_subdomains`
+
+# Function: `get_subdomains()`
+
+```rust
+pub fn get_subdomains(rpc_client: &RpcClient, parent: &Pubkey) -> Result<Vec<String>, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/blocking/subdomain.rs" line={26} label="rust-crates/sns-sdk/src/blocking/subdomain.rs:26" />
+
+Queries reverse-record accounts whose parent is `parent`, then returns their child labels. Values are TLD-less labels such as `team`, not full names such as `team.example.sns`.
+
+## Availability
+
+Requires the `blocking` feature.
+
+## Parameters
+
+| Parameter    | Type                                    | Description                                         |
+| ------------ | --------------------------------------- | --------------------------------------------------- |
+| `rpc_client` | `&solana_client::rpc_client::RpcClient` | Blocking client used for the program-account query. |
+| `parent`     | `&Pubkey`                               | SNS parent name-account key.                        |
+
+## Returns
+
+`Result<Vec<String>, SnsError>` containing the decoded child labels in RPC response order.
+
+## Errors
+
+- `SnsError::InvalidNameAccountData` when a returned account lacks a complete name-record header.
+- `SnsError::InvalidReverse` when a reverse payload is malformed, lacks its subdomain marker, or is not UTF-8.
+- `SnsError::SolanaClient` for RPC failures.
+
+## Example
+
+```rust
+use sns_sdk::{blocking::subdomain::get_subdomains, derivation::get_sns_domain_key};
+use solana_client::rpc_client::RpcClient;
+
+let client = RpcClient::new(std::env::var("RPC_URL")?);
+let parent = get_sns_domain_key("example")?.key;
+for label in get_subdomains(&client, &parent)? {
+    println!("{label}.example.sns");
+}
+```
+
+## Related APIs
+
+- [`get_sub_registrar_info`](../sub-registrars/get-sub-registrar-info.mdx)

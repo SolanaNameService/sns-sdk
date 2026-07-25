@@ -1,0 +1,43 @@
+---
+title: React Hooks quickstart
+description: Configure TanStack Query and resolve an SNS domain with SNS React Hooks v4.
+---
+
+Set up the TanStack Query provider and use SNS React Hooks v4 to resolve a domain in a React component.
+
+## Configure the query provider
+
+Complete the [React Hooks installation](/docs/react-hooks/installation), create a `QueryClient`, and wrap the component that uses SNS hooks with `QueryClientProvider`:
+
+```tsx title="App.tsx"
+import { useResolve } from "@bonfida/sns-react";
+import { Connection } from "@solana/web3.js";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const connection = new Connection(process.env.RPC_URL!);
+const queryClient = new QueryClient();
+
+function DomainLookup() {
+  const domain = useResolve(connection, "name.sns");
+
+  if (domain.isPending) return <p>Loading...</p>;
+  if (domain.isError) return <p>{domain.error.message}</p>;
+
+  return <p>Resolved target: {domain.data.toBase58()}</p>;
+}
+
+export function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <DomainLookup />
+    </QueryClientProvider>
+  );
+}
+```
+
+Pass the application-owned web3.js `Connection` to each SNS hook. Query failures are available through the hook result's `isError` and `error` fields.
+
+## Next steps
+
+- Use the [React Hooks API Reference](/docs/react-hooks/api/) for primary domains, wallet-owned domains, records, profile pictures, reverse lookups, subdomains, and query options.
+- Follow the [JavaScript SDK installation](/docs/sdks/javascript/installation) when you need direct SDK reads or transaction instruction builders.

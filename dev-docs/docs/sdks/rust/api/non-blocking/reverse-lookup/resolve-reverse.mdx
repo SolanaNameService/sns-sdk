@@ -1,0 +1,53 @@
+---
+displayed_sidebar: docsSidebar
+title: resolve_reverse
+description: Resolve the top-level SNS reverse record for one name-account key.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Reverse lookup](../reverse-lookup.mdx) / `resolve_reverse`
+
+# Function: `resolve_reverse()`
+
+```rust
+pub async fn resolve_reverse(
+    rpc_client: &RpcClient,
+    key: &Pubkey,
+) -> Result<Option<String>, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/non_blocking/resolve.rs" line={275} label="rust-crates/sns-sdk/src/non_blocking/resolve.rs:275" />
+
+Derives the top-level reverse account for `key`, reads it over RPC, and returns its TLD-less name. It is equivalent to calling `resolve_reverse_with_parent` with `None`.
+
+## Parameters
+
+| Parameter    | Type         | Description                     |
+| ------------ | ------------ | ------------------------------- |
+| `rpc_client` | `&RpcClient` | Non-blocking Solana RPC client. |
+| `key`        | `&Pubkey`    | Top-level SNS name-account key. |
+
+## Returns
+
+`Result<Option<String>, SnsError>`. `Some` contains the reverse name without a TLD; `None` means the derived reverse account does not exist.
+
+## Errors
+
+- `SnsError::InvalidNameAccountData` when the present reverse account is not a valid name-registry account.
+- `SnsError::InvalidReverse` when its payload is malformed or not UTF-8.
+- `SnsError::SolanaClient` when the RPC request fails.
+
+## Example
+
+```rust
+use sns_sdk::non_blocking::resolve::resolve_reverse;
+
+let name = resolve_reverse(&client, &name_account).await?;
+if let Some(name) = name {
+    println!("{name}.sns");
+}
+```
+
+## Related APIs
+
+- [`resolve_reverse_with_parent`](./resolve-reverse-with-parent.mdx)
+- [`resolve_reverse_batch`](./resolve-reverse-batch.mdx)

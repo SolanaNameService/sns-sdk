@@ -1,0 +1,103 @@
+---
+title: "GET /register"
+description: Build instructions or an unsigned transaction for top-level SNS domain registration.
+---
+
+Build a top-level `.sns` registration without signing or submitting a transaction.
+
+## Request
+
+```http
+GET /register
+```
+
+## Query parameters
+
+### `buyer`
+
+Required. Base58 public key that buys the domain, pays transaction fees, and signs the registration.
+
+### `domain`
+
+Required. One non-empty TLD-less domain label. The value is trimmed and converted to lowercase.
+
+### `space`
+
+Required. Integer account size from `0` through `10000` bytes.
+
+### `serialize`
+
+Optional. `true` returns a base64-encoded unsigned legacy transaction. Omitted or `false` returns instruction objects.
+
+### `referrer`
+
+Optional. Base58 referrer public key. A supported SDK referrer can add idempotent associated-token-account creation; an unsupported referrer is ignored.
+
+### `mint`
+
+Optional. Base58 payment-mint public key. The route uses mainnet USDC when omitted. A custom mint must have a configured Pyth price feed.
+
+### `rpc`
+
+Optional. A non-empty Solana RPC URL that overrides the proxy Worker's `RPC_URL` binding for this request.
+
+## Response
+
+A successful request returns `200 OK`:
+
+```ts
+type SerializedInstruction = {
+  programId: string;
+  keys: Array<{
+    isSigner: boolean;
+    isWritable: boolean;
+    pubkey: string;
+  }>;
+  data: string;
+};
+
+type RegisterResponse = {
+  s: "ok";
+  result: SerializedInstruction[] | string;
+};
+```
+
+Instruction-object responses use base58 public keys and base64 data. With `serialize=true`, the string is a base64 unsigned legacy transaction whose fee payer is `buyer` and whose recent blockhash comes from the selected RPC.
+
+The proxy derives the buyer's associated token account. It never signs, sends, relays, or confirms the returned transaction.
+
+## Example
+
+```bash
+curl --get "https://sdk-proxy.sns.id/register" \
+  --data-urlencode "buyer=<BUYER_PUBLIC_KEY>" \
+  --data-urlencode "domain=<DOMAIN_NAME>" \
+  --data-urlencode "space=1000"
+```
+
+```json
+{
+  "s": "ok",
+  "result": [
+    {
+      "programId": "<PROGRAM_ID>",
+      "keys": [
+        {
+          "isSigner": true,
+          "isWritable": true,
+          "pubkey": "<ACCOUNT_PUBLIC_KEY>"
+        }
+      ],
+      "data": "<BASE64_DATA>"
+    }
+  ]
+}
+```
+
+## Errors
+
+| Status | `result`          | When                                                                  |
+| ------ | ----------------- | --------------------------------------------------------------------- |
+| `400`  | `Invalid input`   | A required value is invalid, or a custom mint has no configured feed. |
+| `502`  | `RPC unavailable` | The selected RPC returns a JSON-RPC error.                            |
+| `500`  | `Internal error`  | No RPC is configured, or another failure occurs.                      |

@@ -1,0 +1,33 @@
+---
+displayed_sidebar: docsSidebar
+title: deserialize_record
+description: Decode and validate a legacy SNS record payload.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Record V1 codecs](../record-v1.mdx) / `deserialize_record`
+
+# Function: `deserialize_record()`
+
+```rust
+pub fn deserialize_record(data: &[u8], record: Record, record_key: &Pubkey) -> Result<String, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/record/record_v1.rs" line={50} label="record_v1.rs:50" />
+
+Decodes textual records or validates fixed-width legacy data. SOL payloads verify their signature against `record_key`.
+
+## Parameters
+
+`data` is account payload bytes, `record` selects the codec, and `record_key` identifies the SOL record for signature verification.
+
+## Returns
+
+The decoded string. Malformed fixed-width data returns `SnsError::InvalidRecordData`; codec failures propagate as `SnsError`.
+
+## Example
+
+```rust
+use sns_sdk::record::{record_v1::deserialize_record, Record};
+
+let value = deserialize_record(b"https://example.com", Record::Url, &record_key)?;
+```

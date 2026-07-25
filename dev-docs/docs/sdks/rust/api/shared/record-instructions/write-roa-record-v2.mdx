@@ -1,0 +1,33 @@
+---
+displayed_sidebar: docsSidebar
+title: write_roa_record_v2
+description: Build an instruction that writes a V2 Right-of-Association identifier.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Record instructions](../record-instructions.mdx) / `write_roa_record_v2`
+
+# Function: `write_roa_record_v2()`
+
+```rust
+pub fn write_roa_record_v2(domain: &str, record: Record, owner: Pubkey, payer: Pubkey, roa_id: Pubkey) -> Result<Instruction, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/bindings/record_v2.rs" line={112} label="record_v2.rs:112" />
+
+Builds an instruction that writes `roa_id` as the V2 record's Right-of-Association identifier.
+
+## Parameters
+
+`domain` must be canonical lowercase `.sns`; `record` identifies the record; `owner` authorizes it; `payer` funds it; `roa_id` is encoded as 32 bytes.
+
+## Returns
+
+An unsigned `Instruction`, or domain-key derivation errors through `SnsError`.
+
+## Example
+
+```rust
+use sns_sdk::{bindings::record_v2::write_roa_record_v2, record::Record};
+
+let instruction = write_roa_record_v2("example.sns", Record::Url, owner, payer, roa_id)?;
+```

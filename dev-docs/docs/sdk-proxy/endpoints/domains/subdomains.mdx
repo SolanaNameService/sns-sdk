@@ -1,0 +1,58 @@
+---
+title: "GET /subdomains/:parent"
+description: List reverse-resolved subdomains beneath an SNS parent domain.
+---
+
+Return discoverable subdomain labels beneath one top-level `.sns` parent.
+
+## Request
+
+```http
+GET /subdomains/:parent
+```
+
+## Path parameters
+
+### `parent`
+
+Required. One TLD-less top-level domain label, such as `bonfida`. The value is trimmed and converted to lowercase.
+
+## Query parameters
+
+### `rpc`
+
+Optional. A non-empty Solana RPC URL that overrides the proxy Worker's `RPC_URL` binding for this request.
+
+## Response
+
+A successful request returns `200 OK` with human-readable subdomain labels:
+
+```ts
+type SubdomainsResponse = {
+  s: "ok";
+  result: string[];
+};
+```
+
+Only subdomains with discoverable reverse records are included. The route performs program-account queries and can be expensive on public RPC providers.
+
+## Example
+
+```bash
+curl "https://sdk-proxy.sns.id/subdomains/bonfida"
+```
+
+```json
+{
+  "s": "ok",
+  "result": ["team"]
+}
+```
+
+## Errors
+
+| Status | `result`          | When                                               |
+| ------ | ----------------- | -------------------------------------------------- |
+| `400`  | `Invalid input`   | `parent` is empty or contains more than one label. |
+| `502`  | `RPC unavailable` | The selected RPC returns a JSON-RPC error.         |
+| `500`  | `Internal error`  | No RPC is configured, or another failure occurs.   |

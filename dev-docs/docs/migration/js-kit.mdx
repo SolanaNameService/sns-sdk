@@ -1,0 +1,161 @@
+---
+title: JS Kit SDK v1
+description: Update applications from JS Kit SDK v0.10 to JS Kit SDK v1.
+---
+
+Use this guide to migrate an application from JS Kit SDK v0.10 to JS Kit SDK v1.
+
+## Install v1
+
+Install JS Kit SDK v1 and its `@solana/kit` peer dependency:
+
+```bash
+npm install @solana-name-service/sns-sdk-kit@^1 @solana/kit@^6.9.0
+```
+
+JS Kit SDK v1 requires Node.js 24 or newer.
+
+## Import from the package root
+
+Root and category-subpath imports are supported in v1. These migration examples use the package root:
+
+```ts
+import {
+  getPrimaryDomain,
+  getSnsDomainAddress,
+  getSnsDomainsForAddress,
+  registerDomain,
+  resolve,
+} from "@solana-name-service/sns-sdk-kit";
+```
+
+## Update domain inputs
+
+Use the input form required by each API family:
+
+| API family                                             | v0.10 input                     | v1 input                                                                       |
+| ------------------------------------------------------ | ------------------------------- | ------------------------------------------------------------------------------ |
+| High-level reads, including `resolve` and record reads | Bare name or legacy `.sol` name | Full name with a supported suffix, such as `name.sns`                          |
+| Domain and record writes                               | API-dependent name              | Lowercase full `.sns` name; follow the API's top-level or subdomain constraint |
+| SNS and record address helpers                         | Bare name or legacy `.sol` name | TLD-less name, such as `name` or `sub.name`                                    |
+| Raw registry helpers                                   | Raw label or account input      | Raw label or account input                                                     |
+
+Do not append `.sns` to `getSnsDomainAddress`, `getRecordV1Address`, `getRecordV2Address`, or `getSrsDomainAddress` inputs.
+
+:::note `.sol` resolution and reads
+
+SNS-backed `.sol` resolution and reads pause automatically at finalized slot <code><CutoffSlot /></code> to transition `.sol` domains to the SRS program; slot checks are not needed at the application level. SRS-backed `.sol` resolution will be enabled in a future SDK update.
+
+:::
+
+## Update resolution
+
+Rename `resolveDomain` to `resolve` and pass a full `.sns` name:
+
+```ts title="v0.10"
+const owner = await resolveDomain({
+  rpc,
+  domain: "name.sol",
+  options: { allowPda: false },
+});
+```
+
+```ts title="v1"
+const owner = await resolve({
+  rpc,
+  domain: "name.sns",
+  options: { allowPda: false },
+});
+```
+
+The parameter-object pattern, caller-provided RPC client, and PDA options remain supported.
+
+## Update primary-domain lookup
+
+`getPrimaryDomain` keeps the same parameter object and `{ domainAddress, domainName, stale }` result:
+
+```ts
+const primary = await getPrimaryDomain({ rpc, walletAddress });
+```
+
+`domainName` remains TLD-less. Update frontend formatting to display it with `.sns` instead of `.sol`.
+
+## Update owner-domain lookup
+
+Rename `getDomainsForAddress` to `getSnsDomainsForAddress`:
+
+```ts title="v0.10"
+const domains = await getDomainsForAddress({ rpc, address });
+```
+
+```ts title="v1"
+const domains = await getSnsDomainsForAddress({ rpc, address });
+```
+
+The result remains `{ domain, domainAddress }[]`. Returned `domain` values are TLD-less. Entries without reverse data are omitted, and tokenized domains and subdomains are not included.
+
+Rename `getNftsForAddress` to `getSnsNftsForAddress` when the application also queries tokenized domains.
+
+## Update address derivation
+
+Rename `getDomainAddress` to `getSnsDomainAddress` and remove the legacy `.sol` suffix from its input:
+
+```ts title="v0.10"
+const { domainAddress } = await getDomainAddress({ domain: "name.sol" });
+```
+
+```ts title="v1"
+const { domainAddress } = await getSnsDomainAddress({ domain: "name" });
+```
+
+Address helpers derive accounts locally. They do not query RPC or apply the `.sol` cutoff rule. `getSrsDomainAddress({ domain: "name" })` derives an SRS address only; it does not enable SRS-backed resolution.
+
+## Update common API names
+
+Update imports and call sites for renamed APIs:
+
+| v0.10                 | v1                          |
+| --------------------- | --------------------------- |
+| `getAllDomains`       | `getAllSnsDomains`          |
+| `getNftMint`          | `getSnsNftMint`             |
+| `getNftOwner`         | `getSnsNftOwner`            |
+| `registerWithNft`     | `registerDomainWithNft`     |
+| `validateRoa`         | `validateRecordRoa`         |
+| `validateRoaEthereum` | `validateRecordRoaEthereum` |
+| `writeRoa`            | `setRecordRoaVerifier`      |
+
+Use `setRecordStalenessVerifier` when writing or refreshing a record's staleness verifier.
+
+## Update writes
+
+String-based write APIs require lowercase full `.sns` domain names. `registerDomain` also removes the `rpc` property:
+
+```ts title="v0.10"
+const instructions = await registerDomain({
+  rpc,
+  domain: "name",
+  space,
+  buyer,
+  buyerTokenAccount,
+});
+```
+
+```ts title="v1"
+const instructions = await registerDomain({
+  domain: "name.sns",
+  space,
+  buyer,
+  buyerTokenAccount,
+});
+```
+
+Write helpers return `Instruction`, `Promise<Instruction>`, or `Promise<Instruction[]>`. The application remains responsible for building the transaction, setting its fee payer and recent blockhash, collecting required signatures, and submitting it.
+
+## Verify the migration
+
+- Replace renamed imports and call sites.
+- Resolve a known domain with TLD suffix (`name.sns`/`name.sol`).
+- Pass full lowercase `.sns` domain names to high-level read and write APIs expecting domain name inputs.
+- Keep address-derivation inputs TLD-less and raw registry inputs unchanged.
+- Remove `rpc` from `registerDomain` calls.
+- Update frontend formatting to display TLD-less SNS domains with `.sns` suffix.

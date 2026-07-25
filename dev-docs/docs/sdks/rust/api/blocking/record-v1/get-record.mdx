@@ -1,0 +1,59 @@
+---
+displayed_sidebar: docsSidebar
+title: get_record
+description: Read a legacy SNS record account with the blocking Rust client.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Record V1](../record-v1.mdx) / `get_record`
+
+# Function: `get_record()`
+
+```rust
+pub fn get_record(
+    rpc_client: &RpcClient,
+    domain: &str,
+    record: Record,
+) -> Result<Option<(NameRecordHeader, Vec<u8>)>, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/blocking/record_v1.rs" line={11} label="rust-crates/sns-sdk/src/blocking/record_v1.rs:11" />
+
+Derives the legacy record address for a supported full domain and fetches its name-registry account through the blocking client.
+
+## Availability
+
+Requires the `blocking` feature.
+
+## Parameters
+
+| Parameter    | Type                                    | Description                                       |
+| ------------ | --------------------------------------- | ------------------------------------------------- |
+| `rpc_client` | `&solana_client::rpc_client::RpcClient` | Blocking client used to fetch the record account. |
+| `domain`     | `&str`                                  | Full supported `.sns` or `.sol` domain.           |
+| `record`     | `Record`                                | Legacy SNS record kind to fetch.                  |
+
+## Returns
+
+`Result<Option<(NameRecordHeader, Vec<u8>)>, SnsError>`. `Some` contains the account header and payload without header bytes; `None` means the record account is absent.
+
+## Errors
+
+- `SnsError::UnsupportedTld` for a bare, unsupported, or unavailable `.sol` domain.
+- `SnsError::InvalidNameAccountData` when an existing record account is malformed or has the wrong owner.
+- `SnsError::SolanaClient` for RPC failures.
+
+## Example
+
+```rust
+use sns_sdk::{blocking::record_v1::get_record, record::Record};
+use solana_client::rpc_client::RpcClient;
+
+let client = RpcClient::new(std::env::var("RPC_URL")?);
+if let Some((header, payload)) = get_record(&client, "example.sns", Record::Url)? {
+    println!("{} bytes owned by {}", payload.len(), header.owner);
+}
+```
+
+## Related APIs
+
+- [`get_record_v2`](../record-v2/get-record-v2.mdx)

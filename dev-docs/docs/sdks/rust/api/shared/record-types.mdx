@@ -1,0 +1,18 @@
+---
+displayed_sidebar: docsSidebar
+title: Record types and keys
+description: SNS record enums, versions, classes, and account-key derivation.
+---
+
+Record APIs identify supported SNS record labels, map them to on-chain classes, and derive record accounts locally without RPC. Key helpers accept a TLD-trimmed SNS domain such as `example` or `sub.example`; `Record` and `RecordVersion` are contextual enum inputs.
+
+## APIs
+
+| API                                                     | Description                                       |
+| ------------------------------------------------------- | ------------------------------------------------- |
+| [`Record::as_str`](./record-types/as-str)               | Returns a record's exact on-chain label.          |
+| [`Record::try_from_str`](./record-types/try-from-str)   | Parses an exact on-chain record label.            |
+| [`get_record_class`](./record-types/get-record-class)   | Returns the class account for a record version.   |
+| [`get_record_key`](./record-types/get-record-key)       | Derives a record account for an explicit version. |
+| [`get_record_v1_key`](./record-types/get-record-v1-key) | Derives a V1 record account.                      |
+| [`get_record_v2_key`](./record-types/get-record-v2-key) | Derives a V2 record account.                      |

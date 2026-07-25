@@ -1,0 +1,51 @@
+---
+displayed_sidebar: docsSidebar
+title: get_subdomains
+description: List child labels for an SNS parent account.
+---
+
+[Rust SDK API Reference](../../index.mdx) / Non-blocking APIs / [Subdomains](../subdomains.mdx) / `get_subdomains`
+
+# Function: `get_subdomains()`
+
+```rust
+pub async fn get_subdomains(
+    rpc_client: &RpcClient,
+    parent: &Pubkey,
+) -> Result<Vec<String>, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/non_blocking/subdomain.rs" line={26} label="rust-crates/sns-sdk/src/non_blocking/subdomain.rs:26" />
+
+Queries reverse lookup accounts whose parent is `parent`, then decodes their NUL-prefixed reverse payloads into child labels. Results are labels such as `team`, not complete domain names; the RPC program-account response determines their order.
+
+## Parameters
+
+| Parameter    | Type         | Description                     |
+| ------------ | ------------ | ------------------------------- |
+| `rpc_client` | `&RpcClient` | Non-blocking Solana RPC client. |
+| `parent`     | `&Pubkey`    | Parent SNS name-account key.    |
+
+## Returns
+
+`Result<Vec<String>, SnsError>` containing TLD-less child labels for valid matching reverse accounts.
+
+## Errors
+
+- `SnsError::InvalidNameAccountData` when a matching account has no complete name-record header.
+- `SnsError::InvalidReverse` when a reverse payload is malformed, missing its subdomain marker, or not UTF-8.
+- `SnsError::SolanaClient` when the program-account query fails.
+
+## Example
+
+```rust
+use sns_sdk::non_blocking::subdomain::get_subdomains;
+
+for label in get_subdomains(&client, &parent_account).await? {
+    println!("{label}");
+}
+```
+
+## Related APIs
+
+- [`get_sub_registrar_info`](../sub-registrars/get-sub-registrar-info.mdx)

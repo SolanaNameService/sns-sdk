@@ -1,0 +1,33 @@
+---
+displayed_sidebar: docsSidebar
+title: delete_name_registry
+description: Build an instruction that deletes a name-registry account.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Name-registry instructions](../name-registry-instructions.mdx) / `delete_name_registry`
+
+# Function: `delete_name_registry()`
+
+```rust
+pub fn delete_name_registry(name_account: Pubkey, owner: Pubkey, refund_target: Pubkey) -> Result<Instruction, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/bindings/name_registry.rs" line={80} label="name_registry.rs:80" />
+
+Builds an instruction that deletes a name account and transfers its rent to `refund_target`.
+
+## Parameters
+
+`owner` authorizes deletion of `name_account`; `refund_target` receives the reclaimed lamports.
+
+## Returns
+
+An unsigned `Instruction`, or `SnsError::SolanaProgramError` from instruction construction.
+
+## Example
+
+```rust
+use sns_sdk::bindings::name_registry::delete_name_registry;
+
+let instruction = delete_name_registry(name_account, owner, refund_target)?;
+```

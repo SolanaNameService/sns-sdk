@@ -1,0 +1,38 @@
+---
+title: lookup
+description: Inspect raw SNS name-registry accounts with SNS CLI v3.
+---
+
+The `lookup` command derives and reads the raw name-registry account for each requested `.sns` domain.
+
+## Usage
+
+```text
+sns [--url <URL>] lookup <DOMAIN>...
+```
+
+## Arguments
+
+### `<DOMAIN>...`
+
+Required. One or more canonical lowercase `.sns` domains, processed in the order they are provided. Top-level domains and one-level subdomains are accepted.
+
+## Options
+
+### `-u, --url <URL>`
+
+Use this RPC endpoint instead of `RPC_URL` or the default public mainnet-beta endpoint at `https://api.mainnet-beta.solana.com`.
+
+## Output
+
+After processing the requested domains, the command prints a table with these columns:
+
+| Column       | Description                                                                   |
+| ------------ | ----------------------------------------------------------------------------- |
+| `Domain`     | The domain exactly as provided.                                               |
+| `Domain key` | The derived name-registry account public key.                                 |
+| `Parent`     | The registry account's parent public key.                                     |
+| `Owner`      | The raw owner stored in the name-registry header.                             |
+| `Data`       | Registry payload with trailing zero bytes removed and invalid UTF-8 replaced. |
+
+When the derived registry account does not exist, `Owner` and `Data` are `N/A`. The displayed raw registry owner can differ from the effective owner returned by `resolve`, including for tokenized domains.

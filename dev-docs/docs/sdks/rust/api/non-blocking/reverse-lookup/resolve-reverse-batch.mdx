@@ -1,0 +1,48 @@
+---
+displayed_sidebar: docsSidebar
+title: resolve_reverse_batch
+description: Resolve top-level SNS reverse records for multiple name-account keys.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Reverse lookup](../reverse-lookup.mdx) / `resolve_reverse_batch`
+
+# Function: `resolve_reverse_batch()`
+
+```rust
+pub async fn resolve_reverse_batch(
+    rpc_client: &RpcClient,
+    keys: &[Pubkey],
+) -> Result<Vec<Option<String>>, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/non_blocking/resolve.rs" line={305} label="rust-crates/sns-sdk/src/non_blocking/resolve.rs:305" />
+
+Derives top-level reverse accounts for every input key and retrieves them in a batch. The output has one entry per input key in the same order. This helper does not accept parent accounts and therefore does not remove subdomain markers.
+
+## Parameters
+
+| Parameter    | Type         | Description                                         |
+| ------------ | ------------ | --------------------------------------------------- |
+| `rpc_client` | `&RpcClient` | Non-blocking Solana RPC client.                     |
+| `keys`       | `&[Pubkey]`  | Top-level SNS name-account keys to reverse-resolve. |
+
+## Returns
+
+`Result<Vec<Option<String>>, SnsError>`. Each `Some` contains a TLD-less reverse name; `None` corresponds to a missing reverse account at the same input index.
+
+## Errors
+
+- `SnsError::InvalidNameAccountData` when a present reverse account is invalid.
+- `SnsError::InvalidReverse` when a payload is malformed or not UTF-8.
+- `SnsError::SolanaClient` when an RPC request fails.
+
+## Example
+
+```rust
+use sns_sdk::non_blocking::resolve::resolve_reverse_batch;
+
+let names = resolve_reverse_batch(&client, &name_accounts).await?;
+for (key, name) in name_accounts.iter().zip(names) {
+    println!("{key}: {name:?}");
+}
+```

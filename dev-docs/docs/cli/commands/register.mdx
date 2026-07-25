@@ -1,0 +1,48 @@
+---
+title: register
+description: Register one or more top-level SNS domains with SNS CLI v3.
+---
+
+The `register` command allocates and registers top-level `.sns` domains for the signing wallet.
+
+## Usage
+
+```text
+sns [--url <URL>] register <KEYPAIR_PATH> <SPACE> <DOMAIN>...
+```
+
+## Arguments
+
+### `<KEYPAIR_PATH>`
+
+Required. Path to the buyer's Solana keypair JSON file. The keypair signs each registration transaction.
+
+### `<SPACE>`
+
+Required. Number of bytes to allocate to each domain registry, from `1000` through `10000` inclusive.
+
+### `<DOMAIN>...`
+
+Required. One or more top-level `.sns` domains. Labels can contain lowercase letters, digits, hyphens, and underscores. Subdomains are not accepted.
+
+## Options
+
+### `-u, --url <URL>`
+
+Use this RPC endpoint instead of `RPC_URL` or the default public mainnet-beta endpoint at `https://api.mainnet-beta.solana.com`.
+
+## Output
+
+After processing the requested domains, the command prints a table with these columns:
+
+| Column        | Description                                         |
+| ------------- | --------------------------------------------------- |
+| `Domain`      | The submitted top-level domain.                     |
+| `Transaction` | The confirmed registration transaction signature.   |
+| `Explorer`    | A mainnet Solana Explorer link for the transaction. |
+
+## Cautions
+
+Registrations are submitted sequentially and are not atomic. An earlier registration can succeed before a later one fails.
+
+The command uses the default mainnet USDC payment path. Treat the keypair file as a sensitive credential.

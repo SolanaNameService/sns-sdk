@@ -1,0 +1,53 @@
+---
+displayed_sidebar: docsSidebar
+title: resolve_name_registry_batch
+description: Read multiple SPL Name Service accounts with the blocking Rust client.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Name registries](../name-registries.mdx) / `resolve_name_registry_batch`
+
+# Function: `resolve_name_registry_batch()`
+
+```rust
+pub fn resolve_name_registry_batch(
+    rpc_client: &RpcClient,
+    keys: &[Pubkey],
+) -> Result<Vec<Option<(NameRecordHeader, Vec<u8>)>>, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/blocking/resolve.rs" line={220} label="rust-crates/sns-sdk/src/blocking/resolve.rs:220" />
+
+Fetches name-registry accounts in chunks of 100 keys. Output preserves input order, and each present account is split into its header and payload.
+
+## Availability
+
+Requires the `blocking` feature.
+
+## Parameters
+
+| Parameter    | Type                                    | Description                                     |
+| ------------ | --------------------------------------- | ----------------------------------------------- |
+| `rpc_client` | `&solana_client::rpc_client::RpcClient` | Blocking client used for batched account reads. |
+| `keys`       | `&[Pubkey]`                             | Name-registry account keys to fetch.            |
+
+## Returns
+
+`Result<Vec<Option<(NameRecordHeader, Vec<u8>)>>, SnsError>` with one result per input key, in input order. Missing accounts are `None`.
+
+## Errors
+
+- `SnsError::InvalidNameAccountData` when a present account has the wrong owner or insufficient header data.
+- `SnsError::BorshError` when a header cannot be unpacked.
+- `SnsError::SolanaClient` for RPC failures.
+
+## Example
+
+```rust
+use sns_sdk::{blocking::resolve::resolve_name_registry_batch, derivation::get_sns_domain_key};
+use solana_client::rpc_client::RpcClient;
+
+let client = RpcClient::new(std::env::var("RPC_URL")?);
+let keys = [get_sns_domain_key("alice")?.key, get_sns_domain_key("bob")?.key];
+let accounts = resolve_name_registry_batch(&client, &keys)?;
+println!("{} results", accounts.len());
+```

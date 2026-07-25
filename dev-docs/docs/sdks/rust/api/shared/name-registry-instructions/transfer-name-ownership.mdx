@@ -1,0 +1,33 @@
+---
+displayed_sidebar: docsSidebar
+title: transfer_name_ownership
+description: Build an instruction that transfers a name-registry account.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Name-registry instructions](../name-registry-instructions.mdx) / `transfer_name_ownership`
+
+# Function: `transfer_name_ownership()`
+
+```rust
+pub fn transfer_name_ownership(name_account: Pubkey, new_owner: Pubkey, current_owner: Pubkey, name_class: Option<Pubkey>) -> Result<Instruction, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/bindings/name_registry.rs" line={64} label="name_registry.rs:64" />
+
+Builds a transfer instruction for a name account. The current owner must authorize the submitted transaction.
+
+## Parameters
+
+`name_account` is transferred from `current_owner` to `new_owner`; provide `name_class` when the account has one.
+
+## Returns
+
+An unsigned `Instruction`, or `SnsError::SolanaProgramError` from instruction construction.
+
+## Example
+
+```rust
+use sns_sdk::bindings::name_registry::transfer_name_ownership;
+
+let instruction = transfer_name_ownership(name_account, new_owner, current_owner, None)?;
+```

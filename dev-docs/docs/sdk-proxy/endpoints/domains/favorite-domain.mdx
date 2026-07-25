@@ -1,0 +1,71 @@
+---
+title: "GET /favorite-domain/:owner"
+description: Compatibility alias for retrieving a wallet's primary SNS domain.
+---
+
+Return the same primary-domain result as `GET /primary-domain/:owner`.
+
+## Request
+
+```http
+GET /favorite-domain/:owner
+```
+
+## Path parameters
+
+### `owner`
+
+Required. The wallet's base58 public key.
+
+## Query parameters
+
+### `rpc`
+
+Optional. A non-empty Solana RPC URL that overrides the proxy Worker's `RPC_URL` binding for this request.
+
+## Response
+
+A successful request returns `200 OK`:
+
+```ts
+type FavoriteDomainResponse = {
+  s: "ok";
+  result: {
+    domain: string;
+    reverse: string;
+    stale: boolean;
+  } | null;
+};
+```
+
+The fields and `null` behavior are identical to `GET /primary-domain/:owner`.
+
+## Example
+
+```bash
+curl "https://sdk-proxy.sns.id/favorite-domain/<OWNER_PUBLIC_KEY>"
+```
+
+```json
+{
+  "s": "ok",
+  "result": {
+    "domain": "<DOMAIN_ACCOUNT_PUBLIC_KEY>",
+    "reverse": "name",
+    "stale": false
+  }
+}
+```
+
+## Errors
+
+| Status | `result`             | When                                                                |
+| ------ | -------------------- | ------------------------------------------------------------------- |
+| `400`  | `Invalid input`      | `owner` is not a valid Solana public key.                           |
+| `404`  | `Resource not found` | A configured primary-domain account or referenced domain is absent. |
+| `502`  | `RPC unavailable`    | The selected RPC returns a JSON-RPC error.                          |
+| `500`  | `Internal error`     | No RPC is configured, or another failure occurs.                    |
+
+## Status
+
+Compatibility alias. New integrations should use `GET /primary-domain/:owner`.

@@ -1,0 +1,134 @@
+---
+title: JavaScript SDK v4
+description: Update applications from JavaScript SDK v3 to JavaScript SDK v4.
+---
+
+Use this guide to migrate an application from JavaScript SDK v3 to JavaScript SDK v4.
+
+## Install v4
+
+Install v4 and its `@solana/web3.js` peer dependency:
+
+```bash
+npm install @bonfida/spl-name-service@^4 @solana/web3.js@^1.98.2
+```
+
+## Import from the package root
+
+Root and category-subpath imports are supported in v4. These migration examples use the package root:
+
+```ts
+import {
+  getPrimaryDomain,
+  getRecord,
+  getSnsDomainsForOwner,
+  Record,
+  resolve,
+} from "@bonfida/spl-name-service";
+```
+
+## Update domain inputs
+
+Use the input form required by each API family instead of applying one transformation to every domain:
+
+| API family                                             | v3 input                                          | v4 input                                                                       |
+| ------------------------------------------------------ | ------------------------------------------------- | ------------------------------------------------------------------------------ |
+| High-level reads, including `resolve` and record reads | TLD-less SNS name; some APIs also accepted `.sol` | Full name with a supported suffix, such as `name.sns`                          |
+| Domain and record writes                               | TLD-less SNS name                                 | Lowercase full `.sns` name; follow the API's top-level or subdomain constraint |
+| Synchronous derivation and raw name-account helpers    | TLD-less or raw account input                     | TLD-less or raw account input, as documented for the helper                    |
+
+Do not append `.sns` to inputs for low-level helpers such as `getSnsDomainKeySync`, `getRecordV1Key`, or `getRecordV2Key`.
+
+:::note `.sol` resolution and reads
+
+SNS-backed `.sol` resolution and reads pause automatically at finalized slot <code><CutoffSlot /></code> to transition `.sol` domains to the SRS program; slot checks are not needed at the application level. SRS-backed `.sol` resolution will be enabled in a future SDK update.
+
+:::
+
+## Update resolution
+
+The `resolve` call shape is unchanged, but the domain now needs a supported suffix.
+
+```ts title="v3"
+import { resolve } from "@bonfida/spl-name-service";
+
+const owner = await resolve(connection, "name");
+```
+
+```ts title="v4"
+import { resolve } from "@bonfida/spl-name-service";
+
+const owner = await resolve(connection, "name.sns");
+```
+
+## Update primary-domain lookup
+
+Replace `getFavoriteDomain` with `getPrimaryDomain`. If the v3 application already uses the `getPrimaryDomain` alias, the call does not change.
+
+```ts
+const primary = await getPrimaryDomain(connection, wallet);
+
+if (!primary.stale) {
+  console.log(`${primary.reverse}.sns`);
+}
+```
+
+The result remains `{ domain, reverse, stale }`. `domain` is the name-account public key, `reverse` is TLD-less, and `stale` is `true` when the wallet no longer owns the selected domain.
+
+## Update owner-domain lookup
+
+Replace `getDomainKeysWithReverses` with `getSnsDomainsForOwner`:
+
+```ts title="v3"
+const domains = await getDomainKeysWithReverses(connection, wallet);
+```
+
+```ts title="v4"
+const domains = await getSnsDomainsForOwner(connection, wallet);
+const displayNames = domains.map(({ domain }) => `${domain}.sns`);
+```
+
+The result property `pubKey` is now named `key`, and entries without a valid reverse name are omitted. This lookup returns directly registry-owned top-level domains; use `getSnsNftsForOwner` separately for tokenized domains.
+
+## Update record reads
+
+In v4, `getRecord` reads record V2 data and returns a structured `RecordResult`. A v3 call that used the V1 `getRecord` API must change both its domain input and result handling:
+
+```ts title="v3"
+const content = await getRecord(connection, "name", Record.Url, true);
+```
+
+```ts title="v4"
+const result = await getRecord(connection, "name.sns", Record.Url, {
+  deserialize: true,
+});
+
+console.log(result.deserializedContent);
+```
+
+Use `result.verified.staleness` and, when present, `result.verified.roa` to evaluate the record's verification status. Rename `getRecordV2` to `getRecord`, and rename `getRecords` or `getMultipleRecordsV2` to `getMultipleRecords`. Batch results preserve request order and use `undefined` for records that do not exist.
+
+## Update common write APIs
+
+v4 uses `.sns` names for string-based high-level writes and consolidates common instruction builders:
+
+| v3                                                       | v4                      | Required change                                                                            |
+| -------------------------------------------------------- | ----------------------- | ------------------------------------------------------------------------------------------ |
+| `registerDomainNameV2`                                   | `registerDomain`        | Pass a full top-level `.sns` name and remove the `Connection` argument                     |
+| `registerWithNft`                                        | `registerDomainWithNft` | Pass a full top-level `.sns` name; remove `nftMetadata` and `masterEdition`                |
+| `registerFavorite`                                       | `setPrimaryDomain`      | Rename the call; the name-account public key argument is unchanged                         |
+| `transferNameOwnership`                                  | `transferDomain`        | Pass a full top-level `.sns` name and remove the class, parent, and parent-owner arguments |
+| `createRecordInstruction` or `createRecordV2Instruction` | `createRecord`          | Pass a full `.sns` domain and use the consolidated signature                               |
+| `updateRecordInstruction` or `updateRecordV2Instruction` | `updateRecord`          | Pass a full `.sns` domain and use the consolidated signature                               |
+| `deleteRecordV2`                                         | `deleteRecord`          | Pass a full `.sns` domain                                                                  |
+
+These helpers return one or more `TransactionInstruction` values. The application remains responsible for adding them to a transaction, collecting the required signatures, and submitting it.
+
+## Verify the migration
+
+- Replace renamed imports and call sites.
+- Resolve a known domain with TLD suffix (`name.sns`/`name.sol`).
+- Pass full lowercase `.sns` names to high-level read and write APIs expecting domain name inputs.
+- Keep address-derivation inputs TLD-less and raw registry inputs unchanged.
+- Update record reads to consume `RecordResult` and its verification fields.
+- Update frontend formatting to display TLD-less SNS names with `.sns`.

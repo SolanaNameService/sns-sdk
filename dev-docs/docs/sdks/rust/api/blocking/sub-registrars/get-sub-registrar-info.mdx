@@ -1,0 +1,53 @@
+---
+displayed_sidebar: docsSidebar
+title: get_sub_registrar_info
+description: Retrieve an SNS sub-registrar account with the blocking Rust client.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Sub-registrars](../sub-registrars.mdx) / `get_sub_registrar_info`
+
+# Function: `get_sub_registrar_info()`
+
+```rust
+pub fn get_sub_registrar_info(rpc_client: &RpcClient, domain: &str) -> Result<Registrar, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/blocking/subdomain.rs" line={66} label="rust-crates/sns-sdk/src/blocking/subdomain.rs:66" />
+
+Derives the SNS name account and its associated sub-registrar PDA, then reads and deserializes the registrar state.
+
+## Availability
+
+Requires both the `blocking` and `subdomain` features.
+
+## Parameters
+
+| Parameter    | Type                                    | Description                                    |
+| ------------ | --------------------------------------- | ---------------------------------------------- |
+| `rpc_client` | `&solana_client::rpc_client::RpcClient` | Blocking client used to fetch registrar state. |
+| `domain`     | `&str`                                  | Full supported `.sns` or `.sol` domain.        |
+
+## Returns
+
+`Result<Registrar, SnsError>` containing the deserialized sub-registrar state.
+
+## Errors
+
+- `SnsError::UnsupportedTld` for a bare, unsupported, or unavailable `.sol` domain.
+- `SnsError::InvalidSubRegistrar` when the registrar account is absent, has the wrong owner or tag, or cannot be deserialized.
+- `SnsError::SolanaClient` for RPC failures.
+
+## Example
+
+```rust
+use sns_sdk::blocking::subdomain::get_sub_registrar_info;
+use solana_client::rpc_client::RpcClient;
+
+let client = RpcClient::new(std::env::var("RPC_URL")?);
+let registrar = get_sub_registrar_info(&client, "example.sns")?;
+println!("{}", registrar.authority);
+```
+
+## Related APIs
+
+- [`get_subdomains`](../subdomains/get-subdomains.mdx)

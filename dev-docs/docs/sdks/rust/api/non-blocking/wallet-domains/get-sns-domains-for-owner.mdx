@@ -1,0 +1,50 @@
+---
+displayed_sidebar: docsSidebar
+title: get_sns_domains_for_owner
+description: List top-level SNS name-account keys directly owned by a wallet.
+---
+
+[Rust SDK API Reference](../../index.mdx) / Non-blocking APIs / [Wallet domains](../wallet-domains.mdx) / `get_sns_domains_for_owner`
+
+# Function: `get_sns_domains_for_owner()`
+
+```rust
+pub async fn get_sns_domains_for_owner(
+    rpc_client: &RpcClient,
+    owner: Pubkey,
+) -> Result<Vec<Pubkey>, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/non_blocking/domain.rs" line={11} label="rust-crates/sns-sdk/src/non_blocking/domain.rs:11" />
+
+Queries SPL Name Service accounts whose parent is the SNS root account and whose header owner equals the supplied wallet. It does not include tokenized domains or subdomains, and it does not impose an ordering on returned keys.
+
+## Parameters
+
+| Parameter    | Type         | Description                                          |
+| ------------ | ------------ | ---------------------------------------------------- |
+| `rpc_client` | `&RpcClient` | Non-blocking Solana RPC client.                      |
+| `owner`      | `Pubkey`     | Wallet public key to match as direct registry owner. |
+
+## Returns
+
+`Result<Vec<Pubkey>, SnsError>` containing directly owned top-level SNS name-account keys. Reverse-resolve keys to obtain display names.
+
+## Errors
+
+- `SnsError::SolanaClient` when the program-account query fails.
+
+## Example
+
+```rust
+use sns_sdk::non_blocking::domain::get_sns_domains_for_owner;
+
+let domains = get_sns_domains_for_owner(&client, owner).await?;
+for domain in domains {
+    println!("{domain}");
+}
+```
+
+## Related APIs
+
+- [`resolve_reverse`](../reverse-lookup/resolve-reverse.mdx)

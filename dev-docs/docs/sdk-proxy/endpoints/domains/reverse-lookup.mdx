@@ -1,0 +1,57 @@
+---
+title: "GET /reverse-lookup/:pubkey"
+description: Retrieve the reverse name for an SNS name-account public key.
+---
+
+Return the stored reverse name for an SNS domain account.
+
+## Request
+
+```http
+GET /reverse-lookup/:pubkey
+```
+
+## Path parameters
+
+### `pubkey`
+
+Required. The base58 public key of a domain name account, not a wallet owner.
+
+## Query parameters
+
+### `rpc`
+
+Optional. A non-empty Solana RPC URL that overrides the proxy Worker's `RPC_URL` binding for this request.
+
+## Response
+
+A successful request returns `200 OK` with the stored reverse name:
+
+```ts
+type ReverseLookupResponse = {
+  s: "ok";
+  result: string;
+};
+```
+
+## Example
+
+```bash
+curl "https://sdk-proxy.sns.id/reverse-lookup/<DOMAIN_ACCOUNT_PUBLIC_KEY>"
+```
+
+```json
+{
+  "s": "ok",
+  "result": "name"
+}
+```
+
+## Errors
+
+| Status | `result`            | When                                                    |
+| ------ | ------------------- | ------------------------------------------------------- |
+| `400`  | `Invalid input`     | `pubkey` is not a valid Solana public key.              |
+| `404`  | `Account not found` | The name account or required reverse account is absent. |
+| `502`  | `RPC unavailable`   | The selected RPC returns a JSON-RPC error.              |
+| `500`  | `Internal error`    | No RPC is configured, or another failure occurs.        |

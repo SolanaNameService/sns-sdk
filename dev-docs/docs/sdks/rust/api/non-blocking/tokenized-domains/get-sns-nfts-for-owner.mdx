@@ -1,0 +1,51 @@
+---
+displayed_sidebar: docsSidebar
+title: get_sns_nfts_for_owner
+description: List tokenized SNS domains held by a wallet when they have reverse records.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Tokenized domains](../tokenized-domains.mdx) / `get_sns_nfts_for_owner`
+
+# Function: `get_sns_nfts_for_owner()`
+
+```rust
+pub async fn get_sns_nfts_for_owner(
+    rpc_client: &RpcClient,
+    owner: &Pubkey,
+) -> Result<Vec<SnsNftDomain>, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/non_blocking/nft.rs" line={89} label="rust-crates/sns-sdk/src/non_blocking/nft.rs:89" />
+
+Retrieves valid name-tokenizer records for `owner`, then batch reverse-resolves their name accounts. Entries with no reverse record are omitted. Each `SnsNftDomain` contains TLD-less `reverse`, the SNS `key`, and its `mint`.
+
+## Parameters
+
+| Parameter    | Type         | Description                                       |
+| ------------ | ------------ | ------------------------------------------------- |
+| `rpc_client` | `&RpcClient` | Non-blocking Solana RPC client.                   |
+| `owner`      | `&Pubkey`    | Wallet owner whose tokenized domains are queried. |
+
+## Returns
+
+`Result<Vec<SnsNftDomain>, SnsError>`. Returned entries have valid name-tokenizer records and reverse records; their order follows the retained NFT records.
+
+## Errors
+
+- `SnsError::SolanaClient` when a token, name-tokenizer, or reverse-record RPC request fails.
+- `SnsError::InvalidNameAccountData` or `SnsError::InvalidReverse` when a present reverse account is invalid.
+
+## Example
+
+```rust
+use sns_sdk::non_blocking::nft::get_sns_nfts_for_owner;
+
+for domain in get_sns_nfts_for_owner(&client, &owner).await? {
+    println!("{}.sns: {}", domain.reverse, domain.key);
+}
+```
+
+## Related APIs
+
+- [`get_nft_records`](./get-nft-records.mdx)
+- [`resolve_nft_owner`](./resolve-nft-owner.mdx)

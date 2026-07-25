@@ -1,0 +1,36 @@
+---
+title: domains
+description: List directly registry-owned top-level SNS domains for one or more wallets with SNS CLI v3.
+---
+
+The `domains` command lists reverse-resolved top-level `.sns` domains owned directly in the name registry by each requested wallet.
+
+## Usage
+
+```text
+sns [--url <URL>] domains <OWNER_PUBKEY>...
+```
+
+## Arguments
+
+### `<OWNER_PUBKEY>...`
+
+Required. One or more base58 wallet public keys, processed in the order they are provided.
+
+## Options
+
+### `-u, --url <URL>`
+
+Use this RPC endpoint instead of `RPC_URL` or the default public mainnet-beta endpoint at `https://api.mainnet-beta.solana.com`.
+
+## Output
+
+The command prints a table with these columns:
+
+| Column   | Description                                               |
+| -------- | --------------------------------------------------------- |
+| `Domain` | A reverse-resolved domain displayed with a `.sns` suffix. |
+| `Owner`  | The requested wallet public key.                          |
+| `Link`   | A naming-site link for the domain.                        |
+
+The result covers direct top-level registry ownership. It does not include subdomains, tokenized domains controlled through NFTs, or domains without reverse data.

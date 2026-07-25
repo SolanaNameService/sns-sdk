@@ -1,0 +1,55 @@
+---
+displayed_sidebar: docsSidebar
+title: get_multiple_records_v2
+description: Read multiple current SNS records with the blocking Rust client.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Record V2 reads](../record-v2.mdx) / `get_multiple_records_v2`
+
+# Function: `get_multiple_records_v2()`
+
+```rust
+pub fn get_multiple_records_v2(
+    rpc_client: &RpcClient,
+    domain: &str,
+    records: &[Record],
+) -> Result<Vec<Option<(NameRecordHeader, Vec<u8>)>>, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/blocking/record_v2.rs" line={22} label="rust-crates/sns-sdk/src/blocking/record_v2.rs:22" />
+
+Validates and trims a full supported domain, derives one V2 address per requested record, and fetches those accounts in a batch. Results preserve `records` order.
+
+## Availability
+
+Requires the `blocking` feature.
+
+## Parameters
+
+| Parameter    | Type                                    | Description                                         |
+| ------------ | --------------------------------------- | --------------------------------------------------- |
+| `rpc_client` | `&solana_client::rpc_client::RpcClient` | Blocking client used for batched record reads.      |
+| `domain`     | `&str`                                  | Full supported `.sns` or `.sol` domain.             |
+| `records`    | `&[Record]`                             | SNS record kinds to fetch, in desired output order. |
+
+## Returns
+
+`Result<Vec<Option<(NameRecordHeader, Vec<u8>)>>, SnsError>` with one header-and-payload result or `None` per requested record, in `records` order.
+
+## Errors
+
+- `SnsError::UnsupportedTld` for a bare, unsupported, or unavailable `.sol` domain.
+- `SnsError::InvalidNameAccountData` when a present record account is malformed or has the wrong owner.
+- `SnsError::SolanaClient` for RPC failures.
+
+## Example
+
+```rust
+use sns_sdk::{blocking::record_v2::get_multiple_records_v2, record::Record};
+use solana_client::rpc_client::RpcClient;
+
+let client = RpcClient::new(std::env::var("RPC_URL")?);
+let records = [Record::Url, Record::Email];
+let values = get_multiple_records_v2(&client, "example.sns", &records)?;
+println!("{} results", values.len());
+```

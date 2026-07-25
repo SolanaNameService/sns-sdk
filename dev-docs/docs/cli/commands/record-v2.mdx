@@ -1,0 +1,114 @@
+---
+title: record-v2
+description: Read and write SNS V2 records with SNS CLI v3.
+---
+
+The `record-v2` command groups operations for SNS V2 records.
+
+## Usage
+
+```text
+sns [--url <URL>] record-v2 <COMMAND>
+```
+
+## Options
+
+### `-u, --url <URL>`
+
+Use this RPC endpoint instead of `RPC_URL` or the default public mainnet-beta endpoint at `https://api.mainnet-beta.solana.com`. This global option may appear before a command or after a nested subcommand.
+
+## Subcommands
+
+### `get`
+
+Fetch one V2 record and report its parsed content and verification status.
+
+#### Usage
+
+```text
+sns [--url <URL>] record-v2 get --domain <DOMAIN> --record <RECORD>
+```
+
+#### Options
+
+**`--domain <DOMAIN>` (required)**
+
+One canonical lowercase `.sns` domain.
+
+**`--record <RECORD>` (required)**
+
+Record label to retrieve. Accepted canonical labels are:
+
+```text
+IPFS ARWV SOL ETH BTC LTC DOGE email url discord github reddit twitter telegram
+pic SHDW POINT BSC INJ backpack A AAAA CNAME TXT BASE bio
+```
+
+The CLI also accepts case-insensitive aliases for `EMAIL`, `URL`, `DISCORD`, `GITHUB`, `REDDIT`, `TWITTER`, `TELEGRAM`, `PIC`, `BACKPACK`, and `BIO`. `INJECTIVE` maps to the canonical `INJ` label.
+
+#### Output
+
+When the domain and record exist, the command prints a table with these columns:
+
+| Column               | Description                                                                                      |
+| -------------------- | ------------------------------------------------------------------------------------------------ |
+| `Domain`             | The requested domain.                                                                            |
+| `Record`             | The canonical record label.                                                                      |
+| `Content`            | The parsed record content.                                                                       |
+| `Staleness Verified` | `true` when staleness validation succeeds against the effective owner and current registry data. |
+| `RoA Verified`       | `true` or `false` for records with Right of Association validation; otherwise `N/A`.             |
+
+The command does not print an empty table when the domain or record is missing.
+
+### `set`
+
+Create a missing V2 record or overwrite the content of an existing V2 record.
+
+#### Usage
+
+```text
+sns [--url <URL>] record-v2 set --keypair <KEYPAIR_PATH> --domain <DOMAIN> --record <RECORD> --content <CONTENT> [--force]
+```
+
+#### Options
+
+**`--keypair <KEYPAIR_PATH>` (required)**
+
+Local signing keypair. It is used as the raw domain owner and as the transaction fee/rent payer. The registry account's raw owner must match this keypair; an effective NFT/token holder is not accepted by the records program.
+
+**`--domain <DOMAIN>` (required)**
+
+Canonical lowercase `.sns` domain. The domain registry must exist.
+
+**`--record <RECORD>` (required)**
+
+Record label to set. Accepted canonical labels are:
+
+```text
+IPFS ARWV SOL ETH BTC LTC DOGE email url discord github reddit twitter telegram
+pic SHDW POINT BSC INJ backpack A AAAA CNAME TXT BASE bio
+```
+
+The CLI also accepts case-insensitive aliases for `EMAIL`, `URL`, `DISCORD`, `GITHUB`, `REDDIT`, `TWITTER`, `TELEGRAM`, `PIC`, `BACKPACK`, and `BIO`. `INJECTIVE` maps to the canonical `INJ` label.
+
+**`--content <CONTENT>` (required)**
+
+Content is type-validated before the keypair is read or an RPC request is made. Quote shell-sensitive values. `SOL` accepts a base58 public key; `ETH`, `BSC`, and `BASE` accept a `0x` 20-byte hexadecimal address; `A` and `AAAA` accept IP literals; `INJ` accepts an `inj...` Bech32 address; and `TXT`, `CNAME`, `url`, and `bio` accept text. URL and email strings are UTF-8 content, not semantically validated URLs or email addresses.
+
+**`--force`**
+
+Allow an update to clear existing validation metadata, or overwrite validation metadata that cannot be decoded. Without this option, the CLI stops before transaction submission. With this option, the CLI prints a warning before sending the transaction.
+
+#### Output
+
+After the transaction is confirmed, the command prints a table with these columns:
+
+| Column        | Description                                                    |
+| ------------- | -------------------------------------------------------------- |
+| `Domain`      | The requested domain.                                          |
+| `Record`      | The canonical record label.                                    |
+| `Action`      | `Created` when the V2 account was absent; otherwise `Updated`. |
+| `Transaction` | The confirmed transaction signature.                           |
+| `Explorer`    | A mainnet-oriented Solana Explorer link for the transaction.   |
+
+If the existing record contains validation metadata, or if that metadata cannot be decoded, the CLI refuses to submit the update without `--force`. When `--force` is present, the warning is written to stderr before the transaction is sent.

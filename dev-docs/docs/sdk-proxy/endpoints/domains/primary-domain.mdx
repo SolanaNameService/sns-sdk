@@ -1,0 +1,67 @@
+---
+title: "GET /primary-domain/:owner"
+description: Retrieve a wallet's configured primary SNS domain.
+---
+
+Return a wallet's configured primary domain, reverse name, and ownership status.
+
+## Request
+
+```http
+GET /primary-domain/:owner
+```
+
+## Path parameters
+
+### `owner`
+
+Required. The wallet's base58 public key.
+
+## Query parameters
+
+### `rpc`
+
+Optional. A non-empty Solana RPC URL that overrides the proxy Worker's `RPC_URL` binding for this request.
+
+## Response
+
+A successful request returns `200 OK`:
+
+```ts
+type PrimaryDomainResponse = {
+  s: "ok";
+  result: {
+    domain: string;
+    reverse: string;
+    stale: boolean;
+  } | null;
+};
+```
+
+`domain` is the primary domain's name-account public key. `reverse` is its TLD-less name. `stale` is `true` when `owner` no longer owns the configured domain. A wallet without a configured primary domain returns `result: null`.
+
+## Example
+
+```bash
+curl "https://sdk-proxy.sns.id/primary-domain/<OWNER_PUBLIC_KEY>"
+```
+
+```json
+{
+  "s": "ok",
+  "result": {
+    "domain": "<DOMAIN_ACCOUNT_PUBLIC_KEY>",
+    "reverse": "name",
+    "stale": false
+  }
+}
+```
+
+## Errors
+
+| Status | `result`             | When                                                                |
+| ------ | -------------------- | ------------------------------------------------------------------- |
+| `400`  | `Invalid input`      | `owner` is not a valid Solana public key.                           |
+| `404`  | `Resource not found` | A configured primary-domain account or referenced domain is absent. |
+| `502`  | `RPC unavailable`    | The selected RPC returns a JSON-RPC error.                          |
+| `500`  | `Internal error`     | No RPC is configured, or another failure occurs.                    |

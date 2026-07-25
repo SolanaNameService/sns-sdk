@@ -1,0 +1,33 @@
+---
+displayed_sidebar: docsSidebar
+title: update_name_registry_data
+description: Build an instruction that overwrites name-registry data at an offset.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Name-registry instructions](../name-registry-instructions.mdx) / `update_name_registry_data`
+
+# Function: `update_name_registry_data()`
+
+```rust
+pub fn update_name_registry_data(name_account: Pubkey, offset: u32, data: Vec<u8>, signer: Pubkey, parent: Option<Pubkey>) -> Result<Instruction, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/bindings/name_registry.rs" line={46} label="name_registry.rs:46" />
+
+Builds an update instruction that writes `data` beginning at `offset` in a name account.
+
+## Parameters
+
+`name_account` is updated by `signer`; `parent` supplies the optional parent authority; `offset` and `data` select the bytes to overwrite.
+
+## Returns
+
+An unsigned `Instruction`, or `SnsError::SolanaProgramError` from instruction construction.
+
+## Example
+
+```rust
+use sns_sdk::bindings::name_registry::update_name_registry_data;
+
+let instruction = update_name_registry_data(name_account, 0, b"hello".to_vec(), signer, None)?;
+```

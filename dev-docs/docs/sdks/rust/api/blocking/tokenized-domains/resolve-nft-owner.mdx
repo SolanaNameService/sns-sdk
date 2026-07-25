@@ -1,0 +1,54 @@
+---
+displayed_sidebar: docsSidebar
+title: resolve_nft_owner
+description: Find the holder of a valid one-of-one tokenized SNS domain mint.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Tokenized domains](../tokenized-domains.mdx) / `resolve_nft_owner`
+
+# Function: `resolve_nft_owner()`
+
+```rust
+pub fn resolve_nft_owner(
+    rpc_client: &RpcClient,
+    domain_key: &Pubkey,
+) -> Result<Option<Pubkey>, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/blocking/nft.rs" line={97} label="rust-crates/sns-sdk/src/blocking/nft.rs:97" />
+
+Derives the domain's canonical Name Tokenizer mint. It returns an owner only when the mint account exists, has supply one, and a matching amount-one SPL Token account is found.
+
+## Availability
+
+Requires the `blocking` feature.
+
+## Parameters
+
+| Parameter    | Type                                    | Description                                                        |
+| ------------ | --------------------------------------- | ------------------------------------------------------------------ |
+| `rpc_client` | `&solana_client::rpc_client::RpcClient` | Blocking client used to fetch the mint and matching token account. |
+| `domain_key` | `&Pubkey`                               | SNS name-account key whose canonical domain mint is checked.       |
+
+## Returns
+
+`Result<Option<Pubkey>, SnsError>`. `Some` is the owner of the first matching amount-one token account; `None` means the domain has no mint account, the mint supply is not one, or no matching holder exists.
+
+## Errors
+
+- `SnsError::InvalidDomain` when the RPC response unexpectedly has no entry for the derived mint query.
+- `SnsError::SolanaProgramError` when the mint or matching token account cannot be unpacked.
+- `SnsError::SolanaClient` for RPC failures.
+
+## Example
+
+```rust
+use sns_sdk::{blocking::nft::resolve_nft_owner, derivation::get_sns_domain_key};
+use solana_client::rpc_client::RpcClient;
+
+let client = RpcClient::new(std::env::var("RPC_URL")?);
+let domain_key = get_sns_domain_key("example")?.key;
+if let Some(owner) = resolve_nft_owner(&client, &domain_key)? {
+    println!("{owner}");
+}
+```

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "name": "React Hooks API Reference",
+  "plugin": ["typedoc-plugin-markdown"],
+  "entryPoints": [
+    "../../react/src/hooks/useResolve/index.ts",
+    "../../react/src/hooks/usePrimaryDomain/index.ts",
+    "../../react/src/hooks/useProfilePic/index.ts",
+    "../../react/src/hooks/useRecords/index.ts",
+    "../../react/src/hooks/useReverseLookup/index.ts",
+    "../../react/src/hooks/useSnsDomainsForOwner/index.ts",
+    "../../react/src/hooks/useSubdomains/index.ts",
+    "../../react/src/types.ts"
+  ],
+  "tsconfig": "../../react/tsconfig.json",
+  "out": "../docs/react-hooks/api",
+  "readme": "none",
+  "entryFileName": "index",
+  "hidePageHeader": true,
+  "indexFormat": "table",
+  "cleanOutputDir": true,
+  "excludeExternals": true,
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "includeVersion": false,
+  "requiredToBeDocumented": ["Interface", "TypeAlias"],
+  "validation": {
+    "invalidLink": true,
+    "notDocumented": true,
+    "notExported": false
+  }
+}

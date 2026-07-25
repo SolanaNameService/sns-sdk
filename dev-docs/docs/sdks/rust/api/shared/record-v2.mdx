@@ -1,0 +1,18 @@
+---
+displayed_sidebar: docsSidebar
+title: Record V2 codecs and verification
+description: Decode, parse, verify, serialize, and deserialize current SNS record payloads.
+---
+
+These local codecs decode SNS Records V2 layout, parse content, and verify its staleness and Right-of-Association proofs. They operate on fetched account data; callers select the applicable `Record` type when decoding content.
+
+## APIs
+
+| API                                                                          | Description                                                 |
+| ---------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| [`decode_record_v2_fields`](./record-v2/decode-record-v2-fields)             | Decodes the V2 header, validations, IDs, and content bytes. |
+| [`RecordV2Fields::parse_content`](./record-v2/parse-content)                 | Parses decoded content into a `ParsedRecordV2`.             |
+| [`ParsedRecordV2::verify_staleness`](./record-v2/verify-staleness)           | Verifies the record against the current domain owner.       |
+| [`ParsedRecordV2::verify_roa`](./record-v2/verify-roa)                       | Verifies the record's Right-of-Association proof.           |
+| [`deserialize_record_v2_content`](./record-v2/deserialize-record-v2-content) | Decodes content for a record type.                          |
+| [`serialize_record_v2_content`](./record-v2/serialize-record-v2-content)     | Encodes content for a record type.                          |

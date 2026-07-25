@@ -1,0 +1,78 @@
+---
+title: JS Kit SDK quickstart
+description: Resolve an SNS domain and query primary and wallet-owned domains with JS Kit SDK v1.
+---
+
+Use JS Kit SDK v1 to resolve a `.sns` domain and query domain data for a wallet.
+
+## Setup
+
+Complete the [JS Kit SDK installation](/docs/sdks/js-kit/installation), then create the shared RPC client:
+
+```ts
+import {
+  createDefaultRpcTransport,
+  createSolanaRpcFromTransport,
+} from "@solana/kit";
+
+const transport = createDefaultRpcTransport({ url: process.env.RPC_URL! });
+const rpc = createSolanaRpcFromTransport(transport);
+```
+
+## Common usage
+
+### Resolve a domain
+
+Pass a full `.sns` name to `resolve`:
+
+```ts
+import { resolve } from "@solana-name-service/sns-sdk-kit";
+
+const owner = await resolve({ rpc, domain: "name.sns" });
+console.log(owner);
+// => "<BASE58_ADDRESS>"
+```
+
+`resolve` returns the effective owner as a Solana Kit `Address`.
+
+### Get a primary domain
+
+Use `getPrimaryDomain` with the wallet address:
+
+```ts
+import { getPrimaryDomain } from "@solana-name-service/sns-sdk-kit";
+import type { Address } from "@solana/kit";
+
+const walletAddress = "<WALLET_ADDRESS>" as Address;
+const primary = await getPrimaryDomain({ rpc, walletAddress });
+
+if (!primary.stale) {
+  console.log(`${primary.domainName}.sns`);
+  // => "name.sns"
+}
+```
+
+`domainName` is TLD-less. Append `.sns` for display. Do not present a stale result as the wallet's current primary domain.
+
+### Get domains for an owner
+
+Use `getSnsDomainsForAddress` to retrieve top-level domains owned by the wallet:
+
+```ts
+import { getSnsDomainsForAddress } from "@solana-name-service/sns-sdk-kit";
+import type { Address } from "@solana/kit";
+
+const address = "<WALLET_ADDRESS>" as Address;
+const domains = await getSnsDomainsForAddress({ rpc, address });
+const suffixedDomains = domains.map(({ domain }) => `${domain}.sns`);
+
+console.log(suffixedDomains);
+// => ["name.sns", "another-name.sns"]
+```
+
+Each result contains a TLD-less `domain` and its `domainAddress`. Results omit names without reverse data and do not include tokenized domains or subdomains.
+
+## Next steps
+
+- Use the [JS Kit SDK API Reference](/docs/sdks/js-kit/api/) for other reads and transaction instruction builders.
+- Follow the [JS Kit SDK migration guide](/docs/migration/js-kit) when upgrading from v0.10.

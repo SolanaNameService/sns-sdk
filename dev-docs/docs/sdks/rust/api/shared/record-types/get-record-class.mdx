@@ -1,0 +1,32 @@
+---
+displayed_sidebar: docsSidebar
+title: get_record_class
+description: Return the class account for a record version.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Record types and keys](../record-types.mdx) / `get_record_class`
+
+# Function: `get_record_class()`
+
+```rust
+pub fn get_record_class(record_version: RecordVersion) -> Option<Pubkey>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/record/mod.rs" line={149} label="record/mod.rs:149" />
+
+Returns the V2 central-state class, which is feature-dependent on devnet. V1 has no class.
+
+## Parameters
+
+`record_version`: `RecordVersion::V1` or `RecordVersion::V2`.
+
+## Returns
+
+`Some(Pubkey)` for V2 and `None` for V1.
+
+## Example
+
+```rust
+use sns_sdk::record::{get_record_class, RecordVersion};
+assert!(get_record_class(RecordVersion::V2).is_some());
+```

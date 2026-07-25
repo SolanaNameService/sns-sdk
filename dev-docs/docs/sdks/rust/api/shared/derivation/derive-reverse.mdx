@@ -1,0 +1,37 @@
+---
+displayed_sidebar: docsSidebar
+title: derive_reverse
+description: Derive a raw SNS reverse-lookup account from a domain key.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Address derivation](../derivation.mdx) / `derive_reverse`
+
+# Function: `derive_reverse()`
+
+```rust
+pub fn derive_reverse(domain_key: &Pubkey, parent: Option<&Pubkey>) -> Pubkey
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/derivation.rs" line={73} label="derivation.rs:73" />
+
+Derives a reverse-lookup account using the configured reverse class and an optional parent account.
+
+## Parameters
+
+| Parameter    | Type              | Description                                                            |
+| ------------ | ----------------- | ---------------------------------------------------------------------- |
+| `domain_key` | `&Pubkey`         | Derived SNS name-account key.                                          |
+| `parent`     | `Option<&Pubkey>` | Parent for a subdomain reverse record, or `None` for a top-level name. |
+
+## Returns
+
+The derived reverse-account `Pubkey`.
+
+## Example
+
+```rust
+use sns_sdk::derivation::{derive_reverse, get_sns_domain_key};
+
+let domain = get_sns_domain_key("example")?;
+let reverse = derive_reverse(&domain.key, None);
+```

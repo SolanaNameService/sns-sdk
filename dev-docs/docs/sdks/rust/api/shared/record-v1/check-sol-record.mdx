@@ -1,0 +1,33 @@
+---
+displayed_sidebar: docsSidebar
+title: check_sol_record
+description: Verify a legacy SOL record signature.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Record V1 codecs](../record-v1.mdx) / `check_sol_record`
+
+# Function: `check_sol_record()`
+
+```rust
+pub fn check_sol_record(record: &[u8], signed_record: &[u8], pubkey: Pubkey) -> Result<bool, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/record/record_v1.rs" line={11} label="record_v1.rs:11" />
+
+Verifies an Ed25519 signature over `record` with `pubkey`.
+
+## Parameters
+
+`record` is signed content, `signed_record` is its signature bytes, and `pubkey` is the verifying public key.
+
+## Returns
+
+`true` for a valid signature and `false` for a mismatch. Invalid key or signature encodings return `SnsError`.
+
+## Example
+
+```rust
+use sns_sdk::record::record_v1::check_sol_record;
+
+let valid = check_sol_record(record, signature, pubkey)?;
+```

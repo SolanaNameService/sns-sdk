@@ -1,0 +1,16 @@
+---
+displayed_sidebar: docsSidebar
+title: Name-registry instructions
+description: Build low-level SPL Name Service create, update, transfer, and delete instructions.
+---
+
+These synchronous, low-level builders return unsigned SPL Name Service `Instruction` values and work with either RPC client mode. Callers supply explicit account relationships; `create_name_registry` requires a name that already includes any record or subdomain prefix.
+
+## APIs
+
+| API                                                                                   | Description                                    |
+| ------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| [`create_name_registry`](./name-registry-instructions/create-name-registry)           | Creates and funds a raw name-registry account. |
+| [`update_name_registry_data`](./name-registry-instructions/update-name-registry-data) | Overwrites account data at an offset.          |
+| [`transfer_name_ownership`](./name-registry-instructions/transfer-name-ownership)     | Transfers a name-registry account.             |
+| [`delete_name_registry`](./name-registry-instructions/delete-name-registry)           | Deletes an account and refunds its rent.       |

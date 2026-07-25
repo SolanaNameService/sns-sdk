@@ -1,0 +1,32 @@
+---
+displayed_sidebar: docsSidebar
+title: set_primary_domain_instruction
+description: Build an instruction to set primary-domain state.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Primary domains](../primary-domains.mdx) / `set_primary_domain_instruction`
+
+# Function: `set_primary_domain_instruction()`
+
+```rust
+pub fn set_primary_domain_instruction(program_id: Pubkey, accounts: set_primary_domain::Accounts<Pubkey>, params: set_primary_domain::Params) -> Instruction
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/primary_domain.rs" line={69} label="primary_domain.rs:69" />
+
+Builds the raw primary-domain instruction. Its generated `Accounts` contract requires the owner signer.
+
+## Parameters
+
+`program_id` selects the program; `accounts` supplies name, PDA, owner, and system program; `params` is the generated empty parameter type.
+
+## Returns
+
+An unsigned `Instruction`.
+
+## Example
+
+```rust
+use sns_sdk::primary_domain::set_primary_domain_instruction;
+let instruction = set_primary_domain_instruction(program_id, accounts, params);
+```

@@ -1,0 +1,57 @@
+---
+title: Rust SDK API Reference
+description: Browse shared, non-blocking, and blocking Rust SDK v2 API families.
+---
+
+Rust SDK APIs are grouped by whether they are shared across client modes or use a non-blocking or blocking Solana RPC client.
+
+The default crate features expose `sns_sdk::non_blocking`. Enabling `blocking` replaces that namespace with `sns_sdk::blocking`. Shared parsing, derivation, types, and instruction builders are available in either mode.
+
+## Shared APIs
+
+| API family                                                        | Description                                                              |
+| ----------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| [Name-registry instructions](./shared/name-registry-instructions) | Create, update, transfer, and delete raw name accounts                   |
+| [Domain registration](./shared/domain-registration)               | Build top-level `.sns` registration instructions                         |
+| [Record instructions](./shared/record-instructions)               | Build V2 record content and verification instructions                    |
+| [Derivation](./shared/derivation)                                 | SNS, SRS, record, and name-account key derivation                        |
+| [Tokenized domains](./shared/tokenized-domains)                   | Shared tokenized-domain result types                                     |
+| [Primary domains](./shared/primary-domains)                       | Primary-domain account parsing, derivation, and instruction construction |
+| [Record types and keys](./shared/record-types)                    | Record enums, versions, classes, and account-key derivation              |
+| [Record V1 codecs](./shared/record-v1)                            | Legacy record serialization, deserialization, and signature checks       |
+| [Record V2 codecs](./shared/record-v2)                            | Current record decoding, content codecs, and verification                |
+| [TLD parsing](./shared/tld-parsing)                               | Supported read suffixes and canonical `.sns` write validation            |
+
+## Non-blocking APIs
+
+These modules use `solana_client::nonblocking::rpc_client::RpcClient` and are available in the default build.
+
+| API family                                            | Description                                                             |
+| ----------------------------------------------------- | ----------------------------------------------------------------------- |
+| [Domain resolution](./non-blocking/domain-resolution) | Resolve full domains to their effective targets                         |
+| [Name registries](./non-blocking/name-registries)     | Read one or multiple SPL Name Service accounts                          |
+| [Reverse lookup](./non-blocking/reverse-lookup)       | Reverse-resolve one or multiple name-account keys                       |
+| [Wallet domains](./non-blocking/wallet-domains)       | List top-level name-account keys owned by a wallet                      |
+| [Tokenized domains](./non-blocking/tokenized-domains) | Retrieve tokenized domains and NFT owners                               |
+| [Primary domains](./non-blocking/primary-domains)     | Retrieve a wallet's primary name-account key                            |
+| [Record V1](./non-blocking/record-v1)                 | Read legacy record accounts                                             |
+| [Record V2](./non-blocking/record-v2)                 | Read current record accounts                                            |
+| [Subdomains](./non-blocking/subdomains)               | Query subdomains; sub-registrar queries require the `subdomain` feature |
+| [Sub-registrars](./non-blocking/sub-registrars)       | Read sub-registrar state; requires the `subdomain` feature              |
+
+## Blocking APIs
+
+These modules use `solana_client::rpc_client::RpcClient` and are available when the crate enables `blocking`.
+
+| API family                                        | Description                                                             |
+| ------------------------------------------------- | ----------------------------------------------------------------------- |
+| [Domain resolution](./blocking/domain-resolution) | Resolve full domains to their effective targets                         |
+| [Name registries](./blocking/name-registries)     | Read one or multiple SPL Name Service accounts                          |
+| [Reverse lookup](./blocking/reverse-lookup)       | Reverse-resolve one or multiple name-account keys                       |
+| [Wallet domains](./blocking/wallet-domains)       | List top-level name-account keys owned by a wallet                      |
+| [Tokenized domains](./blocking/tokenized-domains) | Retrieve tokenized domains and NFT owners                               |
+| [Primary domains](./blocking/primary-domains)     | Retrieve a wallet's primary name-account key                            |
+| [Record V1](./blocking/record-v1)                 | Read legacy record accounts                                             |
+| [Record V2](./blocking/record-v2)                 | Read current record accounts                                            |
+| [Subdomains](./blocking/subdomains)               | Query subdomains; sub-registrar queries require the `subdomain` feature |
+| [Sub-registrars](./blocking/sub-registrars)       | Read sub-registrar state; requires `blocking` and `subdomain`           |

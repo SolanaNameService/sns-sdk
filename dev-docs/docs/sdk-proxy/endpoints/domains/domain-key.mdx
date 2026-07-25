@@ -1,0 +1,49 @@
+---
+title: "GET /domain-key/:domain"
+description: Derive the SNS name-account public key for a domain or subdomain.
+---
+
+Derive an SNS name-account public key without making an RPC request.
+
+## Request
+
+```http
+GET /domain-key/:domain
+```
+
+## Path parameters
+
+### `domain`
+
+Required. A TLD-less top-level domain such as `bonfida`, or a one-level subdomain such as `team.bonfida`. The route trims whitespace, converts the value to lowercase, and derives the corresponding `.sns` account.
+
+## Response
+
+A successful request returns `200 OK` with the derived base58 public key:
+
+```ts
+type DomainKeyResponse = {
+  s: "ok";
+  result: string;
+};
+```
+
+## Example
+
+```bash
+curl "https://sdk-proxy.sns.id/domain-key/bonfida"
+```
+
+```json
+{
+  "s": "ok",
+  "result": "<DOMAIN_ACCOUNT_PUBLIC_KEY>"
+}
+```
+
+## Errors
+
+| Status | `result`         | When                                                 |
+| ------ | ---------------- | ---------------------------------------------------- |
+| `400`  | `Invalid input`  | The domain has empty labels or more than two labels. |
+| `500`  | `Internal error` | Derivation fails for another unmapped reason.        |

@@ -1,0 +1,36 @@
+---
+displayed_sidebar: docsSidebar
+title: get_domain_mint
+description: Derive the name-tokenizer mint for an SNS name account.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Address derivation](../derivation.mdx) / `get_domain_mint`
+
+# Function: `get_domain_mint()`
+
+```rust
+pub fn get_domain_mint(domain_key: &Pubkey) -> Pubkey
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/derivation.rs" line={141} label="derivation.rs:141" />
+
+Derives the canonical name-tokenizer mint PDA for an SNS name account. The configured program ID is feature-dependent on devnet.
+
+## Parameters
+
+| Parameter    | Type      | Description                    |
+| ------------ | --------- | ------------------------------ |
+| `domain_key` | `&Pubkey` | SNS name-registry account key. |
+
+## Returns
+
+The derived mint `Pubkey`.
+
+## Example
+
+```rust
+use sns_sdk::derivation::{get_domain_mint, get_sns_domain_key};
+
+let key = get_sns_domain_key("example")?.key;
+let mint = get_domain_mint(&key);
+```

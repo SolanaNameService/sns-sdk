@@ -1,0 +1,46 @@
+---
+title: transfer
+description: Transfer one or more SNS domains to a new owner with SNS CLI v3.
+---
+
+The `transfer` command signs and submits ownership transfers for one or more `.sns` domains.
+
+## Usage
+
+```text
+sns [--url <URL>] transfer <OWNER_KEYPAIR_PATH> <NEW_OWNER_PUBKEY> <DOMAIN>...
+```
+
+## Arguments
+
+### `<OWNER_KEYPAIR_PATH>`
+
+Required. Path to the current owner's Solana keypair JSON file. The keypair signs each transfer transaction.
+
+### `<NEW_OWNER_PUBKEY>`
+
+Required. Base58 public key of the recipient.
+
+### `<DOMAIN>...`
+
+Required. One or more canonical lowercase `.sns` domains owned by the signing wallet, processed in the order provided.
+
+## Options
+
+### `-u, --url <URL>`
+
+Use this RPC endpoint instead of `RPC_URL` or the default public mainnet-beta endpoint at `https://api.mainnet-beta.solana.com`.
+
+## Output
+
+After processing the requested domains, the command prints a table with these columns:
+
+| Column        | Description                                         |
+| ------------- | --------------------------------------------------- |
+| `Domain`      | The transferred domain.                             |
+| `Transaction` | The confirmed transfer transaction signature.       |
+| `Explorer`    | A mainnet Solana Explorer link for the transaction. |
+
+## Cautions
+
+Transfers are submitted sequentially and are not atomic. An earlier transfer can succeed before a later one fails. Verify the recipient public key and every domain before running the command.
