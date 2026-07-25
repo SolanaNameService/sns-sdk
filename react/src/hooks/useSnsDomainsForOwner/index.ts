@@ -1,3 +1,7 @@
+/**
+ * Wallet-owned SNS domain queries through TanStack Query.
+ * @module useSnsDomainsForOwner
+ */
 import {
   getSnsDomainsForOwner,
   type SnsDomain,
@@ -16,7 +20,16 @@ import type { Options } from "../../types";
  * @param connection Solana RPC connection
  * @param owner Wallet public key, or a nullish value to disable the query
  * @param options Optional React Query settings
- * @returns React Query result containing sorted domain names and name account public keys
+ * @returns React Query result where `data` contains sorted domain names and
+ * name account public keys; `isPending` tracks the initial request, while
+ * failures populate `error` and set `isError` without throwing during render.
+ *
+ * Query failures are exposed through the result's `error` and `isError` fields.
+ *
+ * @example
+ * ```tsx
+ * const { data: domains } = useSnsDomainsForOwner(connection, wallet.publicKey);
+ * ```
  */
 export const useSnsDomainsForOwner = <TData = SnsDomain[]>(
   connection: Connection,

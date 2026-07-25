@@ -1,3 +1,7 @@
+/**
+ * Verified SNS profile-picture records through TanStack Query.
+ * @module useProfilePic
+ */
 import { Record } from "@bonfida/spl-name-service/record";
 import type { Connection } from "@solana/web3.js";
 import { useQuery } from "@tanstack/react-query";
@@ -14,7 +18,16 @@ import { getVerifiedRecords } from "../useRecords";
  * @param connection Solana RPC connection
  * @param domain Full `.sns` or `.sol` domain name
  * @param options Optional React Query settings
- * @returns React Query result containing profile-picture content, or `null` when no safe value exists
+ * @returns React Query result where `data` is profile-picture content or `null`
+ * when no safe value exists; `isPending` tracks the initial request, while
+ * failures populate `error` and set `isError` without throwing during render.
+ *
+ * Query failures are exposed through the result's `error` and `isError` fields.
+ *
+ * @example
+ * ```tsx
+ * const { data: profilePicture } = useProfilePic(connection, "example.sns");
+ * ```
  */
 export const useProfilePic = <TData = string | null>(
   connection: Connection,

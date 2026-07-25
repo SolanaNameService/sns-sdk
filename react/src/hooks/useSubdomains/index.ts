@@ -1,3 +1,7 @@
+/**
+ * SNS subdomain queries through TanStack Query.
+ * @module useSubdomains
+ */
 import type { Options } from "../../types";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -12,7 +16,16 @@ import type { Connection } from "@solana/web3.js";
  * @param connection Solana RPC connection
  * @param domain TLD-trimmed SNS parent domain name, such as `example`
  * @param options Optional React Query settings
- * @returns React Query result containing human-readable subdomain names
+ * @returns React Query result where `data` contains human-readable subdomain
+ * names; `isPending` tracks the initial request, while failures populate
+ * `error` and set `isError` without throwing during render.
+ *
+ * Query failures are exposed through the result's `error` and `isError` fields.
+ *
+ * @example
+ * ```tsx
+ * const { data: subdomains } = useSubdomains(connection, "example");
+ * ```
  */
 export const useSubdomains = <TData = string[]>(
   connection: Connection,

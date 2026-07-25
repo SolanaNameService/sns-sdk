@@ -1,3 +1,7 @@
+/**
+ * Verified SNS record queries and their public result types.
+ * @module useRecords
+ */
 import {
   getMultipleRecords,
   type Record,
@@ -11,7 +15,14 @@ import type { Options } from "../../types";
 /** A record result that passed all applicable verification checks. */
 export type VerifiedRecordResult = RecordResult | undefined;
 
-/** Options for {@link useRecords}. */
+/**
+ * Options for {@link useRecords}.
+ *
+ * @example
+ * ```ts
+ * const options: UseRecordsOptions = { deserialize: true };
+ * ```
+ */
 export interface UseRecordsOptions {
   /** Whether to deserialize record content according to its SNS record type. */
   deserialize?: boolean;
@@ -32,6 +43,14 @@ const isVerified = (result: RecordResult) =>
  * @param records Record types to retrieve
  * @param deserialize Whether to deserialize record content
  * @returns Verified record results in the same order as `records`
+ *
+ * When used as a query function, rejected record retrieval is exposed through
+ * the query result's `error` and `isError` fields.
+ *
+ * @example
+ * ```ts
+ * const records = await getVerifiedRecords(connection, "example.sns", [Record.Url]);
+ * ```
  */
 export const getVerifiedRecords = async (
   connection: Connection,
@@ -56,7 +75,17 @@ export const getVerifiedRecords = async (
  * @param records Record types to retrieve
  * @param options Optional JavaScript SDK record retrieval settings
  * @param queryOptions Optional React Query settings
- * @returns React Query result containing verified records in the same order as `records`
+ * @returns React Query result where `data` preserves the `records` order and
+ * uses `undefined` for missing or unverified entries; `isPending` tracks the
+ * initial request, while failures populate `error` and set `isError` without
+ * throwing during render.
+ *
+ * Query failures are exposed through the result's `error` and `isError` fields.
+ *
+ * @example
+ * ```tsx
+ * const { data, isError } = useRecords(connection, "example.sns", [Record.Url]);
+ * ```
  */
 export const useRecords = <TData = VerifiedRecordResult[]>(
   connection: Connection,
