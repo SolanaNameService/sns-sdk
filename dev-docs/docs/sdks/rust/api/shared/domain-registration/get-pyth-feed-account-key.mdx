@@ -1,0 +1,36 @@
+---
+displayed_sidebar: docsSidebar
+title: get_pyth_feed_account_key
+description: Derive a Pyth push-feed account address.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Domain registration](../domain-registration.mdx) / `get_pyth_feed_account_key`
+
+# Function: `get_pyth_feed_account_key()`
+
+```rust
+pub fn get_pyth_feed_account_key(shard: u16, price_feed: &[u8; 32]) -> Pubkey
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/bindings/register_domain.rs" line={221} label="register_domain.rs:221" />
+
+Derives the Pyth push-feed PDA from a little-endian shard number and a 32-byte price-feed identifier.
+
+## Parameters
+
+| Parameter    | Type        | Description            |
+| ------------ | ----------- | ---------------------- |
+| `shard`      | `u16`       | Pyth shard number.     |
+| `price_feed` | `&[u8; 32]` | Price-feed identifier. |
+
+## Returns
+
+The derived feed-account `Pubkey`.
+
+## Example
+
+```rust
+use sns_sdk::bindings::register_domain::get_pyth_feed_account_key;
+
+let key = get_pyth_feed_account_key(0, &[0; 32]);
+```

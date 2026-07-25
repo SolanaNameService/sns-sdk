@@ -1,0 +1,364 @@
+.hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 380px);
+  gap: 4rem;
+  min-height: 680px;
+  padding: 7rem max(2rem, calc((100vw - 1180px) / 2));
+  overflow: hidden;
+  color: #f6fff8;
+  background:
+    radial-gradient(
+      circle at 88% 3%,
+      rgba(182, 252, 121, 0.25),
+      transparent 36rem
+    ),
+    #121212;
+}
+
+.heroGrid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.3;
+  background-image:
+    linear-gradient(rgb(180 252 117 / 30%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(180 252 117 / 30%) 1px, transparent 1px);
+  background-size: 72px 72px;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    black 0%,
+    black 67%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(to bottom, black 0%, black 67%, transparent 100%);
+}
+
+.heroContent,
+.migrationPanel {
+  position: relative;
+  z-index: 1;
+}
+
+.heroContent {
+  align-self: center;
+  max-width: 780px;
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 2.4rem;
+  color: #b4fc75;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.eyebrow img {
+  width: 24px;
+  height: 28px;
+}
+
+.hero h1 {
+  max-width: 760px;
+  margin: 0;
+  font-size: clamp(4rem, 8vw, 7rem);
+  line-height: 0.9;
+  letter-spacing: -0.065em;
+}
+
+.heroLead {
+  max-width: 670px;
+  margin: 2.3rem 0 0;
+  color: #b9cfbf;
+  font-size: clamp(1.1rem, 2vw, 1.35rem);
+  line-height: 1.6;
+}
+
+.heroLead code {
+  color: #d8ffb6;
+  background: rgb(180 252 117 / 10%);
+  border: 1px solid rgb(180 252 117 / 20%);
+}
+
+.heroActions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+
+.secondaryAction {
+  color: #f6fff8;
+  font-weight: 700;
+}
+
+.secondaryAction:hover {
+  color: #b4fc75;
+  text-decoration: none;
+}
+
+.migrationPanel {
+  align-self: end;
+  padding: 1.8rem;
+  border: 1px solid rgb(180 252 117 / 50%);
+  background: rgb(8 28 18 / 78%);
+}
+
+.panelLabel,
+.sectionIndex {
+  color: #668875;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.migrationPanel strong {
+  display: block;
+  margin-top: 0.5rem;
+  color: #b4fc75;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  letter-spacing: -0.06em;
+  line-height: 1.05;
+}
+
+.migrationPanel p {
+  margin: 0.8rem 0 1.2rem;
+  color: #b9cfbf;
+}
+
+.migrationPanel a {
+  color: #f6fff8;
+  font-weight: 700;
+}
+
+.integrations,
+.rules {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+}
+
+.sectionHeading {
+  display: grid;
+  grid-template-columns: 1fr minmax(280px, 440px);
+  gap: 4rem;
+  align-items: end;
+  margin-bottom: 3rem;
+}
+
+.sectionHeading h2 {
+  margin: 0.7rem 0 0;
+  font-size: clamp(2.6rem, 5vw, 4rem);
+  letter-spacing: -0.045em;
+}
+
+.sectionHeading p {
+  margin: 0;
+  color: var(--sns-muted);
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.integrationGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid var(--sns-border);
+  border-left: 1px solid var(--sns-border);
+}
+
+.integrationCard {
+  position: relative;
+  min-height: 260px;
+  padding: 1.8rem;
+  color: var(--ifm-font-color-base);
+  border-right: 2px solid var(--ifm-background-color);
+  border-bottom: 2px solid var(--ifm-background-color);
+  background: var(--ifm-background-surface-color);
+  transition:
+    transform 160ms ease,
+    background-color 160ms ease;
+}
+
+.integrationCard:hover {
+  z-index: 1;
+  color: var(--ifm-font-color-base);
+  text-decoration: none;
+  border: 2px solid var(--ifm-color-primary-light);
+  background: var(--sns-card-hover);
+  transform: translateY(-3px);
+}
+
+.integrationCard:focus-visible {
+  z-index: 1;
+  outline: 2px solid var(--card-accent);
+  outline-offset: 4px;
+}
+
+.integrationCard::before {
+  position: absolute;
+  top: 1.8rem;
+  right: 1.8rem;
+  width: 10px;
+  height: 10px;
+  content: "";
+  border-radius: 50%;
+  background: var(--card-accent);
+  box-shadow: 0 0 22px var(--card-accent);
+}
+
+.integrationCard h3 {
+  margin: 1.6rem 0 0.8rem;
+  font-size: 1.65rem;
+}
+
+.integrationCard p {
+  margin: 0;
+  color: var(--sns-muted);
+  line-height: 1.55;
+}
+
+.cardVersion {
+  display: block;
+  color: var(--card-accent);
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 0.8;
+  text-transform: uppercase;
+}
+
+.cardAction {
+  position: absolute;
+  bottom: 1.8rem;
+  left: 1.8rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.lime {
+  --card-accent: #8ce34c;
+}
+
+.mint {
+  --card-accent: #4ce3a0;
+}
+
+.amber {
+  --card-accent: #f2b84b;
+}
+
+.violet {
+  --card-accent: #a78bfa;
+}
+
+.blue {
+  --card-accent: #5ab0ff;
+}
+
+.rose {
+  --card-accent: #f277a1;
+}
+
+.rules {
+  margin-bottom: 6rem;
+  border: 1px solid var(--sns-rule-border);
+  background: var(--sns-rule-background);
+}
+
+.ruleGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 3rem;
+  margin: 2rem 0 3rem;
+}
+
+.ruleGrid code {
+  color: var(--ifm-color-primary-darkest);
+  font-size: 1.15rem;
+}
+
+[data-theme="dark"] .ruleGrid code {
+  color: #b4fc75;
+}
+
+.ruleGrid h2 {
+  margin: 1.2rem 0 0.7rem;
+  font-size: 1.35rem;
+}
+
+.ruleGrid p {
+  margin: 0;
+  color: var(--sns-muted);
+}
+
+.rulesLink {
+  font-weight: 800;
+}
+
+@media (max-width: 996px) {
+  .hero {
+    grid-template-columns: 1fr;
+    min-height: auto;
+    padding-top: 5rem;
+  }
+
+  .migrationPanel {
+    max-width: 480px;
+  }
+
+  .sectionHeading {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .integrationGrid,
+  .ruleGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .hero {
+    gap: 3rem;
+    padding: 4rem 1.25rem;
+  }
+
+  .hero h1 {
+    font-size: clamp(3.3rem, 17vw, 5rem);
+  }
+
+  .heroActions {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .integrations,
+  .rules {
+    padding: 4rem 1.25rem;
+  }
+
+  .integrationGrid,
+  .ruleGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .rules {
+    margin: 0 1rem 4rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .integrationCard {
+    transition: none;
+  }
+
+  .integrationCard:hover {
+    transform: none;
+  }
+}

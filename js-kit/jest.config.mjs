@@ -4,5 +4,8 @@ export default {
   testEnvironment: "node",
   testPathIgnorePatterns: ["/node_modules/", "/dist/"],
   moduleDirectories: ["node_modules"],
+  transform: {
+    "^.+\\.tsx?$": ["ts-jest", { tsconfig: "./tsconfig.test.json" }],
+  },
   workerThreads: true,
 };

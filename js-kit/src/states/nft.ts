@@ -13,6 +13,7 @@ import { addressCodec, base64Codec, utf8Codec } from "../codecs";
 import { NAME_TOKENIZER_ADDRESS } from "../constants/addresses";
 import { InvalidSerializedDataError, NftAccountNotFoundError } from "../errors";
 
+/** Tags identifying the SNS NFT state variant. */
 export enum NftTag {
   Uninitialized = 0,
   CentralState = 1,
@@ -20,11 +21,38 @@ export enum NftTag {
   InactiveRecord = 3,
 }
 
-export class NftState {
-  tag: NftTag;
+/**
+ * Input for decoding an SNS NFT account.
+ *
+ * @example
+ * ```ts
+ * const params: NftStateParams = { tag: 2, nonce: 0, nameAccount, owner, nftMint };
+ * ```
+ */
+export interface NftStateParams {
+  /** NFT state tag. */
+  tag: number;
+  /** NFT record nonce. */
   nonce: number;
+  /** Encoded SNS domain account address. */
+  nameAccount: Uint8Array;
+  /** Encoded NFT owner address. */
+  owner: Uint8Array;
+  /** Encoded NFT mint address. */
+  nftMint: Uint8Array;
+}
+
+/** Decoded state of an SNS NFT account. */
+export class NftState {
+  /** NFT state tag. */
+  tag: NftTag;
+  /** NFT record nonce. */
+  nonce: number;
+  /** SNS domain account address. */
   nameAccount: Address;
+  /** NFT owner address. */
   owner: Address;
+  /** NFT mint address. */
   nftMint: Address;
 
   static schema = {
@@ -45,13 +73,7 @@ export class NftState {
   // - `nftMint`: 32 bytes (array of `u8` with length 32)
   static LEN = 1 + 1 + 32 + 32 + 32;
 
-  constructor(obj: {
-    tag: number;
-    nonce: number;
-    nameAccount: Uint8Array;
-    owner: Uint8Array;
-    nftMint: Uint8Array;
-  }) {
+  constructor(obj: NftStateParams) {
     this.tag = obj.tag as NftTag;
     this.nonce = obj.nonce;
     this.nameAccount = addressCodec.decode(obj.nameAccount);

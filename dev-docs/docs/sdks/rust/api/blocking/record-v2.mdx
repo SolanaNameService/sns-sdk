@@ -1,0 +1,14 @@
+---
+displayed_sidebar: docsSidebar
+title: Record V2 reads
+description: Read current SNS record accounts with the blocking Rust SDK client.
+---
+
+Record V2 APIs derive current SNS record addresses locally, then read them through a blocking `RpcClient`. They require a full supported `.sns` or `.sol` domain and return record payloads without the `NameRecordHeader` bytes.
+
+## APIs
+
+| API                                                              | Description                                                            |
+| ---------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| [`get_record_v2`](./record-v2/get-record-v2)                     | Reads one current record for a domain.                                 |
+| [`get_multiple_records_v2`](./record-v2/get-multiple-records-v2) | Reads multiple current records for a domain in requested-record order. |

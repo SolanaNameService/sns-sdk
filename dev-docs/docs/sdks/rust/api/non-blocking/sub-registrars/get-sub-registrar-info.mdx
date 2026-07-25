@@ -1,0 +1,55 @@
+---
+displayed_sidebar: docsSidebar
+title: get_sub_registrar_info
+description: Retrieve and validate an SNS sub-registrar account.
+---
+
+[Rust SDK API Reference](../../index.mdx) / Non-blocking APIs / [Sub-registrars](../sub-registrars.mdx) / `get_sub_registrar_info`
+
+# Function: `get_sub_registrar_info()`
+
+```rust
+pub async fn get_sub_registrar_info(
+    rpc_client: &RpcClient,
+    domain: &str,
+) -> Result<Registrar, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/non_blocking/subdomain.rs" line={88} label="rust-crates/sns-sdk/src/non_blocking/subdomain.rs:88" />
+
+Derives the SNS domain account and then its sub-registrar PDA, reads the account through RPC, and validates the program owner and `Registrar` discriminator before deserializing it.
+
+## Availability
+
+This API requires the `subdomain` feature, which is enabled by default.
+
+## Parameters
+
+| Parameter    | Type         | Description                                  |
+| ------------ | ------------ | -------------------------------------------- |
+| `rpc_client` | `&RpcClient` | Non-blocking Solana RPC client.              |
+| `domain`     | `&str`       | Full supported `.sns` or `.sol` domain name. |
+
+## Returns
+
+`Result<Registrar, SnsError>` containing the validated deserialized sub-registrar state.
+
+## Errors
+
+- `SnsError::UnsupportedTld` when `domain` is bare or has an unsupported suffix.
+- `SnsError::InvalidSubRegistrar` when the registrar account is missing, has the wrong owner or tag, or cannot be deserialized.
+- `SnsError::InvalidDomain` when the trimmed SNS domain cannot be derived.
+- `SnsError::SolanaClient` when a TLD or registrar RPC request fails.
+
+## Example
+
+```rust
+use sns_sdk::non_blocking::subdomain::get_sub_registrar_info;
+
+let registrar = get_sub_registrar_info(&client, "registrar.sns").await?;
+println!("authority: {}", registrar.authority);
+```
+
+## Related APIs
+
+- [`get_subdomains`](../subdomains/get-subdomains.mdx)

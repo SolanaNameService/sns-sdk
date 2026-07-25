@@ -1,0 +1,15 @@
+---
+displayed_sidebar: docsSidebar
+title: Primary domains
+description: Derive, parse, and update wallet primary-domain state.
+---
+
+These local helpers derive and parse a wallet's primary-domain state and build its update instruction. `PrimaryDomain::parse` accepts fetched account bytes and returns `std::io::Error`, while instruction construction leaves signing and submission to the caller.
+
+## APIs
+
+| API                                                                                  | Description                                         |
+| ------------------------------------------------------------------------------------ | --------------------------------------------------- |
+| [`derive_primary_domain_key`](./primary-domains/derive-primary-domain-key)           | Derives a wallet's primary-domain PDA.              |
+| [`PrimaryDomain::parse`](./primary-domains/parse)                                    | Decodes and validates primary-domain account state. |
+| [`set_primary_domain_instruction`](./primary-domains/set-primary-domain-instruction) | Builds an instruction to set primary-domain state.  |

@@ -7,31 +7,56 @@ import {
   REVERSE_LOOKUP_CLASS,
   SYSTEM_PROGRAM_ADDRESS,
 } from "../constants/addresses";
-import { getDomainAddress } from "../domain/getDomainAddress";
-import { burnDomainInstruction } from "../instructions/burnDomainInstruction";
+import { getSnsDomainAddress } from "../domain/getSnsDomainAddress";
+import { BurnDomainInstruction } from "../instructions/burnDomainInstruction";
 import { getReverseAddress } from "../utils/getReverseAddress";
+import { _parseSnsTopLevelDomain } from "../utils/parseSnsDomain";
 
-interface BurnDomainParams {
+/**
+ * Parameters for burning an SNS domain.
+ *
+ * @example
+ * ```ts
+ * const params: BurnDomainParams = {
+ *   domain: "example.sns",
+ *   owner,
+ *   refundAddress,
+ * };
+ * ```
+ */
+export interface BurnDomainParams {
+  /** Full `.sns` domain name. */
   domain: string;
+  /** Current domain owner. */
   owner: Address;
+  /** Account receiving reclaimed rent. */
   refundAddress: Address;
 }
 
 /**
- * Generates an instruction to burn a domain.
+ * Builds an instruction to burn a top-level `.sns` domain.
  *
- * @param params - An object containing the following properties:
- *   - `domain`: The domain name to be burned.
- *   - `owner`: The address of the current owner of the domain.
- *   - `refundAddress`: The address to which rent will be refunded.
- * @returns A promise which resolves to the burn domain instruction.
+ * @param params Burn parameters
+ * @param params.domain Full `.sns` domain name
+ * @param params.owner Current owner of the domain
+ * @param params.refundAddress Account receiving reclaimed rent
+ * @returns Transaction instruction.
+ *
+ * @example
+ * ```ts
+ * const instruction = await burnDomain({ domain: "example.sns", owner, refundAddress });
+ * ```
  */
 export const burnDomain = async ({
   domain,
   owner,
   refundAddress,
 }: BurnDomainParams): Promise<Instruction> => {
-  const { domainAddress } = await getDomainAddress({ domain });
+  const trimmedDomain = _parseSnsTopLevelDomain(domain);
+
+  const { domainAddress } = await getSnsDomainAddress({
+    domain: trimmedDomain,
+  });
   const encoded = addressCodec.encode(domainAddress);
 
   const [pda] = await getProgramDerivedAddress({
@@ -44,9 +69,9 @@ export const burnDomain = async ({
     seeds: [encoded, Uint8Array.from([1, 1])],
   });
 
-  const reverseAddress = await getReverseAddress(domain);
+  const reverseAddress = await getReverseAddress(trimmedDomain);
 
-  const ix = new burnDomainInstruction().getInstruction(
+  const ix = new BurnDomainInstruction().getInstruction(
     REGISTRY_PROGRAM_ADDRESS,
     NAME_PROGRAM_ADDRESS,
     SYSTEM_PROGRAM_ADDRESS,

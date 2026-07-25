@@ -1,0 +1,31 @@
+---
+displayed_sidebar: docsSidebar
+title: ParsedRecordV2::verify_staleness
+description: Verify a V2 record against the current domain owner.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Record V2 codecs and verification](../record-v2.mdx) / `ParsedRecordV2::verify_staleness`
+
+# Method: `ParsedRecordV2::verify_staleness()`
+
+```rust
+pub fn verify_staleness(&self, domain_owner_key: Pubkey, domain_owner_account_data: Option<&[u8]>) -> Result<(), SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/record/record_v2.rs" line={30} label="record_v2.rs:30" />
+
+Verifies Solana-owner staleness or, for XChain-owned domains, verifies the supplied XDomain account data against the encoded owner chain and address.
+
+## Parameters
+
+`domain_owner_key` is the current registry owner. Supply `domain_owner_account_data` when that owner is the XChain emitter.
+
+## Returns
+
+`()` on a current record; stale or incomplete proof data returns `SnsError::StaleRecord` (or malformed-data errors).
+
+## Example
+
+```rust
+parsed.verify_staleness(domain_owner, None)?;
+```

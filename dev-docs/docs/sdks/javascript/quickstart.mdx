@@ -1,0 +1,74 @@
+---
+title: JavaScript SDK quickstart
+description: Resolve an SNS domain and query primary and wallet-owned domains with JavaScript SDK v4.
+---
+
+Use JavaScript SDK v4 to resolve a `.sns` domain and query domain data for a wallet.
+
+## Setup
+
+Complete the [JavaScript SDK installation](/docs/sdks/javascript/installation), then create the shared RPC connection:
+
+```ts
+import { Connection } from "@solana/web3.js";
+
+const connection = new Connection(process.env.RPC_URL!);
+```
+
+## Common usage
+
+### Resolve a domain
+
+Pass a full `.sns` name to `resolve`:
+
+```ts
+import { resolve } from "@bonfida/spl-name-service";
+
+const owner = await resolve(connection, "name.sns");
+console.log(owner.toBase58());
+// => "<BASE58_PUBLIC_KEY>"
+```
+
+`resolve` returns the effective owner as a web3.js `PublicKey`.
+
+### Get a primary domain
+
+Use `getPrimaryDomain` with the wallet public key:
+
+```ts
+import { getPrimaryDomain } from "@bonfida/spl-name-service";
+import { PublicKey } from "@solana/web3.js";
+
+const wallet = new PublicKey("<WALLET_ADDRESS>");
+const primary = await getPrimaryDomain(connection, wallet);
+
+if (!primary.stale) {
+  console.log(`${primary.reverse}.sns`);
+  // => "name.sns"
+}
+```
+
+`reverse` is TLD-less. Append `.sns` for display. Do not present a stale result as the wallet's current primary domain.
+
+### Get domains for an owner
+
+Use `getSnsDomainsForOwner` to retrieve top-level domains owned by the wallet:
+
+```ts
+import { getSnsDomainsForOwner } from "@bonfida/spl-name-service";
+import { PublicKey } from "@solana/web3.js";
+
+const wallet = new PublicKey("<WALLET_ADDRESS>");
+const domains = await getSnsDomainsForOwner(connection, wallet);
+const suffixedDomains = domains.map(({ domain }) => `${domain}.sns`);
+
+console.log(suffixedDomains);
+// => ["name.sns", "another-name.sns"]
+```
+
+Each result contains a TLD-less `domain` and its name-account `key`. Results omit domains without reverse data and do not include tokenized domains or subdomains.
+
+## Next steps
+
+- Use the [JavaScript SDK API Reference](/docs/sdks/javascript/api/) for other reads and transaction instruction builders.
+- Follow the [JavaScript SDK migration guide](/docs/migration/javascript) when upgrading from v3.

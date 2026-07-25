@@ -1,0 +1,15 @@
+---
+displayed_sidebar: docsSidebar
+title: Domain registration
+description: Build SNS top-level domain registration instructions.
+---
+
+These local helpers build the instruction set for registering a canonical top-level `.sns` domain and derive the program addresses it needs. They do not sign or submit a transaction; `register_domain` accepts a full lowercase `.sns` name and defaults payment to USDC.
+
+## APIs
+
+| API                                                                            | Description                                                                        |
+| ------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------- |
+| [`register_domain`](./domain-registration/register-domain)                     | Builds the transaction instructions for a top-level registration.                  |
+| [`get_register_instruction`](./domain-registration/get-register-instruction)   | Builds a registration instruction from explicit generated accounts and parameters. |
+| [`get_pyth_feed_account_key`](./domain-registration/get-pyth-feed-account-key) | Derives a Pyth push-feed account address.                                          |

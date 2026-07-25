@@ -1,0 +1,32 @@
+---
+displayed_sidebar: docsSidebar
+title: get_record_v2_key
+description: Derive an SNS V2 record account.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Record types and keys](../record-types.mdx) / `get_record_v2_key`
+
+# Function: `get_record_v2_key()`
+
+```rust
+pub fn get_record_v2_key(domain: &str, record: Record) -> Result<Pubkey, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/record/mod.rs" line={170} label="record/mod.rs:170" />
+
+Derives a V2 record key using `get_record_key` with `RecordVersion::V2` and its central-state class.
+
+## Parameters
+
+`domain` is TLD-trimmed and `record` selects its V2 label.
+
+## Returns
+
+The derived `Pubkey`, or `SnsError::InvalidDomain` for unsupported label depth.
+
+## Example
+
+```rust
+use sns_sdk::record::{get_record_v2_key, Record};
+let key = get_record_v2_key("example", Record::Url)?;
+```

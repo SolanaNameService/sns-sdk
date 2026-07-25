@@ -18,6 +18,18 @@ const NUMBER_ART_KEY = new PublicKey(
   "6vwnZJZNQjtY4zR93YUuyeDUBhacLLH2mQaZiJAvVwzu",
 );
 
+/**
+ * Derives the name account keys for a custom background.
+ *
+ * @param domain Domain name with its TLD suffix trimmed
+ * @param customBg Custom background identifier
+ * @returns Custom background domain key and background entry key.
+ *
+ * @example
+ * ```ts
+ * const keys = getCustomBgKeys("example", CustomBg.DegenPoet1);
+ * ```
+ */
 export const getCustomBgKeys = (domain: string, customBg: CustomBg) => {
   const hashedBg = getHashedNameSync(customBg);
   const hashedDomain = getHashedNameSync(domain);
@@ -32,6 +44,17 @@ export const getCustomBgKeys = (domain: string, customBg: CustomBg) => {
   return { domainKey, bgKey };
 };
 
+/**
+ * Returns the public key associated with a custom background.
+ *
+ * @param bg The custom background identifier
+ * @returns The artist or payout public key for the background
+ *
+ * @example
+ * ```ts
+ * const artist = getArtistPubkey(CustomBg.DegenPoet1);
+ * ```
+ */
 export const getArtistPubkey = (bg: CustomBg): PublicKey => {
   switch (bg) {
     case CustomBg.DegenPoet1:

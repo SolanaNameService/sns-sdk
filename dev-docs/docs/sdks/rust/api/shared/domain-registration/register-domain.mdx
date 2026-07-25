@@ -1,0 +1,40 @@
+---
+displayed_sidebar: docsSidebar
+title: register_domain
+description: Build instructions to register a top-level SNS domain.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Domain registration](../domain-registration.mdx) / `register_domain`
+
+# Function: `register_domain()`
+
+```rust
+pub fn register_domain(domain: &str, space: u32, buyer: &Pubkey, buyer_token_account: &Pubkey, mint: Option<&Pubkey>, referrer_key: Option<&Pubkey>) -> Result<Vec<Instruction>, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/bindings/register_domain.rs" line={226} label="register_domain.rs:226" />
+
+Builds registration instructions for a canonical top-level `.sns` domain. It defaults `mint` to USDC; a configured referrer adds an idempotent associated-token-account instruction before the registration instruction.
+
+## Parameters
+
+| Parameter             | Type              | Description                                   |
+| --------------------- | ----------------- | --------------------------------------------- |
+| `domain`              | `&str`            | Lowercase top-level `.sns` name.              |
+| `space`               | `u32`             | Bytes allocated for the name account.         |
+| `buyer`               | `&Pubkey`         | Buyer, owner, fee payer, and required signer. |
+| `buyer_token_account` | `&Pubkey`         | Payment token account.                        |
+| `mint`                | `Option<&Pubkey>` | Payment mint; `None` selects USDC.            |
+| `referrer_key`        | `Option<&Pubkey>` | Referral recipient, if configured.            |
+
+## Returns
+
+`Vec<Instruction>` in transaction order. Errors include domain parsing errors and `SnsError::UnsupportedMint` for an unsupported payment mint.
+
+## Example
+
+```rust
+use sns_sdk::bindings::register_domain::register_domain;
+
+let instructions = register_domain("example.sns", 1_000, &buyer, &buyer_token_account, None, None)?;
+```

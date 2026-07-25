@@ -1,15 +1,34 @@
 import {
+  AccountMeta,
   AccountRole,
   Address,
-  AccountMeta,
   Instruction,
   ReadonlyUint8Array,
 } from "@solana/kit";
 import { serialize } from "borsh";
 
-export class updateRecordInstruction {
-  tag: number;
+/**
+ * Input for updating an SNS V2 record account.
+ *
+ * @example
+ * ```ts
+ * const params: UpdateRecordInstructionParams = { record, content };
+ * ```
+ */
+export interface UpdateRecordInstructionParams {
+  /** Encoded V2 record label. */
   record: string;
+  /** Serialized record content. */
+  content: ReadonlyUint8Array;
+}
+
+/** Builder for updating content in an SNS V2 record account. */
+export class UpdateRecordInstruction {
+  /** Instruction discriminator. */
+  tag: number;
+  /** Encoded V2 record label. */
+  record: string;
+  /** Serialized record content. */
   content: ReadonlyUint8Array;
 
   static schema = {
@@ -20,14 +39,14 @@ export class updateRecordInstruction {
     },
   };
 
-  constructor(obj: { record: string; content: ReadonlyUint8Array }) {
+  constructor(obj: UpdateRecordInstructionParams) {
     this.tag = 2;
     this.record = obj.record;
     this.content = obj.content;
   }
 
   serialize(): Uint8Array {
-    return serialize(updateRecordInstruction.schema, this);
+    return serialize(UpdateRecordInstruction.schema, this);
   }
 
   getInstruction(

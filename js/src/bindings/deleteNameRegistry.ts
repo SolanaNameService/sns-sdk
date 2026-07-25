@@ -6,14 +6,19 @@ import { getHashedNameSync } from "../utils/getHashedNameSync";
 import { getNameAccountKeySync } from "../utils/getNameAccountKeySync";
 
 /**
- * Delete the name account and transfer the rent to the target.
+ * Builds an instruction to delete a name account and transfer reclaimed rent.
  *
- * @param connection The solana connection object to the RPC node
- * @param name The name of the name account
- * @param refundTargetKey The refund destination address
- * @param nameClass The class of this name, if it exsists
- * @param nameParent The parent name of this name, if it exists
- * @returns
+ * @param connection Solana RPC connection
+ * @param name Name of the name account
+ * @param refundTargetKey Refund destination address
+ * @param nameClass Optional class of the name account
+ * @param nameParent Optional parent name account
+ * @returns Transaction instruction.
+ *
+ * @example
+ * ```ts
+ * const instruction = await deleteNameRegistry(connection, "example", refundTarget);
+ * ```
  */
 export async function deleteNameRegistry(
   connection: Connection,

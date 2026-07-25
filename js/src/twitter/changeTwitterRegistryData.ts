@@ -9,8 +9,22 @@ import { getHashedNameSync } from "../utils/getHashedNameSync";
 import { getNameAccountKeySync } from "../utils/getNameAccountKeySync";
 import { Numberu32 } from "../int";
 
-// Overwrite the data that is written in the user facing registry
-// Signed by the verified pubkey
+/**
+ * Builds an instruction that overwrites bytes in a verified Twitter registry.
+ *
+ * The verified public key must sign the resulting instruction.
+ *
+ * @param twitterHandle Verified Twitter handle whose registry is updated.
+ * @param verifiedPubkey Signer that owns the verified registry.
+ * @param offset Byte offset at which to write the data.
+ * @param input_data Bytes to write into the registry data.
+ * @returns The instruction that updates the registry data.
+ *
+ * @example
+ * ```ts
+ * const instructions = await changeTwitterRegistryData("bonfida", owner, 0, Buffer.from("data"));
+ * ```
+ */
 export async function changeTwitterRegistryData(
   twitterHandle: string,
   verifiedPubkey: PublicKey,

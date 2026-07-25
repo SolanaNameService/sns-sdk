@@ -1,7 +1,9 @@
-import { AccountRole, Address, AccountMeta, Instruction } from "@solana/kit";
+import { AccountMeta, AccountRole, Address, Instruction } from "@solana/kit";
 import { serialize } from "borsh";
 
-export class burnDomainInstruction {
+/** Builder for burning an SNS domain NFT and registry account. */
+export class BurnDomainInstruction {
+  /** Instruction discriminator. */
   tag: number;
 
   static schema = {
@@ -15,7 +17,7 @@ export class burnDomainInstruction {
   }
 
   serialize(): Uint8Array {
-    return serialize(burnDomainInstruction.schema, this);
+    return serialize(BurnDomainInstruction.schema, this);
   }
 
   getInstruction(

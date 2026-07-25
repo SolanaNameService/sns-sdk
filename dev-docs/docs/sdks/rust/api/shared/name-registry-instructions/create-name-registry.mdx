@@ -1,0 +1,33 @@
+---
+displayed_sidebar: docsSidebar
+title: create_name_registry
+description: Build an instruction to create and fund a raw name-registry account.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Name-registry instructions](../name-registry-instructions.mdx) / `create_name_registry`
+
+# Function: `create_name_registry()`
+
+```rust
+pub fn create_name_registry(name: &str, space: u32, lamports: u64, payer: Pubkey, owner: Pubkey, name_class: Option<Pubkey>, parent: Option<Pubkey>, parent_owner: Option<Pubkey>) -> Result<Instruction, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/bindings/name_registry.rs" line={11} label="name_registry.rs:11" />
+
+Builds a raw SPL Name Service creation instruction. `name` must include any record or subdomain prefix; relationships are not inferred.
+
+## Parameters
+
+`name` is the raw label; `space` and `lamports` allocate and fund it; `payer` and `owner` identify the accounts; `name_class`, `parent`, and `parent_owner` define optional relationships.
+
+## Returns
+
+An unsigned `Instruction`, or `SnsError::SolanaProgramError` if the underlying builder rejects the inputs.
+
+## Example
+
+```rust
+use sns_sdk::bindings::name_registry::create_name_registry;
+
+let instruction = create_name_registry("example", 32, 1_000_000, payer, owner, None, Some(parent), Some(parent_owner))?;
+```

@@ -1,0 +1,53 @@
+---
+title: "GET /record-key-v2/:domain/:record"
+description: Derive the V2 SNS record-account public key for a domain and record type.
+---
+
+Derive a V2 SNS record-account public key without making an RPC request.
+
+## Request
+
+```http
+GET /record-key-v2/:domain/:record
+```
+
+## Path parameters
+
+### `domain`
+
+Required. A TLD-less top-level domain or one-level subdomain. The route trims whitespace, converts the value to lowercase, and derives the corresponding `.sns` record.
+
+### `record`
+
+Required. One exact supported record value from [`GET /types/record`](/docs/sdk-proxy/endpoints/records/types-record).
+
+## Response
+
+A successful request returns `200 OK` with the derived base58 V2 record-account public key:
+
+```ts
+type RecordKeyV2Response = {
+  s: "ok";
+  result: string;
+};
+```
+
+## Example
+
+```bash
+curl "https://sdk-proxy.sns.id/record-key-v2/bonfida/SOL"
+```
+
+```json
+{
+  "s": "ok",
+  "result": "<RECORD_ACCOUNT_PUBLIC_KEY>"
+}
+```
+
+## Errors
+
+| Status | `result`         | When                                               |
+| ------ | ---------------- | -------------------------------------------------- |
+| `400`  | `Invalid input`  | The domain shape or exact record value is invalid. |
+| `500`  | `Internal error` | Derivation fails for another unmapped reason.      |

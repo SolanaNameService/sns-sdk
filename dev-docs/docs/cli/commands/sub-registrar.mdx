@@ -1,0 +1,34 @@
+---
+title: sub-registrar
+description: Inspect SNS sub-registrar information with SNS CLI v3.
+---
+
+The `sub-registrar` command groups operations for sub-registrar accounts.
+
+## Usage
+
+```text
+sns [--url <URL>] sub-registrar get <DOMAIN>
+```
+
+## Subcommands
+
+### `get`
+
+Retrieve the sub-registrar account associated with a `.sns` domain.
+
+#### Arguments
+
+##### `<DOMAIN>`
+
+Required. One canonical lowercase `.sns` domain.
+
+#### Options
+
+##### `-u, --url <URL>`
+
+Use this global RPC endpoint instead of `RPC_URL` or the default public mainnet-beta endpoint at `https://api.mainnet-beta.solana.com`. It may appear before the command or after `get`.
+
+#### Output
+
+The command prints the retrieved sub-registrar information using Rust debug formatting. This diagnostic output is intended for inspection and does not have a stable machine-readable schema.

@@ -1,0 +1,51 @@
+---
+displayed_sidebar: docsSidebar
+title: resolve_nft_owner
+description: Find the holder of a valid one-of-one tokenized domain mint.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Tokenized domains](../tokenized-domains.mdx) / `resolve_nft_owner`
+
+# Function: `resolve_nft_owner()`
+
+```rust
+pub async fn resolve_nft_owner(
+    rpc_client: &RpcClient,
+    domain_key: &Pubkey,
+) -> Result<Option<Pubkey>, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/non_blocking/nft.rs" line={110} label="rust-crates/sns-sdk/src/non_blocking/nft.rs:110" />
+
+Derives the canonical domain mint, requires that mint to have supply one, then finds the first legacy SPL Token account holding one token. It returns `None` when the mint is absent, has a supply other than one, or has no matching token account.
+
+## Parameters
+
+| Parameter    | Type         | Description                                                  |
+| ------------ | ------------ | ------------------------------------------------------------ |
+| `rpc_client` | `&RpcClient` | Non-blocking Solana RPC client.                              |
+| `domain_key` | `&Pubkey`    | SNS name-account key whose canonical domain mint is queried. |
+
+## Returns
+
+`Result<Option<Pubkey>, SnsError>`. `Some` is the owner of the first matching one-token legacy SPL Token account; `None` means no valid tokenized owner was found.
+
+## Errors
+
+- `SnsError::InvalidDomain` when the mint account RPC response contains no expected first entry.
+- `SnsError::SolanaClient` when an RPC request fails.
+- Token-program unpacking errors propagated through `SnsError` when mint or token-account data is invalid.
+
+## Example
+
+```rust
+use sns_sdk::non_blocking::nft::resolve_nft_owner;
+
+if let Some(owner) = resolve_nft_owner(&client, &domain_account).await? {
+    println!("tokenized owner: {owner}");
+}
+```
+
+## Related APIs
+
+- [`get_sns_nfts_for_owner`](./get-sns-nfts-for-owner.mdx)

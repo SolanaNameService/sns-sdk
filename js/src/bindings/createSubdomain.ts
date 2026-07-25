@@ -1,19 +1,26 @@
 import { Connection, PublicKey, TransactionInstruction } from "@solana/web3.js";
-import { NameRegistryState } from "../state";
-import { getDomainKeySync } from "../utils/getDomainKeySync";
-import { getReverseKeySync } from "../utils/getReverseKeySync";
-import { InvalidDomainError } from "../error";
 
+import { NameRegistryState } from "../state";
+import { getSnsDomainKeySync } from "../utils/getSnsDomainKeySync";
+import { _parseSnsSubdomain } from "../utils/parseSnsDomain";
+import { getReverseKeySync } from "../utils/getReverseKeySync";
 import { createNameRegistry } from "./createNameRegistry";
-import { createReverseName } from "./createReverseName";
+import { createReverse } from "./createReverse";
 
 /**
- * This function can be used to create a subdomain
- * @param connection The Solana RPC connection object
- * @param subdomain The subdomain to create with or without .sol e.g something.sns.sol or something.sns
- * @param owner The owner of the parent domain creating the subdomain
- * @param space The space to allocate to the subdomain (defaults to 2kb)
- * @param feePayer Optional: Specifies a fee payer different from the parent owner
+ * Builds the instructions to create a `.sns` subdomain.
+ *
+ * @param connection Solana RPC connection
+ * @param subdomain Full `.sns` subdomain name
+ * @param owner Owner of the parent domain creating the subdomain
+ * @param space Space to allocate to the subdomain. Defaults to 2 kB
+ * @param feePayer Optional fee payer. Defaults to `owner`
+ * @returns Transaction instructions.
+ *
+ * @example
+ * ```ts
+ * const instructions = await createSubdomain(connection, "sub.example.sns", owner);
+ * ```
  */
 export const createSubdomain = async (
   connection: Connection,
@@ -23,12 +30,10 @@ export const createSubdomain = async (
   feePayer?: PublicKey,
 ) => {
   const ixs: TransactionInstruction[] = [];
-  const sub = subdomain.split(".")[0];
-  if (!sub) {
-    throw new InvalidDomainError("The subdomain name is malformed");
-  }
+  const [sub, parentDomain] = _parseSnsSubdomain(subdomain);
+  const trimmedSubdomain = `${sub}.${parentDomain}`;
 
-  const { parent, pubkey } = getDomainKeySync(subdomain);
+  const { parent, pubkey } = getSnsDomainKeySync(trimmedSubdomain);
 
   // Space allocated to the subdomains
   const lamports = await connection.getMinimumBalanceForRentExemption(
@@ -48,10 +53,10 @@ export const createSubdomain = async (
   ixs.push(ix_create);
 
   // Create the reverse name
-  const reverseKey = getReverseKeySync(subdomain, true);
+  const reverseKey = getReverseKeySync(trimmedSubdomain, true);
   const info = await connection.getAccountInfo(reverseKey);
   if (!info?.data) {
-    const ix_reverse = await createReverseName(
+    const ix_reverse = await createReverse(
       pubkey,
       "\0".concat(sub),
       feePayer || owner,

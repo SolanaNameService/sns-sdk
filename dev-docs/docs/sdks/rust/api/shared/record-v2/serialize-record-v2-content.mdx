@@ -1,0 +1,32 @@
+---
+displayed_sidebar: docsSidebar
+title: serialize_record_v2_content
+description: Encode SNS Record V2 content for its record type.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Record V2 codecs and verification](../record-v2.mdx) / `serialize_record_v2_content`
+
+# Function: `serialize_record_v2_content()`
+
+```rust
+pub fn serialize_record_v2_content(content: &str, record: Record) -> Result<Vec<u8>, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/record/record_v2.rs" line={246} label="record_v2.rs:246" />
+
+Encodes a string to the V2 representation selected by `record`, including punycode for CNAME/TXT and binary representations for addresses.
+
+## Parameters
+
+`content` is the human-readable value and `record` selects the encoding.
+
+## Returns
+
+Encoded bytes, or address and codec failures through `SnsError`.
+
+## Example
+
+```rust
+use sns_sdk::record::{record_v2::serialize_record_v2_content, Record};
+let bytes = serialize_record_v2_content("https://example.com", Record::Url)?;
+```

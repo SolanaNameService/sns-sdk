@@ -10,35 +10,59 @@ import {
   NAME_PROGRAM_ADDRESS,
   SYSTEM_PROGRAM_ADDRESS,
 } from "../constants/addresses";
-import { createNameRegistryInstruction } from "../instructions/createNameRegistryInstruction";
+import { CreateNameRegistryInstruction } from "../instructions/createNameRegistryInstruction";
 import { RegistryState } from "../states/registry";
 import { _generateHash, _getAddressFromHash } from "../utils/deriveAddress";
 
-interface CreateNameRegistryParams {
+/**
+ * Parameters for creating a name registry.
+ *
+ * @example
+ * ```ts
+ * const params: CreateNameRegistryParams = { rpc, name: "example", space: 32, payer, owner };
+ * ```
+ */
+export interface CreateNameRegistryParams {
+  /** RPC client. */
   rpc: Rpc<GetAccountInfoApi & GetMinimumBalanceForRentExemptionApi>;
+  /** Raw registry name. */
   name: string;
+  /** Account data size in bytes. */
   space: number;
+  /** Account paying for creation. */
   payer: Address;
+  /** Owner of the new registry. */
   owner: Address;
+  /** Account funding amount. Defaults to the rent-exempt minimum. */
   lamports?: bigint;
+  /** Registry class address. */
   classAddress?: Address;
+  /** Parent registry address. */
   parentAddress?: Address;
 }
 
 /**
- * Creates a name registry with the given rent budget, allocated space, owner, and class.
+ * Creates a raw SPL Name Registry account with the given rent budget,
+ * allocated space, owner, and class.
  *
- * @param params - An object containing the following properties:
- *   - `rpc`: An RPC interface implementing GetAccountInfoApi and GetMinimumBalanceForRentExemptionApi.
- *   - `name`: The name of the new account.
- *   - `space`: The space in bytes allocated to the account.
- *   - `payer`: The allocation cost payer.
- *   - `owner`: The address to be set as the owner of the new name account.
- *   - `lamports`: (Optional) The budget to be set for the name account. If not specified,
- *                 it'll be the minimum for rent exemption.
- *   - `classAddress`: (Optional) The address of the class associated with the registry.
- *   - `parentAddress`: (Optional) The address of the parent registry.
- * @returns A promise which resolves to the create name registry instruction.
+ * This low-level helper accepts a raw registry seed/name and does not parse
+ * `.sns` or `.sol` suffixes.
+ *
+ * @param params Creation parameters
+ * @param params.rpc RPC client implementing account and rent-exemption APIs
+ * @param params.name Raw registry seed/name for the new account
+ * @param params.space Space in bytes allocated to the account
+ * @param params.payer Account paying for allocation
+ * @param params.owner Owner of the new name account
+ * @param params.lamports Optional lamports to fund the account. Defaults to the rent-exempt minimum
+ * @param params.classAddress Optional class address for the registry
+ * @param params.parentAddress Optional parent registry address
+ * @returns Transaction instruction.
+ *
+ * @example
+ * ```ts
+ * const instruction = await createNameRegistry({ rpc, name: "example", space: 32, payer, owner });
+ * ```
  */
 export const createNameRegistry = async ({
   rpc,
@@ -59,7 +83,11 @@ export const createNameRegistry = async ({
 
   lamports =
     lamports ||
-    (await rpc.getMinimumBalanceForRentExemption(BigInt(space)).send());
+    (await rpc
+      .getMinimumBalanceForRentExemption(
+        BigInt(space + RegistryState.HEADER_LEN)
+      )
+      .send());
 
   let parentOwner: Address | undefined;
   if (parentAddress) {
@@ -67,7 +95,7 @@ export const createNameRegistry = async ({
     parentOwner = parentAccount.owner;
   }
 
-  const ix = new createNameRegistryInstruction({
+  const ix = new CreateNameRegistryInstruction({
     nameHash,
     lamports,
     space,

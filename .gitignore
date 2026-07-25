@@ -137,6 +137,9 @@ dist
 # Docusaurus cache and generated files
 
 .docusaurus
+dev-docs/build/
+dev-docs/.vercel/
+dev-docs/docs/api-preview/
 
 # Serverless directories
 

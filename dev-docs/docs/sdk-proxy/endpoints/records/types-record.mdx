@@ -1,0 +1,67 @@
+---
+title: "GET /types/record"
+description: Retrieve the supported SNS record names and values.
+---
+
+Return the record values accepted by the Proxy record routes without making an RPC request.
+
+## Request
+
+```http
+GET /types/record
+```
+
+## Response
+
+A successful request returns `200 OK` with the record enum as a name-to-value object:
+
+```ts
+type RecordTypesResponse = {
+  s: "ok";
+  result: Record<string, string>;
+};
+```
+
+Use the object values, with their exact casing, in record path and query parameters.
+
+## Example
+
+```bash
+curl "https://sdk-proxy.sns.id/types/record"
+```
+
+```json
+{
+  "s": "ok",
+  "result": {
+    "IPFS": "IPFS",
+    "ARWV": "ARWV",
+    "SOL": "SOL",
+    "ETH": "ETH",
+    "BTC": "BTC",
+    "LTC": "LTC",
+    "DOGE": "DOGE",
+    "Email": "email",
+    "Url": "url",
+    "Discord": "discord",
+    "Github": "github",
+    "Reddit": "reddit",
+    "Twitter": "twitter",
+    "Telegram": "telegram",
+    "Pic": "pic",
+    "SHDW": "SHDW",
+    "POINT": "POINT",
+    "BSC": "BSC",
+    "Injective": "INJ",
+    "Backpack": "backpack",
+    "A": "A",
+    "AAAA": "AAAA",
+    "CNAME": "CNAME",
+    "TXT": "TXT",
+    "Background": "background",
+    "BASE": "BASE",
+    "IPNS": "IPNS",
+    "Bio": "bio"
+  }
+}
+```

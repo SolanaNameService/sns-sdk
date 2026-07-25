@@ -1,0 +1,48 @@
+---
+title: React Hooks installation
+description: Install SNS React Hooks v4 and configure TanStack Query and an RPC connection.
+---
+
+Install SNS React Hooks v4 in a React 18 or 19 application that uses JavaScript SDK v4.
+
+## Install the packages
+
+Install the hooks and their peer dependencies:
+
+```bash
+npm install @bonfida/sns-react@^4 @bonfida/spl-name-service@^4 @solana/web3.js@^1.98.2 @tanstack/react-query@^5 react
+```
+
+## Provider Setup
+
+Create a TanStack Query client near the application root:
+
+```tsx
+import type { PropsWithChildren } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
+
+export function AppProviders({ children }: PropsWithChildren) {
+  return (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  );
+}
+```
+
+## RPC Configuration
+
+Set an application-owned `RPC_URL` environment variable, then create the web3.js `Connection` passed to each hook:
+
+```ts
+import { Connection } from "@solana/web3.js";
+
+const rpcUrl = process.env.RPC_URL;
+const connection = new Connection(rpcUrl!);
+```
+
+SNS React Hooks does not create a global RPC client or wallet provider.
+
+## Next
+
+Continue to the [React Hooks Quickstart](/docs/react-hooks/quickstart) to configure common SNS queries in a component.

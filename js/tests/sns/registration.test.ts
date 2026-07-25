@@ -1,0 +1,137 @@
+require("dotenv").config();
+import { randomBytes } from "crypto";
+
+import { expect, jest, test } from "@jest/globals";
+import { getAssociatedTokenAddressSync } from "@solana/spl-token";
+import { Connection, PublicKey, Transaction } from "@solana/web3.js";
+
+import { registerDomain } from "../../src/bindings/registerDomain";
+import { registerDomainWithNft } from "../../src/bindings/registerDomainWithNft";
+import { REFERRERS } from "../../src/constants";
+import { InvalidDomainError } from "../../src/error";
+import { getSnsDomainKeySync } from "../../src/utils/getSnsDomainKeySync";
+import { getReverseKeySync } from "../../src/utils/getReverseKeySync";
+
+jest.setTimeout(20_000);
+jest.retryTimes(3);
+
+const USDC_MINT = new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
+const PYTH_MINT = new PublicKey("HZ1JovNiVvGrGNiiYvEozEVgZ58xaU3RKwX8eACQBCt3");
+
+const connection = new Connection(process.env.RPC_URL!);
+
+const VAULT_OWNER = new PublicKey(
+  "5D2zKog251d6KPCyFyLMt3KroWwXXPWSgTPyhV22K2gR",
+);
+
+test("Register with NFT", async () => {
+  const tx = new Transaction();
+  const trimmedDomain = randomBytes(10).toString("hex");
+  const domain = trimmedDomain + ".sns";
+  const { pubkey } = getSnsDomainKeySync(trimmedDomain);
+  const reverse = getReverseKeySync(trimmedDomain);
+  // https://solscan.io/collection/3c138f8640f62b62016f8020f0532ff888bb0866363c26fb2241bcf28c0776ad#holders
+  const holder = new PublicKey("FiUYY19eXuVcEAHSJ87KEzYjYnfKZm6KbHoVtdQBNGfk");
+  const source = new PublicKey("Df9Jz3NrGVd5jjjrXbedwuHbCc1hL131bUXq2143tTfQ");
+  const nftMint = new PublicKey("7cpq5U6ze5PPcTPVxGifXA8xyDp8rgAJQNwBDj8eWd8w");
+
+  const ix = registerDomainWithNft(
+    domain,
+    1_000,
+    pubkey,
+    reverse,
+    holder,
+    source,
+    nftMint,
+  );
+  tx.add(ix);
+  const { blockhash } = await connection.getLatestBlockhash();
+  tx.recentBlockhash = blockhash;
+  tx.feePayer = VAULT_OWNER;
+  const res = await connection.simulateTransaction(tx);
+  expect(res.value.err).toBe(null);
+});
+
+test("Indempotent ATA creation ref", async () => {
+  const tx = new Transaction();
+  for (let i = 0; i < 3; i++) {
+    const domain = randomBytes(10).toString("hex") + ".sns";
+    const ix = await registerDomain(
+      domain,
+      1_000,
+      VAULT_OWNER,
+      getAssociatedTokenAddressSync(PYTH_MINT, VAULT_OWNER, true),
+      PYTH_MINT,
+      REFERRERS[0],
+    );
+    tx.add(...ix);
+  }
+  const { blockhash } = await connection.getLatestBlockhash();
+  tx.recentBlockhash = blockhash;
+  tx.feePayer = VAULT_OWNER;
+  const res = await connection.simulateTransaction(tx);
+  expect(res.value.err).toBe(null);
+});
+
+test("Register V2", async () => {
+  const tx = new Transaction();
+  const domain = randomBytes(10).toString("hex") + ".sns";
+  const ix = await registerDomain(
+    domain,
+    1_000,
+    VAULT_OWNER,
+    getAssociatedTokenAddressSync(USDC_MINT, VAULT_OWNER, true),
+    USDC_MINT,
+    REFERRERS[1],
+  );
+  tx.add(...ix);
+  const { blockhash } = await connection.getLatestBlockhash();
+  tx.recentBlockhash = blockhash;
+  tx.feePayer = VAULT_OWNER;
+  const res = await connection.simulateTransaction(tx);
+  expect(res.value.err).toBe(null);
+});
+
+test("Registration V2 with ref", async () => {
+  const tx = new Transaction();
+  const domain = randomBytes(10).toString("hex") + ".sns";
+  const ix = await registerDomain(
+    domain,
+    1_000,
+    VAULT_OWNER,
+    getAssociatedTokenAddressSync(USDC_MINT, VAULT_OWNER, true),
+    USDC_MINT,
+    REFERRERS[1],
+  );
+  tx.add(...ix);
+  const { blockhash } = await connection.getLatestBlockhash();
+  tx.recentBlockhash = blockhash;
+  tx.feePayer = VAULT_OWNER;
+  const res = await connection.simulateTransaction(tx);
+  expect(res.value.err).toBe(null);
+});
+
+test("registerDomainWithNft rejects subdomain .sns input", () => {
+  expect(() =>
+    registerDomainWithNft(
+      "sub.mydomain.sns",
+      1_000,
+      PublicKey.default,
+      PublicKey.default,
+      PublicKey.default,
+      PublicKey.default,
+      PublicKey.default,
+    ),
+  ).toThrow(InvalidDomainError);
+});
+
+test("registerDomain rejects subdomain .sns input", async () => {
+  await expect(
+    registerDomain(
+      "sub.mydomain.sns",
+      1_000,
+      PublicKey.default,
+      PublicKey.default,
+    ),
+  ).rejects.toThrow(InvalidDomainError);
+});

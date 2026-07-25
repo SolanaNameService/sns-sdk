@@ -1,0 +1,20 @@
+---
+displayed_sidebar: docsSidebar
+title: Address derivation
+description: Derive SNS, SRS, reverse-record, and tokenized-domain addresses without RPC.
+---
+
+Address derivation APIs calculate deterministic SNS and SRS account addresses locally and do not query RPC. High-level SNS helpers accept TLD-trimmed names such as `example` or `sub.example`; use the low-level helpers when constructing raw name-registry relationships.
+
+## APIs
+
+| API                                                     | Description                                                             |
+| ------------------------------------------------------- | ----------------------------------------------------------------------- |
+| [`get_sns_domain_key`](./derivation/get-sns-domain-key) | Derives an SNS domain or subdomain account and parent metadata.         |
+| [`get_srs_domain_key`](./derivation/get-srs-domain-key) | Derives the canonical SRS record account for a TLD-trimmed `.sol` name. |
+| [`get_reverse_key`](./derivation/get-reverse-key)       | Derives an SNS reverse-lookup account.                                  |
+| [`get_domain_mint`](./derivation/get-domain-mint)       | Derives a name-tokenizer mint from a name account.                      |
+| [`get_prefix`](./derivation/get-prefix)                 | Returns the raw prefix for a domain or record version.                  |
+| [`get_hashed_name`](./derivation/get-hashed-name)       | Hashes a raw SPL Name Service label.                                    |
+| [`derive`](./derivation/derive)                         | Derives a raw SPL Name Service account.                                 |
+| [`derive_reverse`](./derivation/derive-reverse)         | Derives a raw reverse-lookup account.                                   |

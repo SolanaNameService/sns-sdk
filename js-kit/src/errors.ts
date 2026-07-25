@@ -1,36 +1,25 @@
+/**
+ * Error classes and stable error categories emitted by SDK operations.
+ * @module Errors
+ */
+/** Stable error codes emitted by SNS SDK operations. */
 export enum ErrorType {
-  SymbolNotFound = "SymbolNotFound",
   InvalidSubdomain = "InvalidSubdomain",
   PrimaryDomainNotFound = "PrimaryDomainNotFound",
-  MissingParentOwner = "MissingParentOwner",
-  U32Overflow = "U32Overflow",
-  InvalidBufferLength = "InvalidBufferLength",
-  U64Overflow = "U64Overflow",
   NoRecordData = "NoRecordData",
   InvalidRecordData = "InvalidRecordData",
-  UnsupportedRecord = "UnsupportedRecord",
   InvalidEvmAddress = "InvalidEvmAddress",
   InvalidInjectiveAddress = "InvalidInjectiveAddress",
   InvalidARecord = "InvalidARecord",
   InvalidAAAARecord = "InvalidAAAARecord",
   InvalidRecordInput = "InvalidRecordInput",
-  InvalidSignature = "InvalidSignature",
   AccountDoesNotExist = "AccountDoesNotExist",
-  MultipleRegistries = "MultipleRegistries",
-  InvalidReverseTwitter = "InvalidReverseTwitter",
   NoAccountData = "NoAccountData",
   InvalidInput = "InvalidInput",
   InvalidDomain = "InvalidDomain",
-  InvalidCustomBg = "InvalidCustomBackground",
-  UnsupportedSignature = "UnsupportedSignature",
-  RecordDoestNotSupportGuardianSig = "RecordDoestNotSupportGuardianSig",
-  RecordIsNotSigned = "RecordIsNotSigned",
-  UnsupportedSignatureType = "UnsupportedSignatureType",
-  InvalidSolRecordV2 = "InvalidSolRecordV2",
   MissingVerifier = "MissingVerifier",
   PythFeedNotFound = "PythFeedNotFound",
-  InvalidRoA = "InvalidRoA",
-  InvalidPda = "InvalidPda",
+  InvalidRoa = "InvalidRoa",
   InvalidParent = "InvalidParent",
   NftAccountNotFound = "NftRecordNotFound",
   PdaOwnerNotAllowed = "PdaOwnerNotAllowed",
@@ -39,8 +28,12 @@ export enum ErrorType {
   CouldNotFindNftOwner = "CouldNotFindNftOwner",
   InvalidValidation = "InvalidValidation",
   InvalidSerializedData = "InvalidSerializedData",
+  UnsupportedTld = "UnsupportedTld",
+  DomainExpired = "DomainExpired",
+  CouldNotFindSrsOwner = "CouldNotFindSrsOwner",
 }
 
+/** Base error thrown by SNS SDK operations. Inspect `type` for a stable error code. */
 export class SNSError extends Error {
   type: ErrorType;
 
@@ -55,241 +48,191 @@ export class SNSError extends Error {
   }
 }
 
-export class SymbolNotFoundError extends SNSError {
-  constructor(message?: string) {
-    super(ErrorType.SymbolNotFound, message);
-  }
-}
-
+/** Thrown when a subdomain name is malformed or unsupported. */
 export class InvalidSubdomainError extends SNSError {
   constructor(message?: string) {
     super(ErrorType.InvalidSubdomain, message);
   }
 }
 
+/** Thrown when an address has no configured primary domain. */
 export class PrimaryDomainNotFoundError extends SNSError {
   constructor(message?: string) {
     super(ErrorType.PrimaryDomainNotFound, message);
   }
 }
 
-export class MissingParentOwnerError extends SNSError {
-  constructor(message?: string) {
-    super(ErrorType.MissingParentOwner, message);
-  }
-}
-
-export class U32OverflowError extends SNSError {
-  constructor(message?: string) {
-    super(ErrorType.U32Overflow, message);
-  }
-}
-
-export class InvalidBufferLengthError extends SNSError {
-  constructor(message?: string) {
-    super(ErrorType.InvalidBufferLength, message);
-  }
-}
-
-export class U64OverflowError extends SNSError {
-  constructor(message?: string) {
-    super(ErrorType.U64Overflow, message);
-  }
-}
-
+/** Thrown when a requested record account has no readable data. */
 export class NoRecordDataError extends SNSError {
   constructor(message?: string) {
     super(ErrorType.NoRecordData, message);
   }
 }
 
+/** Thrown when record content fails format validation. */
 export class InvalidRecordDataError extends SNSError {
   constructor(message?: string) {
     super(ErrorType.InvalidRecordData, message);
   }
 }
 
-export class UnsupportedRecordError extends SNSError {
-  constructor(message?: string) {
-    super(ErrorType.UnsupportedRecord, message);
-  }
-}
-
+/** Thrown when an EVM address is invalid for a record operation. */
 export class InvalidEvmAddressError extends SNSError {
   constructor(message?: string) {
     super(ErrorType.InvalidEvmAddress, message);
   }
 }
 
+/** Thrown when an Injective address is invalid for a record operation. */
 export class InvalidInjectiveAddressError extends SNSError {
   constructor(message?: string) {
     super(ErrorType.InvalidInjectiveAddress, message);
   }
 }
 
+/** Thrown when an IPv4 record value is invalid. */
 export class InvalidARecordError extends SNSError {
   constructor(message?: string) {
     super(ErrorType.InvalidARecord, message);
   }
 }
 
+/** Thrown when an IPv6 record value is invalid. */
 export class InvalidAAAARecordError extends SNSError {
   constructor(message?: string) {
     super(ErrorType.InvalidAAAARecord, message);
   }
 }
 
+/** Thrown when record creation or update input is incomplete or invalid. */
 export class InvalidRecordInputError extends SNSError {
   constructor(message?: string) {
     super(ErrorType.InvalidRecordInput, message);
   }
 }
 
-export class InvalidSignatureError extends SNSError {
-  constructor(message?: string) {
-    super(ErrorType.InvalidSignature, message);
-  }
-}
-
+/** Thrown when a required on-chain account does not exist. */
 export class AccountDoesNotExistError extends SNSError {
   constructor(message?: string) {
     super(ErrorType.AccountDoesNotExist, message);
   }
 }
 
-export class MultipleRegistriesError extends SNSError {
-  constructor(message?: string) {
-    super(ErrorType.MultipleRegistries, message);
-  }
-}
-export class InvalidReverseTwitterError extends SNSError {
-  constructor(message?: string) {
-    super(ErrorType.InvalidReverseTwitter, message);
-  }
-}
-
+/** Thrown when an existing account has no readable data. */
 export class NoAccountDataError extends SNSError {
   constructor(message?: string) {
     super(ErrorType.NoAccountData, message);
   }
 }
 
+/** Thrown when a general SDK input contract is not met. */
 export class InvalidInputError extends SNSError {
   constructor(message?: string) {
     super(ErrorType.InvalidInput, message);
   }
 }
 
+/** Thrown when a domain name is malformed or invalid. */
 export class InvalidDomainError extends SNSError {
   constructor(message?: string) {
     super(ErrorType.InvalidDomain, message);
   }
 }
 
-export class InvalidCustomBgError extends SNSError {
-  constructor(message?: string) {
-    super(ErrorType.InvalidCustomBg, message);
-  }
-}
-
-export class UnsupportedSignatureError extends SNSError {
-  constructor(message?: string) {
-    super(ErrorType.UnsupportedSignature, message);
-  }
-}
-
-export class RecordDoestNotSupportGuardianSigError extends SNSError {
-  constructor(message?: string) {
-    super(ErrorType.RecordDoestNotSupportGuardianSig, message);
-  }
-}
-
-export class RecordIsNotSignedError extends SNSError {
-  constructor(message?: string) {
-    super(ErrorType.RecordIsNotSigned, message);
-  }
-}
-
-export class UnsupportedSignatureTypeError extends SNSError {
-  constructor(message?: string) {
-    super(ErrorType.UnsupportedSignatureType, message);
-  }
-}
-
-export class InvalidSolRecordV2Error extends SNSError {
-  constructor(message?: string) {
-    super(ErrorType.InvalidSolRecordV2, message);
-  }
-}
-
+/** Thrown when required record verification data is missing. */
 export class MissingVerifierError extends SNSError {
   constructor(message?: string) {
     super(ErrorType.MissingVerifier, message);
   }
 }
 
+/** Thrown when no Pyth price feed is configured for a mint. */
 export class PythFeedNotFoundError extends SNSError {
   constructor(message?: string) {
     super(ErrorType.PythFeedNotFound, message);
   }
 }
 
-export class InvalidRoAError extends SNSError {
+/** Thrown when a Right of Association proof is invalid. */
+export class InvalidRoaError extends SNSError {
   constructor(message?: string) {
-    super(ErrorType.InvalidRoA, message);
+    super(ErrorType.InvalidRoa, message);
   }
 }
 
-export class InvalidPdaError extends SNSError {
-  constructor(message?: string) {
-    super(ErrorType.InvalidPda, message);
-  }
-}
-
+/** Thrown when a required parent domain account cannot be resolved. */
 export class InvalidParentError extends SNSError {
   constructor(message?: string) {
     super(ErrorType.InvalidParent, message);
   }
 }
 
+/** Thrown when an expected SNS NFT account cannot be found. */
 export class NftAccountNotFoundError extends SNSError {
   constructor(message?: string) {
     super(ErrorType.NftAccountNotFound, message);
   }
 }
 
+/** Thrown when a program-derived address is not an allowed owner. */
 export class PdaOwnerNotAllowedError extends SNSError {
   constructor(message?: string) {
     super(ErrorType.PdaOwnerNotAllowed, message);
   }
 }
 
+/** Thrown when a requested SNS domain account does not exist. */
 export class DomainDoesNotExistError extends SNSError {
   constructor(message?: string) {
     super(ErrorType.DomainDoesNotExist, message);
   }
 }
 
+/** Thrown when serialized record data cannot be decoded safely. */
 export class RecordMalformedError extends SNSError {
   constructor(message?: string) {
     super(ErrorType.RecordMalformed, message);
   }
 }
 
+/** Thrown when the owner of an SNS NFT cannot be determined. */
 export class CouldNotFindNftOwnerError extends SNSError {
   constructor(message?: string) {
     super(ErrorType.CouldNotFindNftOwner, message);
   }
 }
 
+/** Thrown when an unsupported record validation mode is encountered. */
 export class InvalidValidationError extends SNSError {
   constructor(message?: string) {
     super(ErrorType.InvalidValidation, message);
   }
 }
 
+/** Thrown when serialized account or record data is inconsistent. */
 export class InvalidSerializedDataError extends SNSError {
   constructor(message?: string) {
     super(ErrorType.InvalidSerializedData, message);
+  }
+}
+
+/** Thrown when a domain does not use a supported top-level domain. */
+export class UnsupportedTldError extends SNSError {
+  constructor(message?: string) {
+    super(ErrorType.UnsupportedTld, message);
+  }
+}
+
+/** Thrown when a Solana Registration Service domain has expired. */
+export class DomainExpiredError extends SNSError {
+  constructor(message?: string) {
+    super(ErrorType.DomainExpired, message);
+  }
+}
+
+/** Thrown when a Solana Registration Service domain owner cannot be resolved. */
+export class CouldNotFindSrsOwnerError extends SNSError {
+  constructor(message?: string) {
+    super(ErrorType.CouldNotFindSrsOwner, message);
   }
 }

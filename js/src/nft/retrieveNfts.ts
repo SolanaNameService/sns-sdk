@@ -7,10 +7,15 @@ import { NAME_TOKENIZER_ID } from "./const";
 import { NftRecord } from "./state";
 
 /**
- * This function can be used to retrieve all the tokenized domains name
+ * Retrieves all tokenized domain name accounts.
  *
- * @param connection The solana connection object to the RPC node
- * @returns
+ * @param connection Solana RPC connection
+ * @returns Tokenized domain name account public keys.
+ *
+ * @example
+ * ```ts
+ * const domains = await retrieveNfts(connection);
+ * ```
  */
 export const retrieveNfts = async (connection: Connection) => {
   const filters: GetProgramAccountsFilter[] = [
@@ -28,6 +33,6 @@ export const retrieveNfts = async (connection: Connection) => {
   });
   const offset = 1 + 1 + 32 + 32;
   return result.map(
-    (e) => new PublicKey(e.account.data.slice(offset, offset + 32)),
+    (e) => new PublicKey(e.account.data.subarray(offset, offset + 32)),
   );
 };

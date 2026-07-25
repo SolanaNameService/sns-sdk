@@ -1,0 +1,49 @@
+---
+title: "GET /reverse-key/:domain"
+description: Derive the SNS reverse-record public key for a domain or subdomain.
+---
+
+Derive an SNS reverse-record public key without making an RPC request.
+
+## Request
+
+```http
+GET /reverse-key/:domain
+```
+
+## Path parameters
+
+### `domain`
+
+Required. A TLD-less top-level domain such as `bonfida`, or a one-level subdomain such as `team.bonfida`. The route trims whitespace, converts the value to lowercase, and selects subdomain derivation when two labels are present.
+
+## Response
+
+A successful request returns `200 OK` with the derived base58 reverse-record public key:
+
+```ts
+type ReverseKeyResponse = {
+  s: "ok";
+  result: string;
+};
+```
+
+## Example
+
+```bash
+curl "https://sdk-proxy.sns.id/reverse-key/bonfida"
+```
+
+```json
+{
+  "s": "ok",
+  "result": "<REVERSE_RECORD_PUBLIC_KEY>"
+}
+```
+
+## Errors
+
+| Status | `result`         | When                                                 |
+| ------ | ---------------- | ---------------------------------------------------- |
+| `400`  | `Invalid input`  | The domain has empty labels or more than two labels. |
+| `500`  | `Internal error` | Derivation fails for another unmapped reason.        |

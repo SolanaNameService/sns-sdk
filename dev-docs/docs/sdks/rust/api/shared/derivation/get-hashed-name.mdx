@@ -1,0 +1,35 @@
+---
+displayed_sidebar: docsSidebar
+title: get_hashed_name
+description: Hash a raw SPL Name Service label.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Address derivation](../derivation.mdx) / `get_hashed_name`
+
+# Function: `get_hashed_name()`
+
+```rust
+pub fn get_hashed_name(name: &str) -> Vec<u8>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/derivation.rs" line={56} label="derivation.rs:56" />
+
+Hashes `HASH_PREFIX` concatenated with the raw label for SPL Name Service derivation.
+
+## Parameters
+
+| Parameter | Type   | Description                                      |
+| --------- | ------ | ------------------------------------------------ |
+| `name`    | `&str` | Raw label, including any caller-required prefix. |
+
+## Returns
+
+The 32-byte hash as `Vec<u8>`.
+
+## Example
+
+```rust
+use sns_sdk::derivation::get_hashed_name;
+
+assert_eq!(get_hashed_name("example").len(), 32);
+```

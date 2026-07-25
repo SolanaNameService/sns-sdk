@@ -15,8 +15,26 @@ import {
   PrimaryDomainNotFoundError,
 } from "../errors";
 
-export class PrimaryDomainState {
+/**
+ * Input for decoding an SNS primary-domain account.
+ *
+ * @example
+ * ```ts
+ * const params: PrimaryDomainStateParams = { tag: 0, nameAccount };
+ * ```
+ */
+export interface PrimaryDomainStateParams {
+  /** Account state tag. */
   tag: number;
+  /** Encoded primary domain account address. */
+  nameAccount: Uint8Array;
+}
+
+/** Decoded state of an SNS primary-domain account. */
+export class PrimaryDomainState {
+  /** Account state tag. */
+  tag: number;
+  /** Primary domain account address. */
   nameAccount: Address;
 
   static schema = {
@@ -26,7 +44,7 @@ export class PrimaryDomainState {
     },
   };
 
-  constructor(obj: { tag: number; nameAccount: Uint8Array }) {
+  constructor(obj: PrimaryDomainStateParams) {
     this.tag = obj.tag;
     this.nameAccount = addressCodec.decode(obj.nameAccount);
   }

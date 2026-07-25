@@ -7,10 +7,16 @@ import { getNameAccountKeySync } from "./getNameAccountKeySync";
 import { deserializeReverse } from "./deserializeReverse";
 
 /**
- * This function can be used to perform a reverse look up
- * @param connection The Solana RPC connection
- * @param nameAccount The public keys of the domains to look up
- * @returns The human readable domain names
+ * Performs reverse lookups for domain accounts.
+ *
+ * @param connection Solana RPC connection
+ * @param nameAccounts Domain account public keys to reverse look up
+ * @returns Human-readable domain names when reverse accounts exist.
+ *
+ * @example
+ * ```ts
+ * const domains = await reverseLookupBatch(connection, nameAccounts);
+ * ```
  */
 export async function reverseLookupBatch(
   connection: Connection,

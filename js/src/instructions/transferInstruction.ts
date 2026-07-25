@@ -1,6 +1,23 @@
 import { Buffer } from "buffer";
 import { PublicKey, TransactionInstruction } from "@solana/web3.js";
 
+/**
+ * Builds an SPL Name Service instruction that transfers a name registry owner.
+ *
+ * @param nameProgramId SPL Name Service program address.
+ * @param nameAccountKey Registry address whose owner changes.
+ * @param newOwnerKey Public key that becomes the registry owner.
+ * @param currentNameOwnerKey Current registry owner and default required signer.
+ * @param nameClassKey Optional class authority signer.
+ * @param nameParent Optional parent registry address.
+ * @param parentOwner Optional parent owner signer used instead of the current owner.
+ * @returns A transaction instruction that transfers registry ownership.
+ *
+ * @example
+ * ```ts
+ * const instruction = transferInstruction(nameProgramId, nameAccount, newOwner, currentOwner);
+ * ```
+ */
 export function transferInstruction(
   nameProgramId: PublicKey,
   nameAccountKey: PublicKey,

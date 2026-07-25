@@ -1,87 +1,123 @@
-import babel from "@rollup/plugin-babel";
-import commonjs from "@rollup/plugin-commonjs";
-import { nodeResolve } from "@rollup/plugin-node-resolve";
-import terser from "@rollup/plugin-terser";
 import typescript from "@rollup/plugin-typescript";
+import { createRequire } from "node:module";
 import del from "rollup-plugin-delete";
+import { dts } from "rollup-plugin-dts";
 import { visualizer } from "rollup-plugin-visualizer";
 
-/**
- * @type {import('rollup').RollupOptions}
- */
-export default {
-  input: [
-    "src/index.ts",
-    "src/address/index.ts",
-    "src/bindings/index.ts",
-    "src/constants/index.ts",
-    "src/domain/index.ts",
-    "src/instructions/index.ts",
-    "src/nft/index.ts",
-    "src/record/index.ts",
-    "src/states/index.ts",
-    "src/types/index.ts",
-    "src/utils/index.ts",
-  ],
-  output: [
-    {
-      dir: "dist",
-      format: "cjs",
-      sourcemap: true,
-      entryFileNames: "cjs/[name].cjs",
-      exports: "named",
-      preserveModules: true,
-      preserveModulesRoot: "src",
-    },
-    {
-      dir: "dist",
-      format: "esm",
-      sourcemap: true,
-      entryFileNames: "esm/[name].mjs",
-      exports: "named",
-      preserveModules: true,
-      preserveModulesRoot: "src",
-    },
-  ],
-  external: [
-    "@solana/kit",
-    "@solana/addresses",
-    "@solana/codecs-core",
-    "@solana/codecs-strings",
-    "@solana/errors",
-  ],
-  plugins: [
-    del({ targets: "dist" }),
-    nodeResolve({
-      browser: true,
-      preferBuiltins: false,
-      dedupe: [
-        "@scure/base",
-        "@solana-program/token",
-        "borsh",
-        "ipaddr.js",
-        "punycode",
-      ],
-    }),
-    commonjs(),
-    typescript({
-      tsconfig: "./tsconfig.json",
-      declaration: true,
-      outDir: null,
-      declarationDir: "dist/types",
-    }),
-    babel({ babelHelpers: "bundled" }),
-    terser(),
-    visualizer({
-      gzipSize: true,
-    }),
-  ],
-  treeshake: {
-    moduleSideEffects: false,
-    preset: "smallest",
-  },
-  onwarn: function (warning, handler) {
-    if (warning.code === "THIS_IS_UNDEFINED") return;
-    handler(warning);
-  },
+const require = createRequire(import.meta.url);
+const packageJson = require("./package.json");
+
+const externalPackages = new Set([
+  ...Object.keys(packageJson.dependencies ?? {}),
+  ...Object.keys(packageJson.peerDependencies ?? {}),
+]);
+
+const external = (id) => {
+  for (const packageName of externalPackages) {
+    if (id === packageName || id.startsWith(`${packageName}/`)) {
+      return true;
+    }
+  }
+
+  return false;
 };
+
+const sharedOutput = {
+  dir: "dist",
+  sourcemap: true,
+  exports: "named",
+  preserveModules: true,
+  preserveModulesRoot: "src",
+  generatedCode: "es2015",
+};
+
+const input = {
+  index: "src/index.ts",
+  "address/index": "src/address/index.ts",
+  "bindings/index": "src/bindings/index.ts",
+  codecs: "src/codecs.ts",
+  "constants/index": "src/constants/index.ts",
+  "domain/index": "src/domain/index.ts",
+  errors: "src/errors.ts",
+  "instructions/index": "src/instructions/index.ts",
+  "nft/index": "src/nft/index.ts",
+  "record/index": "src/record/index.ts",
+  "states/index": "src/states/index.ts",
+  "types/index": "src/types/index.ts",
+  "utils/index": "src/utils/index.ts",
+};
+
+const declarationEntries = Object.keys(input);
+
+const declarationConfigs = declarationEntries.map((name, index) => ({
+  input: `dist/types-internal/${name}.d.ts`,
+  external,
+  output: {
+    file: `dist/types/${name}.d.ts`,
+    format: "es",
+  },
+  plugins: [
+    dts(),
+    ...(index === declarationEntries.length - 1
+      ? [
+          del({
+            targets: "dist/types-internal",
+            hook: "writeBundle",
+          }),
+        ]
+      : []),
+  ],
+}));
+
+/**
+ * @type {import("rollup").RollupOptions[]}
+ */
+export default [
+  {
+    input,
+
+    external,
+
+    output: [
+      {
+        ...sharedOutput,
+        format: "cjs",
+        entryFileNames: "cjs/[name].cjs",
+        chunkFileNames: "cjs/[name]-[hash].cjs",
+        plugins: [
+          visualizer({
+            filename: "stats-cjs.html",
+            gzipSize: true,
+            brotliSize: true,
+          }),
+        ],
+      },
+      {
+        ...sharedOutput,
+        format: "esm",
+        entryFileNames: "esm/[name].mjs",
+        chunkFileNames: "esm/[name]-[hash].mjs",
+        plugins: [
+          visualizer({
+            filename: "stats-esm.html",
+            gzipSize: true,
+            brotliSize: true,
+          }),
+        ],
+      },
+    ],
+
+    plugins: [
+      del({
+        targets: "dist",
+        runOnce: true,
+      }),
+      typescript({
+        tsconfig: "./tsconfig.json",
+      }),
+    ],
+
+    treeshake: true,
+  },
+  ...declarationConfigs,
+];

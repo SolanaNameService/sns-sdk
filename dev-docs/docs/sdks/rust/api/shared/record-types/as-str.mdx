@@ -1,0 +1,28 @@
+---
+displayed_sidebar: docsSidebar
+title: Record::as_str
+description: Return the exact on-chain label for an SNS record type.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Record types and keys](../record-types.mdx) / `Record::as_str`
+
+# Method: `Record::as_str()`
+
+```rust
+pub fn as_str(&self) -> &'static str
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/record/mod.rs" line={53} label="record/mod.rs:53" />
+
+Returns the exact case-sensitive label used for on-chain record derivation and parsing.
+
+## Returns
+
+A static record label.
+
+## Example
+
+```rust
+use sns_sdk::record::Record;
+assert_eq!(Record::Url.as_str(), "url");
+```

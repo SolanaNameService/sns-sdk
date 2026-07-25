@@ -110,7 +110,7 @@ describe("Utils methods", () => {
           74, 150, 166, 192, 11, 33, 237, 12, 252, 39, 152, 209, 249, 169, 233,
           201, 74,
         ],
-        feedAddress: "Dpw1EAVrSB1ibxiDQyTAW6Zip3J4Btk2x4SgApQCeFbX",
+        feedAddress: "6HAuqASbHEh4w4REJEUUUCginTLfj1kwCh215ZLtMkrT",
       },
       {
         mint: "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
@@ -119,7 +119,7 @@ describe("Utils methods", () => {
           15, 57, 187, 108, 169, 206, 4, 176, 253, 127, 46, 151, 22, 136, 226,
           229, 59,
         ],
-        feedAddress: "HT2PLQBcG5EiCcNSaMHAjSgd9F98ecpATbk4Sk5oYuM",
+        feedAddress: "3XBYLaF9wisQLaCxTgchH6xeNJGchwDauGpot1GcRMZV",
       },
       {
         mint: "So11111111111111111111111111111111111111112",
@@ -128,7 +128,7 @@ describe("Utils methods", () => {
           57, 42, 13, 47, 142, 208, 198, 199, 188, 15, 76, 250, 200, 194, 128,
           181, 109,
         ],
-        feedAddress: "7UVimffxr9ow1uXYxsr4LHAcV58mLzhmwaeKvJ1pjLiE",
+        feedAddress: "7AviUf9nL62mcxNbQGKm4nKDQnPjswo6c5MX4D57HmyE",
       },
     ])("$mint", async ({ priceFeed, feedAddress }) => {
       const res = await getPythFeedAddress({ shard: 0, priceFeed });

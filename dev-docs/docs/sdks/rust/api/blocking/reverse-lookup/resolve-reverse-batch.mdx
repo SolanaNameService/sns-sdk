@@ -1,0 +1,53 @@
+---
+displayed_sidebar: docsSidebar
+title: resolve_reverse_batch
+description: Resolve reverse names for multiple top-level SNS name accounts.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Reverse lookup](../reverse-lookup.mdx) / `resolve_reverse_batch`
+
+# Function: `resolve_reverse_batch()`
+
+```rust
+pub fn resolve_reverse_batch(
+    rpc_client: &RpcClient,
+    keys: &[Pubkey],
+) -> Result<Vec<Option<String>>, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/blocking/resolve.rs" line={292} label="rust-crates/sns-sdk/src/blocking/resolve.rs:292" />
+
+Derives reverse-record keys for multiple top-level name accounts and fetches them in batches. Output order matches `keys`; this operation has no parent parameter and therefore targets top-level reverse records.
+
+## Availability
+
+Requires the `blocking` feature.
+
+## Parameters
+
+| Parameter    | Type                                    | Description                                         |
+| ------------ | --------------------------------------- | --------------------------------------------------- |
+| `rpc_client` | `&solana_client::rpc_client::RpcClient` | Blocking client used for batched account reads.     |
+| `keys`       | `&[Pubkey]`                             | Top-level SNS name-account keys to reverse-resolve. |
+
+## Returns
+
+`Result<Vec<Option<String>>, SnsError>` with one TLD-less name or `None` per input key, in input order.
+
+## Errors
+
+- `SnsError::InvalidNameAccountData` when a returned reverse account is malformed or has the wrong owner.
+- `SnsError::InvalidReverse` when a present reverse payload is malformed or not UTF-8.
+- `SnsError::SolanaClient` for RPC failures.
+
+## Example
+
+```rust
+use sns_sdk::{blocking::resolve::resolve_reverse_batch, derivation::get_sns_domain_key};
+use solana_client::rpc_client::RpcClient;
+
+let client = RpcClient::new(std::env::var("RPC_URL")?);
+let keys = [get_sns_domain_key("alice")?.key, get_sns_domain_key("bob")?.key];
+let names = resolve_reverse_batch(&client, &keys)?;
+println!("{names:?}");
+```

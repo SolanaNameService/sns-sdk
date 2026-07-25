@@ -129,5 +129,6 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-# Dundle stats visualization
-stats.html
+# Bundle stats visualization
+stats-cjs.html
+stats-esm.html

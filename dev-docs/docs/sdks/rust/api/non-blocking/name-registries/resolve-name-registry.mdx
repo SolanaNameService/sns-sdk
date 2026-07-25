@@ -1,0 +1,50 @@
+---
+displayed_sidebar: docsSidebar
+title: resolve_name_registry
+description: Read one SPL Name Service account and separate its header and payload.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Name registries](../name-registries.mdx) / `resolve_name_registry`
+
+# Function: `resolve_name_registry()`
+
+```rust
+pub async fn resolve_name_registry(
+    rpc_client: &RpcClient,
+    key: &Pubkey,
+) -> Result<Option<(NameRecordHeader, Vec<u8>)>, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/non_blocking/resolve.rs" line={241} label="rust-crates/sns-sdk/src/non_blocking/resolve.rs:241" />
+
+Reads one account through RPC. Present accounts must be owned by the SPL Name Service program and contain a complete `NameRecordHeader`; the returned byte vector excludes that header.
+
+## Parameters
+
+| Parameter    | Type         | Description                       |
+| ------------ | ------------ | --------------------------------- |
+| `rpc_client` | `&RpcClient` | Non-blocking Solana RPC client.   |
+| `key`        | `&Pubkey`    | Name-registry account public key. |
+
+## Returns
+
+`Result<Option<(NameRecordHeader, Vec<u8>)>, SnsError>`. `Some((header, payload))` contains the unpacked header and payload; `None` means the account does not exist.
+
+## Errors
+
+- `SnsError::InvalidNameAccountData` when a present account has the wrong owner, a truncated header, or no payload region.
+- `SnsError::SolanaClient` when the RPC request fails.
+
+## Example
+
+```rust
+use sns_sdk::non_blocking::resolve::resolve_name_registry;
+
+if let Some((header, payload)) = resolve_name_registry(&client, &account_key).await? {
+    println!("owner: {}, payload bytes: {}", header.owner, payload.len());
+}
+```
+
+## Related APIs
+
+- [`resolve_name_registry_batch`](./resolve-name-registry-batch.mdx)

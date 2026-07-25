@@ -1,8 +1,8 @@
 import { describe, expect, jest, test } from "@jest/globals";
 import { Address } from "@solana/kit";
 
-import { getDomainsForAddress } from "../src/address/getDomainsForAddress";
-import { getNftsForAddress } from "../src/address/getNftsForAddress";
+import { getSnsDomainsForAddress } from "../src/address/getSnsDomainsForAddress";
+import { getSnsNftsForAddress } from "../src/address/getSnsNftsForAddress";
 import { getPrimaryDomain } from "../src/address/getPrimaryDomain";
 import { getPrimaryDomainsBatch } from "../src/address/getPrimaryDomainsBatch";
 import { RANDOM_ADDRESS, TEST_RPC } from "./constants";
@@ -73,7 +73,7 @@ describe("Address methods", () => {
     });
   });
 
-  describe("getDomainsForAddress", () => {
+  describe("getSnsDomainsForAddress", () => {
     test.each([
       {
         address: RANDOM_ADDRESS,
@@ -109,7 +109,7 @@ describe("Address methods", () => {
         ],
       },
     ])("$address", async (item) => {
-      const result = await getDomainsForAddress({
+      const result = await getSnsDomainsForAddress({
         rpc: TEST_RPC,
         address: item.address,
       });
@@ -118,7 +118,7 @@ describe("Address methods", () => {
     });
   });
 
-  describe("getNftsForAddress", () => {
+  describe("getSnsNftsForAddress", () => {
     test.each([
       {
         address: RANDOM_ADDRESS,
@@ -135,7 +135,7 @@ describe("Address methods", () => {
         ],
       },
     ])("$address", async (item) => {
-      const result = await getNftsForAddress({
+      const result = await getSnsNftsForAddress({
         rpc: TEST_RPC,
         address: item.address,
       });

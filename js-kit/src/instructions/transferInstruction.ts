@@ -1,7 +1,7 @@
 import {
+  AccountMeta,
   AccountRole,
   Address,
-  AccountMeta,
   Instruction,
   ReadonlyUint8Array,
 } from "@solana/kit";
@@ -10,8 +10,24 @@ import { serialize } from "borsh";
 import { addressCodec } from "../codecs";
 import { DEFAULT_ADDRESS } from "../constants/addresses";
 
+/**
+ * Input for transferring an SNS name-registry account.
+ *
+ * @example
+ * ```ts
+ * const params: TransferInstructionParams = { newOwner };
+ * ```
+ */
+export interface TransferInstructionParams {
+  /** New registry owner. */
+  newOwner: Address;
+}
+
+/** Builder for the SNS name-registry transfer instruction. */
 export class TransferInstruction {
+  /** Instruction discriminator. */
   tag: number;
+  /** Encoded new owner address. */
   encodedNewOwnerAddress: ReadonlyUint8Array;
 
   static schema = {
@@ -21,7 +37,7 @@ export class TransferInstruction {
     },
   };
 
-  constructor(obj: { newOwner: Address }) {
+  constructor(obj: TransferInstructionParams) {
     this.tag = 2;
     this.encodedNewOwnerAddress = addressCodec.encode(obj.newOwner);
   }

@@ -3,28 +3,66 @@ import { Address, GetAccountInfoApi, Instruction, Rpc } from "@solana/kit";
 import { NAME_PROGRAM_ADDRESS } from "../constants/addresses";
 import { UpdateNameRegistryInstruction } from "../instructions/updateNameRegistryInstruction";
 import { RegistryState } from "../states/registry";
-import { deriveAddress } from "../utils/deriveAddress";
+import { _deriveAddress } from "../utils/deriveAddress";
 
+/**
+ * Input for updating bytes in a raw SNS name-registry account.
+ *
+ * @example
+ * ```ts
+ * const params: UpdateNameRegistryParams = {
+ *   rpc,
+ *   domain: "example",
+ *   offset: 0,
+ *   data: new TextEncoder().encode("data"),
+ * };
+ * ```
+ */
 export interface UpdateNameRegistryParams {
+  /** RPC client used to retrieve the registry owner. */
   rpc: Rpc<GetAccountInfoApi>;
+
+  /** Raw registry seed/name to update. */
   domain: string;
+
+  /** Byte offset where the update begins. */
   offset: number;
+
+  /** Bytes to write to the registry. */
   data: Uint8Array;
+
+  /** Optional class address for the registry. */
   classAddress?: Address;
+  /**
+   * Optional parent name-account address.
+   */
   parentAddress?: Address;
 }
 
 /**
- * Update the data of the given name registry.
+ * Updates the data of a raw SPL Name Registry account.
  *
- * @param params - An object containing the following properties:
- *   - `rpc`: An RPC interface implementing GetAccountInfoApi.
- *   - `domain`: The name of the domain whose registry will be updated.
- *   - `offset`: The offset in bytes where the update should begin.
- *   - `data`: The data to be written to the registry.
- *   - `classAddress`: (Optional) The address of the class associated with the registry.
- *   - `parentAddress`: (Optional) The address of the parent registry.
- * @returns A promise that resolves to the update name registry instruction.
+ * This low-level helper accepts a raw registry seed/name as `domain` and does
+ * not parse `.sns` or `.sol` suffixes.
+ *
+ * @param params Update parameters
+ * @param params.rpc RPC client implementing account lookup
+ * @param params.domain Raw registry seed/name whose account will be updated
+ * @param params.offset Offset in bytes where the update should begin
+ * @param params.data Data to write to the registry
+ * @param params.classAddress Optional class address for the registry
+ * @param params.parentAddress Optional parent registry address
+ * @returns Transaction instruction.
+ *
+ * @example
+ * ```ts
+ * const instruction = await updateNameRegistry({
+ *   rpc,
+ *   domain: "example",
+ *   offset: 0,
+ *   data: new TextEncoder().encode("data"),
+ * });
+ * ```
  */
 export async function updateNameRegistry({
   rpc,
@@ -34,7 +72,7 @@ export async function updateNameRegistry({
   classAddress,
   parentAddress,
 }: UpdateNameRegistryParams): Promise<Instruction> {
-  const domainAddress = await deriveAddress(
+  const domainAddress = await _deriveAddress(
     domain,
     parentAddress,
     classAddress
@@ -45,7 +83,7 @@ export async function updateNameRegistry({
 
   const ix = new UpdateNameRegistryInstruction({
     offset,
-    inputDat: data,
+    inputData: data,
   }).getInstruction(NAME_PROGRAM_ADDRESS, domainAddress, signer);
 
   return ix;

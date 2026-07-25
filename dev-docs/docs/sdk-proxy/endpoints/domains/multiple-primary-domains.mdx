@@ -1,0 +1,58 @@
+---
+title: "GET /multiple-primary-domains/:owners"
+description: Retrieve primary SNS domain names for multiple wallets.
+---
+
+Return positional primary-domain names for up to 100 wallets.
+
+## Request
+
+```http
+GET /multiple-primary-domains/:owners
+```
+
+## Path parameters
+
+### `owners`
+
+Required. A comma-separated list of 1 to 100 base58 wallet public keys. Each value is trimmed before validation.
+
+## Query parameters
+
+### `rpc`
+
+Optional. A non-empty Solana RPC URL that overrides the proxy Worker's `RPC_URL` binding for this request.
+
+## Response
+
+A successful request returns `200 OK`:
+
+```ts
+type MultiplePrimaryDomainsResponse = {
+  s: "ok";
+  result: Array<string | null>;
+};
+```
+
+Results follow the input order. Each string is a TLD-less primary-domain name; `null` preserves the position of a wallet without a current primary domain.
+
+## Example
+
+```bash
+curl "https://sdk-proxy.sns.id/multiple-primary-domains/<FIRST_OWNER_PUBLIC_KEY>,<SECOND_OWNER_PUBLIC_KEY>"
+```
+
+```json
+{
+  "s": "ok",
+  "result": ["first-name", null]
+}
+```
+
+## Errors
+
+| Status | `result`          | When                                                       |
+| ------ | ----------------- | ---------------------------------------------------------- |
+| `400`  | `Invalid input`   | The list size is invalid or any owner is not a public key. |
+| `502`  | `RPC unavailable` | The selected RPC returns a JSON-RPC error.                 |
+| `500`  | `Internal error`  | No RPC is configured, or another failure occurs.           |

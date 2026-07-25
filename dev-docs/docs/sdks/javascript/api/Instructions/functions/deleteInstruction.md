@@ -1,0 +1,51 @@
+---
+displayed_sidebar: docsSidebar
+---
+
+[JavaScript SDK API Reference](../../index.md) / [Instructions](../index.md) / deleteInstruction
+
+# Function: deleteInstruction()
+
+> **deleteInstruction**(`nameProgramId`, `nameAccountKey`, `refundTargetKey`, `nameOwnerKey`): `TransactionInstruction`
+
+Defined in: [instructions/deleteInstruction.ts:18](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js/src/instructions/deleteInstruction.ts#L18)
+
+Builds an SPL Name Service instruction that deletes a name registry account.
+
+## Parameters
+
+### nameProgramId
+
+`PublicKey`
+
+SPL Name Service program address.
+
+### nameAccountKey
+
+`PublicKey`
+
+Registry address to delete.
+
+### refundTargetKey
+
+`PublicKey`
+
+Account that receives the reclaimed lamports.
+
+### nameOwnerKey
+
+`PublicKey`
+
+Signer authorized to delete the registry.
+
+## Returns
+
+`TransactionInstruction`
+
+A transaction instruction that deletes the name registry.
+
+## Example
+
+```ts
+const instruction = deleteInstruction(nameProgramId, nameAccount, refundTarget, owner);
+```

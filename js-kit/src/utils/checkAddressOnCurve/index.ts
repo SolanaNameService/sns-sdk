@@ -22,6 +22,17 @@ function decompressPointBytes(bytes: ReadonlyUint8Array): bigint {
   return BigInt(integerLiteralString);
 }
 
+/**
+ * Returns whether a Solana address represents a valid Ed25519 curve point.
+ *
+ * @param address Solana address to validate
+ * @returns Whether the address is an Ed25519 curve point
+ *
+ * @example
+ * ```ts
+ * const onCurve = checkAddressOnCurve(address);
+ * ```
+ */
 export function checkAddressOnCurve(address: Address): boolean {
   const bytes = addressCodec.encode(address);
   if (bytes.byteLength !== 32) {

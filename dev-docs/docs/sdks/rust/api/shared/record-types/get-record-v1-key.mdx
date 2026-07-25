@@ -1,0 +1,32 @@
+---
+displayed_sidebar: docsSidebar
+title: get_record_v1_key
+description: Derive an SNS V1 record account.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Record types and keys](../record-types.mdx) / `get_record_v1_key`
+
+# Function: `get_record_v1_key()`
+
+```rust
+pub fn get_record_v1_key(domain: &str, record: Record) -> Result<Pubkey, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/record/mod.rs" line={174} label="record/mod.rs:174" />
+
+Derives a V1 record key using `get_record_key` with `RecordVersion::V1`.
+
+## Parameters
+
+`domain` is TLD-trimmed and `record` selects its V1 label.
+
+## Returns
+
+The derived `Pubkey`, or `SnsError::InvalidDomain` for unsupported label depth.
+
+## Example
+
+```rust
+use sns_sdk::record::{get_record_v1_key, Record};
+let key = get_record_v1_key("example", Record::Url)?;
+```

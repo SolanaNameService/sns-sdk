@@ -1,0 +1,14 @@
+---
+displayed_sidebar: docsSidebar
+title: Name registries
+description: Read SPL Name Service accounts with the blocking Rust SDK client.
+---
+
+Name-registry APIs fetch and deserialize SPL Name Service accounts through a blocking `RpcClient`. They accept account public keys and return each account's `NameRecordHeader` separately from its payload bytes.
+
+## APIs
+
+| API                                                                            | Description                                           |
+| ------------------------------------------------------------------------------ | ----------------------------------------------------- |
+| [`resolve_name_registry`](./name-registries/resolve-name-registry)             | Reads one name-registry account.                      |
+| [`resolve_name_registry_batch`](./name-registries/resolve-name-registry-batch) | Reads multiple name-registry accounts in input order. |

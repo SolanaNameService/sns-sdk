@@ -1,0 +1,32 @@
+---
+title: "GET /"
+description: Retrieve the SNS SDK repository URL from the Proxy root route.
+---
+
+Return the SNS SDK repository URL as plain text.
+
+## Request
+
+```http
+GET /
+```
+
+## Response
+
+A successful request returns `200 OK` with a `text/plain` body:
+
+```text
+Visit https://github.com/SolanaNameService/sns-sdk
+```
+
+This root route does not use the JSON application-response envelope.
+
+## Example
+
+```bash
+curl "https://sdk-proxy.sns.id/"
+```
+
+```text
+Visit https://github.com/SolanaNameService/sns-sdk
+```

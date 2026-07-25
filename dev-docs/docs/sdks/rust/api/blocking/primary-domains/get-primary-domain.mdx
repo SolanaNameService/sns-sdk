@@ -1,0 +1,55 @@
+---
+displayed_sidebar: docsSidebar
+title: get_primary_domain
+description: Retrieve a wallet's selected primary SNS name-account key.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Primary domains](../primary-domains.mdx) / `get_primary_domain`
+
+# Function: `get_primary_domain()`
+
+```rust
+pub fn get_primary_domain(
+    rpc_client: &RpcClient,
+    owner: &Pubkey,
+) -> Result<Option<Pubkey>, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/blocking/primary_domain.rs" line={10} label="rust-crates/sns-sdk/src/blocking/primary_domain.rs:10" />
+
+Derives the wallet's primary-domain state account and reads its selected SNS name account.
+
+## Availability
+
+Requires the `blocking` feature.
+
+## Parameters
+
+| Parameter    | Type                                    | Description                                        |
+| ------------ | --------------------------------------- | -------------------------------------------------- |
+| `rpc_client` | `&solana_client::rpc_client::RpcClient` | Blocking client used to read primary-domain state. |
+| `owner`      | `&Pubkey`                               | Wallet whose primary domain is requested.          |
+
+## Returns
+
+`Result<Option<Pubkey>, SnsError>`. `Some` is the selected name-account key; `None` means no primary-domain state account exists.
+
+## Errors
+
+- `SnsError::InvalidNameAccountData` when a present state account is not owned by the name-offers program.
+- `SnsError::BorshError` when the state data cannot be parsed as `PrimaryDomain`.
+- `SnsError::SolanaClient` for RPC failures.
+
+## Example
+
+```rust
+use sns_sdk::blocking::primary_domain::get_primary_domain;
+use solana_client::rpc_client::RpcClient;
+use solana_program::pubkey::Pubkey;
+
+let client = RpcClient::new(std::env::var("RPC_URL")?);
+let owner: Pubkey = std::env::var("OWNER")?.parse()?;
+if let Some(domain_key) = get_primary_domain(&client, &owner)? {
+    println!("{domain_key}");
+}
+```

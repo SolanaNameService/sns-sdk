@@ -1,0 +1,56 @@
+---
+title: CLI quickstart
+description: Resolve an SNS domain and set an owned domain as primary with SNS CLI v3.
+---
+
+Use SNS CLI v3 to resolve a `.sns` domain and set an owned domain as the signing wallet's primary domain.
+
+## Prerequisites
+
+Complete the [CLI installation](/docs/cli/installation) before continuing. Set `RPC_URL` to an application-owned mainnet Solana RPC endpoint:
+
+```bash
+export RPC_URL="https://your-rpc-endpoint.example"
+```
+
+The global `--url <URL>` option overrides this environment variable and may appear before a command or after a nested subcommand. If neither is provided, the CLI uses the public mainnet-beta endpoint at `https://api.mainnet-beta.solana.com`.
+
+The examples use canonical lowercase `.sns` domains. The signed workflow also requires the owner's Solana keypair JSON file.
+
+## Read a domain
+
+Resolve a domain to its effective owner:
+
+```bash
+sns resolve name.sns
+```
+
+The command prints a table containing the domain, the resolved owner's base58 public key, and a Solana Explorer link. A missing domain is reported as `Domain not found`.
+
+## Submit a signed update
+
+Set an owned domain as the signing wallet's primary domain:
+
+```bash
+sns primary-domain set <OWNER_KEYPAIR_PATH> name.sns
+```
+
+The command reads the keypair file, signs the transaction, and submits it to the selected RPC endpoint immediately. When the RPC confirms the transaction, the CLI prints:
+
+```text
+Primary domain set, txid: <SIGNATURE>
+```
+
+Verify the keypair path and domain before running the command. Treat the keypair file as a sensitive credential.
+
+Verify the configured primary domain without signing another transaction:
+
+```bash
+sns primary-domain get <OWNER_PUBKEY>
+```
+
+## Next steps
+
+- Run `sns --help` to list the available reads and signed operations.
+- Run `sns <COMMAND> --help` for a command's exact arguments and options.
+- Use the [Rust SDK quickstart](/docs/sdks/rust/quickstart) when an application needs programmatic SNS access.

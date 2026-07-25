@@ -1,7 +1,9 @@
-import { AccountRole, Address, AccountMeta, Instruction } from "@solana/kit";
+import { AccountMeta, AccountRole, Address, Instruction } from "@solana/kit";
 import { serialize } from "borsh";
 
-export class deleteRecordInstruction {
+/** Builder for deleting an SNS V2 record account. */
+export class DeleteRecordInstruction {
+  /** Instruction discriminator. */
   tag: number;
 
   static schema = {
@@ -15,7 +17,7 @@ export class deleteRecordInstruction {
   }
 
   serialize(): Uint8Array {
-    return serialize(deleteRecordInstruction.schema, this);
+    return serialize(DeleteRecordInstruction.schema, this);
   }
 
   getInstruction(

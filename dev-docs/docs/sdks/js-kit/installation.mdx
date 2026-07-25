@@ -1,0 +1,56 @@
+---
+title: JS Kit SDK installation
+description: Install JS Kit SDK v1 and configure its Solana Kit peer dependency and RPC client.
+---
+
+Install JS Kit SDK v1 in an application that uses `@solana/kit`.
+
+## Install the packages
+
+Install the SDK and its Solana Kit peer dependency:
+
+```bash
+npm install @solana-name-service/sns-sdk-kit@^1 @solana/kit@^6.9.0
+```
+
+## Requirements
+
+JS Kit SDK v1 requires Node.js 24 or newer.
+
+## Import the SDK
+
+The package root and category subpaths are supported. Use either style consistently with the application:
+
+```ts title="Package root"
+import { getPrimaryDomain, resolve } from "@solana-name-service/sns-sdk-kit";
+```
+
+```ts title="Category subpaths"
+import { getPrimaryDomain } from "@solana-name-service/sns-sdk-kit/address";
+import { resolve } from "@solana-name-service/sns-sdk-kit/domain";
+```
+
+CommonJS applications can load the same exports with `require`:
+
+```js
+const { resolve } = require("@solana-name-service/sns-sdk-kit");
+```
+
+## RPC Configuration
+
+Set an application-owned `RPC_URL` environment variable, then use it to create the typed RPC client passed to SDK operations:
+
+```ts
+import {
+  createDefaultRpcTransport,
+  createSolanaRpcFromTransport,
+} from "@solana/kit";
+
+const rpcUrl = process.env.RPC_URL;
+const transport = createDefaultRpcTransport({ url: rpcUrl! });
+const rpc = createSolanaRpcFromTransport(transport);
+```
+
+## Next
+
+Continue to the [JS Kit SDK Quickstart](/docs/sdks/js-kit/quickstart) to resolve a domain and query domain data.

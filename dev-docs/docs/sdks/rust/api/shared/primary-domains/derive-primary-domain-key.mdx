@@ -1,0 +1,32 @@
+---
+displayed_sidebar: docsSidebar
+title: derive_primary_domain_key
+description: Derive a wallet primary-domain PDA.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Primary domains](../primary-domains.mdx) / `derive_primary_domain_key`
+
+# Function: `derive_primary_domain_key()`
+
+```rust
+pub fn derive_primary_domain_key(owner: &Pubkey) -> Pubkey
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/primary_domain.rs" line={10} label="primary_domain.rs:10" />
+
+Derives the primary-domain PDA using the compatibility-preserved `favourite_domain` seed and the name-offers program.
+
+## Parameters
+
+`owner`: wallet public key.
+
+## Returns
+
+The primary-domain PDA.
+
+## Example
+
+```rust
+use sns_sdk::primary_domain::derive_primary_domain_key;
+let key = derive_primary_domain_key(&owner);
+```

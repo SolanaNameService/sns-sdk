@@ -1,0 +1,37 @@
+---
+displayed_sidebar: docsSidebar
+title: get_sns_domain_key
+description: Derive an SNS domain or subdomain account from a TLD-trimmed name.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Address derivation](../derivation.mdx) / `get_sns_domain_key`
+
+# Function: `get_sns_domain_key()`
+
+```rust
+pub fn get_sns_domain_key(domain: &str) -> Result<DomainKeyWithParent, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/derivation.rs" line={91} label="derivation.rs:91" />
+
+Derives the deterministic SNS account for a top-level name or one-level subdomain without RPC.
+
+## Parameters
+
+| Parameter | Type   | Description                                          |
+| --------- | ------ | ---------------------------------------------------- |
+| `domain`  | `&str` | TLD-trimmed name such as `example` or `sub.example`. |
+
+## Returns
+
+`DomainKeyWithParent` contains the derived `key`, its `parent`, and `is_sub`. More than two labels return `SnsError::InvalidDomain`.
+
+## Example
+
+```rust
+use sns_sdk::derivation::get_sns_domain_key;
+
+let domain = get_sns_domain_key("sub.example")?;
+assert!(domain.is_sub);
+println!("{}", domain.key);
+```

@@ -1,0 +1,35 @@
+---
+title: reverse-lookup
+description: Find the SNS reverse name for a domain account public key with SNS CLI v3.
+---
+
+The `reverse-lookup` command reads the reverse name associated with one domain account public key.
+
+## Usage
+
+```text
+sns [--url <URL>] reverse-lookup <PUBLIC_KEY>
+```
+
+## Arguments
+
+### `<PUBLIC_KEY>`
+
+Required. Base58 public key of the domain account to reverse-resolve.
+
+## Options
+
+### `-u, --url <URL>`
+
+Use this RPC endpoint instead of `RPC_URL` or the default public mainnet-beta endpoint at `https://api.mainnet-beta.solana.com`.
+
+## Output
+
+When a reverse record exists, the command prints a table with these columns:
+
+| Column       | Description                                       |
+| ------------ | ------------------------------------------------- |
+| `Public key` | The requested domain account public key.          |
+| `Reverse`    | The reverse name, displayed with a `.sns` suffix. |
+
+When no reverse record exists, the command prints `Domain not found - Are you sure it exists?` instead of a table.

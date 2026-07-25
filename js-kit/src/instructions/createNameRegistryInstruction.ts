@@ -1,12 +1,34 @@
-import { AccountRole, Address, AccountMeta, Instruction } from "@solana/kit";
+import { AccountMeta, AccountRole, Address, Instruction } from "@solana/kit";
 import { serialize } from "borsh";
 
 import { DEFAULT_ADDRESS } from "../constants/addresses";
 
-export class createNameRegistryInstruction {
-  tag: number;
+/**
+ * Input for creating an SNS name-registry account.
+ *
+ * @example
+ * ```ts
+ * const params: CreateNameRegistryInstructionParams = { nameHash, lamports, space: 32 };
+ * ```
+ */
+export interface CreateNameRegistryInstructionParams {
+  /** Hash of the registry name. */
   nameHash: Uint8Array;
+  /** Account funding amount. */
   lamports: bigint;
+  /** Account data size in bytes. */
+  space: number;
+}
+
+/** Builder for creating an SNS name-registry account. */
+export class CreateNameRegistryInstruction {
+  /** Instruction discriminator. */
+  tag: number;
+  /** Hash of the registry name. */
+  nameHash: Uint8Array;
+  /** Account funding amount. */
+  lamports: bigint;
+  /** Account data size in bytes. */
   space: number;
 
   static schema = {
@@ -18,7 +40,7 @@ export class createNameRegistryInstruction {
     },
   };
 
-  constructor(obj: { nameHash: Uint8Array; lamports: bigint; space: number }) {
+  constructor(obj: CreateNameRegistryInstructionParams) {
     this.tag = 0;
     this.nameHash = obj.nameHash;
     this.lamports = obj.lamports;
@@ -26,7 +48,7 @@ export class createNameRegistryInstruction {
   }
 
   serialize(): Uint8Array {
-    return serialize(createNameRegistryInstruction.schema, this);
+    return serialize(CreateNameRegistryInstruction.schema, this);
   }
 
   getInstruction(

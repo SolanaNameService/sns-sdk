@@ -1,8 +1,24 @@
-import { AccountRole, Address, AccountMeta, Instruction } from "@solana/kit";
+import { AccountMeta, AccountRole, Address, Instruction } from "@solana/kit";
 import { serialize } from "borsh";
 
-export class createReverseInstruction {
+/**
+ * Input for creating an SNS reverse-lookup account.
+ *
+ * @example
+ * ```ts
+ * const params: CreateReverseInstructionParams = { domain: "example" };
+ * ```
+ */
+export interface CreateReverseInstructionParams {
+  /** Raw reverse lookup payload. */
+  domain: string;
+}
+
+/** Builder for creating an SNS reverse-lookup account. */
+export class CreateReverseInstruction {
+  /** Instruction discriminator. */
   tag: number;
+  /** Raw reverse lookup payload. */
   domain: string;
   static schema = {
     struct: {
@@ -11,13 +27,13 @@ export class createReverseInstruction {
     },
   };
 
-  constructor(obj: { domain: string }) {
+  constructor(obj: CreateReverseInstructionParams) {
     this.tag = 12;
     this.domain = obj.domain;
   }
 
   serialize(): Uint8Array {
-    return serialize(createReverseInstruction.schema, this);
+    return serialize(CreateReverseInstruction.schema, this);
   }
 
   getInstruction(

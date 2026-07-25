@@ -1,6 +1,7 @@
 import {
   GetAccountInfoApi,
   GetMultipleAccountsApi,
+  GetSlotApi,
   GetTokenLargestAccountsApi,
   ReadonlyUint8Array,
   Rpc,
@@ -14,52 +15,116 @@ import {
 import { _verifyStalenessSync } from "../record/verifyRecordStaleness";
 import { RecordState } from "../states/record";
 import { Record } from "../types/record";
+import { assertTldSupported } from "../utils/assertTldSupported";
 import { deserializeRecordContent } from "../utils/deserializers/deserializeRecordContent";
-import { getDomainOwner } from "./getDomainOwner";
+import { _getSnsDomainOwner } from "./getSnsDomainOwner";
 
-interface GetDomainRecordParams {
-  rpc: Rpc<
-    GetAccountInfoApi & GetMultipleAccountsApi & GetTokenLargestAccountsApi
-  >;
-  domain: string;
-  record: Record;
-  options?: {
-    deserialize?: boolean;
-    verifier?: ReadonlyUint8Array;
-  };
+/**
+ * Options for retrieving a domain record.
+ *
+ * @example
+ * ```ts
+ * const options: GetDomainRecordOptions = { deserialize: true };
+ * ```
+ */
+export interface GetDomainRecordOptions {
+  /** Whether to decode record content. */
+  deserialize?: boolean;
+  /** Custom Right of Association verifier. */
+  verifier?: ReadonlyUint8Array;
 }
 
-interface Result {
+/**
+ * Parameters for retrieving a domain record.
+ *
+ * @example
+ * ```ts
+ * const params: GetDomainRecordParams = {
+ *   rpc,
+ *   domain: "example.sns",
+ *   record: Record.Url,
+ * };
+ * ```
+ */
+export interface GetDomainRecordParams {
+  /** RPC client. */
+  rpc: Rpc<
+    GetAccountInfoApi &
+      GetMultipleAccountsApi &
+      GetTokenLargestAccountsApi &
+      GetSlotApi
+  >;
+  /** Full domain name. */
+  domain: string;
+  /** Record type to retrieve. */
   record: Record;
+  /** Record retrieval options. */
+  options?: GetDomainRecordOptions;
+}
+
+/**
+ * Verification status for a domain record.
+ *
+ * @example
+ * ```ts
+ * const verified: GetDomainRecordVerification = { staleness: true };
+ * ```
+ */
+export interface GetDomainRecordVerification {
+  /** Whether the record is current. */
+  staleness: boolean;
+  /** Right of Association verification result. */
+  roa?: boolean;
+}
+
+/**
+ * A retrieved domain record.
+ *
+ * @example
+ * ```ts
+ * const result: GetDomainRecordResult = {
+ *   record: Record.Url,
+ *   retrievedRecord,
+ *   verified: { staleness: true },
+ * };
+ * ```
+ */
+export interface GetDomainRecordResult {
+  /** Record type. */
+  record: Record;
+  /** Retrieved record state. */
   retrievedRecord: RecordState;
-  verified: {
-    staleness: boolean;
-    roa?: boolean;
-  };
+  /** Verification status. */
+  verified: GetDomainRecordVerification;
+  /** Decoded record content. */
   deserializedContent?: string;
 }
 
 /**
- * Retrieves a specific record under a domain, verifies its state, and optionally deserializes its content.
+ * Retrieves a V2 record under a domain, verifies it, and optionally decodes its content.
  *
- * @param params - An object containing the following properties:
- *   - `rpc`: An RPC interface implementing GetAccountInfoApi, GetMultipleAccountsApi, and GetTokenLargestAccountsApi.
- *   - `domain`: The domain whose record is to be retrieved.
- *   - `record`: The type of record to retrieve.
- *   - `options`: (Optional) Additional options for processing:
- *       - `deserialize`: Whether to deserialize the record content.
- *       - `verifier`: A custom verifier for the record.
- * @returns A promise that resolves to the retrieved record, its verification status, and optionally its deserialized content.
+ * @param params Record retrieval parameters
+ * @param params.rpc RPC client implementing account, multiple-account, and token-largest-account APIs
+ * @param params.domain Full domain name including a `.sns` or `.sol` suffix
+ * @param params.record Record type to retrieve
+ * @param params.options Optional record processing options
+ * @returns The V2 record state, its verification result, and optional decoded content
+ *
+ * @example
+ * ```ts
+ * const result = await getDomainRecord({ rpc, domain: "example.sns", record: Record.Url });
+ * ```
  */
 export async function getDomainRecord({
   rpc,
   domain,
   record,
   options = {},
-}: GetDomainRecordParams): Promise<Result> {
+}: GetDomainRecordParams): Promise<GetDomainRecordResult> {
+  const [trimmedDomain] = await assertTldSupported({ rpc, domain });
   const [domainOwner, state] = await Promise.all([
-    getDomainOwner({ rpc, domain }),
-    getRecordV2Address({ domain, record }).then((address) =>
+    _getSnsDomainOwner({ rpc, domain: trimmedDomain }),
+    getRecordV2Address({ domain: trimmedDomain, record }).then((address) =>
       RecordState.retrieve(rpc, address)
     ),
   ]);
@@ -68,7 +133,7 @@ export async function getDomainRecord({
   const verified = {
     staleness: _verifyStalenessSync({ domainOwner, state }),
     ...(verifier && {
-      rightOfAssociation: _verifyRoaSync({ record, state, verifier }),
+      roa: _verifyRoaSync({ record, state, verifier }),
     }),
   };
 

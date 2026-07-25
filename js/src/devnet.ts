@@ -1,43 +1,5 @@
 import { Buffer } from "buffer";
-import {
-  Connection,
-  PublicKey,
-  SystemProgram,
-  TransactionInstruction,
-  SYSVAR_RENT_PUBKEY,
-} from "@solana/web3.js";
-import { createInstruction } from "./instructions/createInstruction";
-import { deleteInstruction } from "./instructions/deleteInstruction";
-import { transferInstruction } from "./instructions/transferInstruction";
-import { updateInstruction } from "./instructions/updateInstruction";
-import { createReverseInstruction } from "./instructions/createReverseInstruction";
-import { createInstructionV3 } from "./instructions/createInstructionV3";
-import { burnInstruction } from "./instructions/burnInstruction";
-import { createSplitV2Instruction } from "./instructions/createSplitV2Instruction";
-import { NameRegistryState } from "./state";
-import { Numberu64, Numberu32 } from "./int";
-import { getHashedName, getNameOwner } from "./deprecated/utils";
-import {
-  TOKEN_PROGRAM_ID,
-  getAssociatedTokenAddressSync,
-  createAssociatedTokenAccountIdempotentInstruction,
-} from "@solana/spl-token";
-import {
-  InvalidDomainError,
-  InvalidInputError,
-  InvalidParentError,
-  InvalidSubdomainError,
-  NoAccountDataError,
-  PythFeedNotFoundError,
-} from "./error";
-import { deserializeReverse } from "./utils/deserializeReverse";
-import { getHashedNameSync } from "./utils/getHashedNameSync";
-import { getPythFeedAccountKey } from "./utils/getPythFeedAccountKey";
-import { PYTH_PULL_FEEDS } from "./constants";
-import { FavouriteDomain } from "./favorite-domain";
-import { registerFavoriteInstruction } from "./instructions/registerFavoriteInstruction";
-import { serializeRecordV2Content } from "./record_v2/serializeRecordV2Content";
-import { Record, RecordVersion } from "./types/record";
+
 import {
   allocateAndPostRecordInstruction,
   deleteRecordInstruction,
@@ -45,6 +7,47 @@ import {
   validateSolanaSignatureInstruction,
   writeRoaInstruction,
 } from "@bonfida/sns-records";
+import {
+  createAssociatedTokenAccountIdempotentInstruction,
+  getAssociatedTokenAddressSync,
+  TOKEN_PROGRAM_ID,
+} from "@solana/spl-token";
+import {
+  Connection,
+  PublicKey,
+  SystemProgram,
+  SYSVAR_RENT_PUBKEY,
+  TransactionInstruction,
+} from "@solana/web3.js";
+
+import { PYTH_PULL_FEEDS } from "./constants";
+import {
+  InvalidInputError,
+  InvalidParentError,
+  NoAccountDataError,
+  PythFeedNotFoundError,
+} from "./error";
+import { PrimaryDomain } from "./primary-domain";
+import { BurnInstruction } from "./instructions/burnInstruction";
+import { createInstruction } from "./instructions/createInstruction";
+import { CreateReverseInstruction } from "./instructions/createReverseInstruction";
+import { CreateSplitV2Instruction } from "./instructions/createSplitV2Instruction";
+import { deleteInstruction } from "./instructions/deleteInstruction";
+import { SetPrimaryInstruction } from "./instructions/setPrimaryInstruction";
+import { transferInstruction } from "./instructions/transferInstruction";
+import { updateInstruction } from "./instructions/updateInstruction";
+import { Numberu32, Numberu64 } from "./int";
+import { serializeRecordContent } from "./record/serializeRecordContent";
+import { NameRegistryState } from "./state";
+import { Record, RecordVersion } from "./types/record";
+import {
+  _parseSnsDomain,
+  _parseSnsSubdomain,
+  _parseSnsTopLevelDomain,
+} from "./utils/parseSnsDomain";
+import { deserializeReverse } from "./utils/deserializeReverse";
+import { getHashedNameSync } from "./utils/getHashedNameSync";
+import { getPythFeedAccountKey } from "./utils/getPythFeedAccountKey";
 
 const constants = {
   /**
@@ -58,9 +61,9 @@ const constants = {
   HASH_PREFIX: "SPL Name Service",
 
   /**
-   * The `.sol` TLD
+   * The `.sns` TLD
    */
-  ROOT_DOMAIN_ACCOUNT: new PublicKey(
+  SNS_ROOT_DOMAIN_ACCOUNT: new PublicKey(
     "5eoDkP6vCQBXqDV9YN2NdUs3nmML3dMRNmEYpiyVNBm2",
   ),
 
@@ -177,6 +180,7 @@ const reverseLookup = async (
   const reverseLookupAccount = getNameAccountKeySync(
     hashedReverseLookup,
     constants.REVERSE_LOOKUP_CLASS,
+    parent,
   );
 
   const { registry } = await NameRegistryState.retrieve(
@@ -191,7 +195,7 @@ const reverseLookup = async (
 
 const _deriveSync = (
   name: string,
-  parent: PublicKey = constants.ROOT_DOMAIN_ACCOUNT,
+  parent: PublicKey = constants.SNS_ROOT_DOMAIN_ACCOUNT,
   classKey?: PublicKey,
 ) => {
   let hashed = getHashedNameSync(name);
@@ -199,10 +203,19 @@ const _deriveSync = (
   return { pubkey, hashed };
 };
 
-const getDomainKeySync = (domain: string, record?: RecordVersion) => {
-  if (domain.endsWith(".sol")) {
-    domain = domain.slice(0, -4);
-  }
+/**
+ * Derives an SNS namespace account from a TLD-trimmed domain name.
+ *
+ * The caller must trim the TLD suffix before calling this function. For
+ * example, pass `"example"` instead of `"example.sns"`, and pass
+ * `"sub.example"` instead of `"sub.example.sns"`.
+ *
+ * @param domain Domain name with its TLD suffix trimmed
+ * @param record Optional record version when deriving a record account
+ * @returns Derived account key, name hash, and parent/subdomain metadata
+ * @throws {InvalidInputError} When the trimmed domain has unsupported nesting
+ */
+const getSnsDomainKeySync = (domain: string, record?: RecordVersion) => {
   const recordClass =
     record === RecordVersion.V2
       ? constants.CENTRAL_STATE_SNS_RECORDS
@@ -230,12 +243,21 @@ const getDomainKeySync = (domain: string, record?: RecordVersion) => {
   } else if (splitted.length >= 3) {
     throw new InvalidInputError("The domain is malformed");
   }
-  const result = _deriveSync(domain, constants.ROOT_DOMAIN_ACCOUNT);
+  const result = _deriveSync(domain, constants.SNS_ROOT_DOMAIN_ACCOUNT);
   return { ...result, isSub: false, parent: undefined };
 };
 
+/**
+ * Derives the reverse lookup account for a domain name.
+ *
+ * The caller must trim the TLD suffix before calling this function.
+ *
+ * @param domain Domain name with its TLD suffix trimmed
+ * @param isSub Set to true when deriving a subdomain reverse account
+ * @returns Reverse lookup account public key.
+ */
 const getReverseKeySync = (domain: string, isSub?: boolean) => {
-  const { pubkey, parent } = getDomainKeySync(domain);
+  const { pubkey, parent } = getSnsDomainKeySync(domain);
   const hashedReverseLookup = getHashedNameSync(pubkey.toBase58());
   const reverseLookupAccount = getNameAccountKeySync(
     hashedReverseLookup,
@@ -246,17 +268,46 @@ const getReverseKeySync = (domain: string, isSub?: boolean) => {
 };
 
 /**
- * Creates a name account with the given rent budget, allocated space, owner and class.
+ * Derives the V2 record account and the owning domain or subdomain account.
  *
- * @param connection The solana connection object to the RPC node
- * @param name The name of the new account
- * @param space The space in bytes allocated to the account
- * @param payerKey The allocation cost payer
- * @param nameOwner The pubkey to be set as owner of the new name account
- * @param lamports The budget to be set for the name account. If not specified, it'll be the minimum for rent exemption
- * @param nameClass The class of this new name
- * @param parentName The parent name of the new name. If specified its owner needs to sign
- * @returns
+ * Callers are responsible for applying any public API TLD restrictions before
+ * invoking this helper. The key derivation itself follows
+ * `getSnsDomainKeySync`.
+ *
+ * @param domain Domain name with its TLD suffix trimmed
+ * @param record Record type
+ * @returns Derived record account and parent account.
+ * @throws {InvalidParentError} When the owning domain account cannot be resolved
+ */
+const _getRecordAndParentKey = (domain: string, record: Record) => {
+  let { pubkey, parent, isSub } = getSnsDomainKeySync(
+    `${record}.${domain}`,
+    RecordVersion.V2,
+  );
+
+  if (isSub) {
+    parent = getSnsDomainKeySync(domain).pubkey;
+  }
+
+  if (!parent) {
+    throw new InvalidParentError("Parent could not be found");
+  }
+
+  return { pubkey, parent };
+};
+
+/**
+ * Builds an instruction to create a name account with the given rent budget, space, owner, and class.
+ *
+ * @param connection Solana RPC connection
+ * @param name Name of the new account
+ * @param space Space in bytes allocated to the account
+ * @param payerKey Account paying for allocation
+ * @param nameOwner Owner of the new name account
+ * @param lamports Lamports to fund the account. Defaults to the rent-exempt minimum
+ * @param nameClass Optional class of the new name account
+ * @param parentName Optional parent name account. Its owner must sign when provided
+ * @returns Transaction instruction.
  */
 async function createNameRegistry(
   connection: Connection,
@@ -268,7 +319,7 @@ async function createNameRegistry(
   nameClass?: PublicKey,
   parentName?: PublicKey,
 ): Promise<TransactionInstruction> {
-  const hashed_name = await getHashedName(name);
+  const hashed_name = getHashedNameSync(name);
   const nameAccountKey = await getNameAccountKeySync(
     hashed_name,
     nameClass,
@@ -281,7 +332,7 @@ async function createNameRegistry(
 
   let nameParentOwner: PublicKey | undefined;
   if (parentName) {
-    const { registry: parentAccount } = await getNameOwner(
+    const { registry: parentAccount } = await NameRegistryState.retrieve(
       connection,
       parentName,
     );
@@ -306,16 +357,17 @@ async function createNameRegistry(
 }
 
 /**
- * Overwrite the data of the given name registry.
+ * Builds an instruction to overwrite name registry data.
  *
- * @param connection The solana connection object to the RPC node
- * @param name The name of the name registry to update
- * @param offset The offset to which the data should be written into the registry
- * @param input_data The data to be written
- * @param nameClass The class of this name, if it exsists
- * @param nameParent The parent name of this name, if it exists
+ * @param connection Solana RPC connection
+ * @param name Name of the name registry to update
+ * @param offset Offset where data should be written
+ * @param input_data Data to write
+ * @param nameClass Optional class of the name account
+ * @param nameParent Optional parent name account
+ * @returns Transaction instruction.
  */
-async function updateNameRegistryData(
+async function updateNameRegistry(
   connection: Connection,
   name: string,
   offset: number,
@@ -323,7 +375,7 @@ async function updateNameRegistryData(
   nameClass?: PublicKey,
   nameParent?: PublicKey,
 ): Promise<TransactionInstruction> {
-  const hashed_name = await getHashedName(name);
+  const hashed_name = getHashedNameSync(name);
   const nameAccountKey = getNameAccountKeySync(
     hashed_name,
     nameClass,
@@ -350,62 +402,49 @@ async function updateNameRegistryData(
 }
 
 /**
- * Change the owner of a given name account.
+ * Builds an instruction to transfer a top-level `.sns` domain.
  *
- * @param connection The solana connection object to the RPC node
- * @param name The name of the name account
- * @param newOwner The new owner to be set
- * @param nameClass The class of this name, if it exsists
- * @param nameParent The parent name of this name, if it exists
- * @param parentOwner Parent name owner
- * @returns
+ * @param connection Solana RPC connection
+ * @param domain Full `.sns` domain name
+ * @param newOwner New owner of the domain
+ * @returns Transaction instruction.
  */
-async function transferNameOwnership(
+async function transferDomain(
   connection: Connection,
-  name: string,
+  domain: string,
   newOwner: PublicKey,
-  nameClass?: PublicKey,
-  nameParent?: PublicKey,
-  parentOwner?: PublicKey,
 ): Promise<TransactionInstruction> {
-  const hashed_name = await getHashedName(name);
+  const trimmedDomain = _parseSnsTopLevelDomain(domain);
+
+  const hashed_name = getHashedNameSync(trimmedDomain);
   const nameAccountKey = getNameAccountKeySync(
     hashed_name,
-    nameClass,
-    nameParent,
+    undefined,
+    constants.SNS_ROOT_DOMAIN_ACCOUNT,
   );
-
-  let curentNameOwner: PublicKey;
-  if (nameClass) {
-    curentNameOwner = nameClass;
-  } else {
-    curentNameOwner = (
-      await NameRegistryState.retrieve(connection, nameAccountKey)
-    ).registry.owner;
-  }
+  const curentNameOwner = (
+    await NameRegistryState.retrieve(connection, nameAccountKey)
+  ).registry.owner;
 
   const transferInstr = transferInstruction(
     constants.NAME_PROGRAM_ID,
     nameAccountKey,
     newOwner,
     curentNameOwner,
-    nameClass,
-    nameParent,
-    parentOwner,
   );
 
   return transferInstr;
 }
 
 /**
- * Delete the name account and transfer the rent to the target.
+ * Builds an instruction to delete a name account and transfer reclaimed rent.
  *
- * @param connection The solana connection object to the RPC node
- * @param name The name of the name account
- * @param refundTargetKey The refund destination address
- * @param nameClass The class of this name, if it exsists
- * @param nameParent The parent name of this name, if it exists
- * @returns
+ * @param connection Solana RPC connection
+ * @param name Name of the name account
+ * @param refundTargetKey Refund destination address
+ * @param nameClass Optional class of the name account
+ * @param nameParent Optional parent name account
+ * @returns Transaction instruction.
  */
 async function deleteNameRegistry(
   connection: Connection,
@@ -414,7 +453,7 @@ async function deleteNameRegistry(
   nameClass?: PublicKey,
   nameParent?: PublicKey,
 ): Promise<TransactionInstruction> {
-  const hashed_name = await getHashedName(name);
+  const hashed_name = getHashedNameSync(name);
   const nameAccountKey = getNameAccountKeySync(
     hashed_name,
     nameClass,
@@ -440,116 +479,23 @@ async function deleteNameRegistry(
 }
 
 /**
- * @deprecated This function is deprecated and will be removed in future releases. Use `registerDomainNameV2` instead.
- * This function can be used to register a .sol domain
- * @param connection The Solana RPC connection object
- * @param name The domain name to register e.g sns if you want to register sns.sol
- * @param space The domain name account size (max 10kB)
- * @param buyer The public key of the buyer
- * @param buyerTokenAccount The buyer token account (USDC)
- * @param mint Optional mint used to purchase the domain, defaults to USDC
- * @param referrerKey Optional referrer key
- * @returns
- */
-const registerDomainName = async (
-  connection: Connection,
-  name: string,
-  space: number,
-  buyer: PublicKey,
-  buyerTokenAccount: PublicKey,
-  mint = constants.USDC_MINT,
-  referrerKey?: PublicKey,
-) => {
-  // Basic validation
-  if (name.includes(".") || name.trim().toLowerCase() !== name) {
-    throw new InvalidDomainError("The domain is malformed");
-  }
-  const [cs] = PublicKey.findProgramAddressSync(
-    [constants.REGISTER_PROGRAM_ID.toBuffer()],
-    constants.REGISTER_PROGRAM_ID,
-  );
-
-  const hashed = getHashedNameSync(name);
-  const nameAccount = getNameAccountKeySync(
-    hashed,
-    undefined,
-    constants.ROOT_DOMAIN_ACCOUNT,
-  );
-
-  const hashedReverseLookup = getHashedNameSync(nameAccount.toBase58());
-  const reverseLookupAccount = getNameAccountKeySync(hashedReverseLookup, cs);
-
-  const [derived_state] = PublicKey.findProgramAddressSync(
-    [nameAccount.toBuffer()],
-    constants.REGISTER_PROGRAM_ID,
-  );
-
-  const refIdx = constants.REFERRERS.findIndex((e) => referrerKey?.equals(e));
-  let refTokenAccount: PublicKey | undefined = undefined;
-
-  const ixs: TransactionInstruction[] = [];
-
-  if (refIdx !== -1 && !!referrerKey) {
-    refTokenAccount = getAssociatedTokenAddressSync(mint, referrerKey, true);
-    const acc = await connection.getAccountInfo(refTokenAccount);
-    if (!acc?.data) {
-      const ix = createAssociatedTokenAccountIdempotentInstruction(
-        buyer,
-        refTokenAccount,
-        referrerKey,
-        mint,
-      );
-      ixs.push(ix);
-    }
-  }
-
-  const vault = getAssociatedTokenAddressSync(mint, constants.VAULT_OWNER);
-  const pythFeed = devnet.constants.PYTH_FEEDS.get(mint.toBase58());
-
-  if (!pythFeed) {
-    throw new PythFeedNotFoundError(
-      "The Pyth account for the provided mint was not found",
-    );
-  }
-
-  const ix = new createInstructionV3({
-    name,
-    space,
-    referrerIdxOpt: refIdx != -1 ? refIdx : null,
-  }).getInstruction(
-    constants.REGISTER_PROGRAM_ID,
-    constants.NAME_PROGRAM_ID,
-    constants.ROOT_DOMAIN_ACCOUNT,
-    nameAccount,
-    reverseLookupAccount,
-    SystemProgram.programId,
-    cs,
-    buyer,
-    buyerTokenAccount,
-    constants.PYTH_MAPPING_ACC,
-    new PublicKey(pythFeed.product),
-    new PublicKey(pythFeed.price),
-    vault,
-    TOKEN_PROGRAM_ID,
-    SYSVAR_RENT_PUBKEY,
-    derived_state,
-    refTokenAccount,
-  );
-  ixs.push(ix);
-
-  return [[], ixs];
-};
-
-/**
+ * Builds an instruction to create an SNS reverse lookup account.
  *
- * @param nameAccount The name account to create the reverse account for
- * @param name The name of the domain
- * @param feePayer The fee payer of the transaction
- * @param parentName The parent name account
- * @param parentNameOwner The parent name owner
- * @returns
+ * This is a low-level SNS registrar helper: it creates reverse lookup accounts
+ * for SNS domains only. It is not suffix-aware and does not derive `nameAccount`
+ * from a `.sns` domain string. The `name` argument is stored as provided and is
+ * not validated, so callers must ensure it matches the supplied SNS
+ * `nameAccount`. For subdomains, pass the parent name account and parent owner
+ * so the reverse lookup is derived in the parent namespace.
+ *
+ * @param nameAccount The pre-derived SNS name account the reverse lookup points to
+ * @param name The raw reverse name to store without a TLD suffix
+ * @param feePayer Fee payer for the instruction
+ * @param parentName Optional parent name account, required for subdomain reverse lookups
+ * @param parentNameOwner Optional parent name owner, required when `parentName` is provided
+ * @returns Transaction instructions.
  */
-const createReverseName = async (
+const createReverse = async (
   nameAccount: PublicKey,
   name: string,
   feePayer: PublicKey,
@@ -561,19 +507,19 @@ const createReverseName = async (
     constants.REGISTER_PROGRAM_ID,
   );
 
-  let hashedReverseLookup = await getHashedName(nameAccount.toBase58());
+  let hashedReverseLookup = getHashedNameSync(nameAccount.toBase58());
   let reverseLookupAccount = getNameAccountKeySync(
     hashedReverseLookup,
     centralState,
     parentName,
   );
 
-  let initCentralStateInstruction = new createReverseInstruction({
+  let initCentralStateInstruction = new CreateReverseInstruction({
     name,
   }).getInstruction(
     constants.REGISTER_PROGRAM_ID,
     constants.NAME_PROGRAM_ID,
-    constants.ROOT_DOMAIN_ACCOUNT,
+    constants.SNS_ROOT_DOMAIN_ACCOUNT,
     reverseLookupAccount,
     SystemProgram.programId,
     centralState,
@@ -585,29 +531,31 @@ const createReverseName = async (
 
   let instructions = [initCentralStateInstruction];
 
-  return [[], instructions];
+  return instructions;
 };
 
 /**
- * This function can be used to create a subdomain
- * @param connection The Solana RPC connection object
- * @param subdomain The subdomain to create with or without .sol e.g something.sns.sol or something.sns
- * @param owner The owner of the parent domain creating the subdomain
- * @param space The space to allocate to the subdomain (defaults to 2kb)
+ * Builds the instructions to create a `.sns` subdomain.
+ *
+ * @param connection Solana RPC connection
+ * @param subdomain Full `.sns` subdomain name
+ * @param owner Owner of the parent domain creating the subdomain
+ * @param space Space to allocate to the subdomain. Defaults to 2 kB
+ * @param feePayer Optional fee payer. Defaults to `owner`
+ * @returns Transaction instructions.
  */
 const createSubdomain = async (
   connection: Connection,
   subdomain: string,
   owner: PublicKey,
   space = 2_000,
+  feePayer?: PublicKey,
 ) => {
   const ixs: TransactionInstruction[] = [];
-  const sub = subdomain.split(".")[0];
-  if (!sub) {
-    throw new InvalidSubdomainError("The subdomain is malformed");
-  }
+  const [sub, parentDomain] = _parseSnsSubdomain(subdomain);
+  const trimmedSubdomain = `${sub}.${parentDomain}`;
 
-  const { parent, pubkey } = getDomainKeySync(subdomain);
+  const { parent, pubkey } = getSnsDomainKeySync(trimmedSubdomain);
 
   // Space allocated to the subdomains
   const lamports = await connection.getMinimumBalanceForRentExemption(
@@ -617,8 +565,8 @@ const createSubdomain = async (
   const ix_create = await createNameRegistry(
     connection,
     "\0".concat(sub),
-    space, // Hardcode space to 2kB
-    owner,
+    space,
+    feePayer || owner,
     owner,
     lamports,
     undefined,
@@ -627,24 +575,34 @@ const createSubdomain = async (
   ixs.push(ix_create);
 
   // Create the reverse name
-  const reverseKey = getReverseKeySync(subdomain, true);
+  const reverseKey = getReverseKeySync(trimmedSubdomain, true);
   const info = await connection.getAccountInfo(reverseKey);
   if (!info?.data) {
-    const [, ix_reverse] = await createReverseName(
+    const ix_reverse = await createReverse(
       pubkey,
       "\0".concat(sub),
-      owner,
+      feePayer || owner,
       parent,
       owner,
     );
     ixs.push(...ix_reverse);
   }
 
-  return [[], ixs];
+  return ixs;
 };
 
+/**
+ * Builds an instruction to burn a top-level `.sns` domain and its reverse lookup account.
+ *
+ * @param domain Full `.sns` domain name
+ * @param owner Current owner of the domain
+ * @param target Account that receives reclaimed lamports
+ * @returns Transaction instruction.
+ */
 const burnDomain = (domain: string, owner: PublicKey, target: PublicKey) => {
-  const { pubkey } = getDomainKeySync(domain);
+  const trimmedDomain = _parseSnsTopLevelDomain(domain);
+
+  const { pubkey } = getSnsDomainKeySync(trimmedDomain);
   const [state] = PublicKey.findProgramAddressSync(
     [pubkey.toBuffer()],
     constants.REGISTER_PROGRAM_ID,
@@ -654,12 +612,12 @@ const burnDomain = (domain: string, owner: PublicKey, target: PublicKey) => {
     constants.REGISTER_PROGRAM_ID,
   );
 
-  const ix = new burnInstruction().getInstruction(
+  const ix = new BurnInstruction().getInstruction(
     constants.REGISTER_PROGRAM_ID,
     constants.NAME_PROGRAM_ID,
     SystemProgram.programId,
     pubkey,
-    getReverseKeySync(domain),
+    getReverseKeySync(trimmedDomain),
     resellingState,
     state,
     constants.REVERSE_LOOKUP_CLASS,
@@ -670,15 +628,14 @@ const burnDomain = (domain: string, owner: PublicKey, target: PublicKey) => {
 };
 
 /**
- * This function is used to transfer the ownership of a subdomain in the Solana Name Service.
+ * Builds an instruction to transfer a `.sns` subdomain.
  *
- * @param {Connection} connection - The Solana RPC connection object.
- * @param {string} subdomain - The subdomain to transfer. It can be with or without .sol suffix (e.g., 'something.sns.sol' or 'something.sns').
- * @param {PublicKey} newOwner - The public key of the new owner of the subdomain.
- * @param {boolean} [isParentOwnerSigner=false] - A flag indicating whether the parent name owner is signing this transfer.
- * @param {PublicKey} [owner] - The public key of the current owner of the subdomain. This is an optional parameter. If not provided, the owner will be resolved automatically. This can be helpful to build transactions when the subdomain does not exist yet.
- *
- * @returns {Promise<TransactionInstruction>} - A promise that resolves to a Solana instruction for the transfer operation.
+ * @param connection Solana RPC connection
+ * @param subdomain Full `.sns` subdomain name
+ * @param newOwner New owner of the subdomain
+ * @param isParentOwnerSigner Whether the parent name owner signs the transfer
+ * @param owner Current owner of the subdomain. Resolved automatically when omitted
+ * @returns Transaction instruction.
  */
 const transferSubdomain = async (
   connection: Connection,
@@ -687,11 +644,10 @@ const transferSubdomain = async (
   isParentOwnerSigner?: boolean,
   owner?: PublicKey,
 ): Promise<TransactionInstruction> => {
-  const { pubkey, isSub, parent } = getDomainKeySync(subdomain);
+  const [sub, parentDomain] = _parseSnsSubdomain(subdomain);
+  const trimmedSubdomain = `${sub}.${parentDomain}`;
 
-  if (!parent || !isSub) {
-    throw new InvalidSubdomainError("The subdomain is not valid");
-  }
+  const { pubkey, parent } = getSnsDomainKeySync(trimmedSubdomain);
 
   if (!owner) {
     const { registry } = await NameRegistryState.retrieve(connection, pubkey);
@@ -702,8 +658,8 @@ const transferSubdomain = async (
   let nameParentOwner: PublicKey | undefined = undefined;
 
   if (isParentOwnerSigner) {
-    nameParent = parent;
-    nameParentOwner = (await NameRegistryState.retrieve(connection, parent))
+    nameParent = parent!;
+    nameParentOwner = (await NameRegistryState.retrieve(connection, parent!))
       .registry.owner;
   }
 
@@ -721,39 +677,39 @@ const transferSubdomain = async (
 };
 
 /**
- * This function can be used to register a .sol domain
- * @param connection The Solana RPC connection object
- * @param name The domain name to register e.g sns if you want to register sns.sol
- * @param space The domain name account size (max 10kB)
- * @param buyer The public key of the buyer
- * @param buyerTokenAccount The buyer token account (USDC)
- * @param mint Optional mint used to purchase the domain, defaults to USDC
- * @param referrerKey Optional referrer key
- * @returns
+ * Builds the instructions to register a top-level `.sns` domain.
+ *
+ * If a supported referrer is provided and its token account does not exist,
+ * the returned instructions include an idempotent associated token account
+ * creation instruction before the registration instruction.
+ *
+ * @param domain Full `.sns` domain name
+ * @param space The number of bytes to allocate for the domain name account
+ * @param buyer Buyer paying for the registration
+ * @param buyerTokenAccount Buyer's token account used to pay for registration
+ * @param mint Token mint used for payment. Defaults to USDC
+ * @param referrerKey Optional public key of the referrer
+ * @returns Transaction instructions.
  */
-const registerDomainNameV2 = async (
-  connection: Connection,
-  name: string,
+const registerDomain = async (
+  domain: string,
   space: number,
   buyer: PublicKey,
   buyerTokenAccount: PublicKey,
   mint = constants.USDC_MINT,
   referrerKey?: PublicKey,
 ) => {
-  // Basic validation
-  if (name.includes(".") || name.trim().toLowerCase() !== name) {
-    throw new InvalidDomainError("The domain name is malformed");
-  }
+  const trimmedDomain = _parseSnsTopLevelDomain(domain);
   const [cs] = PublicKey.findProgramAddressSync(
     [constants.REGISTER_PROGRAM_ID.toBuffer()],
     constants.REGISTER_PROGRAM_ID,
   );
 
-  const hashed = getHashedNameSync(name);
+  const hashed = getHashedNameSync(trimmedDomain);
   const nameAccount = getNameAccountKeySync(
     hashed,
     undefined,
-    constants.ROOT_DOMAIN_ACCOUNT,
+    constants.SNS_ROOT_DOMAIN_ACCOUNT,
   );
 
   const hashedReverseLookup = getHashedNameSync(nameAccount.toBase58());
@@ -771,16 +727,13 @@ const registerDomainNameV2 = async (
 
   if (refIdx !== -1 && !!referrerKey) {
     refTokenAccount = getAssociatedTokenAddressSync(mint, referrerKey, true);
-    const acc = await connection.getAccountInfo(refTokenAccount);
-    if (!acc?.data) {
-      const ix = createAssociatedTokenAccountIdempotentInstruction(
-        buyer,
-        refTokenAccount,
-        referrerKey,
-        mint,
-      );
-      ixs.push(ix);
-    }
+    const ix = createAssociatedTokenAccountIdempotentInstruction(
+      buyer,
+      refTokenAccount,
+      referrerKey,
+      mint,
+    );
+    ixs.push(ix);
   }
 
   const vault = getAssociatedTokenAddressSync(
@@ -798,14 +751,14 @@ const registerDomainNameV2 = async (
 
   const [pythFeedAccount] = getPythFeedAccountKey(0, pythFeed);
 
-  const ix = new createSplitV2Instruction({
-    name,
+  const ix = new CreateSplitV2Instruction({
+    name: trimmedDomain,
     space,
     referrerIdxOpt: refIdx != -1 ? refIdx : null,
   }).getInstruction(
     constants.REGISTER_PROGRAM_ID,
     constants.NAME_PROGRAM_ID,
-    constants.ROOT_DOMAIN_ACCOUNT,
+    constants.SNS_ROOT_DOMAIN_ACCOUNT,
     nameAccount,
     reverseLookupAccount,
     SystemProgram.programId,
@@ -827,11 +780,12 @@ const registerDomainNameV2 = async (
 };
 
 /**
- * This function can be used to register a domain name as favorite
- * @param nameAccount The name account being registered as favorite
- * @param owner The owner of the name account
- * @param programId The name offer program ID
- * @returns
+ * Builds an instruction to set a domain as the owner's primary domain.
+ *
+ * @param connection Solana RPC connection
+ * @param nameAccount Name account to set as primary
+ * @param owner Owner of the name account
+ * @returns Transaction instruction.
  */
 const setPrimaryDomain = async (
   connection: Connection,
@@ -843,18 +797,18 @@ const setPrimaryDomain = async (
     connection,
     nameAccount,
   );
-  if (!registry.parentName.equals(constants.ROOT_DOMAIN_ACCOUNT)) {
+  if (!registry.parentName.equals(constants.SNS_ROOT_DOMAIN_ACCOUNT)) {
     parent = registry.parentName;
   }
 
-  const [favKey] = await FavouriteDomain.getKey(
+  const [primaryKey] = await PrimaryDomain.getKey(
     constants.NAME_OFFERS_ID,
     owner,
   );
-  const ix = new registerFavoriteInstruction().getInstruction(
+  const ix = new SetPrimaryInstruction().getInstruction(
     constants.NAME_OFFERS_ID,
     nameAccount,
-    favKey,
+    primaryKey,
     owner,
     SystemProgram.programId,
     parent,
@@ -864,66 +818,70 @@ const setPrimaryDomain = async (
 };
 
 /**
- * This function can be used to retrieve the favorite domain of a user
- * @param connection The Solana RPC connection object
- * @param owner The owner you want to retrieve the favorite domain for
- * @returns
+ * Retrieves the primary domain set for a wallet.
+ *
+ * @param connection Solana RPC connection
+ * @param owner The public key of the wallet owner
+ * @returns The primary domain account, reverse domain name, and stale status.
  */
 const getPrimaryDomain = async (connection: Connection, owner: PublicKey) => {
-  const [favKey] = FavouriteDomain.getKeySync(
+  const [primaryKey] = PrimaryDomain.getKeySync(
     constants.NAME_OFFERS_ID,
     new PublicKey(owner),
   );
-  const favorite = await FavouriteDomain.retrieve(connection, favKey);
+  const primary = await PrimaryDomain.retrieve(connection, primaryKey);
   const { registry, nftOwner } = await NameRegistryState.retrieve(
     connection,
-    favorite.nameAccount,
+    primary.nameAccount,
   );
   const domainOwner = nftOwner || registry.owner;
 
   let reverse = await reverseLookup(
     connection,
-    favorite.nameAccount,
-    registry.parentName.equals(constants.ROOT_DOMAIN_ACCOUNT)
+    primary.nameAccount,
+    registry.parentName.equals(constants.SNS_ROOT_DOMAIN_ACCOUNT)
       ? undefined
       : registry.parentName,
   );
 
-  if (!registry.parentName.equals(constants.ROOT_DOMAIN_ACCOUNT)) {
+  if (!registry.parentName.equals(constants.SNS_ROOT_DOMAIN_ACCOUNT)) {
     const parentReverse = await reverseLookup(connection, registry.parentName);
     reverse += `.${parentReverse}`;
   }
 
   return {
-    domain: favorite.nameAccount,
+    domain: primary.nameAccount,
     reverse,
     stale: !owner.equals(domainOwner),
   };
 };
 
 /**
- * This function can be used be create a record V2, it handles the serialization of the record data following SNS-IP 1 guidelines
- * @param domain The .sol domain name
- * @param record The record enum object
- * @param recordV2 The `RecordV2` object that will be serialized into the record via the update instruction
- * @param owner The owner of the domain
- * @param payer The fee payer of the transaction
- * @returns
+ * Builds an instruction to create a record for a `.sns` domain or subdomain.
+ *
+ * @param domain Full `.sns` domain or subdomain name
+ * @param record Record type
+ * @param content Record content
+ * @param owner Current owner of the domain
+ * @param payer Fee payer for the instruction
+ * @returns Transaction instruction.
  */
-const createRecordV2Instruction = (
+const createRecord = (
   domain: string,
   record: Record,
   content: string,
   owner: PublicKey,
   payer: PublicKey,
 ) => {
-  let { pubkey, parent, isSub } = getDomainKeySync(
-    `${record}.${domain}`,
+  const trimmedDomain = _parseSnsDomain(domain);
+
+  let { pubkey, parent, isSub } = getSnsDomainKeySync(
+    `${record}.${trimmedDomain}`,
     RecordVersion.V2,
   );
 
   if (isSub) {
-    parent = getDomainKeySync(domain).pubkey;
+    parent = getSnsDomainKeySync(trimmedDomain).pubkey;
   }
 
   if (!parent) {
@@ -932,7 +890,7 @@ const createRecordV2Instruction = (
 
   const ix = new allocateAndPostRecordInstruction({
     record: `\x02`.concat(record as string),
-    content: Array.from(serializeRecordV2Content(content, record)),
+    content: Array.from(serializeRecordContent(content, record)),
   }).getInstruction(
     constants.SNS_RECORDS_ID,
     SystemProgram.programId,
@@ -948,29 +906,31 @@ const createRecordV2Instruction = (
 };
 
 /**
- * This function updates the content of a record V2. The data serialization follows the SNS-IP 1 guidelines
- * @param connection The Solana RPC connection object
- * @param domain The .sol domain name
- * @param record The record enum object
- * @param recordV2 The `RecordV2` object to serialize into the record
- * @param owner The owner of the record/domain
- * @param payer The fee payer of the transaction
- * @returns The update record instructions
+ * Builds an instruction to update a record for a `.sns` domain or subdomain.
+ *
+ * @param domain Full `.sns` domain or subdomain name
+ * @param record Record type
+ * @param content Record content
+ * @param owner Current owner of the domain
+ * @param payer Fee payer for the instruction
+ * @returns Transaction instruction.
  */
-const updateRecordV2Instruction = (
+const updateRecord = (
   domain: string,
   record: Record,
   content: string,
   owner: PublicKey,
   payer: PublicKey,
 ) => {
-  let { pubkey, parent, isSub } = getDomainKeySync(
-    `${record}.${domain}`,
+  const trimmedDomain = _parseSnsDomain(domain);
+
+  let { pubkey, parent, isSub } = getSnsDomainKeySync(
+    `${record}.${trimmedDomain}`,
     RecordVersion.V2,
   );
 
   if (isSub) {
-    parent = getDomainKeySync(domain).pubkey;
+    parent = getSnsDomainKeySync(trimmedDomain).pubkey;
   }
 
   if (!parent) {
@@ -979,7 +939,7 @@ const updateRecordV2Instruction = (
 
   const ix = new editRecordInstruction({
     record: `\x02`.concat(record as string),
-    content: Array.from(serializeRecordV2Content(content, record)),
+    content: Array.from(serializeRecordContent(content, record)),
   }).getInstruction(
     constants.SNS_RECORDS_ID,
     SystemProgram.programId,
@@ -995,26 +955,28 @@ const updateRecordV2Instruction = (
 };
 
 /**
- * This function deletes a record v2 and returns the rent to the fee payer
- * @param domain The .sol domain name
- * @param record  The record type enum
- * @param owner The owner of the record to delete
- * @param payer The fee payer of the transaction
- * @returns The delete transaction instruction
+ * Builds an instruction to delete a record for a `.sns` domain or subdomain.
+ *
+ * @param domain Full `.sns` domain or subdomain name
+ * @param record Record type
+ * @param owner Current owner of the domain
+ * @param payer Fee payer for the instruction
+ * @returns Transaction instruction.
  */
-const deleteRecordV2 = (
+const deleteRecord = (
   domain: string,
   record: Record,
   owner: PublicKey,
   payer: PublicKey,
 ) => {
-  let { pubkey, parent, isSub } = getDomainKeySync(
-    `${record}.${domain}`,
+  const trimmedDomain = _parseSnsDomain(domain);
+  let { pubkey, parent, isSub } = getSnsDomainKeySync(
+    `${record}.${trimmedDomain}`,
     RecordVersion.V2,
   );
 
   if (isSub) {
-    parent = getDomainKeySync(domain).pubkey;
+    parent = getSnsDomainKeySync(trimmedDomain).pubkey;
   }
 
   if (!parent) {
@@ -1036,16 +998,23 @@ const deleteRecordV2 = (
 };
 
 /**
- * This function validates record v2 content
- * @param staleness Boolean indicating if a record is stale or not
- * @param domain  The .sol domain name
- * @param record The record type enum
- * @param owner The owner of the record/domain
- * @param payer The fee payer of the transaction
- * @param verifier The Public Key of verifier used to validate record content
- * @returns The validate record v2 content transaction instruction
+ * Builds the SNS records program's Solana-signature validation instruction.
+ *
+ * The `staleness` flag selects the low-level program mode: `true` writes or
+ * refreshes staleness verifier metadata, while `false` validates Right of
+ * Association using the provided Solana verifier.
+ *
+ * @param staleness Whether to build the staleness-verifier instruction mode
+ * @param domain Full `.sns` domain or subdomain name
+ * @param record Record type
+ * @param owner Current owner of the domain
+ * @param payer Fee payer for the instruction
+ * @param verifier Verifier account used by the record validation instruction
+ * @returns Transaction instruction.
+ * @throws {UnsupportedTldError} When `domain` is not a `.sns` domain
+ * @throws {InvalidParentError} When the owning domain account cannot be resolved
  */
-const validateRecordV2Content = (
+const _buildValidateSolanaSignatureInstruction = (
   staleness: boolean,
   domain: string,
   record: Record,
@@ -1053,18 +1022,9 @@ const validateRecordV2Content = (
   payer: PublicKey,
   verifier: PublicKey,
 ) => {
-  let { pubkey, parent, isSub } = getDomainKeySync(
-    `${record}.${domain}`,
-    RecordVersion.V2,
-  );
+  const trimmedDomain = _parseSnsDomain(domain);
 
-  if (isSub) {
-    parent = getDomainKeySync(domain).pubkey;
-  }
-
-  if (!parent) {
-    throw new InvalidParentError("Parent could not be found");
-  }
+  const { pubkey, parent } = _getRecordAndParentKey(trimmedDomain, record);
 
   const ix = new validateSolanaSignatureInstruction({
     staleness,
@@ -1084,36 +1044,80 @@ const validateRecordV2Content = (
 };
 
 /**
- * This function writes a Right of Association on a record v2
- * @param domain  The .sol domain name
- * @param record The record type enum
- * @param owner The owner of the record/domain
- * @param payer The fee payer of the transaction
- * @param roaId The authority written to verify the ROA
- * @returns The write ROA record v2 transaction instruction
+ * Builds an instruction to write or refresh staleness verifier metadata.
+ *
+ * @param domain Full `.sns` domain or subdomain name
+ * @param record Record type
+ * @param owner Current owner of the domain
+ * @param payer Fee payer for the instruction
+ * @param verifier Verifier account used by the record validation instruction
+ * @returns Transaction instruction.
  */
-const writRoaRecordV2 = (
+const setRecordStalenessVerifier = (
   domain: string,
   record: Record,
   owner: PublicKey,
   payer: PublicKey,
-  roaId: PublicKey,
-) => {
-  let { pubkey, parent, isSub } = getDomainKeySync(
-    `${record}.${domain}`,
-    RecordVersion.V2,
+  verifier: PublicKey,
+) =>
+  _buildValidateSolanaSignatureInstruction(
+    true,
+    domain,
+    record,
+    owner,
+    payer,
+    verifier,
   );
 
-  if (isSub) {
-    parent = getDomainKeySync(domain).pubkey;
-  }
+/**
+ * Builds an instruction to validate a record's Right of Association with a Solana verifier.
+ *
+ * @param domain Full `.sns` domain or subdomain name
+ * @param record Record type
+ * @param owner Current owner of the domain
+ * @param payer Fee payer for the instruction
+ * @param verifier Verifier account used by the record validation instruction
+ * @returns Transaction instruction.
+ */
+const validateRecordRoa = (
+  domain: string,
+  record: Record,
+  owner: PublicKey,
+  payer: PublicKey,
+  verifier: PublicKey,
+) =>
+  _buildValidateSolanaSignatureInstruction(
+    false,
+    domain,
+    record,
+    owner,
+    payer,
+    verifier,
+  );
 
-  if (!parent) {
-    throw new InvalidParentError("Parent could not be found");
-  }
+/**
+ * Builds an instruction to store the expected Right of Association verifier.
+ *
+ * @param domain Full `.sns` domain or subdomain name
+ * @param record Record type
+ * @param owner Current owner of the domain
+ * @param payer Fee payer for the instruction
+ * @param verifier Verifier account used by the record validation instruction
+ * @returns Transaction instruction.
+ */
+const setRecordRoaVerifier = (
+  domain: string,
+  record: Record,
+  owner: PublicKey,
+  payer: PublicKey,
+  verifier: PublicKey,
+) => {
+  const trimmedDomain = _parseSnsDomain(domain);
+
+  const { pubkey, parent } = _getRecordAndParentKey(trimmedDomain, record);
 
   const ix = new writeRoaInstruction({
-    roaId: Array.from(roaId.toBuffer()),
+    roaId: Array.from(verifier.toBuffer()),
   }).getInstruction(
     constants.SNS_RECORDS_ID,
     SystemProgram.programId,
@@ -1133,27 +1137,27 @@ export const devnet = {
     getNameAccountKeySync,
     reverseLookup,
     _deriveSync,
-    getDomainKeySync,
+    getSnsDomainKeySync,
     getReverseKeySync,
     getPrimaryDomain,
   },
   constants,
   bindings: {
     createNameRegistry,
-    updateNameRegistryData,
-    transferNameOwnership,
+    updateNameRegistry,
+    transferDomain,
     deleteNameRegistry,
-    registerDomainName,
-    createReverseName,
+    createReverse,
     createSubdomain,
     burnDomain,
     transferSubdomain,
-    registerDomainNameV2,
+    registerDomain,
     setPrimaryDomain,
-    createRecordV2Instruction,
-    updateRecordV2Instruction,
-    deleteRecordV2,
-    validateRecordV2Content,
-    writRoaRecordV2,
+    createRecord,
+    updateRecord,
+    deleteRecord,
+    setRecordStalenessVerifier,
+    setRecordRoaVerifier,
+    validateRecordRoa,
   },
 };

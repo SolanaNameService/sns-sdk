@@ -1,0 +1,33 @@
+---
+displayed_sidebar: docsSidebar
+title: RecordV2Fields::parse_content
+description: Parse decoded V2 content into a verification-ready record.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Record V2 codecs and verification](../record-v2.mdx) / `RecordV2Fields::parse_content`
+
+# Method: `RecordV2Fields::parse_content()`
+
+```rust
+pub fn parse_content(self, record: Record) -> Result<ParsedRecordV2<'a>, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/record/record_v2.rs" line={107} label="record_v2.rs:107" />
+
+Decodes the borrowed content bytes according to `record` and returns a `ParsedRecordV2` retaining the header and proof fields.
+
+## Parameters
+
+`record`: record type used to decode the content bytes.
+
+## Returns
+
+`ParsedRecordV2`, or the relevant content decoding `SnsError`.
+
+## Example
+
+```rust
+use sns_sdk::record::{record_v2::decode_record_v2_fields, Record};
+
+let parsed = decode_record_v2_fields(&account.data)?.parse_content(Record::Url)?;
+```

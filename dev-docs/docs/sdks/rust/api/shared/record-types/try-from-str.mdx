@@ -1,0 +1,32 @@
+---
+displayed_sidebar: docsSidebar
+title: Record::try_from_str
+description: Parse an exact SNS on-chain record label.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Record types and keys](../record-types.mdx) / `Record::try_from_str`
+
+# Method: `Record::try_from_str()`
+
+```rust
+pub fn try_from_str(input: &str) -> Result<Record, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/record/mod.rs" line={84} label="record/mod.rs:84" />
+
+Parses one of the case-sensitive on-chain record labels.
+
+## Parameters
+
+`input`: exact record label, such as `url` or `SOL`.
+
+## Returns
+
+A `Record`, or `SnsError::UnrecognizedRecord`.
+
+## Example
+
+```rust
+use sns_sdk::record::Record;
+let record = Record::try_from_str("url")?;
+```

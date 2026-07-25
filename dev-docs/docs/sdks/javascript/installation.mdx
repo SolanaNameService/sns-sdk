@@ -1,0 +1,50 @@
+---
+title: JavaScript SDK installation
+description: Install JavaScript SDK v4 and configure its web3.js peer dependency and RPC connection.
+---
+
+Install JavaScript SDK v4 in an application that uses `@solana/web3.js` 1.x.
+
+## Install the packages
+
+Install the SDK and its web3.js peer dependency:
+
+```bash
+npm install @bonfida/spl-name-service@^4 @solana/web3.js@^1.98.2
+```
+
+## Import the SDK
+
+The package root and category subpaths are supported. Use either style consistently with the application:
+
+```ts title="Package root"
+import { getPrimaryDomain, resolve } from "@bonfida/spl-name-service";
+```
+
+```ts title="Category subpaths"
+import { getPrimaryDomain } from "@bonfida/spl-name-service/address";
+import { resolve } from "@bonfida/spl-name-service/domain";
+```
+
+CommonJS applications can load the same exports with `require`:
+
+```js
+const { resolve } = require("@bonfida/spl-name-service");
+```
+
+## RPC Configuration
+
+Set an application-owned `RPC_URL` environment variable, then use it to create the web3.js `Connection` passed to RPC-backed SDK APIs:
+
+```ts
+import { Connection } from "@solana/web3.js";
+
+const rpcUrl = process.env.RPC_URL;
+const connection = new Connection(rpcUrl!);
+```
+
+Browser applications can provide the endpoint through their framework's runtime configuration instead of `process.env`.
+
+## Next
+
+Continue to the [JavaScript SDK Quickstart](/docs/sdks/javascript/quickstart) to resolve a domain and query domain data.

@@ -1,0 +1,93 @@
+---
+title: "GET /records-v2/:domain"
+description: Retrieve and verify multiple SNS V2 records for one domain.
+---
+
+Return the existing records from a requested batch with decoded content and verification state.
+
+## Request
+
+```http
+GET /records-v2/:domain?records=<RECORDS>
+```
+
+## Path parameters
+
+### `domain`
+
+Required. A TLD-less top-level domain or one-level subdomain. The route trims whitespace, converts the value to lowercase, and reads records for the corresponding `.sns` domain.
+
+## Query parameters
+
+### `records`
+
+Required. A comma-separated list of 1 to 100 exact supported values from [`GET /types/record`](/docs/sdk-proxy/endpoints/records/types-record). Each value is trimmed before validation.
+
+### `rpc`
+
+Optional. A non-empty Solana RPC URL that overrides the proxy Worker's `RPC_URL` binding for this request.
+
+## Response
+
+A successful request returns `200 OK`:
+
+```ts
+type RecordsV2Response = {
+  s: "ok";
+  result: Array<{
+    type: string;
+    deserialized?: string;
+    stale: boolean;
+    roa?: boolean;
+    record: {
+      header: {
+        stalenessValidation: number;
+        rightOfAssociationValidation: number;
+        contentLength: number;
+      };
+      data: string;
+    };
+  }>;
+};
+```
+
+Existing records follow request order. Missing records are omitted rather than represented by `null`, so the result can be shorter than the input list. Each object uses the same verification and encoding semantics as `GET /record-v2/:domain/:record`.
+
+## Example
+
+```bash
+curl --get "https://sdk-proxy.sns.id/records-v2/bonfida" \
+  --data-urlencode "records=url,SOL"
+```
+
+```json
+{
+  "s": "ok",
+  "result": [
+    {
+      "type": "url",
+      "deserialized": "https://example.com",
+      "stale": false,
+      "roa": true,
+      "record": {
+        "header": {
+          "stalenessValidation": 1,
+          "rightOfAssociationValidation": 1,
+          "contentLength": 19
+        },
+        "data": "<BASE64_RECORD_DATA>"
+      }
+    }
+  ]
+}
+```
+
+## Errors
+
+| Status | `result`              | When                                                         |
+| ------ | --------------------- | ------------------------------------------------------------ |
+| `400`  | `Invalid input`       | The domain, list size, or any exact record value is invalid. |
+| `404`  | `Domain not found`    | The requested domain registry is absent.                     |
+| `422`  | `Record is malformed` | Record data or validation metadata is malformed.             |
+| `502`  | `RPC unavailable`     | The selected RPC returns a JSON-RPC error.                   |
+| `500`  | `Internal error`      | No RPC is configured, or another failure occurs.             |

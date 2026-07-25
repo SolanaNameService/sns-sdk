@@ -7,11 +7,16 @@ import { getDomainMint } from "./getDomainMint";
 import { TOKEN_PROGRAM_ID, getMint } from "@solana/spl-token";
 
 /**
- * This function can be used to retrieve the owner of a tokenized domain name
+ * Retrieves the owner of a tokenized domain name.
  *
- * @param connection The solana connection object to the RPC node
- * @param nameAccount The key of the domain name
- * @returns
+ * @param connection Solana RPC connection
+ * @param nameAccount Domain name account public key
+ * @returns Tokenized domain owner, or undefined when none exists.
+ *
+ * @example
+ * ```ts
+ * const owner = await retrieveNftOwner(connection, nameAccount);
+ * ```
  */
 export const retrieveNftOwner = async (
   connection: Connection,
@@ -49,7 +54,7 @@ export const retrieveNftOwner = async (
       return undefined;
     }
 
-    return new PublicKey(result[0].account.data.slice(32, 64));
+    return new PublicKey(result[0].account.data.subarray(32, 64));
   } catch {
     return undefined;
   }

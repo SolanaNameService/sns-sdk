@@ -1,3 +1,7 @@
+/**
+ *  High-level builders for SNS transaction instructions.
+ * @module Bindings
+ */
 export * from "./burnDomain";
 export * from "./createNameRegistry";
 export * from "./createRecord";
@@ -6,12 +10,14 @@ export * from "./createSubdomain";
 export * from "./deleteNameRegistry";
 export * from "./deleteRecord";
 export * from "./registerDomain";
-export * from "./registerWithNft";
+export * from "./registerDomainWithNft";
 export * from "./setPrimaryDomain";
+export * from "./setRecordRoaVerifier";
+export * from "./setRecordStalenessVerifier";
 export * from "./transferDomain";
 export * from "./transferSubdomain";
 export * from "./updateNameRegistry";
 export * from "./updateRecord";
-export * from "./validateRoa";
-export * from "./validateRoaEthereum";
-export * from "./writeRoa";
+export * from "./validateRecordRoa";
+export * from "./validateRecordRoaEthereum";
+export type { RecordVerificationParams } from "./recordValidation";

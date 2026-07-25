@@ -1,113 +1,118 @@
 {
   "name": "@solana-name-service/sns-sdk-kit",
-  "version": "0.10.0",
+  "version": "1.0.0",
   "license": "MIT",
   "files": [
     "dist"
   ],
+  "sideEffects": false,
   "type": "module",
+  "engines": {
+    "node": ">=24.0.0"
+  },
   "main": "./dist/cjs/index.cjs",
   "module": "./dist/esm/index.mjs",
   "types": "./dist/types/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/esm/index.mjs",
-      "require": "./dist/cjs/index.cjs",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/cjs/index.cjs"
     },
     "./address": {
+      "types": "./dist/types/address/index.d.ts",
       "import": "./dist/esm/address/index.mjs",
-      "require": "./dist/cjs/address/index.cjs",
-      "types": "./dist/types/address/index.d.ts"
+      "require": "./dist/cjs/address/index.cjs"
     },
     "./bindings": {
+      "types": "./dist/types/bindings/index.d.ts",
       "import": "./dist/esm/bindings/index.mjs",
-      "require": "./dist/cjs/bindings/index.cjs",
-      "types": "./dist/types/bindings/index.d.ts"
+      "require": "./dist/cjs/bindings/index.cjs"
     },
     "./codecs": {
-      "import": "./dist/esm/codecs/index.mjs",
-      "require": "./dist/cjs/codecs/index.cjs",
-      "types": "./dist/types/codecs/index.d.ts"
+      "types": "./dist/types/codecs.d.ts",
+      "import": "./dist/esm/codecs.mjs",
+      "require": "./dist/cjs/codecs.cjs"
     },
     "./constants": {
+      "types": "./dist/types/constants/index.d.ts",
       "import": "./dist/esm/constants/index.mjs",
-      "require": "./dist/cjs/constants/index.cjs",
-      "types": "./dist/types/constants/index.d.ts"
+      "require": "./dist/cjs/constants/index.cjs"
     },
     "./domain": {
+      "types": "./dist/types/domain/index.d.ts",
       "import": "./dist/esm/domain/index.mjs",
-      "require": "./dist/cjs/domain/index.cjs",
-      "types": "./dist/types/domain/index.d.ts"
+      "require": "./dist/cjs/domain/index.cjs"
     },
     "./errors": {
-      "import": "./dist/esm/errors/index.mjs",
-      "require": "./dist/cjs/errors/index.cjs",
-      "types": "./dist/types/errors/index.d.ts"
+      "types": "./dist/types/errors.d.ts",
+      "import": "./dist/esm/errors.mjs",
+      "require": "./dist/cjs/errors.cjs"
     },
     "./instructions": {
+      "types": "./dist/types/instructions/index.d.ts",
       "import": "./dist/esm/instructions/index.mjs",
-      "require": "./dist/cjs/instructions/index.cjs",
-      "types": "./dist/types/instructions/index.d.ts"
+      "require": "./dist/cjs/instructions/index.cjs"
     },
     "./nft": {
+      "types": "./dist/types/nft/index.d.ts",
       "import": "./dist/esm/nft/index.mjs",
-      "require": "./dist/cjs/nft/index.cjs",
-      "types": "./dist/types/nft/index.d.ts"
+      "require": "./dist/cjs/nft/index.cjs"
     },
     "./record": {
+      "types": "./dist/types/record/index.d.ts",
       "import": "./dist/esm/record/index.mjs",
-      "require": "./dist/cjs/record/index.cjs",
-      "types": "./dist/types/record/index.d.ts"
+      "require": "./dist/cjs/record/index.cjs"
     },
     "./states": {
+      "types": "./dist/types/states/index.d.ts",
       "import": "./dist/esm/states/index.mjs",
-      "require": "./dist/cjs/states/index.cjs",
-      "types": "./dist/types/states/index.d.ts"
+      "require": "./dist/cjs/states/index.cjs"
     },
     "./types": {
+      "types": "./dist/types/types/index.d.ts",
       "import": "./dist/esm/types/index.mjs",
-      "require": "./dist/cjs/types/index.cjs",
-      "types": "./dist/types/types/index.d.ts"
+      "require": "./dist/cjs/types/index.cjs"
     },
     "./utils": {
+      "types": "./dist/types/utils/index.d.ts",
       "import": "./dist/esm/utils/index.mjs",
-      "require": "./dist/cjs/utils/index.cjs",
-      "types": "./dist/types/utils/index.d.ts"
+      "require": "./dist/cjs/utils/index.cjs"
     }
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/SolanaNameService/sns-sdk.git"
   },
-  "homepage": "https://sns.guide",
+  "homepage": "https://dev.sns.id",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "rollup -c",
-    "prepack": "npm run build",
-    "prepublish": "npm run build",
+    "prepack": "npm run check:package",
+    "prepublishOnly": "npm run test && npm run typecheck",
     "lint:fix": "eslint src/**/*.ts --fix",
     "prettier:fix": "prettier --write src/**/*.ts",
-    "test": "jest ./tests"
+    "test": "jest ./tests",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false",
+    "verify:package": "node scripts/verify-package.mjs && tsc -p tests/package/tsconfig.bundler.json && tsc -p tests/package/tsconfig.nodenext.json",
+    "check:package": "npm run build && npm run verify:package"
   },
   "dependencies": {
     "@scure/base": "^1.2.4",
-    "@solana-program/token": "^0.13.0",
-    "@solana/kit": "^6.9.0",
+    "@solana-program/token": "^0.14.0",
     "borsh": "^2.0.0",
     "ipaddr.js": "^2.2.0",
     "punycode": "^2.3.1"
   },
   "peerDependencies": {
-    "@solana-program/token": "^0.13.0",
     "@solana/kit": "^6.9.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",
-    "@rollup/plugin-babel": "^6.0.4",
-    "@rollup/plugin-commonjs": "^28.0.3",
-    "@rollup/plugin-node-resolve": "^16.0.1",
-    "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^12.1.2",
+    "@solana/kit": "^6.9.0",
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "@tsconfig/recommended": "^1.0.8",
     "@types/jest": "^29.5.14",
@@ -120,6 +125,7 @@
     "prettier": "^3.5.2",
     "rollup": "^4.35.0",
     "rollup-plugin-delete": "^3.0.1",
+    "rollup-plugin-dts": "^6.4.1",
     "rollup-plugin-visualizer": "^5.14.0",
     "ts-jest": "^29.2.6",
     "tslib": "^2.8.1",
@@ -127,6 +133,6 @@
     "typescript-eslint": "^8.26.1"
   },
   "volta": {
-    "node": "20.18.0"
+    "node": "24.18.0"
   }
 }

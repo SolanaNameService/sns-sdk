@@ -1,0 +1,40 @@
+name: Check Rust documentation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "rust-crates/sns-sdk/**"
+      - "rust-crates/Cargo.toml"
+      - "rust-crates/Cargo.lock"
+      - ".github/workflows/check-rust-docs.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "rust-crates/sns-sdk/**"
+      - "rust-crates/Cargo.toml"
+      - "rust-crates/Cargo.lock"
+      - ".github/workflows/check-rust-docs.yml"
+  workflow_dispatch:
+
+jobs:
+  rustdoc:
+    name: Check Rust API docs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Rust build artifacts
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: rust-crates
+
+      - name: Build default non-blocking docs
+        run: cargo doc --manifest-path rust-crates/Cargo.toml -p sns-sdk --no-deps
+
+      - name: Build blocking docs
+        run: cargo doc --manifest-path rust-crates/Cargo.toml -p sns-sdk --no-deps --no-default-features --features blocking,subdomain

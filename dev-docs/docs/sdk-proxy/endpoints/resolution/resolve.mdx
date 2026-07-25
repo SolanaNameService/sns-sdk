@@ -1,0 +1,67 @@
+---
+title: "GET /resolve/:domain"
+description: Resolve a full SNS or legacy .sol domain to its effective target public key.
+---
+
+Resolve a full `.sns` or `.sol` domain to its effective target public key.
+
+## Request
+
+```http
+GET /resolve/:domain
+```
+
+## Path parameters
+
+### `domain`
+
+Required. A full domain ending in `.sns` or `.sol`. The value before the suffix must contain one non-empty label, such as `name.sns`, or two non-empty labels, such as `team.name.sns`.
+
+The route trims surrounding whitespace and converts the value to lowercase. Bare names, unsupported suffixes, empty labels, and deeper subdomains are rejected.
+
+## Query parameters
+
+### `rpc`
+
+Optional. A non-empty Solana RPC URL that overrides the proxy Worker's `RPC_URL` binding for this request.
+
+## Response
+
+A successful request returns `200 OK` with the effective target as a base58 public key:
+
+```ts
+type ResolveResponse = {
+  s: "ok";
+  result: string;
+};
+```
+
+For `.sns`, resolution checks an active tokenized-domain owner, a valid V2 `SOL` record, a valid V1 `SOL` record, and then the registry owner, in that order.
+
+For `.sol`, the SDK uses SNS-backed resolution while the selected RPC reports a finalized slot below <code><CutoffSlot /></code>. At or after that slot, the SDK automatically pauses `.sol` resolution and the route returns `400 Unsupported TLD`.
+
+## Example
+
+```bash
+curl "https://sdk-proxy.sns.id/resolve/bonfida.sns"
+```
+
+```json
+{
+  "s": "ok",
+  "result": "<TARGET_PUBLIC_KEY>"
+}
+```
+
+## Errors
+
+Error responses use `{ "s": "error", "result": string }`.
+
+| Status | `result`              | When                                                                               |
+| ------ | --------------------- | ---------------------------------------------------------------------------------- |
+| `400`  | `Invalid input`       | The value before the suffix has empty labels or more than two labels.              |
+| `400`  | `Unsupported TLD`     | The suffix is missing or unsupported, or SDK-managed `.sol` resolution has paused. |
+| `404`  | `Domain not found`    | The requested domain registry does not exist.                                      |
+| `422`  | `Record is malformed` | A selected resolution record has malformed content or unsupported validation.      |
+| `502`  | `RPC unavailable`     | The selected Solana RPC returns a JSON-RPC error.                                  |
+| `500`  | `Internal error`      | No RPC endpoint is configured, or resolution fails for another unmapped reason.    |

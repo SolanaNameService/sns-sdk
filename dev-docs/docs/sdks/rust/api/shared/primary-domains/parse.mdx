@@ -1,0 +1,32 @@
+---
+displayed_sidebar: docsSidebar
+title: PrimaryDomain::parse
+description: Decode and validate primary-domain account data.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Primary domains](../primary-domains.mdx) / `PrimaryDomain::parse`
+
+# Method: `PrimaryDomain::parse()`
+
+```rust
+pub fn parse(mut buffer: &[u8]) -> Result<PrimaryDomain, std::io::Error>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/primary_domain.rs" line={36} label="primary_domain.rs:36" />
+
+Borsh-decodes primary-domain state and rejects any tag other than `Tag::PrimaryDomain`.
+
+## Parameters
+
+`buffer`: raw primary-domain account bytes.
+
+## Returns
+
+`PrimaryDomain`, including `name_account`. Borsh failures and an invalid tag return `std::io::Error`.
+
+## Example
+
+```rust
+use sns_sdk::primary_domain::PrimaryDomain;
+let state = PrimaryDomain::parse(&account.data)?;
+```

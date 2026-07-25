@@ -1,10 +1,15 @@
 import splitGraphemes from "graphemesplit";
 
 /**
- * This function can be used to retrieve the registration cost in USD of a domain
- * from its name
- * @param name - Domain name
- * @returns price
+ * Retrieves the domain registration price in USD from a domain name.
+ *
+ * @param name Domain name without suffix
+ * @returns Registration price in USD.
+ *
+ * @example
+ * ```ts
+ * const price = getDomainPriceFromName("example");
+ * ```
  */
 export const getDomainPriceFromName = (name: string) => {
   const split = splitGraphemes(name);

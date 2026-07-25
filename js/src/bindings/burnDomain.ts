@@ -1,19 +1,36 @@
 import { PublicKey, SystemProgram } from "@solana/web3.js";
-import { burnInstruction } from "../instructions/burnInstruction";
+
 import {
   NAME_PROGRAM_ID,
   REGISTER_PROGRAM_ID,
   REVERSE_LOOKUP_CLASS,
 } from "../constants";
-import { getDomainKeySync } from "../utils/getDomainKeySync";
+import { BurnInstruction } from "../instructions/burnInstruction";
+import { getSnsDomainKeySync } from "../utils/getSnsDomainKeySync";
 import { getReverseKeySync } from "../utils/getReverseKeySync";
+import { _parseSnsTopLevelDomain } from "../utils/parseSnsDomain";
 
+/**
+ * Builds an instruction to burn a top-level `.sns` domain and its reverse lookup account.
+ *
+ * @param domain Full `.sns` domain name
+ * @param owner Current owner of the domain
+ * @param target Account that receives reclaimed lamports
+ * @returns Transaction instruction.
+ *
+ * @example
+ * ```ts
+ * const instruction = burnDomain("example.sns", owner, refundTarget);
+ * ```
+ */
 export const burnDomain = (
   domain: string,
   owner: PublicKey,
   target: PublicKey,
 ) => {
-  const { pubkey } = getDomainKeySync(domain);
+  const trimmedDomain = _parseSnsTopLevelDomain(domain);
+
+  const { pubkey } = getSnsDomainKeySync(trimmedDomain);
   const [state] = PublicKey.findProgramAddressSync(
     [pubkey.toBuffer()],
     REGISTER_PROGRAM_ID,
@@ -23,12 +40,12 @@ export const burnDomain = (
     REGISTER_PROGRAM_ID,
   );
 
-  const ix = new burnInstruction().getInstruction(
+  const ix = new BurnInstruction().getInstruction(
     REGISTER_PROGRAM_ID,
     NAME_PROGRAM_ID,
     SystemProgram.programId,
     pubkey,
-    getReverseKeySync(domain),
+    getReverseKeySync(trimmedDomain),
     resellingState,
     state,
     REVERSE_LOOKUP_CLASS,

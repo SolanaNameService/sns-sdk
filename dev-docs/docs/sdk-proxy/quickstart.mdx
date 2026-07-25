@@ -1,0 +1,68 @@
+---
+title: SDK Proxy quickstart
+description: Resolve an SNS domain and build registration instructions over HTTP.
+---
+
+Use the experimental SDK Proxy when an integration cannot run a native SNS SDK.
+
+The proxy base URL is `https://sdk-proxy.sns.id/`.
+
+RPC-backed routes use the proxy Worker's `RPC_URL` binding. A non-empty `rpc` query parameter overrides that endpoint for one request. All application responses use an `{ "s": "ok" | "error", "result": ... }` envelope.
+
+## Read a domain
+
+Pass a full `.sns` or `.sol` domain or subdomain to `GET /resolve/:domain`:
+
+```bash
+curl "https://sdk-proxy.sns.id/resolve/bonfida.sns"
+```
+
+A successful response contains the effective target's base58 public key:
+
+```json
+{
+  "s": "ok",
+  "result": "<OWNER_PUBLIC_KEY>"
+}
+```
+
+## Build registration instructions
+
+Pass the buyer public key, a TLD-less unregistered domain name, and an account size from `0` through `10000` bytes to `GET /register`:
+
+```bash
+curl --get "https://sdk-proxy.sns.id/register" \
+  --data-urlencode "buyer=<BUYER_PUBLIC_KEY>" \
+  --data-urlencode "domain=<DOMAIN_NAME>" \
+  --data-urlencode "space=1000"
+```
+
+By default, `serialize` is disabled. When `serialize` is omitted or set to `false`, `result` contains one or more instruction objects with base58 public keys and base64 instruction data:
+
+```json
+{
+  "s": "ok",
+  "result": [
+    {
+      "programId": "<PROGRAM_ID>",
+      "keys": [
+        {
+          "isSigner": true,
+          "isWritable": true,
+          "pubkey": "<ACCOUNT_PUBLIC_KEY>"
+        }
+      ],
+      "data": "<BASE64_DATA>"
+    }
+  ]
+}
+```
+
+Set `serialize=true` to receive a base64-encoded unsigned legacy transaction instead of instruction objects.
+
+The route derives the buyer's associated token account and uses mainnet USDC when `mint` is omitted. It only builds instructions or an unsigned transaction: the proxy never signs, sends, relays, or confirms a transaction. Inspect every program ID, account meta, and instruction payload before obtaining the required signatures and submitting the transaction.
+
+## Next steps
+
+- Use the [JavaScript SDK installation](/docs/sdks/javascript/installation) when the integration can run a native SDK.
+- Keep private keys and signing outside the proxy. Never send a keypair or secret key in a proxy request.

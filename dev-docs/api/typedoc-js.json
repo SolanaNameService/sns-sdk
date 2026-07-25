@@ -1,0 +1,43 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "name": "JavaScript SDK API Reference",
+  "plugin": ["typedoc-plugin-markdown"],
+  "entryPoints": [
+    "../../js/src/address/index.ts",
+    "../../js/src/bindings/index.ts",
+    "../../js/src/constants.ts",
+    "../../js/src/domain/index.ts",
+    "../../js/src/error.ts",
+    "../../js/src/int.ts",
+    "../../js/src/instructions/index.ts",
+    "../../js/src/nft/index.ts",
+    "../../js/src/record/index.ts",
+    "../../js/src/states/index.ts",
+    "../../js/src/twitter/index.ts",
+    "../../js/src/types/index.ts",
+    "../../js/src/utils/index.ts"
+  ],
+  "tsconfig": "../../js/tsconfig.json",
+  "out": "../docs/sdks/javascript/api",
+  "readme": "none",
+  "entryFileName": "index",
+  "hidePageHeader": true,
+  "indexFormat": "table",
+  "cleanOutputDir": true,
+  "excludeExternals": true,
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "includeVersion": false,
+  "requiredToBeDocumented": [
+    "Class",
+    "Interface",
+    "Enum",
+    "TypeAlias",
+    "Variable"
+  ],
+  "validation": {
+    "invalidLink": true,
+    "notDocumented": true,
+    "notExported": false
+  }
+}

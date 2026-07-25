@@ -1,14 +1,15 @@
 {
   "extends": "@tsconfig/recommended/tsconfig.json",
   "compilerOptions": {
-    "target": "ESNext",
+    "target": "ES2024",
     "module": "ESNext",
     "moduleResolution": "bundler",
     "declaration": true,
     "emitDeclarationOnly": true,
+    "noEmitOnError": true,
     "rootDir": "src",
     "outDir": "dist",
-    "declarationDir": "dist/types",
+    "declarationDir": "dist/types-internal",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,

@@ -1,0 +1,36 @@
+---
+displayed_sidebar: docsSidebar
+title: get_srs_domain_key
+description: Derive the canonical SRS record account for a TLD-trimmed .sol name.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Address derivation](../derivation.mdx) / `get_srs_domain_key`
+
+# Function: `get_srs_domain_key()`
+
+```rust
+pub fn get_srs_domain_key(domain: &str) -> SrsDomainKey
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/derivation.rs" line={123} label="derivation.rs:123" />
+
+Derives the canonical SRS record PDA from the `SRS` hash prefix and a TLD-trimmed `.sol` name. It performs no validation or RPC request.
+
+## Parameters
+
+| Parameter | Type   | Description                                  |
+| --------- | ------ | -------------------------------------------- |
+| `domain`  | `&str` | TLD-trimmed `.sol` label, such as `example`. |
+
+## Returns
+
+`SrsDomainKey`, containing the derived `key` and 32-byte `hashed` name.
+
+## Example
+
+```rust
+use sns_sdk::derivation::get_srs_domain_key;
+
+let domain = get_srs_domain_key("example");
+println!("{}", domain.key);
+```

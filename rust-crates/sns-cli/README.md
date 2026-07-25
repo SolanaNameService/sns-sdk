@@ -1,0 +1,312 @@
+<p align="center">
+  <img width="200" src="https://www.sns.id/assets/logo/brand.svg" alt="SNS logo" />
+</p>
+
+# SNS CLI
+
+Command-line utility for reading and administering Solana Name Service (SNS) `.sns` domains.
+
+[![Crates.io](https://img.shields.io/crates/v/sns-cli.svg)](https://crates.io/crates/sns-cli)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](../../LICENSE)
+
+The `sns-cli` package installs the `sns` executable. It uses mainnet SNS program constants and defaults to the public mainnet RPC endpoint, so it is intended for mainnet data and transactions.
+
+## Installation
+
+Install the published crate:
+
+```bash
+cargo install sns-cli
+```
+
+Build this checkout from the repository root:
+
+```bash
+cargo build --manifest-path rust-crates/Cargo.toml -p sns-cli --release
+```
+
+Install this checkout:
+
+```bash
+cargo install --path rust-crates/sns-cli
+```
+
+Inspect the available commands and a command's options:
+
+```bash
+sns --help
+sns resolve --help
+```
+
+## Runtime Model
+
+The CLI needs network access to a Solana JSON-RPC endpoint. It selects the endpoint in this order: the global `-u <URL>` or `--url <URL>` option, the `RPC_URL` environment variable, then the public mainnet endpoint. The CLI does not read Solana CLI configuration. Global options may appear before a command or after a nested subcommand.
+
+Changing `--url` changes only the RPC transport. It does not change the mainnet program IDs, payment path, or explorer links compiled into this executable. A local keypair JSON file is required only for commands that sign and submit writes. Public-key inputs are base58-encoded Solana public keys.
+
+## Domain Rules
+
+All domain arguments are canonical, lowercase, suffixed `.sns` names, such as `mydomain.sns` or the one-level subdomain `team.mydomain.sns`. Bare names, `.sol` names, uppercase names, whitespace, empty labels, and names deeper than one subdomain are rejected.
+
+`register` and `primary-domain set` accept top-level names only. Registration further limits the label to lowercase letters, digits, hyphens, and underscores. Other domain commands accept a top-level name or one-level subdomain when their underlying operation supports it. This CLI has no `.sol` compatibility or write path.
+
+## Read-Only Quick Start
+
+### Resolve A Domain
+
+Resolve an owner using the selected RPC endpoint:
+
+```bash
+sns resolve mydomain.sns
+```
+
+### List Domains For An Owner
+
+List directly owned top-level registry domains for a wallet address:
+
+```bash
+sns domains <OWNER_PUBKEY>
+```
+
+## Command Summary
+
+| Command                    | Purpose                                        | Transaction behavior |
+| -------------------------- | ---------------------------------------------- | -------------------- |
+| `resolve`                  | Resolve a domain's effective owner             | Read only            |
+| `register`                 | Register top-level domains                     | Signs and submits    |
+| `primary-domain get`       | Get an owner's primary domain                  | Read only            |
+| `primary-domain set`       | Set an owner's primary domain                  | Signs and submits    |
+| `transfer`                 | Transfer domains to another public key         | Signs and submits    |
+| `burn`                     | Delete domain registry accounts                | Signs and submits    |
+| `lookup`                   | Inspect raw name-registry accounts             | Read only            |
+| `reverse-lookup`           | Find the reverse name for an account key       | Read only            |
+| `domains`                  | List directly owned top-level registry domains | Read only            |
+| `record-v2 get`            | Fetch and validate a V2 record                 | Read only            |
+| `record-v2 set`            | Create or update a V2 record                   | Signs and submits    |
+| `sub-registrar get`        | Print sub-registrar information                | Read only            |
+| `count registered-domains` | Count root SNS registry accounts               | Read only            |
+| `count sub-domains`        | Count subdomains and optionally rank parents   | Read only            |
+
+## Command Reference
+
+Options in brackets are optional. `<DOMAIN>...` and similar ellipses mean one or more positional values. `--url` is global and may appear before a command or after a nested subcommand, for example `sns --url <URL> record-v2 get ...` or `sns record-v2 get --url <URL> ...`.
+
+### `resolve`
+
+**`resolve`** — resolve a domain's effective owner.
+
+```text
+sns [--url <URL>] resolve <DOMAIN>...
+```
+
+Arguments: one or more canonical `.sns` domain names. `--url` selects the RPC endpoint.
+
+Output: a progress display followed by a table with `Domain`, resolved `Owner`, and a mainnet-oriented Solana Explorer address link. A missing domain is shown as `Domain not found`.
+
+```bash
+sns resolve mydomain.sns
+```
+
+### `register`
+
+**`register`** — register top-level domains.
+
+```text
+sns [--url <URL>] register <KEYPAIR_PATH> <SPACE> <DOMAIN>...
+```
+
+Arguments: a signing keypair JSON path, allocation `SPACE` between 1,000 and 10,000 bytes inclusive, and one or more eligible top-level `.sns` domains. `--url` selects the RPC endpoint.
+
+Output: after each submitted registration, a table row containing `Domain`, transaction signature, and a mainnet-oriented Explorer transaction link.
+
+### `primary-domain get`
+
+**`primary-domain get`** — get a wallet's configured primary domain.
+
+```text
+sns [--url <URL>] primary-domain get <OWNER_PUBKEY>
+```
+
+Arguments: the requested owner's base58 public key. Global `--url` selects the RPC endpoint and may also appear after the nested subcommand and its positional argument.
+
+Output: `No primary domain set` with a successful exit status when the wallet has no configured primary domain. Otherwise, a one-row table contains `Requested Owner`, readable `.sns` `Domain`, `Name Account`, and `Stale`.
+
+`Requested Owner` is the input wallet, not a claim about current ownership. `Stale` is `true` when that wallet differs from the effective domain owner: the NFT holder for a tokenized domain, or the raw name-registry owner otherwise. Missing or malformed selected registries and reverse records are errors rather than “not set” results.
+
+### `primary-domain set`
+
+**`primary-domain set`** — set an owner's primary domain.
+
+```text
+sns [--url <URL>] primary-domain set <OWNER_KEYPAIR> <DOMAIN>
+```
+
+Arguments: the owner's signing keypair JSON path and one canonical top-level `.sns` domain. Subdomains are rejected. Global `--url` selects the RPC endpoint and may also appear after the nested subcommand and its positional arguments.
+
+Before submitting, the command requires the selected registry to exist, to be top-level, and to have a raw registry owner equal to the signer. Effective NFT ownership does not authorize this operation. The signer is also the transaction fee payer.
+
+Output after successful preflight and submission:
+
+```text
+Setting primary domain...
+Primary domain set, txid: <SIGNATURE>
+```
+
+### `transfer`
+
+**`transfer`** — transfer domains to another public key.
+
+```text
+sns [--url <URL>] transfer <OWNER_KEYPAIR_PATH> <NEW_OWNER_PUBKEY> <DOMAIN>...
+```
+
+Arguments: the current owner's signing keypair JSON path, the recipient's base58 public key, and one or more canonical `.sns` domains. `--url` selects the RPC endpoint.
+
+Output: a table of `Domain`, submitted transaction signature, and a mainnet-oriented Explorer transaction link.
+
+### `burn`
+
+**`burn`** — delete domain registry accounts.
+
+```text
+sns [--url <URL>] burn <KEYPAIR_PATH> <DOMAIN>...
+```
+
+Arguments: the current owner's signing keypair JSON path and one or more canonical `.sns` domains. `--url` selects the RPC endpoint.
+
+Output: a table of `Domain`, submitted transaction signature, and a mainnet-oriented Explorer transaction link.
+
+### `lookup`
+
+**`lookup`** — inspect raw name-registry accounts.
+
+```text
+sns [--url <URL>] lookup <DOMAIN>...
+```
+
+Arguments: one or more canonical `.sns` domains. `--url` selects the RPC endpoint.
+
+Output: a table containing `Domain`, derived `Domain key`, `Parent`, raw name-registry `Owner`, and UTF-8-decoded account `Data`. A missing registry account is shown with `N/A` owner and data.
+
+### `reverse-lookup`
+
+**`reverse-lookup`** — find the reverse name for an account key.
+
+```text
+sns [--url <URL>] reverse-lookup <PUBLIC_KEY>
+```
+
+Arguments: one base58 public key. `--url` selects the RPC endpoint.
+
+Output: a `Public key` and `Reverse` table when a reverse record exists; otherwise `Domain not found - Are you sure it exists?`.
+
+### `domains`
+
+**`domains`** — list directly owned top-level registry domains.
+
+```text
+sns [--url <URL>] domains <OWNER_PUBKEY>...
+```
+
+Arguments: one or more base58 owner public keys. `--url` selects the RPC endpoint.
+
+Output: a table of reverse-resolved `Domain`, requested `Owner`, and a naming-site link. It reports direct top-level registry ownership, not every tokenized/NFT domain an address may control.
+
+```bash
+sns domains 11111111111111111111111111111111
+```
+
+### `record-v2 get`
+
+**`record-v2 get`** — fetch and validate a V2 record.
+
+```text
+sns [--url <URL>] record-v2 get --domain <DOMAIN> --record <RECORD>
+```
+
+Arguments: global `--url` selects the RPC endpoint; `--domain` is a canonical `.sns` domain and `--record` is a record label.
+
+Output: a table with `Domain`, canonical `Record`, parsed `Content`, `Staleness Verified`, and `RoA Verified`. Missing records and missing domains are errors. `Staleness Verified` is `true` only when the record's staleness validation succeeds against the effective owner and current registry data. `RoA Verified` is `true` or `false` only for records with a right-of-association validation policy; otherwise it is `N/A`.
+
+Accepted canonical record labels are:
+
+```text
+IPFS ARWV SOL ETH BTC LTC DOGE email url discord github reddit twitter telegram
+pic SHDW POINT BSC INJ backpack A AAAA CNAME TXT BASE bio
+```
+
+For convenience, the CLI also recognizes case-insensitive aliases for `EMAIL`, `URL`, `DISCORD`, `GITHUB`, `REDDIT`, `TWITTER`, `TELEGRAM`, `PIC`, `BACKPACK`, `BIO`, and `INJECTIVE` (for `INJ`).
+
+### `record-v2 set`
+
+**`record-v2 set`** — create a missing V2 record or overwrite an existing V2 record.
+
+```text
+sns [--url <URL>] record-v2 set --keypair <KEYPAIR_PATH> --domain <DOMAIN> --record <RECORD> --content <CONTENT> [--force]
+```
+
+Arguments: `--keypair` is the signing keypair and fee/rent payer. It must equal the raw on-chain owner of the domain registry, which can differ from the effective holder of a tokenized/NFT domain. `--domain` is a canonical `.sns` domain; `--record` accepts the same labels and aliases as `record-v2 get`; `--content` is validated according to the selected record type before the keypair is loaded or RPC requests are made. `--force` explicitly permits an update to clear existing or unreadable validation metadata.
+
+Output: after confirmation, a table row with `Domain`, canonical `Record`, `Action` (`Created` or `Updated`), transaction signature, and a mainnet-oriented Explorer link. Success output is written to stdout; validation warnings and errors are written to stderr.
+
+The command checks only for the derived V2 record account. A missing V2 record is created even if a legacy V1 record exists; V1 data is neither read nor migrated. Creating a record or growing an existing account can charge additional rent to the payer. The existence check is advisory: if another writer changes the record before submission, the transaction fails and the CLI does not retry the opposite instruction.
+
+Updating replaces the complete V2 payload. If the existing record contains validation metadata, or if that metadata cannot be decoded, the CLI refuses the update before transaction submission. Rerun with `--force` to acknowledge the loss; the CLI then prints a warning before sending the transaction.
+
+Quote shell-sensitive content. Representative typed inputs include a base58 public key for `SOL`, a `0x` 20-byte hexadecimal address for `ETH`, `BSC`, or `BASE`, IP literals for `A` and `AAAA`, an `inj...` Bech32 address for `INJ`, and quoted text for `TXT`, `CNAME`, `url`, or `bio`. URL and email records are stored as UTF-8 text and are not semantically validated as URLs or email addresses.
+
+### `sub-registrar get`
+
+**`sub-registrar get`** — print sub-registrar information.
+
+```text
+sns [--url <URL>] sub-registrar get <DOMAIN>
+```
+
+Arguments: one canonical `.sns` domain. `--url` selects the RPC endpoint.
+
+Output: the retrieved sub-registrar information in Rust debug formatting. This output is diagnostic rather than a stable machine-readable schema.
+
+### `count registered-domains`
+
+**`count registered-domains`** — count root SNS registry accounts.
+
+```text
+sns [--url <URL>] count registered-domains
+```
+
+Arguments: global `--url` selects the RPC endpoint; the nested command has no arguments.
+
+Output: one decimal number, the count of root SNS registry accounts.
+
+### `count sub-domains`
+
+**`count sub-domains`** — count subdomains and optionally rank parents.
+
+```text
+sns [--url <URL>] count sub-domains [--top-domains <N>]
+```
+
+Arguments: global `--url` selects the RPC endpoint. `--top-domains <N>` optionally requests the top `N` parent account keys ordered by subdomain count.
+
+Output: pretty-printed JSON with `number_of_domains`, `number_of_subdomains`, `number_of_domains_with_subdomains`, and, when requested, `top_domains` as `[parent_account_key, count]` pairs.
+
+## Write Safety
+
+`register`, `transfer`, and `burn` process their domain lists sequentially. They are not atomic: an earlier transaction may succeed before a later item fails. `burn` deletes the name-registry account, is destructive, and has no prompt or dry-run mode. `primary-domain set` and `record-v2 set` each submit one transaction after their preflight checks.
+
+Registration builds the default mainnet USDC payment path. Treat all keypair paths as sensitive credentials.
+
+## Operational Caveats
+
+- `lookup` displays the raw name-registry owner, which can differ from an effective tokenized-domain owner. `domains` is intentionally a direct registry-ownership query and does not enumerate all tokenized ownership.
+
+- Both `count` commands call `getProgramAccounts`; on public RPCs this can be expensive, slow, or rejected. Progress displays, tables, debug output, and Explorer/naming-site links are presentation conveniences, not stable APIs. Explorer transaction and address links are mainnet-oriented even if `--url` points elsewhere.
+
+- Command-handler failures print an `Error:` message to stderr and return a nonzero process exit status. Human-readable tables and debug-formatted errors remain presentation output rather than a stable machine schema.
+
+For SNS integration guidance, see [developer documentation](https://dev.sns.id/), the [repository overview](../../README.md), and the [Rust SDK guide](../sns-sdk/README.md).
+
+## License
+
+This project is available under the [MIT License](../../LICENSE).

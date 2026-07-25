@@ -1,0 +1,16 @@
+---
+displayed_sidebar: docsSidebar
+title: Record V1 codecs
+description: Serialize, deserialize, size, and verify legacy SNS record payloads.
+---
+
+These local codecs and verifier handle legacy SNS Records V1 payloads without RPC. They select fixed-width binary encodings for address records and UTF-8 or punycode encodings for applicable textual records.
+
+## APIs
+
+| API                                                    | Description                                       |
+| ------------------------------------------------------ | ------------------------------------------------- |
+| [`get_record_size`](./record-v1/get-record-size)       | Returns the fixed binary width for a record type. |
+| [`deserialize_record`](./record-v1/deserialize-record) | Decodes and validates a V1 record payload.        |
+| [`serialize_record`](./record-v1/serialize-record)     | Encodes content for a V1 record payload.          |
+| [`check_sol_record`](./record-v1/check-sol-record)     | Verifies a legacy SOL record signature.           |

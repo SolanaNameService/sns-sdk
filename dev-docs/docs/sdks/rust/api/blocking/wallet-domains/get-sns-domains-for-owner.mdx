@@ -1,0 +1,52 @@
+---
+displayed_sidebar: docsSidebar
+title: get_sns_domains_for_owner
+description: List top-level SNS name accounts directly owned by a wallet.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Wallet domains](../wallet-domains.mdx) / `get_sns_domains_for_owner`
+
+# Function: `get_sns_domains_for_owner()`
+
+```rust
+pub fn get_sns_domains_for_owner(
+    rpc_client: &RpcClient,
+    owner: Pubkey,
+) -> Result<Vec<Pubkey>, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/blocking/domain.rs" line={11} label="rust-crates/sns-sdk/src/blocking/domain.rs:11" />
+
+Queries the SPL Name Service for top-level SNS name accounts directly owned by a wallet. Tokenized domains and subdomains are excluded.
+
+## Availability
+
+Requires the `blocking` feature.
+
+## Parameters
+
+| Parameter    | Type                                    | Description                                                        |
+| ------------ | --------------------------------------- | ------------------------------------------------------------------ |
+| `rpc_client` | `&solana_client::rpc_client::RpcClient` | Blocking client used for the program-account query.                |
+| `owner`      | `Pubkey`                                | Wallet whose directly owned top-level name accounts are requested. |
+
+## Returns
+
+`Result<Vec<Pubkey>, SnsError>` containing matching name-account keys. Reverse-resolve a key to obtain its TLD-less display name.
+
+## Errors
+
+Returns `SnsError::SolanaClient` when the program-account RPC request fails.
+
+## Example
+
+```rust
+use sns_sdk::blocking::domain::get_sns_domains_for_owner;
+use solana_client::rpc_client::RpcClient;
+use solana_program::pubkey::Pubkey;
+
+let client = RpcClient::new(std::env::var("RPC_URL")?);
+let owner: Pubkey = std::env::var("OWNER")?.parse()?;
+let domains = get_sns_domains_for_owner(&client, owner)?;
+println!("{} domains", domains.len());
+```

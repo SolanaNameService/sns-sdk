@@ -6,10 +6,16 @@ import { deserializeReverse } from "./deserializeReverse";
 import { getReverseKeyFromDomainKey } from "./getReverseKeyFromDomainKey";
 
 /**
+ * Finds subdomains for a parent domain account.
  *
- * @param connection The Solana RPC connection object
- * @param parentKey The parent you want to find sub-domains for
- * @returns
+ * @param connection Solana RPC connection
+ * @param parentKey Parent domain account public key
+ * @returns Human-readable subdomain names.
+ *
+ * @example
+ * ```ts
+ * const domains = await findSubdomains(connection, parentDomainKey);
+ * ```
  */
 export const findSubdomains = async (
   connection: Connection,
@@ -50,7 +56,7 @@ export const findSubdomains = async (
   const map = new Map<string, string | undefined>(
     reverses.map((e) => [
       e.pubkey.toBase58(),
-      deserializeReverse(e.account.data.slice(96), true),
+      deserializeReverse(e.account.data.subarray(96), true),
     ]),
   );
 

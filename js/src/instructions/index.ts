@@ -1,0 +1,15 @@
+/**
+ * Low-level SPL Name Service and SNS instruction classes.
+ * @module Instructions
+ */
+export * from "./burnInstruction";
+export * from "./createInstruction";
+export * from "./createReverseInstruction";
+export * from "./createSplitV2Instruction";
+export * from "./createWithNftInstruction";
+export * from "./deleteInstruction";
+export * from "./reallocInstruction";
+export * from "./setPrimaryInstruction";
+export * from "./transferInstruction";
+export * from "./types";
+export * from "./updateInstruction";

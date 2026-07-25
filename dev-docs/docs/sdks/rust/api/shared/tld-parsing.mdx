@@ -1,0 +1,15 @@
+---
+displayed_sidebar: docsSidebar
+title: TLD parsing
+description: Parse supported read suffixes and validate canonical SNS write names.
+---
+
+These local parsers validate read-side suffixes and canonical writable `.sns` names without RPC. Read parsing recognizes the rollout's supported suffixes, while write parsing requires lowercase, whitespace-free `.sns` input and returns the suffix-trimmed name.
+
+## APIs
+
+| API                                                                      | Description                                              |
+| ------------------------------------------------------------------------ | -------------------------------------------------------- |
+| [`parse_supported_tld`](./tld-parsing/parse-supported-tld)               | Splits a supported read-side suffix from a domain.       |
+| [`parse_sns_domain`](./tld-parsing/parse-sns-domain)                     | Parses a canonical `.sns` domain or one-level subdomain. |
+| [`parse_sns_top_level_domain`](./tld-parsing/parse-sns-top-level-domain) | Parses a canonical top-level `.sns` domain.              |

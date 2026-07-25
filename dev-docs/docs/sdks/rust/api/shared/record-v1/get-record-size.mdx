@@ -1,0 +1,33 @@
+---
+displayed_sidebar: docsSidebar
+title: get_record_size
+description: Get the fixed binary width of a legacy record type.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Record V1 codecs](../record-v1.mdx) / `get_record_size`
+
+# Function: `get_record_size()`
+
+```rust
+pub fn get_record_size(record: Record) -> Option<usize>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/record/record_v1.rs" line={40} label="record_v1.rs:40" />
+
+Returns fixed widths for `SOL` (96), EVM/Injective (20), IPv4 (4), and IPv6 (16). Other record types are variable-width.
+
+## Parameters
+
+`record`: the `Record` variant to inspect.
+
+## Returns
+
+`Some(usize)` for fixed binary encodings, otherwise `None`.
+
+## Example
+
+```rust
+use sns_sdk::record::{record_v1::get_record_size, Record};
+
+assert_eq!(get_record_size(Record::A), Some(4));
+```

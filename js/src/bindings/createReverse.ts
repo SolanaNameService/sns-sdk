@@ -1,0 +1,66 @@
+import { PublicKey, SystemProgram, SYSVAR_RENT_PUBKEY } from "@solana/web3.js";
+import { CreateReverseInstruction } from "../instructions/createReverseInstruction";
+import {
+  NAME_PROGRAM_ID,
+  SNS_ROOT_DOMAIN_ACCOUNT,
+  REGISTER_PROGRAM_ID,
+  CENTRAL_STATE,
+} from "../constants";
+import { getHashedNameSync } from "../utils/getHashedNameSync";
+import { getNameAccountKeySync } from "../utils/getNameAccountKeySync";
+
+/**
+ * Builds an instruction to create an SNS reverse lookup account.
+ *
+ * This is a low-level SNS registrar helper: it creates reverse lookup accounts
+ * for SNS domains only. It is not suffix-aware and does not derive `nameAccount`
+ * from a `.sns` domain string. The `name` argument is stored as provided and is
+ * not validated, so callers must ensure it matches the supplied SNS
+ * `nameAccount`. For subdomains, pass the parent name account and parent owner
+ * so the reverse lookup is derived in the parent namespace.
+ *
+ * @param nameAccount The pre-derived SNS name account the reverse lookup points to
+ * @param name The raw reverse name to store without a TLD suffix
+ * @param feePayer Fee payer for the instruction
+ * @param parentName Optional parent name account, required for subdomain reverse lookups
+ * @param parentNameOwner Optional parent name owner, required when `parentName` is provided
+ * @returns Transaction instructions.
+ *
+ * @example
+ * ```ts
+ * const instructions = await createReverse(nameAccount, "example", payer);
+ * ```
+ */
+export const createReverse = async (
+  nameAccount: PublicKey,
+  name: string,
+  feePayer: PublicKey,
+  parentName?: PublicKey,
+  parentNameOwner?: PublicKey,
+) => {
+  let hashedReverseLookup = getHashedNameSync(nameAccount.toBase58());
+  let reverseLookupAccount = getNameAccountKeySync(
+    hashedReverseLookup,
+    CENTRAL_STATE,
+    parentName,
+  );
+
+  let initCentralStateInstruction = new CreateReverseInstruction({
+    name,
+  }).getInstruction(
+    REGISTER_PROGRAM_ID,
+    NAME_PROGRAM_ID,
+    SNS_ROOT_DOMAIN_ACCOUNT,
+    reverseLookupAccount,
+    SystemProgram.programId,
+    CENTRAL_STATE,
+    feePayer,
+    SYSVAR_RENT_PUBKEY,
+    parentName,
+    parentNameOwner,
+  );
+
+  let instructions = [initCentralStateInstruction];
+
+  return instructions;
+};

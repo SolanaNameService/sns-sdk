@@ -1,0 +1,38 @@
+---
+title: resolve
+description: Resolve one or more canonical SNS domains to their effective owners with SNS CLI v3.
+---
+
+The `resolve` command returns the effective owner of each requested `.sns` domain.
+
+## Usage
+
+```text
+sns [--url <URL>] resolve <DOMAIN>...
+```
+
+## Arguments
+
+### `<DOMAIN>...`
+
+Required. One or more canonical lowercase `.sns` domains, processed in the order they are provided. Each domain can be a top-level name such as `name.sns` or a one-level subdomain such as `team.name.sns`.
+
+Bare names, `.sol` names, uppercase names, surrounding whitespace, empty labels, and deeper subdomains are rejected.
+
+## Options
+
+### `-u, --url <URL>`
+
+Use this RPC endpoint instead of `RPC_URL` or the default public mainnet-beta endpoint at `https://api.mainnet-beta.solana.com`.
+
+## Output
+
+After processing the requested domains, the command prints a table with these columns:
+
+| Column     | Description                                                         |
+| ---------- | ------------------------------------------------------------------- |
+| `Domain`   | The domain exactly as provided.                                     |
+| `Owner`    | The resolved owner's base58 public key.                             |
+| `Explorer` | A mainnet Solana Explorer address link for the resolved public key. |
+
+A domain that does not exist remains in the table with `Domain not found` in place of an owner. Multiple domains appear in input order.

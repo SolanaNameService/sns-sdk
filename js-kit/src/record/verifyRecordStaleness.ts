@@ -1,25 +1,32 @@
 import {
   Address,
   GetAccountInfoApi,
+  GetSlotApi,
   GetTokenLargestAccountsApi,
   Rpc,
 } from "@solana/kit";
 
 import { addressCodec } from "../codecs";
-import { getDomainOwner } from "../domain/getDomainOwner";
+import { _getSnsDomainOwner } from "../domain/getSnsDomainOwner";
 import { getRecordV2Address } from "../record/getRecordV2Address";
 import { RecordState } from "../states/record";
 import { Record } from "../types/record";
 import { Validation } from "../types/validation";
+import { assertTldSupported } from "../utils/assertTldSupported";
 import { uint8ArraysEqual } from "../utils/uint8Array/uint8ArraysEqual";
 
 /**
- * Verifies the staleness of a record synchronously.
- * This is intended for internal use only.
+ * Internal helper that verifies a record's staleness validation.
  *
- * @param domainOwner - The address of the domain's owner.
- * @param state - The state of the record to verify.
+ * @param params Staleness verification parameters
+ * @param params.domainOwner Current owner of the domain
+ * @param params.state Record state to verify
  * @returns True if the record's staleness validation passes, false otherwise.
+ *
+ * @example
+ * ```ts
+ * const valid = _verifyStalenessSync({ domainOwner, state });
+ * ```
  */
 export const _verifyStalenessSync = ({
   domainOwner,
@@ -36,29 +43,50 @@ export const _verifyStalenessSync = ({
   );
 };
 
-interface VerifyRecordStalenessParams {
-  rpc: Rpc<GetAccountInfoApi & GetTokenLargestAccountsApi>;
+/**
+ * Parameters for verifying record staleness.
+ *
+ * @example
+ * ```ts
+ * const params: VerifyRecordStalenessParams = {
+ *   rpc,
+ *   domain: "example.sns",
+ *   record: Record.Url,
+ * };
+ * ```
+ */
+export interface VerifyRecordStalenessParams {
+  /** RPC client. */
+  rpc: Rpc<GetAccountInfoApi & GetTokenLargestAccountsApi & GetSlotApi>;
+  /** Full domain name. */
   domain: string;
+  /** Record type. */
   record: Record;
 }
 
 /**
- * Verifies the staleness of a record asynchronously.
+ * Verifies a record's staleness validation.
  *
- * @param params - An object containing the following properties:
- *   - `rpc`: The RPC interface implementing GetAccountInfoApi and GetTokenLargestAccountsApi.
- *   - `domain`: The domain under which the record resides.
- *   - `record`: The record to verify.
- * @returns A promise that resolves to true if the record is stale, false otherwise.
+ * @param params Staleness verification parameters
+ * @param params.rpc RPC client implementing account and token-largest-account APIs
+ * @param params.domain Full domain name including a `.sns` or `.sol` suffix
+ * @param params.record Record type to verify
+ * @returns True if the record's staleness validation passes, false otherwise.
+ *
+ * @example
+ * ```ts
+ * const valid = await verifyRecordStaleness({ rpc, domain: "example.sns", record: Record.Url });
+ * ```
  */
 export const verifyRecordStaleness = async ({
   rpc,
   domain,
   record,
 }: VerifyRecordStalenessParams): Promise<boolean> => {
+  const [trimmedDomain] = await assertTldSupported({ rpc, domain });
   const [domainOwner, state] = await Promise.all([
-    getDomainOwner({ rpc, domain }),
-    getRecordV2Address({ domain, record }).then((address) =>
+    _getSnsDomainOwner({ rpc, domain: trimmedDomain }),
+    getRecordV2Address({ domain: trimmedDomain, record }).then((address) =>
       RecordState.retrieve(rpc, address)
     ),
   ]);

@@ -1,0 +1,44 @@
+---
+title: burn
+description: Permanently delete one or more SNS domain registry accounts with SNS CLI v3.
+---
+
+The `burn` command signs and submits deletion transactions for one or more `.sns` domain registry accounts.
+
+## Usage
+
+```text
+sns [--url <URL>] burn <KEYPAIR_PATH> <DOMAIN>...
+```
+
+## Arguments
+
+### `<KEYPAIR_PATH>`
+
+Required. Path to the current owner's Solana keypair JSON file. The keypair signs each deletion transaction.
+
+### `<DOMAIN>...`
+
+Required. One or more canonical lowercase `.sns` domains owned by the signing wallet, processed in the order provided.
+
+## Options
+
+### `-u, --url <URL>`
+
+Use this RPC endpoint instead of `RPC_URL` or the default public mainnet-beta endpoint at `https://api.mainnet-beta.solana.com`.
+
+## Output
+
+After processing the requested domains, the command prints a table with these columns:
+
+| Column        | Description                                         |
+| ------------- | --------------------------------------------------- |
+| `Domain`      | The deleted domain.                                 |
+| `Transaction` | The confirmed deletion transaction signature.       |
+| `Explorer`    | A mainnet Solana Explorer link for the transaction. |
+
+## Cautions
+
+Burning deletes the name-registry account. The command has no confirmation prompt or dry-run mode.
+
+Deletions are submitted sequentially and are not atomic. An earlier deletion can succeed before a later one fails.

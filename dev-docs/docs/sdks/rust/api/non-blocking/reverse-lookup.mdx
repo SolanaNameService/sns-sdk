@@ -1,0 +1,15 @@
+---
+displayed_sidebar: docsSidebar
+title: Reverse lookup
+description: Reverse-resolve SNS name-account keys with the non-blocking Rust SDK client.
+---
+
+Reverse lookup APIs query SNS reverse-record accounts through a non-blocking Solana RPC client. They accept name-account public keys and return TLD-less names; append `.sns` when displaying an SNS name.
+
+## APIs
+
+| API                                                                           | Description                                                                   |
+| ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| [`resolve_reverse`](./reverse-lookup/resolve-reverse)                         | Resolves the top-level reverse record for one name account.                   |
+| [`resolve_reverse_with_parent`](./reverse-lookup/resolve-reverse-with-parent) | Resolves a top-level or subdomain reverse record with an explicit parent.     |
+| [`resolve_reverse_batch`](./reverse-lookup/resolve-reverse-batch)             | Resolves top-level reverse records for multiple name accounts in input order. |

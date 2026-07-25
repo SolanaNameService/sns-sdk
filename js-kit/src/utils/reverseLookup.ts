@@ -5,21 +5,37 @@ import { RegistryState } from "../states/registry";
 import { deserializeReverse } from "./deserializers/deserializeReverse";
 import { getReverseAddressFromDomainAddress } from "./getReverseAddressFromDomainAddress";
 
-interface ReverseLookupParams {
+/**
+ * Parameters for reverse lookup.
+ *
+ * @example
+ * ```ts
+ * const params: ReverseLookupParams = { rpc, domainAddress };
+ * ```
+ */
+export interface ReverseLookupParams {
+  /** RPC client. */
   rpc: Rpc<GetAccountInfoApi>;
+  /** Domain account address. */
   domainAddress: Address;
+  /** Parent domain address for a subdomain. */
   parentAddress?: Address;
 }
 
 /**
- * Perform a reverse lookup for a given domain address.
+ * Performs a reverse lookup for a domain address.
  *
- * @param params - An object containing the following properties:
- *   - `rpc`: The RPC client to interact with the blockchain.
- *   - `address`: The domain address to perform the reverse lookup on.
- *   - `parentAddress`: (Optional) The parent domain address, if applicable.
- * @returns A promise that resolves to the human-readable domain name associated with the given address.
- * @throws {NoAccountDataError} If the registry data is empty.
+ * @param params Reverse lookup parameters
+ * @param params.rpc RPC client implementing account lookup
+ * @param params.domainAddress Domain address to reverse look up
+ * @param params.parentAddress Optional parent domain address for subdomain reverse lookups
+ * @returns Human-readable domain name.
+ * @throws NoAccountDataError If the registry data is empty.
+ *
+ * @example
+ * ```ts
+ * const name = await reverseLookup({ rpc, domainAddress });
+ * ```
  */
 export async function reverseLookup({
   rpc,

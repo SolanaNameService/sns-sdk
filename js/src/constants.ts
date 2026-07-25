@@ -1,3 +1,7 @@
+/**
+ * Public SNS program addresses and protocol constants.
+ * @module Constants
+ */
 import { PublicKey } from "@solana/web3.js";
 
 /**
@@ -8,14 +12,33 @@ export const NAME_PROGRAM_ID = new PublicKey(
 );
 
 /**
- * Hash prefix used to derive domain name addresses
+ * Hash prefix used to derive SNS domain name addresses
  */
-export const HASH_PREFIX = "SPL Name Service";
+export const SNS_HASH_PREFIX = "SPL Name Service";
 
 /**
- * The `.sol` TLD
+ * Hash prefix used to derive SRS domain name addresses
  */
-export const ROOT_DOMAIN_ACCOUNT = new PublicKey(
+export const SRS_HASH_PREFIX = "SRS";
+
+/**
+ * The SRS registrar central state
+ */
+export const SRS_CENTRAL_STATE = new PublicKey(
+  "8K9XmpN6nKy3ERnMovnoj5cbqWKPiGYN8hCRRyW4TLQV",
+);
+
+/**
+ * The SRS class for `.sol` domains
+ */
+export const SOL_SRS_CLASS = new PublicKey(
+  "AjheAtCgSwEcEYd6xi6thcQW25ELWd7wKCx6SKBGUtMQ",
+);
+
+/**
+ * The `.sns` TLD
+ */
+export const SNS_ROOT_DOMAIN_ACCOUNT = new PublicKey(
   "58PwtjSDuFHuUkYjH9BYnnQKHfwo9reZhC2zMJv9JPkx",
 );
 
@@ -33,6 +56,7 @@ export const REVERSE_LOOKUP_CLASS = new PublicKey(
   "33m47vH6Eav6jr5Ry86XjhRft2jRBLDnDgPSHoquXi2Z",
 );
 
+/** Alias for the SNS reverse-lookup class account. */
 export const CENTRAL_STATE = REVERSE_LOOKUP_CLASS;
 
 /**
@@ -49,10 +73,12 @@ export const TWITTER_ROOT_PARENT_REGISTRY_KEY = new PublicKey(
   "4YcexoW3r78zz16J2aqmukBLRwGq6rAvWzJpkYAXqebv",
 );
 
+/** Mainnet USDC mint address used by SNS registration flows. */
 export const USDC_MINT = new PublicKey(
   "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
 );
 
+/** Registered SNS referral account public keys, indexed by the registrar. */
 export const REFERRERS: PublicKey[] = [
   new PublicKey("3ogYncmMM5CmytsGCqKHydmXmKUZ6sGWvizkzqwT7zb1"), // Test wallet,
   new PublicKey("DM1jJCkZZEwY5tmWbgvKRxsDFzXCdbfrYCCH1CtwguEs"), // 4Everland
@@ -74,6 +100,7 @@ export const REFERRERS: PublicKey[] = [
   new PublicKey("7siDgAEyXRCEhNjZcQ8VLVbMxXQaQY4hNcRbGbKj2i7u"), // CFL
 ];
 
+/** Maps supported token mint addresses to their display symbols. */
 export const TOKENS_SYM_MINT = new Map<string, string>([
   ["EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v", "USDC"],
   ["Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB", "USDT"],
@@ -88,6 +115,7 @@ export const TOKENS_SYM_MINT = new Map<string, string>([
   ["6p6xgHyF7AeE6TZkSmFsko444wqoP15icUSqi2jfGiPN", "TRUMP"],
 ]);
 
+/** Maps supported payment token mints to legacy Pyth price and product feeds. */
 export const PYTH_FEEDS = new Map<string, { price: string; product: string }>([
   [
     "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
@@ -161,34 +189,46 @@ export const PYTH_FEEDS = new Map<string, { price: string; product: string }>([
   ],
 ]);
 
+/** Legacy Pyth mapping account used by SNS pricing. */
 export const PYTH_MAPPING_ACC = new PublicKey(
   "AHtgzX45WTKfkPG53L6WYhGEXwQkN1BVknET3sVsLL8J",
 );
 
+/**
+ * Legacy SNS vault owner.
+ *
+ * @deprecated Use {@link VAULT_OWNER} for new integrations.
+ */
 export const VAULT_OWNER_DEPRECATED = new PublicKey(
   "GcWEQ9K78FV7LEHteFVciYApERk5YvQuFDQPk1yYJVXi",
 );
 
+/** Current SNS vault owner account. */
 export const VAULT_OWNER = new PublicKey(
   "5D2zKog251d6KPCyFyLMt3KroWwXXPWSgTPyhV22K2gR",
 );
 
+/** Parent name account for custom-background records. */
 export const CUSTOM_BG_TLD = new PublicKey(
   "BPeXUQDqGbzxeK1LJby6ugvCBuo7kRSEUkjD726mUVsz",
 );
 
+/** Metaplex metadata account for the Wolves collection accepted by registration. */
 export const WOLVES_COLLECTION_METADATA = new PublicKey(
   "72aLKvXeV4aansAQtxKymeXDevT5ed6sCuz9iN62ugPT",
 );
 
+/** Metaplex Token Metadata program ID. */
 export const METAPLEX_ID = new PublicKey(
   "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s",
 );
 
+/** Default Pyth push-oracle program used by SNS registration. */
 export const DEFAULT_PYTH_PUSH_PROGRAM = new PublicKey(
-  "pythWSnswVUd12oZpeFP8e9CVaEqJg25g1Vtc2biRsT",
+  "pyt2F414BA6dPttK6RddPZUdHfapoBN24GL5wbrPCou",
 );
 
+/** Maps supported payment token mints to Pyth pull-feed identifiers. */
 export const PYTH_PULL_FEEDS = new Map<string, number[]>([
   [
     "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",

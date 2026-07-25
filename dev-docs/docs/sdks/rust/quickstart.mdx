@@ -1,0 +1,89 @@
+---
+title: Rust SDK quickstart
+description: Resolve an SNS domain and query primary and wallet-owned domains with Rust SDK v2.
+---
+
+Use Rust SDK v2 to resolve a `.sns` domain and query domain data for a wallet.
+
+## Setup
+
+Complete the [Rust SDK installation](/docs/sdks/rust/installation), then create the shared asynchronous RPC client:
+
+```rust
+use solana_client::nonblocking::rpc_client::RpcClient;
+
+let client = RpcClient::new(std::env::var("RPC_URL")?);
+```
+
+## Common usage
+
+### Resolve a domain
+
+Pass a full `.sns` name to `resolve`:
+
+```rust
+use sns_sdk::non_blocking::resolve::{resolve, AllowPda};
+
+let owner = resolve(&client, "name.sns", AllowPda::Deny).await?;
+println!("{owner}");
+// => "<BASE58_PUBLIC_KEY>"
+```
+
+`resolve` returns the effective owner as a Solana `Pubkey`.
+
+### Get a primary domain
+
+Use `get_primary_domain` with the wallet public key, then reverse-resolve the returned name-account key for display:
+
+```rust
+use sns_sdk::non_blocking::{
+    primary_domain::get_primary_domain,
+    resolve::resolve_reverse,
+};
+use solana_sdk::pubkey::Pubkey;
+use std::str::FromStr;
+
+let wallet = Pubkey::from_str("<WALLET_ADDRESS>")?;
+let primary_key = get_primary_domain(&client, &wallet).await?;
+
+if let Some(primary_key) = primary_key {
+    if let Some(name) = resolve_reverse(&client, &primary_key).await? {
+        println!("{name}.sns");
+        // => "name.sns"
+    }
+}
+```
+
+`get_primary_domain` returns `None` when the wallet has no primary domain. Reverse lookup domain names are TLD-less, so append `.sns` for display.
+
+### Get domains for an owner
+
+Use `get_sns_domains_for_owner` to retrieve top-level name-account keys owned by the wallet, then reverse-resolve them for display:
+
+```rust
+use sns_sdk::non_blocking::{
+    domain::get_sns_domains_for_owner,
+    resolve::resolve_reverse_batch,
+};
+use solana_sdk::pubkey::Pubkey;
+use std::str::FromStr;
+
+let wallet = Pubkey::from_str("<WALLET_ADDRESS>")?;
+let domain_keys = get_sns_domains_for_owner(&client, wallet).await?;
+let domains = resolve_reverse_batch(&client, &domain_keys).await?;
+let display_domains = domains
+    .into_iter()
+    .flatten()
+    .map(|domain| format!("{domain}.sns"))
+    .collect::<Vec<_>>();
+
+println!("{display_domains:?}");
+// => ["name.sns", "another-name.sns"]
+```
+
+The owner lookup does not include tokenized domains or subdomains. Missing reverse records appear as `None` and are omitted by `flatten`.
+
+## Next steps
+
+- Use the [Rust SDK API Reference](/docs/sdks/rust/api/) for other reads and transaction instruction builders.
+- Follow the [Rust SDK migration guide](/docs/migration/rust) when upgrading from v1.

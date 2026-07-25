@@ -1,9 +1,28 @@
-import { AccountRole, Address, AccountMeta, Instruction } from "@solana/kit";
+import { AccountMeta, AccountRole, Address, Instruction } from "@solana/kit";
 import { serialize } from "borsh";
 
-export class createWithNftInstruction {
-  tag: number;
+/**
+ * Input for registering an SNS domain backed by an NFT.
+ *
+ * @example
+ * ```ts
+ * const params: CreateWithNftInstructionParams = { name: "example", space: 1_000 };
+ * ```
+ */
+export interface CreateWithNftInstructionParams {
+  /** TLD-less domain name. */
   name: string;
+  /** Account data size in bytes. */
+  space: number;
+}
+
+/** Builder for registering an SNS domain backed by an NFT. */
+export class CreateWithNftInstruction {
+  /** Instruction discriminator. */
+  tag: number;
+  /** TLD-less domain name. */
+  name: string;
+  /** Account data size in bytes. */
   space: number;
 
   static schema = {
@@ -14,14 +33,14 @@ export class createWithNftInstruction {
     },
   };
 
-  constructor(obj: { name: string; space: number }) {
+  constructor(obj: CreateWithNftInstructionParams) {
     this.tag = 17;
     this.name = obj.name;
     this.space = obj.space;
   }
 
   serialize(): Uint8Array {
-    return serialize(createWithNftInstruction.schema, this);
+    return serialize(CreateWithNftInstruction.schema, this);
   }
 
   getInstruction(

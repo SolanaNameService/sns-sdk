@@ -1,0 +1,61 @@
+---
+displayed_sidebar: docsSidebar
+title: resolve
+description: Resolve an SNS domain to its effective target with the blocking Rust client.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Domain resolution](../domain-resolution.mdx) / `resolve`
+
+# Function: `resolve()`
+
+```rust
+pub fn resolve(
+    rpc_client: &RpcClient,
+    domain: &str,
+    allow_pda: AllowPda,
+) -> Result<Pubkey, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/blocking/resolve.rs" line={33} label="rust-crates/sns-sdk/src/blocking/resolve.rs:33" />
+
+Resolves a full `.sns` or currently supported `.sol` name to its effective owner. SNS resolution prefers an active tokenized-domain owner, then a valid V2 `SOL` record, then a valid V1 `SOL` record, and finally the name-registry owner. SRS-backed `.sol` resolution is disabled; legacy SNS-backed `.sol` reads stop at finalized slot <code><CutoffSlot /></code>.
+
+## Availability
+
+Requires the `blocking` feature, which exposes `sns_sdk::blocking` instead of `sns_sdk::non_blocking`.
+
+## Parameters
+
+| Parameter    | Type                                    | Description                                                                                                          |
+| ------------ | --------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `rpc_client` | `&solana_client::rpc_client::RpcClient` | Blocking client used for account and token-owner lookups.                                                            |
+| `domain`     | `&str`                                  | Full supported `.sns` or `.sol` domain.                                                                              |
+| `allow_pda`  | `AllowPda`                              | `Deny` rejects PDAs; `Allow(program_ids)` accepts only PDAs owned by an allowed program; `AllowAny` accepts any PDA. |
+
+## Returns
+
+`Result<Pubkey, SnsError>` containing the effective target public key after ownership precedence and PDA policy are applied.
+
+## Errors
+
+- `SnsError::UnsupportedTld` when the suffix is unsupported or a `.sol` read is past the cutoff.
+- `SnsError::DomainDoesNotExist` when the resolved name account is absent.
+- `SnsError::PdaOwnerNotAllowed` when the final PDA violates `allow_pda`.
+- `SnsError::CouldNotFindNftOwner` when an active tokenized domain has no resolvable owner.
+- `SnsError::SolanaClient` for RPC failures.
+
+## Example
+
+```rust
+use sns_sdk::blocking::resolve::{resolve, AllowPda};
+use solana_client::rpc_client::RpcClient;
+
+let client = RpcClient::new(std::env::var("RPC_URL")?);
+let target = resolve(&client, "example.sns", AllowPda::Deny)?;
+println!("{target}");
+```
+
+## Related APIs
+
+- [`resolve_name_registry`](../name-registries/resolve-name-registry.mdx)
+- [`resolve_reverse`](../reverse-lookup/resolve-reverse.mdx)

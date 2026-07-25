@@ -5,10 +5,16 @@ import { getHashedNameSync } from "./getHashedNameSync";
 import { getNameAccountKeySync } from "./getNameAccountKeySync";
 
 /**
- * This function can be used to get the reverse key from a domain key
- * @param domainKey The domain key to compute the reverse for
- * @param parent The parent public key
- * @returns The public key of the reverse account
+ * Derives the reverse lookup account for a domain account.
+ *
+ * @param domainKey Domain account public key
+ * @param parent Optional parent name account for subdomain reverse lookups
+ * @returns Reverse lookup account public key.
+ *
+ * @example
+ * ```ts
+ * const key = getReverseKeyFromDomainKey(domainKey);
+ * ```
  */
 export const getReverseKeyFromDomainKey = (
   domainKey: PublicKey,

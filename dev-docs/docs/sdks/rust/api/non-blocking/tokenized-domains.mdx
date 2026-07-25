@@ -1,0 +1,16 @@
+---
+displayed_sidebar: docsSidebar
+title: Tokenized domains
+description: Query tokenized SNS domains and name-tokenizer records with the non-blocking Rust SDK client.
+---
+
+Tokenized-domain APIs query SPL Token and Name Tokenizer program accounts through a non-blocking Solana RPC client. Use the high-level owner and domain lookups for SNS domains, or the record queries when raw name-tokenizer state is required.
+
+## APIs
+
+| API                                                                    | Description                                                                   |
+| ---------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| [`get_sns_nfts_for_owner`](./tokenized-domains/get-sns-nfts-for-owner) | Lists tokenized SNS domains held by a wallet when they have reverse records.  |
+| [`resolve_nft_owner`](./tokenized-domains/resolve-nft-owner)           | Finds the holder of a valid one-of-one tokenized domain mint.                 |
+| [`get_record_from_mint`](./tokenized-domains/get-record-from-mint)     | Queries active name-tokenizer records for a mint.                             |
+| [`get_nft_records`](./tokenized-domains/get-nft-records)               | Retrieves valid name-tokenizer records for a wallet's one-token SPL accounts. |

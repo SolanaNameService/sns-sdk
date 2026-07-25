@@ -1,12 +1,16 @@
 use solana_program::{pubkey, pubkey::Pubkey};
 
+pub mod bindings;
+mod config;
 pub mod derivation;
 pub mod error;
-pub mod favourite_domain;
-pub mod register;
+pub mod nft;
+pub mod primary_domain;
+pub mod tld;
 mod utils;
 
 pub mod record;
+mod resolve;
 
 #[cfg(not(feature = "blocking"))]
 pub mod non_blocking;

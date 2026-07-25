@@ -1,0 +1,33 @@
+---
+displayed_sidebar: docsSidebar
+title: delete_record_v2
+description: Build an instruction that deletes a V2 record.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Record instructions](../record-instructions.mdx) / `delete_record_v2`
+
+# Function: `delete_record_v2()`
+
+```rust
+pub fn delete_record_v2(domain: &str, record: Record, owner: Pubkey, payer: Pubkey) -> Result<Instruction, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/bindings/record_v2.rs" line={89} label="record_v2.rs:89" />
+
+Builds a V2 deletion instruction that sends reclaimed record rent to `payer`.
+
+## Parameters
+
+`domain` must be canonical lowercase `.sns`; `record` identifies the record; `owner` authorizes deletion and `payer` receives the refund.
+
+## Returns
+
+An unsigned `Instruction`, or domain-key derivation errors through `SnsError`.
+
+## Example
+
+```rust
+use sns_sdk::{bindings::record_v2::delete_record_v2, record::Record};
+
+let instruction = delete_record_v2("example.sns", Record::Url, owner, payer)?;
+```

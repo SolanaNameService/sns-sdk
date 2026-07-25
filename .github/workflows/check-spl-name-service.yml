@@ -40,26 +40,9 @@ jobs:
           echo "Job originally triggered by ${{ github.actor }}."
           exit 1
 
-  prepare-dependencies:
-    name: Prepare local deps
-    needs: check-permissions
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          # Important for forked repositories
-          # This is dangerous without the "check-permissions" job
-          ref: ${{ github.event.pull_request.head.sha }}
-      - id: prepare-env
-        uses: ./.github/actions/prepare-spl-name-service-env
-      - name: Use cache or install dependencies
-        if: steps.prepare-env.outputs.cache-hit != 'true'
-        run: npm ci
-
   test:
     name: Test source code
-    needs: prepare-dependencies
+    needs: check-permissions
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -68,6 +51,10 @@ jobs:
           # This is dangerous without the "check-permissions" job
           ref: ${{ github.event.pull_request.head.sha }}
       - uses: ./.github/actions/prepare-spl-name-service-env
+      - name: Install dependencies
+        run: npm ci
+      - name: Verify test dependencies
+        run: npm ls --depth=0 jest ts-jest @types/punycode
       - name: Make envfile
         run: |
           rm .env || true;
@@ -79,7 +66,7 @@ jobs:
 
   build:
     name: Build source code
-    needs: prepare-dependencies
+    needs: check-permissions
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -88,5 +75,9 @@ jobs:
           # This is dangerous without the "check-permissions" job
           ref: ${{ github.event.pull_request.head.sha }}
       - uses: ./.github/actions/prepare-spl-name-service-env
+      - name: Install dependencies
+        run: npm ci
+      - name: Verify build dependencies
+        run: npm ls --depth=0 rollup rollup-plugin-delete
       - name: Build source code
         run: npm run build

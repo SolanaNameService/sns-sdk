@@ -1,0 +1,53 @@
+---
+displayed_sidebar: docsSidebar
+title: resolve_reverse_with_parent
+description: Resolve an SNS top-level or subdomain reverse record with an explicit parent.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Reverse lookup](../reverse-lookup.mdx) / `resolve_reverse_with_parent`
+
+# Function: `resolve_reverse_with_parent()`
+
+```rust
+pub async fn resolve_reverse_with_parent(
+    rpc_client: &RpcClient,
+    key: &Pubkey,
+    parent: Option<&Pubkey>,
+) -> Result<Option<String>, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/non_blocking/resolve.rs" line={285} label="rust-crates/sns-sdk/src/non_blocking/resolve.rs:285" />
+
+Derives and reads the reverse account for a top-level domain or subdomain. For subdomains, the SDK removes the leading NUL marker stored in the reverse payload. Returned names are TLD-less.
+
+## Parameters
+
+| Parameter    | Type              | Description                                                          |
+| ------------ | ----------------- | -------------------------------------------------------------------- |
+| `rpc_client` | `&RpcClient`      | Non-blocking Solana RPC client.                                      |
+| `key`        | `&Pubkey`         | SNS name-account key to reverse-resolve.                             |
+| `parent`     | `Option<&Pubkey>` | `None` for a top-level name; `Some(parent_account)` for a subdomain. |
+
+## Returns
+
+`Result<Option<String>, SnsError>`. `Some` contains the TLD-less reverse name or subdomain label; `None` means no derived reverse account exists.
+
+## Errors
+
+- `SnsError::InvalidNameAccountData` when the present reverse account is invalid.
+- `SnsError::InvalidReverse` when the reverse payload is malformed or not UTF-8.
+- `SnsError::SolanaClient` when the RPC request fails.
+
+## Example
+
+```rust
+use sns_sdk::non_blocking::resolve::resolve_reverse_with_parent;
+
+let label = resolve_reverse_with_parent(&client, &subdomain_account, Some(&parent_account)).await?;
+println!("{label:?}");
+```
+
+## Related APIs
+
+- [`resolve_reverse`](./resolve-reverse.mdx)
+- [`resolve_reverse_batch`](./resolve-reverse-batch.mdx)

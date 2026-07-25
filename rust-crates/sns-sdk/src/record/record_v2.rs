@@ -3,25 +3,22 @@ use sns_records::state::{
     record_header::RecordHeader,
     validation::{get_validation_length, Validation},
 };
-use solana_program::{program_pack::Pack, pubkey};
+use solana_program::pubkey;
 
-use super::{convert_u5_array, get_record_key, Record};
-use crate::{
-    error::SnsError,
-    non_blocking::resolve::{resolve_name_registry, resolve_name_registry_batch},
-};
+use super::{decode_injective_address, Record};
+use crate::error::SnsError;
 use {
     bech32::ToBase32,
-    solana_client::nonblocking::rpc_client::RpcClient,
     solana_program::pubkey::Pubkey,
-    spl_name_service::state::NameRecordHeader,
     std::net::{Ipv4Addr, Ipv6Addr},
     std::str::FromStr,
 };
 
-pub struct ParsedRecord<'a> {
-    pub kind: Record,
+pub struct ParsedRecordV2<'a> {
+    pub record: Record,
     pub header: RecordHeader,
+    pub staleness_validation: Validation,
+    pub roa_validation: Validation,
     pub roa_id: &'a [u8],
     pub staleness_id: &'a [u8],
     pub content: String,
@@ -29,7 +26,7 @@ pub struct ParsedRecord<'a> {
 
 pub const GUARDIAN_ID: Pubkey = pubkey!("ExXjtfdQe8JacoqP9Z535WzQKjF4CzW1TTRKRgpxvya3");
 
-impl<'a> ParsedRecord<'a> {
+impl<'a> ParsedRecordV2<'a> {
     pub fn verify_staleness(
         &self,
         domain_owner_key: Pubkey,
@@ -50,7 +47,7 @@ impl<'a> ParsedRecord<'a> {
                     .get(..2)
                     .ok_or(SnsError::InvalidRecordData)?
                     .try_into()
-                    .unwrap(),
+                    .map_err(|_| SnsError::InvalidRecordData)?,
             );
             let expected_owner_address = self
                 .staleness_id
@@ -61,6 +58,8 @@ impl<'a> ParsedRecord<'a> {
             {
                 return Err(SnsError::StaleRecord);
             }
+
+            return Ok(());
         }
         if self.header.staleness_validation != Validation::Solana as u16
             || self.staleness_id != domain_owner_key.as_ref()
@@ -71,69 +70,121 @@ impl<'a> ParsedRecord<'a> {
     }
 
     pub fn verify_roa(&self) -> Result<(), SnsError> {
-        let validation = self.kind.roa_validation();
+        let validation = self.record.roa_validation();
         if validation as u16 != self.header.right_of_association_validation {
             return Err(SnsError::UnverifiedRecord);
         }
-        if matches!(self.kind, Record::CNAME | Record::Url) && self.roa_id != GUARDIAN_ID.as_ref() {
-            return Err(SnsError::UnverifiedRecord);
+
+        match self.record {
+            Record::CNAME | Record::Url => {
+                if self.roa_id != GUARDIAN_ID.as_ref() {
+                    return Err(SnsError::UnverifiedRecord);
+                }
+            }
+            Record::Sol | Record::Injective | Record::Eth | Record::Bsc | Record::BASE => {
+                let content = serialize_record_v2_content(&self.content, self.record)?;
+                if self.roa_id != content.as_slice() {
+                    return Err(SnsError::UnverifiedRecord);
+                }
+            }
+            _ => {}
         }
+
         Ok(())
     }
 }
 
-pub async fn parse_record_v2(
-    record: Record,
-    account_data: &[u8],
-) -> Result<ParsedRecord, SnsError> {
-    let record_header = RecordHeader::from_buffer(account_data);
-    let mut offset = spl_name_service::state::NameRecordHeader::LEN + RecordHeader::LEN;
-    let roa_validation = Validation::try_from(record_header.right_of_association_validation)?;
-    let staleness_validation = Validation::try_from(record_header.staleness_validation)?;
-    let mut length = get_validation_length(roa_validation) as usize;
-    let roa_id = account_data
-        .get(offset..offset + length)
+pub struct RecordV2Fields<'a> {
+    pub header: RecordHeader,
+    pub staleness_validation: Validation,
+    pub roa_validation: Validation,
+    pub staleness_id: &'a [u8],
+    pub roa_id: &'a [u8],
+    pub content_bytes: &'a [u8],
+}
+
+impl<'a> RecordV2Fields<'a> {
+    pub fn parse_content(self, record: Record) -> Result<ParsedRecordV2<'a>, SnsError> {
+        let content = deserialize_record_v2_content(self.content_bytes, record)?;
+        Ok(ParsedRecordV2 {
+            record,
+            header: self.header,
+            staleness_validation: self.staleness_validation,
+            roa_validation: self.roa_validation,
+            roa_id: self.roa_id,
+            staleness_id: self.staleness_id,
+            content,
+        })
+    }
+}
+
+pub fn decode_record_v2_fields(record_data: &[u8]) -> Result<RecordV2Fields<'_>, SnsError> {
+    if record_data.len() < RecordHeader::LEN {
+        return Err(SnsError::InvalidRecordData);
+    }
+
+    let header = bytemuck::pod_read_unaligned::<RecordHeader>(&record_data[..RecordHeader::LEN]);
+    let staleness_validation = Validation::try_from(header.staleness_validation)?;
+    let roa_validation = Validation::try_from(header.right_of_association_validation)?;
+
+    // On-chain layout: staleness_id, then roa_id, then content.
+    let mut offset = RecordHeader::LEN;
+    let staleness_len = get_validation_length(staleness_validation) as usize;
+    let staleness_id = record_data
+        .get(offset..offset + staleness_len)
         .ok_or(SnsError::InvalidRecordData)?;
-    offset += length;
-    length = get_validation_length(staleness_validation) as usize;
-    let staleness_id = account_data
-        .get(offset..offset + length)
+    offset += staleness_len;
+
+    let roa_len = get_validation_length(roa_validation) as usize;
+    let roa_id = record_data
+        .get(offset..offset + roa_len)
         .ok_or(SnsError::InvalidRecordData)?;
-    offset += length;
-    let content = deserialize_record_v2_content(
-        account_data
-            .get(offset..)
-            .ok_or(SnsError::InvalidRecordData)?,
-        record,
-    )?;
-    Ok(ParsedRecord {
-        kind: record,
-        header: record_header,
-        roa_id,
+    offset += roa_len;
+
+    let content_length = header.content_length as usize;
+    let content_bytes = record_data
+        .get(offset..offset + content_length)
+        .ok_or(SnsError::InvalidRecordData)?;
+
+    Ok(RecordV2Fields {
+        header,
+        staleness_validation,
+        roa_validation,
         staleness_id,
-        content,
+        roa_id,
+        content_bytes,
     })
 }
 
-pub async fn retrieve_record_v2(
-    rpc_client: RpcClient,
-    record: Record,
-    domain: &str,
-) -> Result<Option<(NameRecordHeader, Vec<u8>)>, SnsError> {
-    let record_key = get_record_key(domain, record, super::RecordVersion::V2)?;
-    resolve_name_registry(&rpc_client, &record_key).await
-}
+pub(crate) fn check_sol_record_v2_data(
+    record_data: &[u8],
+    registry_owner: &Pubkey,
+) -> Result<Option<Pubkey>, SnsError> {
+    let record = decode_record_v2_fields(record_data)?;
 
-pub async fn retrieve_records_batch_v2(
-    rpc_client: RpcClient,
-    records: &[Record],
-    domain: &str,
-) -> Result<Vec<Option<(NameRecordHeader, Vec<u8>)>>, SnsError> {
-    let pubkeys: Vec<Pubkey> = records
-        .iter()
-        .map(|r| get_record_key(domain, *r, super::RecordVersion::V2))
-        .collect::<Result<Vec<_>, _>>()?;
-    resolve_name_registry_batch(&rpc_client, &pubkeys).await
+    if record.content_bytes.len() != 32 {
+        return Err(SnsError::RecordMalformed);
+    }
+
+    if !matches!(record.staleness_validation, Validation::Solana)
+        || !matches!(record.roa_validation, Validation::Solana)
+    {
+        return Err(SnsError::WrongValidation);
+    }
+
+    if record.staleness_id != registry_owner.as_ref() {
+        return Ok(None);
+    }
+
+    if record.roa_id == record.content_bytes {
+        let bytes: [u8; 32] = record
+            .content_bytes
+            .try_into()
+            .map_err(|_| SnsError::InvalidPubkey)?;
+        return Ok(Some(Pubkey::new_from_array(bytes)));
+    }
+
+    Err(SnsError::InvalidRoa)
 }
 
 pub fn deserialize_record_v2_content(content: &[u8], record: Record) -> Result<String, SnsError> {
@@ -225,17 +276,7 @@ pub fn serialize_record_v2_content(content: &str, record: Record) -> Result<Vec<
             let pubkey = Pubkey::from_str(content).map_err(|_| SnsError::InvalidPubkey)?;
             Ok(pubkey.to_bytes().to_vec())
         }
-        Record::Injective => {
-            if !content.starts_with("inj") {
-                return Err(SnsError::InvalidInjectiveAddress);
-            }
-            let (_, data, _) = bech32::decode(content)?;
-            let data = convert_u5_array(&data);
-            if data.len() != 20 {
-                return Err(SnsError::InvalidInjectiveAddress);
-            }
-            Ok(data)
-        }
+        Record::Injective => decode_injective_address(content),
         Record::Bsc | Record::Eth | Record::BASE => {
             if !content.starts_with("0x") {
                 return Err(SnsError::InvalidEvmAddress);
@@ -263,6 +304,11 @@ pub fn serialize_record_v2_content(content: &str, record: Record) -> Result<Vec<
 
 #[cfg(test)]
 mod test {
+
+    use crate::{
+        derivation::{derive, get_sns_domain_key},
+        record::{get_record_v2_key, CENTRAL_STATE_RECORD_V2},
+    };
 
     use super::*;
     #[test]
@@ -312,5 +358,216 @@ mod test {
         let ser = serialize_record_v2_content(content, Record::A).unwrap();
         let des = deserialize_record_v2_content(&ser, Record::A).unwrap();
         assert_eq!(content, des);
+    }
+
+    fn build_v2_record(
+        staleness_validation: Validation,
+        roa_validation: Validation,
+        staleness_id: &[u8],
+        roa_id: &[u8],
+        content: &[u8],
+    ) -> Vec<u8> {
+        let mut buf = vec![];
+        buf.extend_from_slice(&(staleness_validation as u16).to_le_bytes());
+        buf.extend_from_slice(&(roa_validation as u16).to_le_bytes());
+        buf.extend_from_slice(&(content.len() as u32).to_le_bytes());
+        buf.extend_from_slice(staleness_id);
+        buf.extend_from_slice(roa_id);
+        buf.extend_from_slice(content);
+        buf
+    }
+
+    #[test]
+    fn decode_record_v2_fields_reads_fields_in_order() {
+        let staleness_id = [0x11u8; 32];
+        let roa_id = [0x22u8; 32];
+        let content = [0x33u8; 32];
+        let buf = build_v2_record(
+            Validation::Solana,
+            Validation::Solana,
+            &staleness_id,
+            &roa_id,
+            &content,
+        );
+
+        let fields = decode_record_v2_fields(&buf).unwrap();
+        assert!(matches!(fields.staleness_validation, Validation::Solana));
+        assert!(matches!(fields.roa_validation, Validation::Solana));
+        assert_eq!(fields.staleness_id, &staleness_id);
+        assert_eq!(fields.roa_id, &roa_id);
+        assert_eq!(fields.content_bytes, &content);
+
+        let parsed = fields.parse_content(Record::Sol).unwrap();
+        assert_eq!(parsed.staleness_id, &staleness_id);
+        assert_eq!(parsed.roa_id, &roa_id);
+        assert_eq!(parsed.content, Pubkey::new_from_array(content).to_string());
+    }
+
+    #[test]
+    fn decode_record_v2_fields_accepts_unaligned_input() {
+        let staleness_id = [0x11u8; 32];
+        let roa_id = [0x22u8; 32];
+        let content = [0x33u8; 32];
+        let record = build_v2_record(
+            Validation::Solana,
+            Validation::Solana,
+            &staleness_id,
+            &roa_id,
+            &content,
+        );
+        let alignment = std::mem::align_of::<RecordHeader>();
+        let mut storage = vec![0; alignment + record.len()];
+        let offset = (1..=alignment)
+            .find(|offset| storage[*offset..].as_ptr().align_offset(alignment) != 0)
+            .unwrap();
+        storage[offset..offset + record.len()].copy_from_slice(&record);
+        let unaligned = &storage[offset..offset + record.len()];
+        assert_ne!(unaligned.as_ptr().align_offset(alignment), 0);
+
+        let expected = decode_record_v2_fields(&record).unwrap();
+        let actual = decode_record_v2_fields(unaligned).unwrap();
+        assert_eq!(
+            actual.header.staleness_validation,
+            expected.header.staleness_validation
+        );
+        assert_eq!(
+            actual.header.right_of_association_validation,
+            expected.header.right_of_association_validation
+        );
+        assert_eq!(actual.header.content_length, expected.header.content_length);
+        assert_eq!(actual.staleness_id, expected.staleness_id);
+        assert_eq!(actual.roa_id, expected.roa_id);
+        assert_eq!(actual.content_bytes, expected.content_bytes);
+    }
+
+    #[test]
+    fn decode_record_v2_fields_rejects_invalid_layouts() {
+        let truncated_validation =
+            build_v2_record(Validation::Solana, Validation::Solana, &[0u8; 16], &[], &[]);
+        let mut truncated_content =
+            build_v2_record(Validation::None, Validation::None, &[], &[], &[0x44]);
+        truncated_content.pop();
+
+        for data in [
+            vec![0; RecordHeader::LEN - 1],
+            truncated_validation,
+            truncated_content,
+        ] {
+            assert!(matches!(
+                decode_record_v2_fields(&data),
+                Err(SnsError::InvalidRecordData)
+            ));
+        }
+
+        let mut invalid_validation =
+            build_v2_record(Validation::None, Validation::None, &[], &[], &[]);
+        invalid_validation[..2].copy_from_slice(&u16::MAX.to_le_bytes());
+        assert!(matches!(
+            decode_record_v2_fields(&invalid_validation),
+            Err(SnsError::RecordsError(_))
+        ));
+    }
+
+    #[test]
+    fn v2_record_key_for_subdomain_matches_domain_key_derivation() {
+        let domain = "dex.bonfida";
+        let record = Record::Url;
+        let domain_key = get_sns_domain_key(domain).unwrap().key;
+        let expected = derive(
+            &format!("\x02{}", record.as_str()),
+            &domain_key,
+            Some(CENTRAL_STATE_RECORD_V2),
+        );
+
+        let actual = get_record_v2_key(domain, record).unwrap();
+
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn verify_roa_accepts_guardian_records() {
+        for (record, content) in [
+            (Record::Url, b"https://sns.id".to_vec()),
+            (
+                Record::CNAME,
+                serialize_record_v2_content("sns.id", Record::CNAME).unwrap(),
+            ),
+        ] {
+            let buf = build_v2_record(
+                Validation::None,
+                Validation::Solana,
+                &[],
+                GUARDIAN_ID.as_ref(),
+                &content,
+            );
+
+            let parsed = decode_record_v2_fields(&buf)
+                .unwrap()
+                .parse_content(record)
+                .unwrap();
+
+            assert!(parsed.verify_roa().is_ok(), "record {record:?}");
+        }
+    }
+
+    #[test]
+    fn verify_roa_accepts_solana_self_signed_records() {
+        let content = [0x44u8; 32];
+        let buf = build_v2_record(
+            Validation::None,
+            Validation::Solana,
+            &[],
+            &content,
+            &content,
+        );
+
+        let parsed = decode_record_v2_fields(&buf)
+            .unwrap()
+            .parse_content(Record::Sol)
+            .unwrap();
+
+        assert!(parsed.verify_roa().is_ok());
+    }
+
+    #[test]
+    fn verify_roa_accepts_ethereum_self_signed_records() {
+        let content = [0x55u8; 20];
+        let buf = build_v2_record(
+            Validation::None,
+            Validation::Ethereum,
+            &[],
+            &content,
+            &content,
+        );
+
+        let parsed = decode_record_v2_fields(&buf)
+            .unwrap()
+            .parse_content(Record::Eth)
+            .unwrap();
+
+        assert!(parsed.verify_roa().is_ok());
+    }
+
+    #[test]
+    fn verify_roa_rejects_wrong_self_signed_id() {
+        let content = [0x55u8; 20];
+        let roa_id = [0x66u8; 20];
+        let buf = build_v2_record(
+            Validation::None,
+            Validation::Ethereum,
+            &[],
+            &roa_id,
+            &content,
+        );
+
+        let parsed = decode_record_v2_fields(&buf)
+            .unwrap()
+            .parse_content(Record::Eth)
+            .unwrap();
+
+        assert!(matches!(
+            parsed.verify_roa(),
+            Err(SnsError::UnverifiedRecord)
+        ));
     }
 }

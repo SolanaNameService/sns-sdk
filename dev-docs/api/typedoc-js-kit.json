@@ -1,0 +1,42 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "name": "JS Kit SDK API Reference",
+  "plugin": ["typedoc-plugin-markdown"],
+  "entryPoints": [
+    "../../js-kit/src/address/index.ts",
+    "../../js-kit/src/bindings/index.ts",
+    "../../js-kit/src/codecs.ts",
+    "../../js-kit/src/constants/index.ts",
+    "../../js-kit/src/domain/index.ts",
+    "../../js-kit/src/errors.ts",
+    "../../js-kit/src/instructions/index.ts",
+    "../../js-kit/src/nft/index.ts",
+    "../../js-kit/src/record/index.ts",
+    "../../js-kit/src/states/index.ts",
+    "../../js-kit/src/types/index.ts",
+    "../../js-kit/src/utils/index.ts"
+  ],
+  "tsconfig": "../../js-kit/tsconfig.json",
+  "out": "../docs/sdks/js-kit/api",
+  "readme": "none",
+  "entryFileName": "index",
+  "hidePageHeader": true,
+  "indexFormat": "table",
+  "cleanOutputDir": true,
+  "excludeExternals": true,
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "includeVersion": false,
+  "requiredToBeDocumented": [
+    "Class",
+    "Interface",
+    "Enum",
+    "TypeAlias",
+    "Variable"
+  ],
+  "validation": {
+    "invalidLink": true,
+    "notDocumented": true,
+    "notExported": false
+  }
+}

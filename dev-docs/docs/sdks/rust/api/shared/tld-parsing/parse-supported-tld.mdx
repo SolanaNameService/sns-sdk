@@ -1,0 +1,32 @@
+---
+displayed_sidebar: docsSidebar
+title: parse_supported_tld
+description: Split a supported read-side suffix from a domain.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [TLD parsing](../tld-parsing.mdx) / `parse_supported_tld`
+
+# Function: `parse_supported_tld()`
+
+```rust
+pub fn parse_supported_tld(domain: &str) -> Result<(&str, Tld), SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/tld.rs" line={54} label="tld.rs:54" />
+
+Strips a suffix in `SUPPORTED_TLDS` and returns the borrowed bare name plus `Tld`. Current rollout configuration controls whether `.sol` is supported.
+
+## Parameters
+
+`domain`: full read-side domain including a supported suffix.
+
+## Returns
+
+The suffix-trimmed `&str` and `Tld`, or `SnsError::UnsupportedTld`.
+
+## Example
+
+```rust
+use sns_sdk::tld::parse_supported_tld;
+let (name, tld) = parse_supported_tld("example.sns")?;
+```

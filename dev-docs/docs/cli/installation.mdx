@@ -1,0 +1,38 @@
+---
+title: CLI installation
+description: Install SNS CLI v3 and configure its Solana RPC endpoint.
+---
+
+Install the `sns` command-line utility for mainnet SNS data and transactions.
+
+## Install the package
+
+Install the published crate with Cargo:
+
+```bash
+cargo install sns-cli
+```
+
+Confirm the executable is available:
+
+```bash
+sns --help
+```
+
+## RPC Configuration
+
+The CLI selects its RPC endpoint in this order:
+
+1. The command's `--url <URL>` or `-u <URL>` option.
+2. The `RPC_URL` environment variable.
+3. The public mainnet RPC endpoint.
+
+The CLI does not read Solana CLI configuration. Changing the RPC URL does not change the mainnet SNS program IDs compiled into the executable.
+
+## Signing Configuration
+
+Read-only commands do not require a keypair. Commands that sign and submit transactions require the path to a Solana keypair JSON file as a command argument.
+
+## Next
+
+Continue to the [CLI Quickstart](/docs/cli/quickstart) for representative read and signed-write workflows.

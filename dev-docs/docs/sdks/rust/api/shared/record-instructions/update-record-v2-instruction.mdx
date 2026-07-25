@@ -1,0 +1,33 @@
+---
+displayed_sidebar: docsSidebar
+title: update_record_v2_instruction
+description: Build an instruction that replaces V2 record content.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Record instructions](../record-instructions.mdx) / `update_record_v2_instruction`
+
+# Function: `update_record_v2_instruction()`
+
+```rust
+pub fn update_record_v2_instruction(domain: &str, record: Record, content: &str, owner: Pubkey, payer: Pubkey) -> Result<Instruction, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/bindings/record_v2.rs" line={61} label="record_v2.rs:61" />
+
+Derives the V2 record and domain keys, serializes replacement content, and builds an edit instruction.
+
+## Parameters
+
+`domain` is a canonical lowercase `.sns` name; `record` selects its encoding; `owner` authorizes the update and `payer` funds it.
+
+## Returns
+
+An unsigned `Instruction`. Parsing and serialization failures return `SnsError`.
+
+## Example
+
+```rust
+use sns_sdk::{bindings::record_v2::update_record_v2_instruction, record::Record};
+
+let instruction = update_record_v2_instruction("example.sns", Record::Url, "https://new.example", owner, payer)?;
+```

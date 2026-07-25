@@ -1,0 +1,54 @@
+---
+displayed_sidebar: docsSidebar
+title: get_record
+description: Read one legacy SNS record account.
+---
+
+[Rust SDK API Reference](../../index.mdx) / Non-blocking APIs / [Record V1](../record-v1.mdx) / `get_record`
+
+# Function: `get_record()`
+
+```rust
+pub async fn get_record(
+    rpc_client: &RpcClient,
+    domain: &str,
+    record: Record,
+) -> Result<Option<(NameRecordHeader, Vec<u8>)>, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/non_blocking/record_v1.rs" line={11} label="rust-crates/sns-sdk/src/non_blocking/record_v1.rs:11" />
+
+Validates the full domain's supported TLD, derives the V1 record address, and reads the account through RPC. The byte vector excludes the `NameRecordHeader`; deserialize it with the V1 record helper.
+
+## Parameters
+
+| Parameter    | Type         | Description                                  |
+| ------------ | ------------ | -------------------------------------------- |
+| `rpc_client` | `&RpcClient` | Non-blocking Solana RPC client.              |
+| `domain`     | `&str`       | Full supported `.sns` or `.sol` domain name. |
+| `record`     | `Record`     | Legacy record type to retrieve.              |
+
+## Returns
+
+`Result<Option<(NameRecordHeader, Vec<u8>)>, SnsError>`. `Some` contains the account header and payload; `None` means the record account does not exist.
+
+## Errors
+
+- `SnsError::UnsupportedTld` when `domain` is bare or has an unsupported suffix.
+- `SnsError::InvalidNameAccountData` when a present record account is invalid.
+- `SnsError::SolanaClient` when a TLD or record RPC request fails.
+
+## Example
+
+```rust
+use sns_sdk::{non_blocking::record_v1::get_record, record::Record};
+
+if let Some((_header, payload)) = get_record(&client, "bonfida.sns", Record::Url).await? {
+    println!("record bytes: {}", payload.len());
+}
+```
+
+## Related APIs
+
+- [`deserialize_record`](/docs/sdks/rust/api/shared/record-v1)
+- [`get_record_v2`](../record-v2/get-record-v2.mdx)

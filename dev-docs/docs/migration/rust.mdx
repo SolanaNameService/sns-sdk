@@ -1,0 +1,206 @@
+---
+title: Rust SDK v2
+description: Update applications from Rust SDK v1 to Rust SDK v2.
+---
+
+Use this guide to migrate an application from Rust SDK v1 to Rust SDK v2.
+
+## Install v2
+
+The default build exposes asynchronous RPC APIs under `sns_sdk::non_blocking`:
+
+```toml
+[dependencies]
+sns-sdk = "2"
+solana-client = "2.1"
+solana-sdk = "2.1"
+tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
+```
+
+For synchronous RPC APIs, disable default features and enable `blocking`:
+
+```toml
+[dependencies]
+sns-sdk = { version = "2", default-features = false, features = ["blocking"] }
+solana-client = "2.1"
+solana-sdk = "2.1"
+```
+
+Add `subdomain` to the blocking feature list when the application uses sub-registrar APIs.
+
+## Import v2 APIs
+
+The examples use the default non-blocking modules:
+
+```rust
+use sns_sdk::{
+    derivation::get_sns_domain_key,
+    non_blocking::{
+        domain::get_sns_domains_for_owner,
+        primary_domain::get_primary_domain,
+        resolve::{resolve, AllowPda},
+    },
+    record::Record,
+};
+```
+
+In a blocking build, use the equivalent modules under `sns_sdk::blocking` and remove `.await` from RPC calls.
+
+## Update domain inputs
+
+Use the input form required by each API family:
+
+| API family                                              | v1 input                                 | v2 input                                              |
+| ------------------------------------------------------- | ---------------------------------------- | ----------------------------------------------------- |
+| High-level reads, including resolution and record reads | Bare name or legacy `.sol` name          | Full name with a supported suffix, such as `name.sns` |
+| Registration and V2 record writes                       | API-dependent bare or legacy `.sol` name | Lowercase full `.sns` name                            |
+| SNS and record-key derivation                           | Bare name or legacy `.sol` name          | TLD-less name, such as `name` or `sub.name`           |
+| Raw name-registry builders                              | Raw name or explicit account key         | Raw name or explicit account key                      |
+
+Do not append `.sns` to derivation helpers or raw name-registry inputs.
+
+:::note `.sol` resolution and reads
+
+SNS-backed `.sol` resolution and reads pause automatically at finalized slot <code><CutoffSlot /></code> to transition `.sol` domains to the SRS program; slot checks are not needed at the application level. SRS-backed `.sol` resolution will be enabled in a future SDK update.
+
+:::
+
+## Update resolution
+
+Rename `resolve_owner` to `resolve`, pass a full `.sns` name, and add the required `AllowPda` argument:
+
+```rust title="v1"
+use sns_sdk::non_blocking::resolve::resolve_owner;
+
+let owner = resolve_owner(&client, "name").await?;
+// Result<Option<Pubkey>, SnsError>
+```
+
+```rust title="v2"
+use sns_sdk::non_blocking::resolve::{resolve, AllowPda};
+
+let owner = resolve(&client, "name.sns", AllowPda::Deny).await?;
+// Result<Pubkey, SnsError>
+```
+
+Remove `None` handling from successful resolution. A domain that does not exist now returns `SnsError::DomainDoesNotExist`.
+
+Use `AllowPda::Deny` unless the application intentionally supports program-derived resolution targets.
+
+## Update primary-domain lookup
+
+Rename favourite-domain APIs and move the RPC lookup into its mode-specific module:
+
+```rust title="v1"
+use sns_sdk::non_blocking::resolve::get_favourite_domain;
+
+let primary = get_favourite_domain(&client, &owner).await?;
+```
+
+```rust title="v2"
+use sns_sdk::non_blocking::primary_domain::get_primary_domain;
+
+let primary = get_primary_domain(&client, &owner).await?;
+```
+
+The result remains `Option<Pubkey>` containing the primary name-account key, not a display name. Other renamed symbols include `FavouriteDomain` to `PrimaryDomain`, `register_favourite` to `set_primary_domain`, and `get_register_favourite_instruction` to `set_primary_domain_instruction`.
+
+## Update owner-domain lookup
+
+Rename `get_domains_owner` and move it into the `domain` module:
+
+```rust title="v1"
+let domains = sns_sdk::non_blocking::resolve::get_domains_owner(
+    &client,
+    owner,
+)
+.await?;
+```
+
+```rust title="v2"
+let domains = sns_sdk::non_blocking::domain::get_sns_domains_for_owner(
+    &client,
+    owner,
+)
+.await?;
+```
+
+The result remains `Vec<Pubkey>` containing top-level name-account keys owned by the wallet. Tokenized domains are not included.
+
+For tokenized domains, rename `get_tokenized_domains` to `nft::get_sns_nfts_for_owner`. Its result changes from `Vec<(String, Pubkey)>` to `Vec<SnsNftDomain>` with `reverse`, `key`, and `mint` fields.
+
+## Update key derivation
+
+Replace `get_domain_key` with `get_sns_domain_key`, keep the input TLD-less, and read the returned `.key` field:
+
+```rust title="v1"
+let key = sns_sdk::derivation::get_domain_key("sub.name.sol")?;
+```
+
+```rust title="v2"
+let domain = get_sns_domain_key("sub.name")?;
+let key = domain.key;
+```
+
+The v2 `DomainKeyWithParent` also exposes `parent` and `is_sub`. `get_srs_domain_key("name")` derives an SRS address only; it does not enable SRS-backed resolution.
+
+## Update record reads
+
+Move record getters into versioned, mode-specific modules:
+
+| v1                                             | v2                                   |
+| ---------------------------------------------- | ------------------------------------ |
+| `resolve::resolve_record`                      | `record_v1::get_record`              |
+| `record::record_v2::retrieve_record_v2`        | `record_v2::get_record_v2`           |
+| `record::record_v2::retrieve_records_batch_v2` | `record_v2::get_multiple_records_v2` |
+
+V2 getters now borrow the RPC client, take the domain before the record, and require a full domain:
+
+```rust title="v2"
+let record = sns_sdk::non_blocking::record_v2::get_record_v2(
+    &client,
+    "name.sns",
+    Record::Url,
+)
+.await?;
+```
+
+The result remains optional when the record account does not exist. Returned bytes have the SPL Name Registry header removed; pass the payload to `decode_record_v2_fields` before parsing and validating it.
+
+## Update registration
+
+Replace the mode-specific `register_domain_name` RPC helper with the shared instruction builder:
+
+```rust title="v1"
+let transaction = sns_sdk::non_blocking::register::register_domain_name(
+    &client,
+    "name",
+    space,
+    &buyer,
+    &buyer_token_account,
+    None,
+    None,
+)
+.await?;
+```
+
+```rust title="v2"
+let instructions = sns_sdk::bindings::register_domain::register_domain(
+    "name.sns",
+    space,
+    &buyer,
+    &buyer_token_account,
+    None,
+    None,
+)?;
+```
+
+The v2 builder has no RPC argument and returns `Vec<Instruction>` instead of an unsigned `Transaction`. The application constructs the transaction, selects its fee payer, fetches a recent blockhash, collects required signatures, and submits it.
+
+## Verify the migration
+
+- Rename `resolve_owner`, add `AllowPda`, pass a full `.sns` name, and remove successful `None` handling.
+- Update primary-domain, owner-domain, tokenized-domain, and record module paths and result handling.
+- Pass full lowercase `.sns` domain names to registration and V2 record builders.
+- Keep address-derivation inputs TLD-less and raw registry inputs unchanged.
+- Update frontend formatting to display TLD-less SNS domains with `.sns` suffix.

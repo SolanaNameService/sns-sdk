@@ -1,6 +1,12 @@
+/**
+ * Integer encoding helpers exported from the package root.
+ * @module Integer utilities
+ */
 import { Buffer } from "buffer";
 import { InvalidBufferLengthError, U64OverflowError } from "./error";
+/** Unsigned 32-bit integer wrapper for SPL Name Service instruction encoding. */
 export class Numberu32 {
+  /** Wrapped unsigned integer value. */
   value: bigint;
 
   constructor(value: number | string | bigint) {
@@ -39,7 +45,9 @@ export class Numberu32 {
   }
 }
 
+/** Unsigned 64-bit integer wrapper for SPL Name Service instruction encoding. */
 export class Numberu64 {
+  /** Wrapped unsigned integer value. */
   value: bigint;
 
   constructor(value: number | string | bigint) {

@@ -1,0 +1,37 @@
+---
+displayed_sidebar: docsSidebar
+title: get_register_instruction
+description: Build a registration instruction from explicit generated accounts and parameters.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Domain registration](../domain-registration.mdx) / `get_register_instruction`
+
+# Function: `get_register_instruction()`
+
+```rust
+pub fn get_register_instruction(program_id: Pubkey, accounts: create::Accounts<Pubkey>, params: create::Params) -> Instruction
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/bindings/register_domain.rs" line={213} label="register_domain.rs:213" />
+
+Builds the raw `CreateSplitV2` registration instruction from caller-provided generated accounts and parameters. It does not validate, sign, or submit it.
+
+## Parameters
+
+| Parameter    | Type                       | Description                                             |
+| ------------ | -------------------------- | ------------------------------------------------------- |
+| `program_id` | `Pubkey`                   | Registration program ID.                                |
+| `accounts`   | `create::Accounts<Pubkey>` | Generated account contract, including required signers. |
+| `params`     | `create::Params`           | Generated registration parameters.                      |
+
+## Returns
+
+An unsigned `Instruction`.
+
+## Example
+
+```rust
+use sns_sdk::bindings::register_domain::{create, get_register_instruction};
+
+let instruction = get_register_instruction(program_id, accounts, create::Params { name, space: 1_000, referrer_idx_opt: None });
+```

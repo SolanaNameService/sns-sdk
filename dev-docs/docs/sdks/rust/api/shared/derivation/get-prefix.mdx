@@ -1,0 +1,35 @@
+---
+displayed_sidebar: docsSidebar
+title: get_prefix
+description: Return the raw SPL Name Service prefix for a domain or record version.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Address derivation](../derivation.mdx) / `get_prefix`
+
+# Function: `get_prefix()`
+
+```rust
+pub fn get_prefix(domain: Domain) -> String
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/derivation.rs" line={47} label="derivation.rs:47" />
+
+Returns the raw prefix used when constructing a name-registry label: empty for a main name, NUL for a subdomain, and version bytes for records.
+
+## Parameters
+
+| Parameter | Type     | Description                                 |
+| --------- | -------- | ------------------------------------------- | ----- |
+| `domain`  | `Domain` | `Main`, `Sub`, or `Record(RecordVersion::V1 | V2)`. |
+
+## Returns
+
+The prefix as a `String`.
+
+## Example
+
+```rust
+use sns_sdk::derivation::{get_prefix, Domain};
+
+assert_eq!(get_prefix(Domain::Sub), "\0");
+```

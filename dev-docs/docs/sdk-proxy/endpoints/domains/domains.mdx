@@ -1,0 +1,66 @@
+---
+title: "GET /domains/:owner"
+description: List directly owned and tokenized SNS domains for a wallet.
+---
+
+Return the reverse-resolved `.sns` domains owned directly or through domain NFTs by a wallet.
+
+## Request
+
+```http
+GET /domains/:owner
+```
+
+## Path parameters
+
+### `owner`
+
+Required. The wallet's base58 public key.
+
+## Query parameters
+
+### `rpc`
+
+Optional. A non-empty Solana RPC URL that overrides the proxy Worker's `RPC_URL` binding for this request.
+
+## Response
+
+A successful request returns `200 OK` with directly registry-owned entries followed by tokenized-domain entries:
+
+```ts
+type DomainsResponse = {
+  s: "ok";
+  result: Array<{
+    domain: string;
+    key: string;
+  }>;
+};
+```
+
+`domain` is the fully qualified `.sns` name. `key` is its name-account public key. Subdomains and entries without reverse-name data are omitted.
+
+## Example
+
+```bash
+curl "https://sdk-proxy.sns.id/domains/<OWNER_PUBLIC_KEY>"
+```
+
+```json
+{
+  "s": "ok",
+  "result": [
+    {
+      "domain": "name.sns",
+      "key": "<DOMAIN_ACCOUNT_PUBLIC_KEY>"
+    }
+  ]
+}
+```
+
+## Errors
+
+| Status | `result`          | When                                             |
+| ------ | ----------------- | ------------------------------------------------ |
+| `400`  | `Invalid input`   | `owner` is not a valid Solana public key.        |
+| `502`  | `RPC unavailable` | The selected RPC returns a JSON-RPC error.       |
+| `500`  | `Internal error`  | No RPC is configured, or another failure occurs. |

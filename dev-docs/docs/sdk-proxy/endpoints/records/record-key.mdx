@@ -1,0 +1,50 @@
+---
+title: "GET /record-key/:domain/:record"
+description: Deprecated V1 record-key route.
+---
+
+Return a deprecation response directing callers to the V2 record-key route.
+
+## Request
+
+```http
+GET /record-key/:domain/:record
+```
+
+## Path parameters
+
+### `domain`
+
+Retained for compatibility. The deprecated route does not validate or use this value.
+
+### `record`
+
+Retained for compatibility. The deprecated route does not validate or use this value.
+
+## Response
+
+Every request returns `400 Bad Request`:
+
+```ts
+type DeprecatedRecordKeyResponse = {
+  s: "error";
+  result: "This endpoint is deprecated. Use /record-key-v2/:domain/:record instead.";
+};
+```
+
+## Example
+
+```bash
+curl "https://sdk-proxy.sns.id/record-key/bonfida/SOL"
+```
+
+```json
+{
+  "s": "error",
+  "result": "This endpoint is deprecated. Use /record-key-v2/:domain/:record instead."
+}
+```
+
+## Status
+
+Deprecated. Use [`GET /record-key-v2/:domain/:record`](/docs/sdk-proxy/endpoints/records/record-key-v2).

@@ -3,7 +3,9 @@ import { PublicKey, TransactionInstruction } from "@solana/web3.js";
 import { serialize } from "borsh";
 import type { AccountKey } from "./types";
 
-export class burnInstruction {
+/** Serializable registrar instruction for burning a registered domain. */
+export class BurnInstruction {
+  /** Instruction discriminator. */
   tag: number;
   static schema = {
     struct: {
@@ -14,9 +16,11 @@ export class burnInstruction {
   constructor() {
     this.tag = 16;
   }
+  /** Serializes the registrar instruction payload. */
   serialize(): Uint8Array {
-    return serialize(burnInstruction.schema, this);
+    return serialize(BurnInstruction.schema, this);
   }
+  /** Builds the transaction instruction with the required burn accounts. */
   getInstruction(
     programId: PublicKey,
     nameServiceId: PublicKey,

@@ -1,0 +1,74 @@
+import { createSubdomain, registerDomain } from "@bonfida/spl-name-service";
+import { getAssociatedTokenAddress } from "@solana/spl-token";
+import { PublicKey } from "@solana/web3.js";
+import type { TransactionInstruction } from "@solana/web3.js";
+import type { Hono } from "hono";
+
+import { toSnsDomain } from "../utils/domain";
+import {
+  getConnection,
+  handleApiError,
+  response,
+  type Env,
+} from "../utils/http";
+import { buildInstructionResponse } from "../utils/instructions";
+import {
+  createSubdomainQuerySchema,
+  registerQuerySchema,
+} from "../utils/schemas";
+
+const USDC_MINT = new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
+
+export const registerInstructionRoutes = (app: Hono<Env>) => {
+  app.get("/register", async (c) => {
+    try {
+      const { buyer, domain, space, serialize, referrer, mint } =
+        registerQuerySchema.parse(c.req.query());
+      const paymentMint = mint ?? USDC_MINT;
+      const ata = await getAssociatedTokenAddress(paymentMint, buyer, true);
+      const connection = getConnection(c);
+      const ixs = await registerDomain(
+        toSnsDomain(domain),
+        space,
+        buyer,
+        ata,
+        paymentMint,
+        referrer,
+      );
+      const result = await buildInstructionResponse(
+        connection,
+        buyer,
+        ixs,
+        serialize,
+      );
+
+      return c.json(response(true, result));
+    } catch (err) {
+      return handleApiError(c, err);
+    }
+  });
+
+  app.get("/create-subdomain", async (c) => {
+    try {
+      const { owner, subdomain, serialize } = createSubdomainQuerySchema.parse(
+        c.req.query(),
+      );
+      const connection = getConnection(c);
+      const ixs: TransactionInstruction[] = [];
+      const fullSubdomain = toSnsDomain(subdomain);
+      const ix = await createSubdomain(connection, fullSubdomain, owner, 0);
+      ixs.push(...ix);
+
+      const result = await buildInstructionResponse(
+        connection,
+        owner,
+        ixs,
+        serialize,
+      );
+
+      return c.json(response(true, result));
+    } catch (err) {
+      return handleApiError(c, err, { resource: "Domain" });
+    }
+  });
+};
