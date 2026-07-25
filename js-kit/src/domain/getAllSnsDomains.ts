@@ -1,4 +1,9 @@
-import { Base58EncodedBytes, GetProgramAccountsApi, Rpc } from "@solana/kit";
+import {
+  Address,
+  Base58EncodedBytes,
+  GetProgramAccountsApi,
+  Rpc,
+} from "@solana/kit";
 
 import { addressCodec, base64Codec } from "../codecs";
 import {
@@ -6,8 +11,32 @@ import {
   SNS_ROOT_DOMAIN_ACCOUNT,
 } from "../constants/addresses";
 
-interface GetAllSnsDomainsParams {
+/**
+ * Parameters for retrieving all SNS domains.
+ *
+ * @example
+ * ```ts
+ * const params: GetAllSnsDomainsParams = { rpc };
+ * ```
+ */
+export interface GetAllSnsDomainsParams {
+  /** RPC client. */
   rpc: Rpc<GetProgramAccountsApi>;
+}
+
+/**
+ * A top-level SNS domain account.
+ *
+ * @example
+ * ```ts
+ * const domain: GetAllSnsDomainsResult = { domainAddress, owner };
+ * ```
+ */
+export interface GetAllSnsDomainsResult {
+  /** Domain account address. */
+  domainAddress: Address;
+  /** Registry owner address. */
+  owner: Address;
 }
 
 /**
@@ -16,8 +45,15 @@ interface GetAllSnsDomainsParams {
  * @param params Domain retrieval parameters
  * @param params.rpc RPC client implementing program account lookup
  * @returns Domain account addresses and owners.
+ *
+ * @example
+ * ```ts
+ * const domains = await getAllSnsDomains({ rpc });
+ * ```
  */
-export const getAllSnsDomains = async ({ rpc }: GetAllSnsDomainsParams) => {
+export const getAllSnsDomains = async ({
+  rpc,
+}: GetAllSnsDomainsParams): Promise<GetAllSnsDomainsResult[]> => {
   const accounts = await rpc
     .getProgramAccounts(NAME_PROGRAM_ADDRESS, {
       encoding: "base64",

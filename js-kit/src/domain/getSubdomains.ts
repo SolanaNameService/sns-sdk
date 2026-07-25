@@ -11,18 +11,44 @@ import {
   NAME_PROGRAM_ADDRESS,
   REVERSE_LOOKUP_CLASS,
 } from "../constants/addresses";
-import { deserializeReverse } from "../utils/deserializers/deserializeReverse";
 import { assertTldSupported } from "../utils/assertTldSupported";
+import { deserializeReverse } from "../utils/deserializers/deserializeReverse";
 import { getReverseAddressFromDomainAddress } from "../utils/getReverseAddressFromDomainAddress";
 import { getSnsDomainAddress } from "./getSnsDomainAddress";
 
-interface GetSubdomainsParams {
+/**
+ * Parameters for retrieving subdomains under a parent domain.
+ *
+ * @example
+ * ```ts
+ * const params: GetSubdomainsParams = {
+ *   rpc,
+ *   domain: "example.sns",
+ * };
+ * ```
+ */
+export interface GetSubdomainsParams {
+  /** RPC client. */
   rpc: Rpc<GetProgramAccountsApi & GetSlotApi>;
+  /** Full parent domain name, including its `.sns` or `.sol` suffix. */
   domain: string;
 }
 
-interface Result {
+/**
+ * A subdomain and the owner recorded in its name registry.
+ *
+ * @example
+ * ```ts
+ * const subdomain: GetSubdomainsResult = {
+ *   subdomain: "blog",
+ *   owner: "Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8" as Address,
+ * };
+ * ```
+ */
+export interface GetSubdomainsResult {
+  /** TLD-less label recorded by the subdomain's reverse lookup account. */
   subdomain: string;
+  /** Owner address stored in the subdomain's name registry account. */
   owner: Address;
 }
 
@@ -36,11 +62,16 @@ interface Result {
  * @param params.rpc RPC client implementing program account lookup
  * @param params.domain Full parent domain name including a `.sns` or `.sol` suffix
  * @returns Subdomain names and owner addresses.
+ *
+ * @example
+ * ```ts
+ * const subdomains = await getSubdomains({ rpc, domain: "example.sns" });
+ * ```
  */
 export const getSubdomains = async ({
   rpc,
   domain,
-}: GetSubdomainsParams): Promise<Result[]> => {
+}: GetSubdomainsParams): Promise<GetSubdomainsResult[]> => {
   const [trimmedDomain] = await assertTldSupported({ rpc, domain });
   const { domainAddress, isSub } = await getSnsDomainAddress({
     domain: trimmedDomain,

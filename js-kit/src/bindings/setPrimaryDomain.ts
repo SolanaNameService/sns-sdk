@@ -9,9 +9,22 @@ import { RegisterPrimaryInstruction } from "../instructions/registerPrimaryInstr
 import { PrimaryDomainState } from "../states/primaryDomain";
 import { RegistryState } from "../states/registry";
 
+/**
+ * Input for setting an owner's already-derived SNS primary domain.
+ *
+ * @example
+ * ```ts
+ * const params: SetPrimaryDomainParams = { rpc, domainAddress, owner };
+ * ```
+ */
 export interface SetPrimaryDomainParams {
+  /** RPC client used to retrieve the domain registry. */
   rpc: Rpc<GetAccountInfoApi>;
+
+  /** Already-derived SNS domain account address. */
   domainAddress: Address;
+
+  /** Owner of the domain account. */
   owner: Address;
 }
 
@@ -26,6 +39,11 @@ export interface SetPrimaryDomainParams {
  * @param params.domainAddress SNS domain account address to set as primary
  * @param params.owner Owner of the domain account
  * @returns Transaction instruction.
+ *
+ * @example
+ * ```ts
+ * const instruction = await setPrimaryDomain({ rpc, domainAddress, owner });
+ * ```
  */
 export const setPrimaryDomain = async ({
   rpc,

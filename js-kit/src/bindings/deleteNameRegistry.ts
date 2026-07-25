@@ -5,11 +5,24 @@ import { DeleteNameRegistryInstruction } from "../instructions/deleteNameRegistr
 import { RegistryState } from "../states/registry";
 import { _deriveAddress } from "../utils/deriveAddress";
 
-interface DeleteNameRegistryParams {
+/**
+ * Parameters for deleting a name registry.
+ *
+ * @example
+ * ```ts
+ * const params: DeleteNameRegistryParams = { rpc, name: "example", refundAddress };
+ * ```
+ */
+export interface DeleteNameRegistryParams {
+  /** RPC client. */
   rpc: Rpc<GetAccountInfoApi>;
+  /** Raw registry name. */
   name: string;
+  /** Account receiving refunded rent. */
   refundAddress: Address;
+  /** Registry class address. */
   classAddress?: Address;
+  /** Parent registry address. */
   parentAddress?: Address;
 }
 
@@ -27,6 +40,11 @@ interface DeleteNameRegistryParams {
  * @param params.classAddress Optional class address for the registry
  * @param params.parentAddress Optional parent registry address
  * @returns Transaction instruction.
+ *
+ * @example
+ * ```ts
+ * const instruction = await deleteNameRegistry({ rpc, name: "example", refundAddress });
+ * ```
  */
 export const deleteNameRegistry = async ({
   rpc,

@@ -13,11 +13,30 @@ import { Record, RecordVersion } from "../types/record";
 import { _parseSnsDomain } from "../utils/parseSnsDomain";
 import { serializeRecordContent } from "../utils/serializers/serializeRecordContent";
 
-interface UpdateRecordParams {
+/**
+ * Parameters for updating a domain record.
+ *
+ * @example
+ * ```ts
+ * const params: UpdateRecordParams = {
+ *   domain: "example.sns",
+ *   record: Record.Url,
+ *   content: "https://example.com",
+ *   owner,
+ *   payer,
+ * };
+ * ```
+ */
+export interface UpdateRecordParams {
+  /** Full `.sns` domain name. */
   domain: string;
+  /** Record type. */
   record: Record;
+  /** Record content. */
   content: string;
+  /** Current domain owner. */
   owner: Address;
+  /** Instruction fee payer. */
   payer: Address;
 }
 
@@ -33,6 +52,17 @@ interface UpdateRecordParams {
  * @param params.owner Current owner of the domain
  * @param params.payer Fee payer for the instruction
  * @returns Transaction instruction.
+ *
+ * @example
+ * ```ts
+ * const instruction = await updateRecord({
+ *   domain: "example.sns",
+ *   record: Record.Url,
+ *   content: "https://example.com",
+ *   owner,
+ *   payer,
+ * });
+ * ```
  */
 export const updateRecord = async ({
   domain,
@@ -49,9 +79,8 @@ export const updateRecord = async ({
   });
 
   if (isSub) {
-    parentAddress = (
-      await getSnsDomainAddress({ domain: trimmedDomain })
-    ).domainAddress;
+    parentAddress = (await getSnsDomainAddress({ domain: trimmedDomain }))
+      .domainAddress;
   }
 
   if (!parentAddress) {

@@ -4,8 +4,18 @@ import { RegistryState } from "../states/registry";
 import { deserializeReverse } from "./deserializers/deserializeReverse";
 import { getReverseAddressFromDomainAddress } from "./getReverseAddressFromDomainAddress";
 
-interface ReverseLookupBatchParams {
+/**
+ * Parameters for batch reverse lookup.
+ *
+ * @example
+ * ```ts
+ * const params: ReverseLookupBatchParams = { rpc, domainAddresses };
+ * ```
+ */
+export interface ReverseLookupBatchParams {
+  /** RPC client. */
   rpc: Rpc<GetMultipleAccountsApi>;
+  /** Domain account addresses. */
   domainAddresses: Address[];
 }
 
@@ -16,6 +26,11 @@ interface ReverseLookupBatchParams {
  * @param params.rpc RPC client implementing multiple-account lookup
  * @param params.domainAddresses Domain addresses to reverse look up
  * @returns Human-readable domain names, or `undefined` when reverse account data is unavailable.
+ *
+ * @example
+ * ```ts
+ * const domains = await reverseLookupBatch({ rpc, domainAddresses });
+ * ```
  */
 export async function reverseLookupBatch({
   rpc,

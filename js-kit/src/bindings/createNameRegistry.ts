@@ -14,14 +14,30 @@ import { CreateNameRegistryInstruction } from "../instructions/createNameRegistr
 import { RegistryState } from "../states/registry";
 import { _generateHash, _getAddressFromHash } from "../utils/deriveAddress";
 
-interface CreateNameRegistryParams {
+/**
+ * Parameters for creating a name registry.
+ *
+ * @example
+ * ```ts
+ * const params: CreateNameRegistryParams = { rpc, name: "example", space: 32, payer, owner };
+ * ```
+ */
+export interface CreateNameRegistryParams {
+  /** RPC client. */
   rpc: Rpc<GetAccountInfoApi & GetMinimumBalanceForRentExemptionApi>;
+  /** Raw registry name. */
   name: string;
+  /** Account data size in bytes. */
   space: number;
+  /** Account paying for creation. */
   payer: Address;
+  /** Owner of the new registry. */
   owner: Address;
+  /** Account funding amount. Defaults to the rent-exempt minimum. */
   lamports?: bigint;
+  /** Registry class address. */
   classAddress?: Address;
+  /** Parent registry address. */
   parentAddress?: Address;
 }
 
@@ -42,6 +58,11 @@ interface CreateNameRegistryParams {
  * @param params.classAddress Optional class address for the registry
  * @param params.parentAddress Optional parent registry address
  * @returns Transaction instruction.
+ *
+ * @example
+ * ```ts
+ * const instruction = await createNameRegistry({ rpc, name: "example", space: 32, payer, owner });
+ * ```
  */
 export const createNameRegistry = async ({
   rpc,

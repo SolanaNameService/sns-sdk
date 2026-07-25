@@ -8,8 +8,18 @@ import {
 import { assertTldSupported } from "../utils/assertTldSupported";
 import { _getSnsDomainOwner } from "./getSnsDomainOwner";
 
-interface GetDomainOwnerParams {
+/**
+ * Parameters for retrieving a domain owner.
+ *
+ * @example
+ * ```ts
+ * const params: GetDomainOwnerParams = { rpc, domain: "example.sns" };
+ * ```
+ */
+export interface GetDomainOwnerParams {
+  /** RPC client. */
   rpc: Rpc<GetAccountInfoApi & GetTokenLargestAccountsApi & GetSlotApi>;
+  /** Full domain name. */
   domain: string;
 }
 
@@ -21,6 +31,11 @@ interface GetDomainOwnerParams {
  * @param params.rpc RPC client implementing account and token-largest-account APIs
  * @param params.domain Full domain name including a `.sns` or `.sol` suffix
  * @returns The domain owner address.
+ *
+ * @example
+ * ```ts
+ * const owner = await getDomainOwner({ rpc, domain: "example.sns" });
+ * ```
  */
 export const getDomainOwner = async ({ rpc, domain }: GetDomainOwnerParams) => {
   const [trimmedDomain] = await assertTldSupported({ rpc, domain });

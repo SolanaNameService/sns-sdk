@@ -21,8 +21,18 @@ import { RegistryState } from "../states/registry";
 import { deserializeReverse } from "../utils/deserializers/deserializeReverse";
 import { getReverseAddressFromDomainAddress } from "../utils/getReverseAddressFromDomainAddress";
 
-interface GetPrimaryDomainsBatchParams {
+/**
+ * Parameters for retrieving primary domains for multiple wallets.
+ *
+ * @example
+ * ```ts
+ * const params: GetPrimaryDomainsBatchParams = { rpc, walletAddresses };
+ * ```
+ */
+export interface GetPrimaryDomainsBatchParams {
+  /** RPC client. */
   rpc: Rpc<GetMultipleAccountsApi & GetTokenLargestAccountsApi>;
+  /** Wallet addresses. */
   walletAddresses: Address[];
 }
 
@@ -43,6 +53,11 @@ interface ValidPrimary {
  * @param params.rpc RPC client implementing multiple-account and token-largest-account APIs
  * @param params.walletAddresses Wallet addresses whose primary domains are retrieved
  * @returns Primary domain names, or `undefined` when no valid non-stale primary domain is found.
+ *
+ * @example
+ * ```ts
+ * const domains = await getPrimaryDomainsBatch({ rpc, walletAddresses });
+ * ```
  */
 export const getPrimaryDomainsBatch = async ({
   rpc,
@@ -133,7 +148,9 @@ export const getPrimaryDomainsBatch = async ({
       parentRevAccount.exists &&
       parentRevAccount.programAddress === NAME_PROGRAM_ADDRESS
     ) {
-      const des = deserializeReverse({ data: parentRevAccount.data.slice(96) });
+      const des = deserializeReverse({
+        data: parentRevAccount.data.slice(96),
+      });
       parentRev = `.${des}`;
     }
 

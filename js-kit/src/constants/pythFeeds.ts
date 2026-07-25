@@ -1,8 +1,10 @@
 import { Address } from "@solana/kit";
 
+/** Program address of the legacy Pyth oracle program. */
 export const PYTH_PROGRAM_ID =
   "pyt2F414BA6dPttK6RddPZUdHfapoBN24GL5wbrPCou" as Address;
 
+/** Maps supported payment mint addresses to their Pyth price-feed identifiers. */
 export const PYTH_FEEDS = new Map<string, number[]>([
   [
     "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v" as Address,

@@ -27,6 +27,11 @@ import { uint8ArraysEqual } from "../utils/uint8Array/uint8ArraysEqual";
  * @param params.record Record type
  * @param params.state Record state
  * @returns The default verifier, or `undefined` when no verifier is found.
+ *
+ * @example
+ * ```ts
+ * const verifier = _getDefaultVerifier({ record: Record.Url, state });
+ * ```
  */
 export const _getDefaultVerifier = ({
   record,
@@ -57,6 +62,11 @@ export const _getDefaultVerifier = ({
  * @param params.state Record state
  * @param params.verifier Verifier for the record
  * @returns True if the association is valid, false otherwise.
+ *
+ * @example
+ * ```ts
+ * const valid = _verifyRoaSync({ record: Record.Url, state, verifier });
+ * ```
  */
 export const _verifyRoaSync = ({
   record,
@@ -88,6 +98,11 @@ export const _verifyRoaSync = ({
  * @param verifier Optional verifier for the record. If omitted, a default verifier is derived
  * @returns True if the association is valid, false otherwise.
  * @throws MissingVerifierError If no verifier is specified and no default verifier is found.
+ *
+ * @example
+ * ```ts
+ * const valid = await verifyRecordRightOfAssociation(rpc, "example.sns", Record.Url);
+ * ```
  */
 export const verifyRecordRightOfAssociation = async (
   rpc: Rpc<GetAccountInfoApi & GetTokenLargestAccountsApi & GetSlotApi>,

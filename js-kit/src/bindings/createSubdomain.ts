@@ -14,11 +14,28 @@ import { _parseSnsSubdomain } from "../utils/parseSnsDomain";
 import { createNameRegistry } from "./createNameRegistry";
 import { createReverse } from "./createReverse";
 
-interface CreateSubdomainParams {
+/**
+ * Parameters for creating an SNS subdomain.
+ *
+ * @example
+ * ```ts
+ * const params: CreateSubdomainParams = {
+ *   rpc,
+ *   subdomain: "sub.example.sns",
+ *   owner,
+ * };
+ * ```
+ */
+export interface CreateSubdomainParams {
+  /** RPC client. */
   rpc: Rpc<GetAccountInfoApi & GetMinimumBalanceForRentExemptionApi>;
+  /** Full `.sns` subdomain name. */
   subdomain: string;
+  /** New subdomain owner. */
   owner: Address;
+  /** Account data size in bytes. Defaults to 2,000. */
   space?: number;
+  /** Account funding creation. Defaults to `owner`. */
   feePayer?: Address;
 }
 
@@ -35,6 +52,11 @@ interface CreateSubdomainParams {
  * @param params.space Optional space in bytes allocated to the subdomain account. Defaults to 2,000
  * @param params.feePayer Optional account funding subdomain creation. Defaults to `owner`
  * @returns Transaction instructions.
+ *
+ * @example
+ * ```ts
+ * const instructions = await createSubdomain({ rpc, subdomain: "sub.example.sns", owner });
+ * ```
  */
 export const createSubdomain = async ({
   rpc,

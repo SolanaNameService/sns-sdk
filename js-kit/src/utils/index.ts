@@ -1,3 +1,7 @@
+/**
+ *  Low-level address, serialization, reverse-lookup, and TLD utilities.
+ * @module Utilities
+ */
 export * from "./checkAddressOnCurve/";
 export * from "./deserializers/deserializeRecordContent";
 export * from "./deserializers/deserializeReverse";

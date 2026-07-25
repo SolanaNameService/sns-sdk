@@ -12,12 +12,28 @@ import { Validation } from "../types/validation";
 import { _parseSnsDomain } from "../utils/parseSnsDomain";
 import { _getRecordAndParentAddress } from "./recordValidation";
 
-interface ValidateRecordRoaEthereumParams {
+/**
+ * Parameters for validating a record with an Ethereum signature.
+ *
+ * @example
+ * ```ts
+ * const params: ValidateRecordRoaEthereumParams = {
+ *   domain: "example.sns", record: Record.ETH, owner, payer, signature, expectedPubkey,
+ * };
+ * ```
+ */
+export interface ValidateRecordRoaEthereumParams {
+  /** Full `.sns` domain name. */
   domain: string;
+  /** Record type. */
   record: Record;
+  /** Current domain owner. */
   owner: Address;
+  /** Instruction fee payer. */
   payer: Address;
+  /** Ethereum signature. */
   signature: Uint8Array;
+  /** Expected Ethereum public key. */
   expectedPubkey: Uint8Array;
 }
 
@@ -32,6 +48,18 @@ interface ValidateRecordRoaEthereumParams {
  * @param params.signature Ethereum signature used for validation
  * @param params.expectedPubkey Expected Ethereum public key for validation
  * @returns Transaction instruction.
+ *
+ * @example
+ * ```ts
+ * const instruction = await validateRecordRoaEthereum({
+ *   domain: "example.sns",
+ *   record: Record.ETH,
+ *   owner,
+ *   payer,
+ *   signature,
+ *   expectedPubkey,
+ * });
+ * ```
  */
 export const validateRecordRoaEthereum = async ({
   domain,

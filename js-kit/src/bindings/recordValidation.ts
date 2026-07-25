@@ -12,11 +12,34 @@ import { ValidateSolanaSignatureInstruction } from "../instructions/validateSola
 import { Record, RecordVersion } from "../types/record";
 import { _parseSnsDomain } from "../utils/parseSnsDomain";
 
+/**
+ * Accounts and record identity required to build a record-validation instruction.
+ *
+ * @example
+ * ```ts
+ * const params: RecordVerificationParams = {
+ *   domain: "example.sns",
+ *   record: Record.Url,
+ *   owner,
+ *   payer,
+ *   verifier,
+ * };
+ * ```
+ */
 export interface RecordVerificationParams {
+  /** Full `.sns` domain or subdomain name. */
   domain: string;
+
+  /** V2 record type to validate. */
   record: Record;
+
+  /** Current owner of the domain. */
   owner: Address;
+
+  /** Fee payer for the validation instruction. */
   payer: Address;
+
+  /** Account whose signature or identity verifies the record. */
   verifier: Address;
 }
 

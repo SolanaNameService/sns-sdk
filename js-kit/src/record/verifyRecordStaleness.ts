@@ -22,6 +22,11 @@ import { uint8ArraysEqual } from "../utils/uint8Array/uint8ArraysEqual";
  * @param params.domainOwner Current owner of the domain
  * @param params.state Record state to verify
  * @returns True if the record's staleness validation passes, false otherwise.
+ *
+ * @example
+ * ```ts
+ * const valid = _verifyStalenessSync({ domainOwner, state });
+ * ```
  */
 export const _verifyStalenessSync = ({
   domainOwner,
@@ -38,9 +43,24 @@ export const _verifyStalenessSync = ({
   );
 };
 
-interface VerifyRecordStalenessParams {
+/**
+ * Parameters for verifying record staleness.
+ *
+ * @example
+ * ```ts
+ * const params: VerifyRecordStalenessParams = {
+ *   rpc,
+ *   domain: "example.sns",
+ *   record: Record.Url,
+ * };
+ * ```
+ */
+export interface VerifyRecordStalenessParams {
+  /** RPC client. */
   rpc: Rpc<GetAccountInfoApi & GetTokenLargestAccountsApi & GetSlotApi>;
+  /** Full domain name. */
   domain: string;
+  /** Record type. */
   record: Record;
 }
 
@@ -52,6 +72,11 @@ interface VerifyRecordStalenessParams {
  * @param params.domain Full domain name including a `.sns` or `.sol` suffix
  * @param params.record Record type to verify
  * @returns True if the record's staleness validation passes, false otherwise.
+ *
+ * @example
+ * ```ts
+ * const valid = await verifyRecordStaleness({ rpc, domain: "example.sns", record: Record.Url });
+ * ```
  */
 export const verifyRecordStaleness = async ({
   rpc,

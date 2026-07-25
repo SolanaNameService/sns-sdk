@@ -7,11 +7,28 @@ import { TransferInstruction } from "../instructions/transferInstruction";
 import { RegistryState } from "../states/registry";
 import { _parseSnsSubdomain } from "../utils/parseSnsDomain";
 
-interface TransferSubdomainParams {
+/**
+ * Parameters for transferring an SNS subdomain.
+ *
+ * @example
+ * ```ts
+ * const params: TransferSubdomainParams = {
+ *   rpc,
+ *   subdomain: "sub.example.sns",
+ *   newOwner,
+ * };
+ * ```
+ */
+export interface TransferSubdomainParams {
+  /** RPC client. */
   rpc: Rpc<GetAccountInfoApi>;
+  /** Full `.sns` subdomain name. */
   subdomain: string;
+  /** New subdomain owner. */
   newOwner: Address;
+  /** Whether the parent domain owner signs. */
   isParentOwnerSigner?: boolean;
+  /** Current subdomain owner. Resolved when omitted. */
   currentOwner?: Address;
 }
 
@@ -25,6 +42,11 @@ interface TransferSubdomainParams {
  * @param params.isParentOwnerSigner Whether the parent domain owner signs the transfer
  * @param params.currentOwner Optional current owner of the subdomain. Resolved automatically when omitted
  * @returns Transaction instruction.
+ *
+ * @example
+ * ```ts
+ * const instruction = await transferSubdomain({ rpc, subdomain: "sub.example.sns", newOwner });
+ * ```
  */
 export const transferSubdomain = async ({
   rpc,

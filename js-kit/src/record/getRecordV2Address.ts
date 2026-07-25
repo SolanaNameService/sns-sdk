@@ -5,8 +5,18 @@ import { getSnsDomainAddress } from "../domain/getSnsDomainAddress";
 import { Record } from "../types/record";
 import { _deriveAddress } from "../utils/deriveAddress";
 
-interface GetRecordV2AddressParams {
+/**
+ * Parameters for deriving a V2 record address.
+ *
+ * @example
+ * ```ts
+ * const params: GetRecordV2AddressParams = { domain: "example", record: Record.Url };
+ * ```
+ */
+export interface GetRecordV2AddressParams {
+  /** TLD-less domain name. */
   domain: string;
+  /** Record type. */
   record: Record;
 }
 
@@ -17,6 +27,11 @@ interface GetRecordV2AddressParams {
  * @param params.domain TLD-trimmed SNS domain name
  * @param params.record Record type
  * @returns The derived V2 record account address.
+ *
+ * @example
+ * ```ts
+ * const address = await getRecordV2Address({ domain: "example", record: Record.Url });
+ * ```
  */
 export const getRecordV2Address = async ({
   domain,

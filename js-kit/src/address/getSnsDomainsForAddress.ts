@@ -12,13 +12,36 @@ import {
 } from "../constants/addresses";
 import { reverseLookupBatch } from "../utils/reverseLookupBatch";
 
-interface GetSnsDomainsForAddressParams {
+/**
+ * Parameters for retrieving SNS domains owned by an address.
+ *
+ * @example
+ * ```ts
+ * const params: GetSnsDomainsForAddressParams = { rpc, address };
+ * ```
+ */
+export interface GetSnsDomainsForAddressParams {
+  /** RPC client. */
   rpc: Rpc<GetProgramAccountsApi & GetMultipleAccountsApi>;
+  /** Owner address. */
   address: Address;
 }
 
-interface Result {
+/**
+ * An SNS domain owned directly by a registry address.
+ *
+ * @example
+ * ```ts
+ * const domain: GetSnsDomainsForAddressResult = {
+ *   domain: "example",
+ *   domainAddress,
+ * };
+ * ```
+ */
+export interface GetSnsDomainsForAddressResult {
+  /** TLD-less domain name. */
   domain: string;
+  /** Domain account address. */
   domainAddress: Address;
 }
 
@@ -32,11 +55,16 @@ interface Result {
  * @param params.rpc RPC client implementing program account and multiple-account APIs
  * @param params.address Address whose directly registry-owned SNS domains are retrieved
  * @returns Domain records with names without a TLD suffix and domain addresses.
+ *
+ * @example
+ * ```ts
+ * const domains = await getSnsDomainsForAddress({ rpc, address });
+ * ```
  */
 export const getSnsDomainsForAddress = async ({
   rpc,
   address,
-}: GetSnsDomainsForAddressParams): Promise<Result[]> => {
+}: GetSnsDomainsForAddressParams): Promise<GetSnsDomainsForAddressResult[]> => {
   const results = await rpc
     .getProgramAccounts(NAME_PROGRAM_ADDRESS, {
       encoding: "base64",

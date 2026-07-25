@@ -8,6 +8,7 @@ import { SNSError } from "../errors";
  * @param error Error to throw when the condition is false
  * @throws The provided error if the condition is false.
  */
+/** Implementation helper that throws `error` when a validation condition fails. */
 export const _check = <T extends SNSError>(bool: boolean, error: T) => {
   if (!bool) {
     throw error;

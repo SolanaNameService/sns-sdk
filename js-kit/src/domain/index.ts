@@ -1,3 +1,7 @@
+/**
+ *  Domain resolution, derivation, records, and subdomain APIs.
+ * @module Domain
+ */
 export * from "./getAllSnsDomains";
 export * from "./getSnsDomainAddress";
 export * from "./getSrsDomainAddress";

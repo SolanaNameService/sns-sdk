@@ -1,11 +1,14 @@
 import type { Address } from "@solana/kit";
 
+/** Address of the Solana System Program. */
 export const SYSTEM_PROGRAM_ADDRESS =
   "11111111111111111111111111111111" as Address;
 
+/** Address of the rent sysvar account. */
 export const SYSVAR_RENT_ADDRESS =
   "SysvarRent111111111111111111111111111111111" as Address;
 
+/** All-zero Solana address used as the SDK default sentinel. */
 export const DEFAULT_ADDRESS = "11111111111111111111111111111111" as Address;
 
 /** Address of the SPL Token program. */
@@ -73,6 +76,7 @@ export const SOL_SRS_CLASS =
 export const REVERSE_LOOKUP_CLASS =
   "33m47vH6Eav6jr5Ry86XjhRft2jRBLDnDgPSHoquXi2Z" as Address;
 
+/** Legacy alias for the reverse-lookup class address. */
 export const CENTRAL_STATE = REVERSE_LOOKUP_CLASS;
 
 /**
@@ -93,21 +97,27 @@ export const TWITTER_VERIFICATION_AUTHORITY =
 export const TWITTER_ROOT_PARENT_REGISTRY_ADDRESS =
   "4YcexoW3r78zz16J2aqmukBLRwGq6rAvWzJpkYAXqebv" as Address;
 
+/** Owner address of the SNS registration vault. */
 export const VAULT_OWNER =
   "5D2zKog251d6KPCyFyLMt3KroWwXXPWSgTPyhV22K2gR" as Address;
 
+/** Mainnet USDC mint address. */
 export const USDC_MINT =
   "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v" as Address;
 
+/** Mainnet FIDA mint address. */
 export const FIDA_MINT =
   "EchesyfXePKdLtoiZSL8pBe8Myagyy8ZRqsACNCFGnvp" as Address;
 
+/** Address of the Metaplex Token Metadata program. */
 export const METAPLEX_PROGRAM_ADDRESS =
   "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s" as Address;
 
+/** Metadata account for the SNS Wolves collection. */
 export const WOLVES_COLLECTION_METADATA =
   "72aLKvXeV4aansAQtxKymeXDevT5ed6sCuz9iN62ugPT" as Address;
 
+/** Approved referrer addresses for SNS registration flows. */
 export const REFERRERS: Address[] = [
   "3ogYncmMM5CmytsGCqKHydmXmKUZ6sGWvizkzqwT7zb1" as Address, //Test wallet,
   "DM1jJCkZZEwY5tmWbgvKRxsDFzXCdbfrYCCH1CtwguEs" as Address, //4Everland

@@ -1,7 +1,9 @@
 import { AccountMeta, AccountRole, Address, Instruction } from "@solana/kit";
 import { serialize } from "borsh";
 
+/** Builder for registering an address's SNS primary domain. */
 export class RegisterPrimaryInstruction {
+  /** Instruction discriminator. */
   tag: number;
   static schema = {
     struct: {

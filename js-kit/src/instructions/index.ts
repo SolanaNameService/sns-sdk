@@ -1,3 +1,7 @@
+/**
+ *  Low-level SNS instruction classes and instruction helpers.
+ * @module Instructions
+ */
 export * from "./allocateAndPostRecordInstruction";
 export * from "./burnDomainInstruction";
 export * from "./createAtaIdempotentInstruction";

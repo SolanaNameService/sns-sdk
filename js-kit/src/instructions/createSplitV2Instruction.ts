@@ -1,10 +1,32 @@
-import { AccountRole, Address, AccountMeta, Instruction } from "@solana/kit";
+import { AccountMeta, AccountRole, Address, Instruction } from "@solana/kit";
 import { serialize } from "borsh";
 
-export class CreateSplitV2Instruction {
-  tag: number;
+/**
+ * Input for creating a split SNS V2 domain account.
+ *
+ * @example
+ * ```ts
+ * const params: CreateSplitV2InstructionParams = { name: "example", space: 1_000, referrerIdxOpt: null };
+ * ```
+ */
+export interface CreateSplitV2InstructionParams {
+  /** TLD-less domain name. */
   name: string;
+  /** Account data size in bytes. */
   space: number;
+  /** Approved referrer index, if any. */
+  referrerIdxOpt: number | null;
+}
+
+/** Builder for creating a split SNS V2 domain account. */
+export class CreateSplitV2Instruction {
+  /** Instruction discriminator. */
+  tag: number;
+  /** TLD-less domain name. */
+  name: string;
+  /** Account data size in bytes. */
+  space: number;
+  /** Approved referrer index, if any. */
   referrerIdxOpt: number | null;
 
   static schema = {
@@ -16,11 +38,7 @@ export class CreateSplitV2Instruction {
     },
   };
 
-  constructor(obj: {
-    name: string;
-    space: number;
-    referrerIdxOpt: number | null;
-  }) {
+  constructor(obj: CreateSplitV2InstructionParams) {
     this.tag = 20;
     this.name = obj.name;
     this.space = obj.space;

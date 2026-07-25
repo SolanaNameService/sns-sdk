@@ -11,11 +11,24 @@ import {
 import { CreateReverseInstruction } from "../instructions/createReverseInstruction";
 import { _deriveAddress } from "../utils/deriveAddress";
 
-interface CreateReverseParams {
+/**
+ * Parameters for creating a reverse lookup record.
+ *
+ * @example
+ * ```ts
+ * const params: CreateReverseParams = { domainAddress, domain: "example", payer };
+ * ```
+ */
+export interface CreateReverseParams {
+  /** Domain account address. */
   domainAddress: Address;
+  /** Raw reverse lookup payload. */
   domain: string;
+  /** Account funding creation. */
   payer: Address;
+  /** Parent domain address for a subdomain. */
   parentAddress?: Address;
+  /** Parent domain owner for a subdomain. */
   parentOwner?: Address;
 }
 
@@ -32,6 +45,11 @@ interface CreateReverseParams {
  * @param params.parentAddress Optional parent domain address for subdomain reverse lookups
  * @param params.parentOwner Optional parent domain owner for subdomain reverse lookups
  * @returns Transaction instruction.
+ *
+ * @example
+ * ```ts
+ * const instruction = await createReverse({ domainAddress, domain: "example", payer });
+ * ```
  */
 export const createReverse = async ({
   domainAddress,

@@ -1,4 +1,5 @@
-/**!
+/**
+ * !
  * noble-ed25519
  *
  * The MIT License (MIT)
@@ -84,6 +85,7 @@ function uvRatio(u: bigint, v: bigint): bigint | null {
 }
 
 // https://datatracker.ietf.org/doc/html/rfc8032#section-5.1.3
+/** Implementation helper that checks compressed Ed25519 point coordinates. */
 export function _pointIsOnCurve(y: bigint, lastByte: number): boolean {
   const y2 = mod(y * y); // y²
   const u = mod(y2 - 1n); // u=y²-1

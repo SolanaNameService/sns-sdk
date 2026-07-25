@@ -1,8 +1,24 @@
-import { AccountRole, Address, AccountMeta, Instruction } from "@solana/kit";
+import { AccountMeta, AccountRole, Address, Instruction } from "@solana/kit";
 import { serialize } from "borsh";
 
+/**
+ * Input for validating a Solana signature for an SNS record.
+ *
+ * @example
+ * ```ts
+ * const params: ValidateSolanaSignatureInstructionParams = { staleness: false };
+ * ```
+ */
+export interface ValidateSolanaSignatureInstructionParams {
+  /** Whether to validate staleness. */
+  staleness: boolean;
+}
+
+/** Builder for validating a Solana signature for an SNS record. */
 export class ValidateSolanaSignatureInstruction {
+  /** Instruction discriminator. */
   tag: number;
+  /** Whether to validate staleness. */
   staleness: boolean;
   static schema = {
     struct: {
@@ -11,7 +27,7 @@ export class ValidateSolanaSignatureInstruction {
     },
   };
 
-  constructor(obj: { staleness: boolean }) {
+  constructor(obj: ValidateSolanaSignatureInstructionParams) {
     this.tag = 3;
     this.staleness = obj.staleness;
   }

@@ -1,15 +1,34 @@
 import {
+  AccountMeta,
   AccountRole,
   Address,
-  AccountMeta,
   Instruction,
   ReadonlyUint8Array,
 } from "@solana/kit";
 import { serialize } from "borsh";
 
-export class AllocateAndPostRecordInstruction {
-  tag: number;
+/**
+ * Input for allocating and writing an SNS V2 record.
+ *
+ * @example
+ * ```ts
+ * const params: AllocateAndPostRecordInstructionParams = { record, content };
+ * ```
+ */
+export interface AllocateAndPostRecordInstructionParams {
+  /** Encoded V2 record label. */
   record: string;
+  /** Serialized record content. */
+  content: ReadonlyUint8Array;
+}
+
+/** Builder for allocating and writing an SNS V2 record account. */
+export class AllocateAndPostRecordInstruction {
+  /** Instruction discriminator. */
+  tag: number;
+  /** Encoded V2 record label. */
+  record: string;
+  /** Serialized record content. */
   content: ReadonlyUint8Array;
 
   static schema = {
@@ -20,7 +39,7 @@ export class AllocateAndPostRecordInstruction {
     },
   };
 
-  constructor(obj: { record: string; content: ReadonlyUint8Array }) {
+  constructor(obj: AllocateAndPostRecordInstructionParams) {
     this.tag = 1;
     this.record = obj.record;
     this.content = obj.content;

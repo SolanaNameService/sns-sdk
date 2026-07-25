@@ -1,16 +1,38 @@
 import {
+  AccountMeta,
   AccountRole,
   Address,
-  AccountMeta,
   Instruction,
   ReadonlyUint8Array,
 } from "@solana/kit";
 import { serialize } from "borsh";
 
-export class ValidateEthereumSignatureInstruction {
-  tag: number;
+/**
+ * Input for validating an Ethereum signature for an SNS record.
+ *
+ * @example
+ * ```ts
+ * const params: ValidateEthereumSignatureInstructionParams = { validation, signature, expectedPubkey };
+ * ```
+ */
+export interface ValidateEthereumSignatureInstructionParams {
+  /** Validation mode discriminator. */
   validation: number;
+  /** Ethereum signature. */
   signature: ReadonlyUint8Array;
+  /** Expected Ethereum public key. */
+  expectedPubkey: ReadonlyUint8Array;
+}
+
+/** Builder for validating an Ethereum signature for an SNS record. */
+export class ValidateEthereumSignatureInstruction {
+  /** Instruction discriminator. */
+  tag: number;
+  /** Validation mode discriminator. */
+  validation: number;
+  /** Ethereum signature. */
+  signature: ReadonlyUint8Array;
+  /** Expected Ethereum public key. */
   expectedPubkey: ReadonlyUint8Array;
 
   static schema = {
@@ -22,11 +44,7 @@ export class ValidateEthereumSignatureInstruction {
     },
   };
 
-  constructor(obj: {
-    validation: number;
-    signature: ReadonlyUint8Array;
-    expectedPubkey: ReadonlyUint8Array;
-  }) {
+  constructor(obj: ValidateEthereumSignatureInstructionParams) {
     this.tag = 4;
     this.validation = obj.validation;
     this.signature = obj.signature;

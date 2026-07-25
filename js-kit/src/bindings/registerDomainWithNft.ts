@@ -17,11 +17,30 @@ import { CreateWithNftInstruction } from "../instructions/createWithNftInstructi
 import { _deriveAddress } from "../utils/deriveAddress";
 import { _parseSnsTopLevelDomain } from "../utils/parseSnsDomain";
 
-interface RegisterDomainWithNftParams {
+/**
+ * Parameters for registering an SNS domain with an NFT.
+ *
+ * @example
+ * ```ts
+ * const params: RegisterDomainWithNftParams = {
+ *   domain: "example.sns",
+ *   space: 1_000,
+ *   buyer,
+ *   nftSource,
+ *   nftMint,
+ * };
+ * ```
+ */
+export interface RegisterDomainWithNftParams {
+  /** Full `.sns` domain name. */
   domain: string;
+  /** Domain registry size in bytes. */
   space: number;
+  /** Account registering the domain. */
   buyer: Address;
+  /** Source token account for the NFT. */
   nftSource: Address;
+  /** Bonfida Wolves NFT mint. */
   nftMint: Address;
 }
 
@@ -35,6 +54,17 @@ interface RegisterDomainWithNftParams {
  * @param params.nftSource NFT source account
  * @param params.nftMint NFT mint used for registration
  * @returns Transaction instruction.
+ *
+ * @example
+ * ```ts
+ * const instruction = await registerDomainWithNft({
+ *   domain: "example.sns",
+ *   space: 1_000,
+ *   buyer,
+ *   nftSource,
+ *   nftMint,
+ * });
+ * ```
  */
 export const registerDomainWithNft = async ({
   domain,

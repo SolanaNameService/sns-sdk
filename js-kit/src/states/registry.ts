@@ -14,10 +14,32 @@ import {
   InvalidSerializedDataError,
 } from "../errors";
 
+/**
+ * Input for decoding an SNS name-registry account.
+ *
+ * @example
+ * ```ts
+ * const params: RegistryStateParams = { parentName, owner, class: classAddress };
+ * ```
+ */
+export interface RegistryStateParams {
+  /** Encoded parent registry address. */
+  parentName: Uint8Array;
+  /** Encoded registry owner address. */
+  owner: Uint8Array;
+  /** Encoded registry class address. */
+  class: Uint8Array;
+}
+
+/** Decoded state of an SNS name-registry account. */
 export class RegistryState {
+  /** Parent registry address. */
   parentName: Address;
+  /** Registry owner address. */
   owner: Address;
+  /** Registry class address. */
   class: Address;
+  /** Registry data after the fixed header. */
   data: Uint8Array | undefined;
 
   static schema = {
@@ -34,11 +56,7 @@ export class RegistryState {
   // - `class`: 32 bytes (array of `u8` with length 32)
   static HEADER_LEN = 96;
 
-  constructor(obj: {
-    parentName: Uint8Array;
-    owner: Uint8Array;
-    class: Uint8Array;
-  }) {
+  constructor(obj: RegistryStateParams) {
     this.parentName = addressCodec.decode(obj.parentName);
     this.owner = addressCodec.decode(obj.owner);
     this.class = addressCodec.decode(obj.class);

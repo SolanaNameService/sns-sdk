@@ -5,9 +5,20 @@ import { RegistryState } from "../states/registry";
 import { deserializeReverse } from "./deserializers/deserializeReverse";
 import { getReverseAddressFromDomainAddress } from "./getReverseAddressFromDomainAddress";
 
-interface ReverseLookupParams {
+/**
+ * Parameters for reverse lookup.
+ *
+ * @example
+ * ```ts
+ * const params: ReverseLookupParams = { rpc, domainAddress };
+ * ```
+ */
+export interface ReverseLookupParams {
+  /** RPC client. */
   rpc: Rpc<GetAccountInfoApi>;
+  /** Domain account address. */
   domainAddress: Address;
+  /** Parent domain address for a subdomain. */
   parentAddress?: Address;
 }
 
@@ -20,6 +31,11 @@ interface ReverseLookupParams {
  * @param params.parentAddress Optional parent domain address for subdomain reverse lookups
  * @returns Human-readable domain name.
  * @throws NoAccountDataError If the registry data is empty.
+ *
+ * @example
+ * ```ts
+ * const name = await reverseLookup({ rpc, domainAddress });
+ * ```
  */
 export async function reverseLookup({
   rpc,

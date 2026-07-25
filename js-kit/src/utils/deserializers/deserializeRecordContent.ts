@@ -9,8 +9,18 @@ import { InvalidRecordDataError } from "../../errors";
 import { Record } from "../../types/record";
 import { uint8ArrayToHex } from "../uint8Array/uint8ArrayToHex";
 
-interface DeserializeRecordContentParams {
+/**
+ * Parameters for deserializing record content.
+ *
+ * @example
+ * ```ts
+ * const params: DeserializeRecordContentParams = { content, record: Record.Url };
+ * ```
+ */
+export interface DeserializeRecordContentParams {
+  /** Serialized record content. */
   content: ReadonlyUint8Array;
+  /** Record type. */
   record: Record;
 }
 
@@ -24,6 +34,19 @@ interface DeserializeRecordContentParams {
  * @param params.record Record type
  * @returns Deserialized record content.
  * @throws InvalidRecordDataError If the record type or content is unsupported.
+ *
+ * @example
+ * ```ts
+ * const result = await getDomainRecord({
+ *   rpc,
+ *   domain: "example.sns",
+ *   record: Record.Url,
+ * });
+ * const content = deserializeRecordContent({
+ *   content: result.retrievedRecord.getContent(),
+ *   record: Record.Url,
+ * });
+ * ```
  */
 export const deserializeRecordContent = ({
   content,

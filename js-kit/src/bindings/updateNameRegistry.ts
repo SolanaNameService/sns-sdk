@@ -5,12 +5,37 @@ import { UpdateNameRegistryInstruction } from "../instructions/updateNameRegistr
 import { RegistryState } from "../states/registry";
 import { _deriveAddress } from "../utils/deriveAddress";
 
+/**
+ * Input for updating bytes in a raw SNS name-registry account.
+ *
+ * @example
+ * ```ts
+ * const params: UpdateNameRegistryParams = {
+ *   rpc,
+ *   domain: "example",
+ *   offset: 0,
+ *   data: new TextEncoder().encode("data"),
+ * };
+ * ```
+ */
 export interface UpdateNameRegistryParams {
+  /** RPC client used to retrieve the registry owner. */
   rpc: Rpc<GetAccountInfoApi>;
+
+  /** Raw registry seed/name to update. */
   domain: string;
+
+  /** Byte offset where the update begins. */
   offset: number;
+
+  /** Bytes to write to the registry. */
   data: Uint8Array;
+
+  /** Optional class address for the registry. */
   classAddress?: Address;
+  /**
+   * Optional parent name-account address.
+   */
   parentAddress?: Address;
 }
 
@@ -28,6 +53,16 @@ export interface UpdateNameRegistryParams {
  * @param params.classAddress Optional class address for the registry
  * @param params.parentAddress Optional parent registry address
  * @returns Transaction instruction.
+ *
+ * @example
+ * ```ts
+ * const instruction = await updateNameRegistry({
+ *   rpc,
+ *   domain: "example",
+ *   offset: 0,
+ *   data: new TextEncoder().encode("data"),
+ * });
+ * ```
  */
 export async function updateNameRegistry({
   rpc,

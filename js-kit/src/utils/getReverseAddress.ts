@@ -6,9 +6,16 @@ import { getReverseAddressFromDomainAddress } from "./getReverseAddressFromDomai
  *
  * @param domain TLD-trimmed SNS domain name
  * @returns The reverse lookup account address.
+ *
+ * @example
+ * ```ts
+ * const address = await getReverseAddress("example");
+ * ```
  */
 export const getReverseAddress = async (domain: string) => {
-  const { domainAddress, parentAddress } = await getSnsDomainAddress({ domain });
+  const { domainAddress, parentAddress } = await getSnsDomainAddress({
+    domain,
+  });
 
   return getReverseAddressFromDomainAddress({
     domainAddress,

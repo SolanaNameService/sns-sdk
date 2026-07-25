@@ -6,6 +6,7 @@ import { ReadonlyUint8Array } from "@solana/kit";
  * @param arrays Uint8Array or ReadonlyUint8Array instances to concatenate
  * @returns A new Uint8Array containing the concatenated data from all input arrays.
  */
+/** Concatenates byte arrays into a newly allocated `Uint8Array`. */
 export const uint8ArraysConcat = (
   arrays: (Uint8Array | ReadonlyUint8Array)[]
 ): Uint8Array => {

@@ -18,8 +18,21 @@ import { uint8ArrayFromHex } from "../uint8Array/uint8ArrayFromHex";
 
 const EVM_ADDRESS_REGEX = /^0x[0-9a-fA-F]{40}$/;
 
-interface SerializeRecordContentParams {
+/**
+ * Parameters for serializing record content.
+ *
+ * @example
+ * ```ts
+ * const params: SerializeRecordContentParams = {
+ *   content: "https://example.com",
+ *   record: Record.Url,
+ * };
+ * ```
+ */
+export interface SerializeRecordContentParams {
+  /** Record content. */
   content: string;
+  /** Record type. */
   record: Record;
 }
 
@@ -32,11 +45,16 @@ interface SerializeRecordContentParams {
  * @param params.content Record content to serialize
  * @param params.record Record type
  * @returns Serialized record content.
- * @throws InvalidEvmAddressError If an EVM record is not a `0x`-prefixed 20-byte hex address.
- * @throws InvalidInjectiveAddressError If an Injective record is not a valid Injective address.
- * @throws InvalidARecordError If an `A` record is not a valid IPv4 address.
- * @throws InvalidAAAARecordError If an `AAAA` record is not a valid IPv6 address.
- * @throws InvalidRecordInputError If the record type or content is unsupported.
+ * @throws InvalidEvmAddressError, InvalidInjectiveAddressError, InvalidARecordError,
+ * InvalidAAAARecordError, or InvalidRecordInputError when the record content is invalid or unsupported.
+ *
+ * @example
+ * ```ts
+ * const content = serializeRecordContent({
+ *   content: "https://example.com",
+ *   record: Record.Url,
+ * });
+ * ```
  */
 export const serializeRecordContent = ({
   content,

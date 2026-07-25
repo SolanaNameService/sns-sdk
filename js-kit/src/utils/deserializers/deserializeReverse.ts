@@ -2,8 +2,18 @@ import { ReadonlyUint8Array } from "@solana/kit";
 
 import { utf8Codec } from "../../codecs";
 
-interface DeserializeReverseParams {
+/**
+ * Parameters for deserializing reverse account data.
+ *
+ * @example
+ * ```ts
+ * const params: DeserializeReverseParams = { data: reverseAccountData };
+ * ```
+ */
+export interface DeserializeReverseParams {
+  /** Reverse account data. */
   data: ReadonlyUint8Array | undefined;
+  /** Whether to remove a subdomain's leading null byte. Defaults to false. */
   trimFirstNullByte?: boolean;
 }
 
@@ -16,6 +26,11 @@ interface DeserializeReverseParams {
  * @param params.data Reverse account data. If undefined, returns undefined
  * @param params.trimFirstNullByte Whether to trim the first null byte for subdomain reverse names. Defaults to false
  * @returns The deserialized string, or `undefined` if data is undefined.
+ *
+ * @example
+ * ```ts
+ * const name = deserializeReverse({ data: reverseAccountData });
+ * ```
  */
 export function deserializeReverse({
   data,

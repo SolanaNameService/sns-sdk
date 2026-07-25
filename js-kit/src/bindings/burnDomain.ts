@@ -12,9 +12,24 @@ import { BurnDomainInstruction } from "../instructions/burnDomainInstruction";
 import { getReverseAddress } from "../utils/getReverseAddress";
 import { _parseSnsTopLevelDomain } from "../utils/parseSnsDomain";
 
-interface BurnDomainParams {
+/**
+ * Parameters for burning an SNS domain.
+ *
+ * @example
+ * ```ts
+ * const params: BurnDomainParams = {
+ *   domain: "example.sns",
+ *   owner,
+ *   refundAddress,
+ * };
+ * ```
+ */
+export interface BurnDomainParams {
+  /** Full `.sns` domain name. */
   domain: string;
+  /** Current domain owner. */
   owner: Address;
+  /** Account receiving reclaimed rent. */
   refundAddress: Address;
 }
 
@@ -26,6 +41,11 @@ interface BurnDomainParams {
  * @param params.owner Current owner of the domain
  * @param params.refundAddress Account receiving reclaimed rent
  * @returns Transaction instruction.
+ *
+ * @example
+ * ```ts
+ * const instruction = await burnDomain({ domain: "example.sns", owner, refundAddress });
+ * ```
  */
 export const burnDomain = async ({
   domain,

@@ -1,3 +1,4 @@
+/** Validation modes encoded in an SNS record header. */
 export enum Validation {
   None = 0,
   Solana = 1,

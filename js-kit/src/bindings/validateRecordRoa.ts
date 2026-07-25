@@ -15,6 +15,17 @@ import {
  * @param params.payer Fee payer for the instruction
  * @param params.verifier Verifier account used by the record validation instruction
  * @returns Transaction instruction.
+ *
+ * @example
+ * ```ts
+ * const instruction = await validateRecordRoa({
+ *   domain: "example.sns",
+ *   record: Record.Url,
+ *   owner,
+ *   payer,
+ *   verifier,
+ * });
+ * ```
  */
 export const validateRecordRoa = async (
   params: RecordVerificationParams

@@ -11,8 +11,18 @@ import {
 import { tokenCodec } from "../codecs";
 import { getSnsNftMint } from "./getSnsNftMint";
 
-interface GetSnsNftOwnerParams {
+/**
+ * Parameters for retrieving an SNS NFT owner.
+ *
+ * @example
+ * ```ts
+ * const params: GetSnsNftOwnerParams = { rpc, domainAddress };
+ * ```
+ */
+export interface GetSnsNftOwnerParams {
+  /** RPC client. */
   rpc: Rpc<GetAccountInfoApi & GetTokenLargestAccountsApi>;
+  /** Tokenized domain account address. */
   domainAddress: Address;
 }
 
@@ -23,6 +33,11 @@ interface GetSnsNftOwnerParams {
  * @param params.rpc RPC client implementing account and token-largest-account APIs
  * @param params.domainAddress Domain account address whose tokenized owner is retrieved
  * @returns The SNS domain NFT owner address, or `null` when no valid tokenized owner is found.
+ *
+ * @example
+ * ```ts
+ * const owner = await getSnsNftOwner({ rpc, domainAddress });
+ * ```
  */
 export const getSnsNftOwner = async ({
   rpc,

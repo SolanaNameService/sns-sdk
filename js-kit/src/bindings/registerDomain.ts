@@ -25,12 +25,31 @@ import { _deriveAddress } from "../utils/deriveAddress";
 import { getPythFeedAddress } from "../utils/getPythFeedAddress";
 import { _parseSnsTopLevelDomain } from "../utils/parseSnsDomain";
 
-interface RegisterDomainParams {
+/**
+ * Parameters for registering an SNS domain.
+ *
+ * @example
+ * ```ts
+ * const params: RegisterDomainParams = {
+ *   domain: "example.sns",
+ *   space: 1_000,
+ *   buyer,
+ *   buyerTokenAccount,
+ * };
+ * ```
+ */
+export interface RegisterDomainParams {
+  /** Full `.sns` domain name. */
   domain: string;
+  /** Domain registry size in bytes. */
   space: number;
+  /** Account paying for registration. */
   buyer: Address;
+  /** Buyer's payment token account. */
   buyerTokenAccount: Address;
+  /** Payment token mint. Defaults to USDC. */
   mint?: Address;
+  /** Supported referrer address. */
   referrer?: Address;
 }
 
@@ -49,6 +68,16 @@ interface RegisterDomainParams {
  * @param params.mint Token mint used for payment. Defaults to USDC
  * @param params.referrer Optional referrer address
  * @returns Transaction instructions.
+ *
+ * @example
+ * ```ts
+ * const instructions = await registerDomain({
+ *   domain: "example.sns",
+ *   space: 1_000,
+ *   buyer,
+ *   buyerTokenAccount,
+ * });
+ * ```
  */
 export const registerDomain = async ({
   domain,

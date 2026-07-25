@@ -12,10 +12,27 @@ import { DeleteRecordInstruction } from "../instructions/deleteRecordInstruction
 import { Record, RecordVersion } from "../types/record";
 import { _parseSnsDomain } from "../utils/parseSnsDomain";
 
-interface DeleteRecordParams {
+/**
+ * Parameters for deleting a domain record.
+ *
+ * @example
+ * ```ts
+ * const params: DeleteRecordParams = {
+ *   domain: "example.sns",
+ *   record: Record.Url,
+ *   owner,
+ *   payer,
+ * };
+ * ```
+ */
+export interface DeleteRecordParams {
+  /** Full `.sns` domain name. */
   domain: string;
+  /** Record type. */
   record: Record;
+  /** Current domain owner. */
   owner: Address;
+  /** Instruction fee payer. */
   payer: Address;
 }
 
@@ -28,6 +45,16 @@ interface DeleteRecordParams {
  * @param params.owner Current owner of the domain
  * @param params.payer Fee payer for the instruction
  * @returns Transaction instruction.
+ *
+ * @example
+ * ```ts
+ * const instruction = await deleteRecord({
+ *   domain: "example.sns",
+ *   record: Record.Url,
+ *   owner,
+ *   payer,
+ * });
+ * ```
  */
 export const deleteRecord = async ({
   domain,
@@ -43,9 +70,8 @@ export const deleteRecord = async ({
   });
 
   if (isSub) {
-    parentAddress = (
-      await getSnsDomainAddress({ domain: trimmedDomain })
-    ).domainAddress;
+    parentAddress = (await getSnsDomainAddress({ domain: trimmedDomain }))
+      .domainAddress;
   }
 
   if (!parentAddress) {

@@ -7,6 +7,7 @@ import { ReadonlyUint8Array } from "@solana/kit";
  * @param arr2 Second byte array to compare
  * @returns True if both arrays are equal, false otherwise.
  */
+/** Compares two byte arrays for equal length and contents. */
 export const uint8ArraysEqual = (
   arr1: ReadonlyUint8Array,
   arr2: ReadonlyUint8Array

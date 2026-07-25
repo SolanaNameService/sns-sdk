@@ -1,3 +1,5 @@
+import { Address } from "@solana/kit";
+
 import {
   CENTRAL_STATE_DOMAIN_RECORDS,
   SNS_ROOT_DOMAIN_ACCOUNT,
@@ -6,9 +8,41 @@ import { InvalidInputError } from "../errors";
 import { RecordVersion } from "../types/record";
 import { _deriveAddress } from "../utils/deriveAddress";
 
-interface GetSnsDomainAddressParams {
+/**
+ * Parameters for deriving an SNS domain address.
+ *
+ * @example
+ * ```ts
+ * const params: GetSnsDomainAddressParams = { domain: "example" };
+ * ```
+ */
+export interface GetSnsDomainAddressParams {
+  /** TLD-less domain name. */
   domain: string;
+  /** Record version. */
   record?: RecordVersion;
+}
+
+/**
+ * A derived SNS domain address.
+ *
+ * @example
+ * ```ts
+ * const derived: GetSnsDomainAddressResult = {
+ *   domainAddress,
+ *   isSub: false,
+ * };
+ * ```
+ */
+export interface GetSnsDomainAddressResult {
+  /** Derived account address. */
+  domainAddress: Address;
+  /** Parent domain address for subdomains. */
+  parentAddress?: Address;
+  /** Whether the input is a subdomain. */
+  isSub: boolean;
+  /** Whether the input is a subdomain record. */
+  isSubRecord?: boolean;
 }
 
 /**
@@ -18,11 +52,16 @@ interface GetSnsDomainAddressParams {
  * @param params.domain TLD-trimmed SNS domain name
  * @param params.record Optional record account version for record derivation
  * @returns Derived account address and metadata describing top-level, subdomain, or sub-record derivation.
+ *
+ * @example
+ * ```ts
+ * const derived = await getSnsDomainAddress({ domain: "example" });
+ * ```
  */
 export const getSnsDomainAddress = async ({
   domain,
   record,
-}: GetSnsDomainAddressParams) => {
+}: GetSnsDomainAddressParams): Promise<GetSnsDomainAddressResult> => {
   const recordClass =
     record === RecordVersion.V2 ? CENTRAL_STATE_DOMAIN_RECORDS : undefined;
   const recordPrefix =

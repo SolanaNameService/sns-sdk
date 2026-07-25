@@ -15,8 +15,17 @@ import {
 } from "../errors";
 import { Validation } from "../types/validation";
 
+/** Byte length of the common SNS name-registry account header. */
 export const NAME_REGISTRY_LEN = 96;
 
+/**
+ * Returns the byte length of an identifier encoded for a validation mode.
+ *
+ * @example
+ * ```ts
+ * const length = getValidationLength(Validation.Solana);
+ * ```
+ */
 export const getValidationLength = (validation: Validation) => {
   switch (validation) {
     case Validation.None:
@@ -32,9 +41,30 @@ export const getValidationLength = (validation: Validation) => {
   }
 };
 
-export class RecordHeaderState {
+/**
+ * Input for decoding an SNS V2 record header.
+ *
+ * @example
+ * ```ts
+ * const params: RecordHeaderStateParams = { stalenessValidation: 0, rightOfAssociationValidation: 0, contentLength: 0 };
+ * ```
+ */
+export interface RecordHeaderStateParams {
+  /** Staleness validation mode. */
   stalenessValidation: number;
+  /** Right of Association validation mode. */
   rightOfAssociationValidation: number;
+  /** Record content length in bytes. */
+  contentLength: number;
+}
+
+/** Decoded header of an SNS V2 record account. */
+export class RecordHeaderState {
+  /** Staleness validation mode. */
+  stalenessValidation: number;
+  /** Right of Association validation mode. */
+  rightOfAssociationValidation: number;
+  /** Record content length in bytes. */
   contentLength: number;
 
   static schema: Schema = {
@@ -51,11 +81,7 @@ export class RecordHeaderState {
   // - `contentLength`: 4 bytes (`u32`)
   static LEN = 8;
 
-  constructor(obj: {
-    stalenessValidation: number;
-    rightOfAssociationValidation: number;
-    contentLength: number;
-  }) {
+  constructor(obj: RecordHeaderStateParams) {
     this.stalenessValidation = obj.stalenessValidation;
     this.rightOfAssociationValidation = obj.rightOfAssociationValidation;
     this.contentLength = obj.contentLength;
@@ -81,8 +107,11 @@ export class RecordHeaderState {
   }
 }
 
+/** Decoded SNS V2 record account, including its validation data and content. */
 export class RecordState {
+  /** Decoded record header. */
   header: RecordHeaderState;
+  /** Validation identifiers and record content. */
   data: Uint8Array;
 
   constructor(header: RecordHeaderState, data: Uint8Array) {

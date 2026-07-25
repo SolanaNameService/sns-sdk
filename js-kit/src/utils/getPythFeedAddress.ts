@@ -2,8 +2,18 @@ import { getProgramDerivedAddress } from "@solana/kit";
 
 import { PYTH_PROGRAM_ID } from "../constants/pythFeeds";
 
-interface GetPythFeedAddressParams {
+/**
+ * Parameters for deriving a Pyth feed address.
+ *
+ * @example
+ * ```ts
+ * const params: GetPythFeedAddressParams = { shard: 0, priceFeed };
+ * ```
+ */
+export interface GetPythFeedAddressParams {
+  /** Pyth feed shard number. */
   shard: number;
+  /** Pyth price feed ID bytes. */
   priceFeed: number[];
 }
 
@@ -14,6 +24,11 @@ interface GetPythFeedAddressParams {
  * @param params.shard Shard number associated with the Pyth feed
  * @param params.priceFeed Feed ID bytes
  * @returns The Pyth feed address.
+ *
+ * @example
+ * ```ts
+ * const address = await getPythFeedAddress({ shard: 0, priceFeed });
+ * ```
  */
 export const getPythFeedAddress = async ({
   shard,

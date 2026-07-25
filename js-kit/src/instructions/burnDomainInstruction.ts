@@ -1,7 +1,9 @@
-import { AccountRole, Address, AccountMeta, Instruction } from "@solana/kit";
+import { AccountMeta, AccountRole, Address, Instruction } from "@solana/kit";
 import { serialize } from "borsh";
 
+/** Builder for burning an SNS domain NFT and registry account. */
 export class BurnDomainInstruction {
+  /** Instruction discriminator. */
   tag: number;
 
   static schema = {

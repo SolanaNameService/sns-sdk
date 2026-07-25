@@ -1,7 +1,7 @@
 import {
+  AccountMeta,
   AccountRole,
   Address,
-  AccountMeta,
   Instruction,
   ReadonlyUint8Array,
 } from "@solana/kit";
@@ -9,8 +9,24 @@ import { serialize } from "borsh";
 
 import { addressCodec } from "../codecs";
 
+/**
+ * Input for setting an SNS record's Right of Association verifier.
+ *
+ * @example
+ * ```ts
+ * const params: SetRecordRoaVerifierInstructionParams = { verifier };
+ * ```
+ */
+export interface SetRecordRoaVerifierInstructionParams {
+  /** Verifier account address. */
+  verifier: Address;
+}
+
+/** Builder for setting an SNS record's Right of Association verifier. */
 export class SetRecordRoaVerifierInstruction {
+  /** Instruction discriminator. */
   tag: number;
+  /** Encoded verifier address. */
   roaId: ReadonlyUint8Array;
 
   static schema = {
@@ -20,7 +36,7 @@ export class SetRecordRoaVerifierInstruction {
     },
   };
 
-  constructor(obj: { verifier: Address }) {
+  constructor(obj: SetRecordRoaVerifierInstructionParams) {
     this.tag = 6;
     this.roaId = addressCodec.encode(obj.verifier);
   }

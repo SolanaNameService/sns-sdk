@@ -8,7 +8,7 @@ import { resolveSns } from "./resolveSns";
 import { resolveSol } from "./resolveSol";
 import { ResolveParams } from "./resolveTypes";
 
-export type { ResolveOptions } from "./resolveTypes";
+export type { ResolveOptions, ResolveParams } from "./resolveTypes";
 
 /**
  * Resolves a `.sns` or `.sol` domain to its target address.
@@ -18,6 +18,11 @@ export type { ResolveOptions } from "./resolveTypes";
  * @param params.domain Full domain name including a `.sns` or `.sol` suffix
  * @param params.options Optional PDA owner resolution options. Defaults to `{ allowPda: false }`
  * @returns The resolved target address.
+ *
+ * @example
+ * ```ts
+ * const address = await resolve({ rpc, domain: "example.sns" });
+ * ```
  */
 export const resolve = async ({
   rpc,

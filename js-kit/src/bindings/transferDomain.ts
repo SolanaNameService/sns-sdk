@@ -9,9 +9,20 @@ import { RegistryState } from "../states/registry";
 import { _deriveAddress } from "../utils/deriveAddress";
 import { _parseSnsTopLevelDomain } from "../utils/parseSnsDomain";
 
-interface TransferDomainParams {
+/**
+ * Parameters for transferring an SNS domain.
+ *
+ * @example
+ * ```ts
+ * const params: TransferDomainParams = { rpc, domain: "example.sns", newOwner };
+ * ```
+ */
+export interface TransferDomainParams {
+  /** RPC client. */
   rpc: Rpc<GetAccountInfoApi>;
+  /** Full `.sns` domain name. */
   domain: string;
+  /** New domain owner. */
   newOwner: Address;
 }
 
@@ -23,6 +34,11 @@ interface TransferDomainParams {
  * @param params.domain Full `.sns` domain name
  * @param params.newOwner New owner of the domain
  * @returns Transaction instruction.
+ *
+ * @example
+ * ```ts
+ * const instruction = await transferDomain({ rpc, domain: "example.sns", newOwner });
+ * ```
  */
 export const transferDomain = async ({
   rpc,

@@ -1,11 +1,35 @@
-import { getProgramDerivedAddress } from "@solana/kit";
+import { Address, getProgramDerivedAddress } from "@solana/kit";
 
 import { addressCodec, utf8Codec } from "../codecs";
 import { SRS_HASH_PREFIX, SRS_PROGRAM_ADDRESS } from "../config";
 import { SOL_SRS_CLASS } from "../constants/addresses";
 
-interface GetSrsDomainAddressParams {
+/**
+ * Parameters for deriving an SRS domain address.
+ *
+ * @example
+ * ```ts
+ * const params: GetSrsDomainAddressParams = { domain: "example" };
+ * ```
+ */
+export interface GetSrsDomainAddressParams {
+  /** TLD-less `.sol` domain name. */
   domain: string;
+}
+
+/**
+ * A derived SRS domain address.
+ *
+ * @example
+ * ```ts
+ * const derived: GetSrsDomainAddressResult = { domainAddress, hashed };
+ * ```
+ */
+export interface GetSrsDomainAddressResult {
+  /** Derived SRS record address. */
+  domainAddress: Address;
+  /** SHA-256 hash of the canonical name. */
+  hashed: Uint8Array;
 }
 
 /**
@@ -14,10 +38,15 @@ interface GetSrsDomainAddressParams {
  * @param params Derivation parameters
  * @param params.domain TLD-trimmed `.sol` name
  * @returns The SRS record address and canonical name hash.
+ *
+ * @example
+ * ```ts
+ * const derived = await getSrsDomainAddress({ domain: "example" });
+ * ```
  */
 export const getSrsDomainAddress = async ({
   domain,
-}: GetSrsDomainAddressParams) => {
+}: GetSrsDomainAddressParams): Promise<GetSrsDomainAddressResult> => {
   const hashed = new Uint8Array(
     await crypto.subtle.digest(
       "SHA-256",

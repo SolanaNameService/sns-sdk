@@ -32,6 +32,7 @@ export enum Record {
   Bio = "bio",
 }
 
+/** Fixed content sizes, in bytes, for V1 record types. */
 export const RECORD_V1_SIZE: Map<Record, number> = new Map([
   [Record.SOL, 96],
   [Record.ETH, 20],
@@ -42,6 +43,7 @@ export const RECORD_V1_SIZE: Map<Record, number> = new Map([
   [Record.Background, 32],
 ]);
 
+/** Versions of the SNS record account layout. */
 export enum RecordVersion {
   V1 = 1,
   V2 = 2,
