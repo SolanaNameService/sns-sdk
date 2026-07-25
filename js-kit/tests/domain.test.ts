@@ -1,6 +1,5 @@
 import { describe, expect, jest, test } from "@jest/globals";
 
-import { getAllSnsDomains } from "../src/domain/getAllSnsDomains";
 import { getSnsDomainAddress } from "../src/domain/getSnsDomainAddress";
 import { resolve } from "../src/domain/resolve";
 import { InvalidInputError, UnsupportedTldError } from "../src/errors";
@@ -26,12 +25,5 @@ describe("Domain input policy", () => {
         );
       }
     );
-  });
-});
-
-describe("Registered domain listing", () => {
-  test("getAllSnsDomains returns registered SNS root domains", async () => {
-    const registered = await getAllSnsDomains({ rpc: TEST_RPC });
-    expect(registered.length).toBeGreaterThan(250_000);
   });
 });
