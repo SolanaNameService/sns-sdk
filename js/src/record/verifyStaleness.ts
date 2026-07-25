@@ -15,6 +15,11 @@ import { getRecordV2Key } from "./getRecordV2Key";
  * @param record Record type
  * @param domain Full `.sns` or `.sol` domain name
  * @returns Whether the record's staleness validation matches the current owner.
+ *
+ * @example
+ * ```ts
+ * const valid = await verifyStaleness(connection, Record.Url, "example.sns");
+ * ```
  */
 export const verifyStaleness = async (
   connection: Connection,

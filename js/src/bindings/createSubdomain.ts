@@ -16,6 +16,11 @@ import { createReverse } from "./createReverse";
  * @param space Space to allocate to the subdomain. Defaults to 2 kB
  * @param feePayer Optional fee payer. Defaults to `owner`
  * @returns Transaction instructions.
+ *
+ * @example
+ * ```ts
+ * const instructions = await createSubdomain(connection, "sub.example.sns", owner);
+ * ```
  */
 export const createSubdomain = async (
   connection: Connection,

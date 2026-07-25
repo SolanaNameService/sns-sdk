@@ -12,17 +12,29 @@ import type { ResolveConfig } from "./types";
 export type { ResolveConfig } from "./types";
 
 /**
- * Resolves a domain to its owner public key.
+ * Resolves a full `.sns` or `.sol` domain name to its effective target public key.
  *
- * A TLD suffix is required. `.sns` uses SNS-IP 5. `.sol` uses SRS when
- * enabled by package configuration; otherwise SNS resolution is available
- * only before the configured cutoff.
+ * `.sns` resolution applies SNS ownership precedence: an active tokenized-domain
+ * owner, then valid V2 and V1 `SOL` records, then the registry owner.
+ *
+ * `.sol` currently falls back to SNS-backed resolution until finalized slot
+ * `452_825_395`, then pauses automatically. SRS-backed `.sol` resolution will be
+ * restored in a future SDK update.
  *
  * @param connection Solana RPC connection
- * @param domain Full `.sns` or `.sol` domain name
- * @param config Optional PDA allowance config
- * @returns Resolved owner public key
- * @throws {UnsupportedTldError} When the domain has an unsupported TLD suffix
+ * @param domain Full domain name with a supported `.sns` or `.sol` suffix
+ * @param config PDA allowance policy. Defaults to `{ allowPda: false }`
+ * @returns Effective target as a web3.js `PublicKey`
+ * @throws
+ * - {@link Errors.UnsupportedTldError} when the name is bare, has an unsupported suffix, or uses `.sol` after the SDK-managed pause.
+ * - {@link Errors.DomainDoesNotExist} when the domain account does not exist.
+ * - {@link Errors.PdaOwnerNotAllowed} when the fallback registry owner is a PDA not allowed by `config`.
+ * @example
+ * ```ts
+ * const target = await resolve(connection, "name.sns");
+ * console.log(target.toBase58());
+ * // => "<BASE58_PUBLIC_KEY>"
+ * ```
  */
 export const resolve = async (
   connection: Connection,

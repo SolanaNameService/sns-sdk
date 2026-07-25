@@ -14,6 +14,11 @@ import { getNameAccountKeySync } from "../utils/getNameAccountKeySync";
  * @param nameClass Optional class of the name account
  * @param nameParent Optional parent name account
  * @returns Transaction instruction.
+ *
+ * @example
+ * ```ts
+ * const instruction = await deleteNameRegistry(connection, "example", refundTarget);
+ * ```
  */
 export async function deleteNameRegistry(
   connection: Connection,

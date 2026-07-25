@@ -11,6 +11,11 @@ import { NftRecord } from "./state";
  *
  * @param connection Solana RPC connection
  * @returns Tokenized domain name account public keys.
+ *
+ * @example
+ * ```ts
+ * const domains = await retrieveNfts(connection);
+ * ```
  */
 export const retrieveNfts = async (connection: Connection) => {
   const filters: GetProgramAccountsFilter[] = [

@@ -1,15 +1,20 @@
 import { Record } from "../types/record";
 import { PublicKey } from "@solana/web3.js";
 
+/** On-chain record validation scheme identifiers. */
 export enum Validation {
+  /** No validation is required. */
   None = 0,
+  /** Validation uses a Solana signature. */
   Solana = 1,
+  /** Validation uses an Ethereum signature. */
   Ethereum = 2,
+  /** Solana validation is present but unverified. */
   UnverifiedSolana = 3,
 }
 
 /**
- * A map that associates each record type with a public key, known as guardians.
+ * Maps record types to their guardian public keys.
  */
 export const GUARDIANS = new Map<Record, PublicKey>([
   [Record.Url, new PublicKey("ExXjtfdQe8JacoqP9Z535WzQKjF4CzW1TTRKRgpxvya3")],
@@ -17,7 +22,7 @@ export const GUARDIANS = new Map<Record, PublicKey>([
 ]);
 
 /**
- * Set of records that utilize secp256k1 for verification purposes
+ * Record types that use secp256k1 verification.
  */
 export const ETH_ROA_RECORDS = new Set<Record>([
   Record.ETH,
@@ -26,6 +31,7 @@ export const ETH_ROA_RECORDS = new Set<Record>([
   Record.BASE,
 ]);
 
+/** Record types whose values use EVM address encoding. */
 export const EVM_RECORDS = new Set<Record>([
   Record.ETH,
   Record.BSC,
@@ -33,7 +39,7 @@ export const EVM_RECORDS = new Set<Record>([
 ]);
 
 /**
- * Set of records that are UTF-8 encoded strings
+ * Record types encoded as UTF-8 strings.
  */
 export const UTF8_ENCODED = new Set<Record>([
   Record.IPFS,
@@ -59,8 +65,7 @@ export const UTF8_ENCODED = new Set<Record>([
 ]);
 
 /**
- * Set of records that are self signed i.e signed by the public key contained
- * in the record itself.
+ * Record types self-signed by the public key in their content.
  */
 export const SELF_SIGNED = new Set<Record>([
   Record.BASE,

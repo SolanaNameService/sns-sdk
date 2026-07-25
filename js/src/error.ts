@@ -1,3 +1,8 @@
+/**
+ * Error classes and stable error categories emitted by SDK operations.
+ * @module Errors
+ */
+/** Stable error categories emitted by SNS SDK operations. */
 export enum ErrorType {
   InvalidSubdomain = "InvalidSubdomain",
   PrimaryDomainNotFound = "PrimaryDomainNotFound",
@@ -31,7 +36,9 @@ export enum ErrorType {
   CouldNotFindSrsOwner = "CouldNotFindSrsOwner",
 }
 
+/** Base error for SDK failures, carrying a machine-readable {@link ErrorType}. */
 export class SNSError extends Error {
+  /** Machine-readable error category. */
   type: ErrorType;
 
   constructor(type: ErrorType, message?: string) {

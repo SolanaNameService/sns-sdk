@@ -12,6 +12,11 @@ import { _buildValidateSolanaSignatureInstruction } from "./recordValidation";
  * @param payer Fee payer for the instruction
  * @param verifier Verifier account used by the record validation instruction
  * @returns Transaction instruction.
+ *
+ * @example
+ * ```ts
+ * const instruction = validateRecordRoa("example.sns", Record.Url, owner, payer, verifier);
+ * ```
  */
 export const validateRecordRoa = (
   domain: string,

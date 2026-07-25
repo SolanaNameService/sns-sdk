@@ -1,3 +1,7 @@
+/**
+ * High-level builders for SNS transaction instructions.
+ * @module Bindings
+ */
 export * from "./burnDomain";
 export * from "./createNameRegistry";
 export * from "./createRecord";

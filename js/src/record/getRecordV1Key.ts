@@ -12,6 +12,11 @@ import { getSnsDomainKeySync } from "../utils/getSnsDomainKeySync";
  * @param domain Domain name with its TLD suffix trimmed
  * @param record Record type
  * @returns Record account public key
+ *
+ * @example
+ * ```ts
+ * const key = getRecordV1Key("example", Record.SOL);
+ * ```
  */
 export const getRecordV1Key = (domain: string, record: Record) => {
   const { pubkey } = getSnsDomainKeySync(

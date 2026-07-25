@@ -10,7 +10,16 @@ import { deserializeRecordContent } from "./deserializeRecordContent";
 import { getRecordV2Key } from "./getRecordV2Key";
 
 import type { RecordResult } from "./getRecord";
-interface GetMultipleRecordsOptions {
+/**
+ * Options controlling content decoding for {@link getMultipleRecords}.
+ *
+ * @example
+ * ```ts
+ * const options: GetMultipleRecordsOptions = { deserialize: true };
+ * ```
+ */
+export interface GetMultipleRecordsOptions {
+  /** Whether to deserialize each record's content. */
   deserialize?: boolean;
 }
 
@@ -27,6 +36,11 @@ interface GetMultipleRecordsOptions {
  * contains the record type, the raw SNS record account, staleness and
  * right-of-association verification results, and optionally the deserialized
  * content. Entries are `undefined` for records that do not exist on-chain.
+ *
+ * @example
+ * ```ts
+ * const records = await getMultipleRecords(connection, "example.sns", [Record.Url]);
+ * ```
  */
 export async function getMultipleRecords(
   connection: Connection,

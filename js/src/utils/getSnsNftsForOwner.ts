@@ -3,9 +3,22 @@ import { Connection, PublicKey } from "@solana/web3.js";
 import { retrieveRecords } from "../nft/retrieveRecords";
 import { reverseLookupBatch } from "./reverseLookupBatch";
 
+/**
+ * A tokenized SNS domain and its associated NFT mint.
+ *
+ * @example
+ * ```ts
+ * const firstDomain: SnsNft | undefined = domains[0];
+ * ```
+ */
 export interface SnsNft {
+  /** Fully qualified `.sns` domain name. */
   domain: string;
+
+  /** Name-service account address for `domain`. */
   key: PublicKey;
+
+  /** NFT mint that tokenizes `domain`. */
   mint: PublicKey;
 }
 
@@ -16,6 +29,11 @@ export interface SnsNft {
  * @param owner Owner of the tokenized domains
  * @returns Tokenized domain records containing the domain name, its name
  * account public key, and NFT mint public key
+ *
+ * @example
+ * ```ts
+ * const domains = await getSnsNftsForOwner(connection, wallet);
+ * ```
  */
 export const getSnsNftsForOwner = async (
   connection: Connection,
@@ -23,14 +41,14 @@ export const getSnsNftsForOwner = async (
 ): Promise<SnsNft[]> => {
   const nftRecords = await retrieveRecords(connection, owner);
 
-  const names = await reverseLookupBatch(
+  const domains = await reverseLookupBatch(
     connection,
     nftRecords.map((record) => record.nameAccount),
   );
 
   return nftRecords
     .map((record, index) => {
-      const domain = names[index];
+      const domain = domains[index];
 
       return domain
         ? {

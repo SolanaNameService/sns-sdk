@@ -1,3 +1,7 @@
+/**
+ * Low-level SPL Name Service and SNS instruction classes.
+ * @module Instructions
+ */
 export * from "./burnInstruction";
 export * from "./createInstruction";
 export * from "./createReverseInstruction";

@@ -7,6 +7,11 @@ import { NAME_PROGRAM_ID, SNS_ROOT_DOMAIN_ACCOUNT } from "../constants";
  * @param connection Solana RPC connection
  * @param wallet Wallet to search domain accounts for
  * @returns Domain account public keys.
+ *
+ * @example
+ * ```ts
+ * const keys = await getSnsDomainKeysForOwner(connection, wallet);
+ * ```
  */
 export async function getSnsDomainKeysForOwner(
   connection: Connection,

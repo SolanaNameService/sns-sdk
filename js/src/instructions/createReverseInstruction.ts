@@ -3,8 +3,24 @@ import { PublicKey, TransactionInstruction } from "@solana/web3.js";
 import { serialize } from "borsh";
 import type { AccountKey } from "./types";
 
+/**
+ * Input for creating a reverse-lookup registry.
+ *
+ * @example
+ * ```ts
+ * const params: CreateReverseInstructionParams = { name: "example" };
+ * ```
+ */
+export interface CreateReverseInstructionParams {
+  /** Raw reverse lookup payload. */
+  name: string;
+}
+
+/** Serializable registrar instruction for creating a reverse-lookup registry. */
 export class CreateReverseInstruction {
+  /** Instruction discriminator. */
   tag: number;
+  /** Raw reverse lookup payload. */
   name: string;
   static schema = {
     struct: {
@@ -13,13 +29,15 @@ export class CreateReverseInstruction {
     },
   };
 
-  constructor(obj: { name: string }) {
+  constructor(obj: CreateReverseInstructionParams) {
     this.tag = 12;
     this.name = obj.name;
   }
+  /** Serializes the registrar instruction payload. */
   serialize(): Uint8Array {
     return serialize(CreateReverseInstruction.schema, this);
   }
+  /** Builds the transaction instruction with the required reverse-registry accounts. */
   getInstruction(
     programId: PublicKey,
     namingServiceProgram: PublicKey,

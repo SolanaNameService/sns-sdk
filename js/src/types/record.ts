@@ -1,5 +1,5 @@
 /**
- * List of SNS Records
+ * Supported SNS record identifiers.
  */
 export enum Record {
   IPFS = "IPFS",
@@ -32,6 +32,7 @@ export enum Record {
   Bio = "bio",
 }
 
+/** Fixed byte lengths for V1 record payloads. */
 export const RECORD_V1_SIZE: Map<Record, number> = new Map([
   [Record.SOL, 96],
   [Record.ETH, 20],
@@ -42,6 +43,7 @@ export const RECORD_V1_SIZE: Map<Record, number> = new Map([
   [Record.Background, 32],
 ]);
 
+/** Supported SNS record account layouts. */
 export enum RecordVersion {
   V1 = 1,
   V2 = 2,

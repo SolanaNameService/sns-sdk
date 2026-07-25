@@ -1,3 +1,7 @@
+/**
+ * Twitter registry lookup and management APIs.
+ * @module Twitter
+ */
 export * from "./ReverseTwitterRegistryState";
 export * from "./changeTwitterRegistryData";
 export * from "./changeVerifiedPubkey";

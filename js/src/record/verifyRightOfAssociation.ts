@@ -19,6 +19,11 @@ import type { Buffer } from "buffer";
  * @param domain Full `.sns` or `.sol` domain name
  * @param verifier Optional verifier. Required when no guardian exists for the record
  * @returns Whether the record's Right of Association validation matches the verifier.
+ *
+ * @example
+ * ```ts
+ * const valid = await verifyRightOfAssociation(connection, Record.Url, "example.sns");
+ * ```
  */
 export const verifyRightOfAssociation = async (
   connection: Connection,

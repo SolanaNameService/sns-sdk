@@ -4,11 +4,34 @@ import { Buffer } from "buffer";
 import { deserialize } from "borsh";
 import { AccountDoesNotExistError } from "./error";
 
+/**
+ * Input for decoding an SNS name registry account.
+ *
+ * @example
+ * ```ts
+ * const params: NameRegistryStateParams = { parentName, owner, class: classAddress };
+ * ```
+ */
+export interface NameRegistryStateParams {
+  /** Encoded parent registry address. */
+  parentName: Uint8Array;
+  /** Encoded registry owner address. */
+  owner: Uint8Array;
+  /** Encoded registry class address. */
+  class: Uint8Array;
+}
+
+/** Deserialized header and payload of an SNS name registry account. */
 export class NameRegistryState {
+  /** Fixed byte length of the registry header. */
   static HEADER_LEN = 96;
+  /** Parent registry address. */
   parentName: PublicKey;
+  /** Registry owner address. */
   owner: PublicKey;
+  /** Registry class address. */
   class: PublicKey;
+  /** Registry data after the fixed header. */
   data: Buffer | undefined;
 
   static schema = {
@@ -19,16 +42,13 @@ export class NameRegistryState {
     },
   };
 
-  constructor(obj: {
-    parentName: Uint8Array;
-    owner: Uint8Array;
-    class: Uint8Array;
-  }) {
+  constructor(obj: NameRegistryStateParams) {
     this.parentName = new PublicKey(obj.parentName);
     this.owner = new PublicKey(obj.owner);
     this.class = new PublicKey(obj.class);
   }
 
+  /** Deserializes raw name registry account data. */
   static deserialize(data: Buffer) {
     const res = new NameRegistryState(deserialize(this.schema, data) as any);
 
@@ -36,6 +56,7 @@ export class NameRegistryState {
     return res;
   }
 
+  /** Fetches a name registry account and its tokenized-domain owner, if any. */
   public static async retrieve(
     connection: Connection,
     nameAccountKey: PublicKey,
@@ -55,6 +76,7 @@ export class NameRegistryState {
     return { registry: res, nftOwner };
   }
 
+  /** Fetches one RPC-sized batch of name registry accounts. */
   static async _retrieveBatch(
     connection: Connection,
     nameAccountKeys: PublicKey[],
@@ -70,6 +92,7 @@ export class NameRegistryState {
     return nameAccounts.map((e) => fn(e?.data));
   }
 
+  /** Fetches and deserializes name registry accounts in batches of up to 100. */
   public static async retrieveBatch(
     connection: Connection,
     nameAccountKeys: PublicKey[],

@@ -17,7 +17,23 @@ import { Numberu32, Numberu64 } from "../int";
 
 import { createReverseTwitterRegistry } from "./createReverseTwitterRegistry";
 
-// Signed by the authority, the payer and the verified pubkey
+/**
+ * Builds instructions to create a verified Twitter handle registry and its reverse registry.
+ *
+ * The authority, payer, and verified public key must sign the resulting instructions.
+ *
+ * @param connection Solana RPC connection used to calculate rent-exemption costs.
+ * @param twitterHandle Twitter handle to verify and register.
+ * @param verifiedPubkey Public key associated with the verified handle.
+ * @param space Number of bytes available in the user-facing registry.
+ * @param payerKey Signer that funds both registry accounts.
+ * @returns Instructions that create the handle and reverse registries.
+ *
+ * @example
+ * ```ts
+ * const instructions = await createVerifiedTwitterRegistry(connection, "bonfida", owner, 128, payer);
+ * ```
+ */
 export async function createVerifiedTwitterRegistry(
   connection: Connection,
   twitterHandle: string,

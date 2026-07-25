@@ -25,6 +25,18 @@ const closure = async (connection: Connection, acc: RawAccount) => {
   }
 };
 
+/**
+ * Retrieves active SNS NFT records for tokenized domains owned by a wallet.
+ *
+ * @param connection Solana RPC connection used to query token and NFT accounts.
+ * @param owner Wallet address that owns the tokenized domains.
+ * @returns Active NFT records associated with the wallet's tokenized domains.
+ *
+ * @example
+ * ```ts
+ * const records = await retrieveRecords(connection, owner);
+ * ```
+ */
 export const retrieveRecords = async (
   connection: Connection,
   owner: PublicKey,

@@ -22,6 +22,11 @@ import { EVM_RECORDS, UTF8_ENCODED } from "./const";
  * @param content Record content
  * @param record Record type
  * @returns Serialized record content.
+ *
+ * @example
+ * ```ts
+ * const bytes = serializeRecordContent("https://example.com", Record.Url);
+ * ```
  */
 export const serializeRecordContent = (
   content: string,

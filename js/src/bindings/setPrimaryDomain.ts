@@ -15,6 +15,11 @@ import { SNS_ROOT_DOMAIN_ACCOUNT } from "../constants";
  * @param nameAccount Name account to set as primary
  * @param owner Owner of the name account
  * @returns Transaction instruction.
+ *
+ * @example
+ * ```ts
+ * const instruction = await setPrimaryDomain(connection, nameAccount, owner);
+ * ```
  */
 export const setPrimaryDomain = async (
   connection: Connection,

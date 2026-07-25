@@ -17,6 +17,11 @@ import { _parseSnsDomain } from "../utils/parseSnsDomain";
  * @param owner Current owner of the domain
  * @param payer Fee payer for the instruction
  * @returns Transaction instruction.
+ *
+ * @example
+ * ```ts
+ * const instruction = createRecord("example.sns", Record.Url, "https://example.com", owner, payer);
+ * ```
  */
 export const createRecord = (
   domain: string,

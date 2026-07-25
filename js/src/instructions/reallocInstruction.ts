@@ -2,6 +2,29 @@ import { Buffer } from "buffer";
 import { PublicKey, TransactionInstruction } from "@solana/web3.js";
 import { Numberu32 } from "../int";
 
+/**
+ * Builds an SPL Name Service instruction that resizes a name registry account.
+ *
+ * @param nameProgramId SPL Name Service program address.
+ * @param systemProgramId System Program address used for reallocation.
+ * @param payerKey Signer that funds the additional account rent.
+ * @param nameAccountKey Registry address to resize.
+ * @param nameOwnerKey Signer authorized to resize the registry.
+ * @param space New registry data size in bytes.
+ * @returns A transaction instruction that resizes the name registry.
+ *
+ * @example
+ * ```ts
+ * const instruction = reallocInstruction(
+ *   nameProgramId,
+ *   systemProgramId,
+ *   payer,
+ *   nameAccount,
+ *   owner,
+ *   space,
+ * );
+ * ```
+ */
 export function reallocInstruction(
   nameProgramId: PublicKey,
   systemProgramId: PublicKey,

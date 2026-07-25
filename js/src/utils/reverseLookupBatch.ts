@@ -12,6 +12,11 @@ import { deserializeReverse } from "./deserializeReverse";
  * @param connection Solana RPC connection
  * @param nameAccounts Domain account public keys to reverse look up
  * @returns Human-readable domain names when reverse accounts exist.
+ *
+ * @example
+ * ```ts
+ * const domains = await reverseLookupBatch(connection, nameAccounts);
+ * ```
  */
 export async function reverseLookupBatch(
   connection: Connection,

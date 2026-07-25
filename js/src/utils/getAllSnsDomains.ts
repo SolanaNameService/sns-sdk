@@ -8,6 +8,11 @@ import { NAME_PROGRAM_ID, SNS_ROOT_DOMAIN_ACCOUNT } from "../constants";
  *
  * @param connection Solana RPC connection
  * @returns Registered domain accounts with sliced account data.
+ *
+ * @example
+ * ```ts
+ * const domains = await getAllSnsDomains(connection);
+ * ```
  */
 export const getAllSnsDomains = async (connection: Connection) => {
   const filters = [

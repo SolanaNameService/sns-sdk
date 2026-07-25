@@ -3,9 +3,28 @@ import { PublicKey, TransactionInstruction } from "@solana/web3.js";
 import { serialize } from "borsh";
 import type { AccountKey } from "./types";
 
-export class CreateWithNftInstruction {
-  tag: number;
+/**
+ * Input for registration with an eligible NFT.
+ *
+ * @example
+ * ```ts
+ * const params: CreateWithNftInstructionParams = { name: "example", space: 1_000 };
+ * ```
+ */
+export interface CreateWithNftInstructionParams {
+  /** TLD-less domain name. */
   name: string;
+  /** Account data size in bytes. */
+  space: number;
+}
+
+/** Serializable registrar instruction for registration with an eligible NFT. */
+export class CreateWithNftInstruction {
+  /** Instruction discriminator. */
+  tag: number;
+  /** TLD-less domain name. */
+  name: string;
+  /** Account data size in bytes. */
   space: number;
   static schema = {
     struct: {
@@ -15,14 +34,16 @@ export class CreateWithNftInstruction {
     },
   };
 
-  constructor(obj: { name: string; space: number }) {
+  constructor(obj: CreateWithNftInstructionParams) {
     this.tag = 17;
     this.name = obj.name;
     this.space = obj.space;
   }
+  /** Serializes the registrar instruction payload. */
   serialize(): Uint8Array {
     return serialize(CreateWithNftInstruction.schema, this);
   }
+  /** Builds the transaction instruction with the required NFT-registration accounts. */
   getInstruction(
     programId: PublicKey,
     namingServiceProgram: PublicKey,

@@ -10,6 +10,11 @@ import { getNameAccountKeySync } from "./getNameAccountKeySync";
  * @param domainKey Domain account public key
  * @param parent Optional parent name account for subdomain reverse lookups
  * @returns Reverse lookup account public key.
+ *
+ * @example
+ * ```ts
+ * const key = getReverseKeyFromDomainKey(domainKey);
+ * ```
  */
 export const getReverseKeyFromDomainKey = (
   domainKey: PublicKey,

@@ -14,6 +14,11 @@ import { _parseSnsSubdomain } from "../utils/parseSnsDomain";
  * @param isParentOwnerSigner Whether the parent name owner signs the transfer
  * @param owner Current owner of the subdomain. Resolved automatically when omitted
  * @returns Transaction instruction.
+ *
+ * @example
+ * ```ts
+ * const instruction = await transferSubdomain(connection, "sub.example.sns", newOwner);
+ * ```
  */
 export const transferSubdomain = async (
   connection: Connection,

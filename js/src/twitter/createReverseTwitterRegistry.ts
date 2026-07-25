@@ -19,6 +19,29 @@ import { getNameAccountKeySync } from "../utils/getNameAccountKeySync";
 import { Numberu32, Numberu64 } from "../int";
 import { ReverseTwitterRegistryState } from "./ReverseTwitterRegistryState";
 
+/**
+ * Builds instructions to create the reverse registry for a verified Twitter handle.
+ *
+ * The Twitter verification authority must authorize the resulting registry writes.
+ *
+ * @param connection Solana RPC connection used to calculate rent-exemption costs.
+ * @param twitterHandle Verified Twitter handle for the reverse registry.
+ * @param twitterRegistryKey User-facing registry address for the handle.
+ * @param verifiedPubkey Verified public key associated with the handle.
+ * @param payerKey Signer that funds the reverse registry account.
+ * @returns Instructions that create and populate the reverse registry.
+ *
+ * @example
+ * ```ts
+ * const instructions = await createReverseTwitterRegistry(
+ *   connection,
+ *   "bonfida",
+ *   registry,
+ *   owner,
+ *   payer,
+ * );
+ * ```
+ */
 export async function createReverseTwitterRegistry(
   connection: Connection,
   twitterHandle: string,

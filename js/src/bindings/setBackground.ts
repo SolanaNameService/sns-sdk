@@ -27,6 +27,11 @@ import { _parseSnsTopLevelDomain } from "../utils/parseSnsDomain";
  * @param bg The issued custom background to set
  * @param owner Current owner of the domain
  * @returns Transaction instructions.
+ *
+ * @example
+ * ```ts
+ * const instructions = await setBackground(connection, "example.sns", CustomBg.DegenPoet1, owner);
+ * ```
  */
 export const setBackground = async (
   connection: Connection,

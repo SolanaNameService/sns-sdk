@@ -1,3 +1,7 @@
+/**
+ * Low-level name-account, reverse-lookup, and TLD utilities.
+ * @module Utilities
+ */
 export * from "../custom-bg";
 export * from "./check";
 export * from "./deserializeReverse";

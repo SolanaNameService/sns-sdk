@@ -17,6 +17,11 @@ import { _parseSnsTopLevelDomain } from "../utils/parseSnsDomain";
  * @param owner Current owner of the domain
  * @param target Account that receives reclaimed lamports
  * @returns Transaction instruction.
+ *
+ * @example
+ * ```ts
+ * const instruction = burnDomain("example.sns", owner, refundTarget);
+ * ```
  */
 export const burnDomain = (
   domain: string,

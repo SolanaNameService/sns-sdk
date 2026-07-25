@@ -7,8 +7,22 @@ import {
 import { NameRegistryState } from "../state";
 import { MultipleRegistriesError } from "../error";
 
-// Uses the RPC node filtering feature, execution speed may vary
-// Does not give you the handle, but is an alternative to getHandlesAndKeysFromVerifiedPubkey + getTwitterRegistry to get the data
+/**
+ * Retrieves raw user-facing registry data for a verified Twitter public key.
+ *
+ * This uses an RPC program-account query and does not return the handle; RPC
+ * filtering performance varies by provider.
+ *
+ * @param connection Solana RPC connection
+ * @param verifiedPubkey Verified public key associated with the handle
+ * @returns Raw name-registry payload bytes
+ * @throws {MultipleRegistriesError} When more than one registry matches
+ *
+ * @example
+ * ```ts
+ * const data = await getTwitterRegistryData(connection, verifiedPubkey);
+ * ```
+ */
 export async function getTwitterRegistryData(
   connection: Connection,
   verifiedPubkey: PublicKey,

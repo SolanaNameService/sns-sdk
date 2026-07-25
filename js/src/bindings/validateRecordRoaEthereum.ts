@@ -19,6 +19,18 @@ import { _getRecordAndParentKey } from "./recordValidation";
  * @param signature The 64-byte Ethereum signature used for validation
  * @param expectedPubkey The 20-byte Ethereum public key expected to match the signature
  * @returns Transaction instruction.
+ *
+ * @example
+ * ```ts
+ * const instruction = validateRecordRoaEthereum(
+ *   "example.sns",
+ *   Record.ETH,
+ *   owner,
+ *   payer,
+ *   signature,
+ *   addressBytes,
+ * );
+ * ```
  */
 export const validateRecordRoaEthereum = (
   domain: string,

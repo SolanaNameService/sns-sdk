@@ -3,8 +3,26 @@ import { Connection, PublicKey } from "@solana/web3.js";
 import { NameRegistryState } from "../state";
 import { InvalidReverseTwitterError } from "../error";
 
-export class ReverseTwitterRegistryState {
+/**
+ * Input for decoding a reverse Twitter registry.
+ *
+ * @example
+ * ```ts
+ * const params: ReverseTwitterRegistryStateParams = { twitterRegistryKey, twitterHandle: "bonfida" };
+ * ```
+ */
+export interface ReverseTwitterRegistryStateParams {
+  /** Encoded verified Twitter registry address. */
   twitterRegistryKey: Uint8Array;
+  /** Verified Twitter handle. */
+  twitterHandle: string;
+}
+
+/** Deserialized reverse registry linking a verified key to a Twitter handle. */
+export class ReverseTwitterRegistryState {
+  /** Encoded verified Twitter registry address. */
+  twitterRegistryKey: Uint8Array;
+  /** Verified Twitter handle. */
   twitterHandle: string;
 
   static schema = {
@@ -14,11 +32,12 @@ export class ReverseTwitterRegistryState {
     },
   };
 
-  constructor(obj: { twitterRegistryKey: Uint8Array; twitterHandle: string }) {
+  constructor(obj: ReverseTwitterRegistryStateParams) {
     this.twitterRegistryKey = obj.twitterRegistryKey;
     this.twitterHandle = obj.twitterHandle;
   }
 
+  /** Fetches and deserializes a reverse Twitter registry account. */
   public static async retrieve(
     connection: Connection,
     reverseTwitterAccountKey: PublicKey,

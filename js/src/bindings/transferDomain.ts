@@ -14,6 +14,11 @@ import { _parseSnsTopLevelDomain } from "../utils/parseSnsDomain";
  * @param domain Full `.sns` domain name
  * @param newOwner New owner of the domain
  * @returns Transaction instruction.
+ *
+ * @example
+ * ```ts
+ * const instruction = await transferDomain(connection, "example.sns", newOwner);
+ * ```
  */
 export async function transferDomain(
   connection: Connection,

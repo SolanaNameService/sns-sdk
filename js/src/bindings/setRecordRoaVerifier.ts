@@ -15,6 +15,11 @@ import { _getRecordAndParentKey } from "./recordValidation";
  * @param payer Fee payer for the instruction
  * @param verifier Verifier account used by the record validation instruction
  * @returns Transaction instruction.
+ *
+ * @example
+ * ```ts
+ * const instruction = setRecordRoaVerifier("example.sns", Record.Url, owner, payer, verifier);
+ * ```
  */
 export const setRecordRoaVerifier = (
   domain: string,

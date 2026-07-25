@@ -13,12 +13,31 @@ import { getDomainMint } from "./nft/getDomainMint";
 import { NameRegistryState } from "./state";
 import { NAME_PROGRAM_ID, SNS_ROOT_DOMAIN_ACCOUNT } from "./constants";
 
+/** Program ID that stores wallet primary-domain selections. */
 export const NAME_OFFERS_ID = new PublicKey(
   "85iDfUvr3HJyLM2zcq5BXSiDvUWfw6cSE1FfNBo8Ap29",
 );
 
-export class PrimaryDomain {
+/**
+ * Input for decoding a primary-domain account.
+ *
+ * @example
+ * ```ts
+ * const params: PrimaryDomainParams = { tag: 0, nameAccount };
+ * ```
+ */
+export interface PrimaryDomainParams {
+  /** Account state tag. */
   tag: number;
+  /** Encoded primary domain account address. */
+  nameAccount: Uint8Array;
+}
+
+/** Deserialized primary-domain account and its address derivation helpers. */
+export class PrimaryDomain {
+  /** Account state tag. */
+  tag: number;
+  /** Primary domain account address. */
   nameAccount: PublicKey;
   static schema = {
     struct: {
@@ -27,7 +46,7 @@ export class PrimaryDomain {
     },
   };
 
-  constructor(obj: { tag: number; nameAccount: Uint8Array }) {
+  constructor(obj: PrimaryDomainParams) {
     this.tag = obj.tag;
     this.nameAccount = new PublicKey(obj.nameAccount);
   }
@@ -94,6 +113,11 @@ export class PrimaryDomain {
  * @param connection Solana RPC connection
  * @param owner The public key of the wallet owner
  * @returns The primary domain account, reverse domain name, and stale status
+ *
+ * @example
+ * ```ts
+ * const primary = await getPrimaryDomain(connection, wallet);
+ * ```
  */
 export const getPrimaryDomain = async (
   connection: Connection,
@@ -138,6 +162,11 @@ export const getPrimaryDomain = async (
  * @param connection Solana RPC connection
  * @param wallets Wallet public keys
  * @returns Primary domain names, or undefined for wallets without one.
+ *
+ * @example
+ * ```ts
+ * const domains = await getMultiplePrimaryDomains(connection, wallets);
+ * ```
  */
 export const getMultiplePrimaryDomains = async (
   connection: Connection,

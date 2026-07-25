@@ -3,6 +3,20 @@ import { Connection, PublicKey } from "@solana/web3.js";
 
 import { getDomainMint } from "./getDomainMint";
 
+/**
+ * Retrieves the owner of a tokenized name using the mint's largest token account.
+ *
+ * Returns `null` when the mint or a one-token holder cannot be found.
+ *
+ * @param connection Solana RPC connection used to query token accounts.
+ * @param nameAccount Tokenized SNS name account address.
+ * @returns The owner public key, or `null` when no one-token holder exists.
+ *
+ * @example
+ * ```ts
+ * const owner = await retrieveNftOwnerV2(connection, nameAccount);
+ * ```
+ */
 export const retrieveNftOwnerV2 = async (
   connection: Connection,
   nameAccount: PublicKey,

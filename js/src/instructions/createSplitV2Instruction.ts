@@ -3,10 +3,32 @@ import { PublicKey, TransactionInstruction } from "@solana/web3.js";
 import { serialize } from "borsh";
 import type { AccountKey } from "./types";
 
-export class CreateSplitV2Instruction {
-  tag: number;
+/**
+ * Input for paid V2 domain registration.
+ *
+ * @example
+ * ```ts
+ * const params: CreateSplitV2InstructionParams = { name: "example", space: 1_000, referrerIdxOpt: null };
+ * ```
+ */
+export interface CreateSplitV2InstructionParams {
+  /** TLD-less domain name. */
   name: string;
+  /** Account data size in bytes. */
   space: number;
+  /** Approved referrer index, if any. */
+  referrerIdxOpt: number | null;
+}
+
+/** Serializable V2 registrar instruction for paid domain registration. */
+export class CreateSplitV2Instruction {
+  /** Instruction discriminator. */
+  tag: number;
+  /** TLD-less domain name. */
+  name: string;
+  /** Account data size in bytes. */
+  space: number;
+  /** Approved referrer index, if any. */
   referrerIdxOpt: number | null;
   static schema = {
     struct: {
@@ -16,19 +38,17 @@ export class CreateSplitV2Instruction {
       referrerIdxOpt: { option: "u16" },
     },
   };
-  constructor(obj: {
-    name: string;
-    space: number;
-    referrerIdxOpt: number | null;
-  }) {
+  constructor(obj: CreateSplitV2InstructionParams) {
     this.tag = 20;
     this.name = obj.name;
     this.space = obj.space;
     this.referrerIdxOpt = obj.referrerIdxOpt;
   }
+  /** Serializes the registrar instruction payload. */
   serialize(): Uint8Array {
     return serialize(CreateSplitV2Instruction.schema, this);
   }
+  /** Builds the transaction instruction with the required paid-registration accounts. */
   getInstruction(
     programId: PublicKey,
     namingServiceProgram: PublicKey,

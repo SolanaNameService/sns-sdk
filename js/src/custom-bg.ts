@@ -24,6 +24,11 @@ const NUMBER_ART_KEY = new PublicKey(
  * @param domain Domain name with its TLD suffix trimmed
  * @param customBg Custom background identifier
  * @returns Custom background domain key and background entry key.
+ *
+ * @example
+ * ```ts
+ * const keys = getCustomBgKeys("example", CustomBg.DegenPoet1);
+ * ```
  */
 export const getCustomBgKeys = (domain: string, customBg: CustomBg) => {
   const hashedBg = getHashedNameSync(customBg);
@@ -44,6 +49,11 @@ export const getCustomBgKeys = (domain: string, customBg: CustomBg) => {
  *
  * @param bg The custom background identifier
  * @returns The artist or payout public key for the background
+ *
+ * @example
+ * ```ts
+ * const artist = getArtistPubkey(CustomBg.DegenPoet1);
+ * ```
  */
 export const getArtistPubkey = (bg: CustomBg): PublicKey => {
   switch (bg) {

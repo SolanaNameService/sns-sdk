@@ -3,7 +3,9 @@ import { PublicKey, TransactionInstruction } from "@solana/web3.js";
 import { serialize } from "borsh";
 import type { AccountKey } from "./types";
 
+/** Serializable registrar instruction for setting a wallet primary domain. */
 export class SetPrimaryInstruction {
+  /** Instruction discriminator. */
   tag: number;
   static schema = {
     struct: {
@@ -13,9 +15,11 @@ export class SetPrimaryInstruction {
   constructor() {
     this.tag = 6;
   }
+  /** Serializes the registrar instruction payload. */
   serialize(): Uint8Array {
     return serialize(SetPrimaryInstruction.schema, this);
   }
+  /** Builds the transaction instruction with the required primary-domain accounts. */
   getInstruction(
     programId: PublicKey,
     nameAccount: PublicKey,

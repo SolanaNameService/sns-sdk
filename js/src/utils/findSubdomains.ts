@@ -11,6 +11,11 @@ import { getReverseKeyFromDomainKey } from "./getReverseKeyFromDomainKey";
  * @param connection Solana RPC connection
  * @param parentKey Parent domain account public key
  * @returns Human-readable subdomain names.
+ *
+ * @example
+ * ```ts
+ * const domains = await findSubdomains(connection, parentDomainKey);
+ * ```
  */
 export const findSubdomains = async (
   connection: Connection,

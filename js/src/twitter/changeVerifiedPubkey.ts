@@ -10,8 +10,29 @@ import { getHashedNameSync } from "../utils/getHashedNameSync";
 import { getNameAccountKeySync } from "../utils/getNameAccountKeySync";
 import { createReverseTwitterRegistry } from "./createReverseTwitterRegistry";
 
-// Change the verified pubkey for a given twitter handle
-// Signed by the Authority, the verified pubkey and the payer
+/**
+ * Builds instructions to transfer a Twitter handle to a new verified public key.
+ *
+ * The authority, current verified key, and payer must sign the resulting instructions.
+ *
+ * @param connection Solana RPC connection used to calculate rent-exemption costs.
+ * @param twitterHandle Verified Twitter handle to transfer.
+ * @param currentVerifiedPubkey Current verified owner and required signer.
+ * @param newVerifiedPubkey Public key that will become the verified owner.
+ * @param payerKey Signer that funds creation of the new reverse registry.
+ * @returns Instructions that transfer the handle and recreate its reverse registry.
+ *
+ * @example
+ * ```ts
+ * const instructions = await changeVerifiedPubkey(
+ *   connection,
+ *   "bonfida",
+ *   currentOwner,
+ *   newOwner,
+ *   payer,
+ * );
+ * ```
+ */
 export async function changeVerifiedPubkey(
   connection: Connection,
   twitterHandle: string,

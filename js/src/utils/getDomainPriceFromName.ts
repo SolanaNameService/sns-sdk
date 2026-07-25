@@ -5,6 +5,11 @@ import splitGraphemes from "graphemesplit";
  *
  * @param name Domain name without suffix
  * @returns Registration price in USD.
+ *
+ * @example
+ * ```ts
+ * const price = getDomainPriceFromName("example");
+ * ```
  */
 export const getDomainPriceFromName = (name: string) => {
   const split = splitGraphemes(name);

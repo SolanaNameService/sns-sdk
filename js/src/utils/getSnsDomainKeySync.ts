@@ -19,6 +19,27 @@ const _deriveSync = (
 };
 
 /**
+ * A derived SNS domain account and its parent metadata.
+ *
+ * @example
+ * ```ts
+ * const result: SnsDomainKey = getSnsDomainKeySync("example");
+ * ```
+ */
+export interface SnsDomainKey {
+  /** Derived SNS account address. */
+  pubkey: PublicKey;
+  /** Hash used to derive the account address. */
+  hashed: Buffer;
+  /** Whether the input is a subdomain or subdomain record. */
+  isSub: boolean;
+  /** Parent domain account address for subdomains. */
+  parent?: PublicKey;
+  /** Whether the input is a subdomain record. */
+  isSubRecord?: boolean;
+}
+
+/**
  * Derives an SNS namespace account from a TLD-trimmed domain name.
  *
  * The caller must trim the TLD suffix before calling this function. For
@@ -29,8 +50,16 @@ const _deriveSync = (
  * @param record Optional record version when deriving a record account
  * @returns Derived account key, name hash, and parent/subdomain metadata
  * @throws {InvalidInputError} When the trimmed domain has unsupported nesting
+ *
+ * @example
+ * ```ts
+ * const { pubkey } = getSnsDomainKeySync("example");
+ * ```
  */
-export const getSnsDomainKeySync = (domain: string, record?: RecordVersion) => {
+export const getSnsDomainKeySync = (
+  domain: string,
+  record?: RecordVersion,
+): SnsDomainKey => {
   const recordClass =
     record === RecordVersion.V2 ? CENTRAL_STATE_SNS_RECORDS : undefined;
   const splitted = domain.split(".");

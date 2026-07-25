@@ -1,3 +1,7 @@
+/**
+ * Record reads, key derivation, validation, and content codecs.
+ * @module Records
+ */
 export * from "../types/record";
 export * from "./const";
 export * from "./deserializeRecordContent";

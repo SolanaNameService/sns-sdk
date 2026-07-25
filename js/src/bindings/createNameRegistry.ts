@@ -24,6 +24,11 @@ import { getNameAccountKeySync } from "../utils/getNameAccountKeySync";
  * @param nameClass Optional class of the new name account
  * @param parentName Optional parent name account. Its owner must sign when provided
  * @returns Transaction instruction.
+ *
+ * @example
+ * ```ts
+ * const instruction = await createNameRegistry(connection, "example", 1000, payer, owner);
+ * ```
  */
 export async function createNameRegistry(
   connection: Connection,

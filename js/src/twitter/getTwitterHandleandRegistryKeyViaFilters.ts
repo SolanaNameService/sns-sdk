@@ -10,7 +10,21 @@ import { AccountDoesNotExistError } from "../error";
 
 import { ReverseTwitterRegistryState } from "./ReverseTwitterRegistryState";
 
-// Uses the RPC node filtering feature, execution speed may vary
+/**
+ * Retrieves a Twitter handle and registry key through an RPC program-account query.
+ *
+ * RPC filtering performance varies by provider.
+ *
+ * @param connection Solana RPC connection used for the program-account query.
+ * @param verifiedPubkey Verified public key to find.
+ * @returns The Twitter handle and its user-facing registry address.
+ * @throws {AccountDoesNotExistError} When no matching reverse registry is found.
+ *
+ * @example
+ * ```ts
+ * const [handle, registry] = await getTwitterHandleandRegistryKeyViaFilters(connection, owner);
+ * ```
+ */
 export async function getTwitterHandleandRegistryKeyViaFilters(
   connection: Connection,
   verifiedPubkey: PublicKey,

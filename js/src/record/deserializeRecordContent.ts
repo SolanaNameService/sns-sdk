@@ -16,6 +16,20 @@ import type { Buffer } from "buffer";
  * @param content Serialized record content
  * @param record Record type
  * @returns Deserialized record content.
+ *
+ * @example
+ * ```ts
+ * const result = await getRecord(
+ *   connection,
+ *   "example.sns",
+ *   Record.Url,
+ *   { deserialize: false },
+ * );
+ * const url = deserializeRecordContent(
+ *   result.retrievedRecord.getContent(),
+ *   Record.Url,
+ * );
+ * ```
  */
 export const deserializeRecordContent = (
   content: Buffer,

@@ -12,6 +12,11 @@ import { TOKEN_PROGRAM_ID, getMint } from "@solana/spl-token";
  * @param connection Solana RPC connection
  * @param nameAccount Domain name account public key
  * @returns Tokenized domain owner, or undefined when none exists.
+ *
+ * @example
+ * ```ts
+ * const owner = await retrieveNftOwner(connection, nameAccount);
+ * ```
  */
 export const retrieveNftOwner = async (
   connection: Connection,

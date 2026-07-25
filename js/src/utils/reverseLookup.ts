@@ -11,6 +11,11 @@ import { getReverseKeyFromDomainKey } from "./getReverseKeyFromDomainKey";
  * @param nameAccount Domain account public key to reverse look up
  * @param parent Optional parent name account for subdomain reverse lookups
  * @returns Human-readable domain name.
+ *
+ * @example
+ * ```ts
+ * const name = await reverseLookup(connection, nameAccount);
+ * ```
  */
 export async function reverseLookup(
   connection: Connection,

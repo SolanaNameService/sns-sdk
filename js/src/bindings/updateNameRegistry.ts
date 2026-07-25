@@ -17,6 +17,11 @@ import { getNameAccountKeySync } from "../utils/getNameAccountKeySync";
  * @param nameClass Optional class of the name account
  * @param nameParent Optional parent name account
  * @returns Transaction instruction.
+ *
+ * @example
+ * ```ts
+ * const instruction = await updateNameRegistry(connection, "example", 0, Buffer.from("data"));
+ * ```
  */
 export async function updateNameRegistry(
   connection: Connection,

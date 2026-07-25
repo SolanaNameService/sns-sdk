@@ -18,6 +18,11 @@ import { _parseSnsDomain } from "../utils/parseSnsDomain";
  * @param owner Current owner of the domain
  * @param payer Fee payer for the instruction
  * @returns Transaction instruction.
+ *
+ * @example
+ * ```ts
+ * const instruction = deleteRecord("example.sns", Record.Url, owner, payer);
+ * ```
  */
 export const deleteRecord = (
   domain: string,

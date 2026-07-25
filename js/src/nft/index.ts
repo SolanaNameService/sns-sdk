@@ -1,3 +1,7 @@
+/**
+ * Tokenized-domain account, mint, owner, and state APIs.
+ * @module NFT
+ */
 export * from "./const";
 export * from "./getDomainMint";
 export * from "./getRecordFromMint";

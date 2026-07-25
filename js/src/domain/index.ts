@@ -1,3 +1,7 @@
+/**
+ * Domain resolution, derivation, reverse lookup, and discovery APIs.
+ * @module Domain
+ */
 export * from "../resolve";
 export * from "../utils/findSubdomains";
 export * from "../utils/getAllSnsDomains";

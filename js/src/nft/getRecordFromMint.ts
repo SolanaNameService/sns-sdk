@@ -12,6 +12,11 @@ import { NftRecord } from "./state";
  * @param connection Solana RPC connection
  * @param mint NFT record mint
  * @returns Matching NFT record program accounts.
+ *
+ * @example
+ * ```ts
+ * const records = await getRecordFromMint(connection, mint);
+ * ```
  */
 export const getRecordFromMint = async (
   connection: Connection,

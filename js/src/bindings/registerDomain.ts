@@ -41,6 +41,11 @@ import { _parseSnsTopLevelDomain } from "../utils/parseSnsDomain";
  * @param mint The token mint used for payment, defaults to USDC
  * @param referrerKey Optional public key of the referrer
  * @returns Transaction instructions.
+ *
+ * @example
+ * ```ts
+ * const instructions = await registerDomain("example.sns", 1_000, buyer, buyerTokenAccount);
+ * ```
  */
 export const registerDomain = async (
   domain: string,
