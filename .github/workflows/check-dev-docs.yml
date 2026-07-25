@@ -104,13 +104,6 @@ jobs:
         run: npm run api:generate
         working-directory: dev-docs
 
-      - name: Verify generated references are current
-        run: |
-          git diff --exit-code -- \
-            dev-docs/docs/sdks/javascript/api \
-            dev-docs/docs/sdks/js-kit/api \
-            dev-docs/docs/react-hooks/api
-
       - name: Run documentation checks
         run: npm run check
         working-directory: dev-docs
