@@ -4,11 +4,12 @@ on:
   push:
     branches: [main]
     paths:
-      - 'js/**'
+      - "js/**"
   pull_request_target:
     branches: [main]
     paths:
-      - 'js/**'
+      - "js/**"
+  workflow_dispatch:
 
 defaults:
   run:
