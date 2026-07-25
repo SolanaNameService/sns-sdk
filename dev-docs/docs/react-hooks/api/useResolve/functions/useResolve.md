@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **useResolve**\<`TData`\>(`connection`, `domain`, `options?`): `UseQueryResult`\<`NoInfer`\<`TData`\>, `Error`\>
 
-Defined in: [react/src/hooks/useResolve/index.ts:27](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/react/src/hooks/useResolve/index.ts#L27)
+Defined in: [react/src/hooks/useResolve/index.ts:27](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/react/src/hooks/useResolve/index.ts#L27)
 
 Resolves a `.sns` or `.sol` domain to its target public key through React Query.
 

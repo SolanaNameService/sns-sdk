@@ -8,6 +8,6 @@ displayed_sidebar: docsSidebar
 
 > `const` **SNS\_TLD**: `".sns"` = `".sns"`
 
-Defined in: [utils/tld.ts:8](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/utils/tld.ts#L8)
+Defined in: [utils/tld.ts:8](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/utils/tld.ts#L8)
 
 The Bonfida SNS top-level domain.

@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **createNameRegistry**(`params`): `Promise`\<`Instruction`\<`string`, readonly (`AccountLookupMeta`\<`string`, `string`\> \| `AccountMeta`\<`string`\>)[]\>\>
 
-Defined in: [bindings/createNameRegistry.ts:67](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/bindings/createNameRegistry.ts#L67)
+Defined in: [bindings/createNameRegistry.ts:67](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/createNameRegistry.ts#L67)
 
 Creates a raw SPL Name Registry account with the given rent budget,
 allocated space, owner, and class.

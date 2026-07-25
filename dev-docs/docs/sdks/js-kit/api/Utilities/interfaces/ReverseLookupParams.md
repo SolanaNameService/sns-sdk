@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: ReverseLookupParams
 
-Defined in: [utils/reverseLookup.ts:16](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/utils/reverseLookup.ts#L16)
+Defined in: [utils/reverseLookup.ts:16](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/utils/reverseLookup.ts#L16)
 
 Parameters for reverse lookup.
 
@@ -22,7 +22,7 @@ const params: ReverseLookupParams = { rpc, domainAddress };
 
 > **domainAddress**: `Address`
 
-Defined in: [utils/reverseLookup.ts:20](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/utils/reverseLookup.ts#L20)
+Defined in: [utils/reverseLookup.ts:20](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/utils/reverseLookup.ts#L20)
 
 Domain account address.
 
@@ -32,7 +32,7 @@ Domain account address.
 
 > `optional` **parentAddress?**: `Address`
 
-Defined in: [utils/reverseLookup.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/utils/reverseLookup.ts#L22)
+Defined in: [utils/reverseLookup.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/utils/reverseLookup.ts#L22)
 
 Parent domain address for a subdomain.
 
@@ -42,6 +42,6 @@ Parent domain address for a subdomain.
 
 > **rpc**: `Rpc`\<`GetAccountInfoApi`\>
 
-Defined in: [utils/reverseLookup.ts:18](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/utils/reverseLookup.ts#L18)
+Defined in: [utils/reverseLookup.ts:18](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/utils/reverseLookup.ts#L18)
 
 RPC client.

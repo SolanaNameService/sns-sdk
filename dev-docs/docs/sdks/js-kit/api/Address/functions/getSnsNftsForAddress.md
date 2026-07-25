@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **getSnsNftsForAddress**(`params`): `Promise`\<[`GetSnsNftsForAddressResult`](../interfaces/GetSnsNftsForAddressResult.md)[]\>
 
-Defined in: [address/getSnsNftsForAddress.ts:125](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/address/getSnsNftsForAddress.ts#L125)
+Defined in: [address/getSnsNftsForAddress.ts:125](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/address/getSnsNftsForAddress.ts#L125)
 
 Retrieves the SNS domain NFTs owned by a given address.
 

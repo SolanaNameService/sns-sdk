@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Enumeration: Validation
 
-Defined in: [record/const.ts:5](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js/src/record/const.ts#L5)
+Defined in: [record/const.ts:5](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/record/const.ts#L5)
 
 On-chain record validation scheme identifiers.
 
@@ -16,7 +16,7 @@ On-chain record validation scheme identifiers.
 
 > **Ethereum**: `2`
 
-Defined in: [record/const.ts:11](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js/src/record/const.ts#L11)
+Defined in: [record/const.ts:11](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/record/const.ts#L11)
 
 Validation uses an Ethereum signature.
 
@@ -26,7 +26,7 @@ Validation uses an Ethereum signature.
 
 > **None**: `0`
 
-Defined in: [record/const.ts:7](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js/src/record/const.ts#L7)
+Defined in: [record/const.ts:7](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/record/const.ts#L7)
 
 No validation is required.
 
@@ -36,7 +36,7 @@ No validation is required.
 
 > **Solana**: `1`
 
-Defined in: [record/const.ts:9](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js/src/record/const.ts#L9)
+Defined in: [record/const.ts:9](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/record/const.ts#L9)
 
 Validation uses a Solana signature.
 
@@ -46,6 +46,6 @@ Validation uses a Solana signature.
 
 > **UnverifiedSolana**: `3`
 
-Defined in: [record/const.ts:13](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js/src/record/const.ts#L13)
+Defined in: [record/const.ts:13](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/record/const.ts#L13)
 
 Solana validation is present but unverified.

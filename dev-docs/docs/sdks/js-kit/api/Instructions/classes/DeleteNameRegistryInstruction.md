@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: DeleteNameRegistryInstruction
 
-Defined in: [instructions/deleteNameRegistryInstruction.ts:5](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/deleteNameRegistryInstruction.ts#L5)
+Defined in: [instructions/deleteNameRegistryInstruction.ts:5](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/deleteNameRegistryInstruction.ts#L5)
 
 Builder for deleting an SNS name-registry account.
 
@@ -16,7 +16,7 @@ Builder for deleting an SNS name-registry account.
 
 > **new DeleteNameRegistryInstruction**(): `DeleteNameRegistryInstruction`
 
-Defined in: [instructions/deleteNameRegistryInstruction.ts:15](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/deleteNameRegistryInstruction.ts#L15)
+Defined in: [instructions/deleteNameRegistryInstruction.ts:15](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/deleteNameRegistryInstruction.ts#L15)
 
 #### Returns
 
@@ -28,7 +28,7 @@ Defined in: [instructions/deleteNameRegistryInstruction.ts:15](https://github.co
 
 > **tag**: `number`
 
-Defined in: [instructions/deleteNameRegistryInstruction.ts:7](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/deleteNameRegistryInstruction.ts#L7)
+Defined in: [instructions/deleteNameRegistryInstruction.ts:7](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/deleteNameRegistryInstruction.ts#L7)
 
 Instruction discriminator.
 
@@ -38,7 +38,7 @@ Instruction discriminator.
 
 > `static` **schema**: `object`
 
-Defined in: [instructions/deleteNameRegistryInstruction.ts:9](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/deleteNameRegistryInstruction.ts#L9)
+Defined in: [instructions/deleteNameRegistryInstruction.ts:9](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/deleteNameRegistryInstruction.ts#L9)
 
 #### struct
 
@@ -54,7 +54,7 @@ Defined in: [instructions/deleteNameRegistryInstruction.ts:9](https://github.com
 
 > **getInstruction**(`programAddress`, `domainAddress`, `refundTarget`, `owner`): `Instruction`
 
-Defined in: [instructions/deleteNameRegistryInstruction.ts:23](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/deleteNameRegistryInstruction.ts#L23)
+Defined in: [instructions/deleteNameRegistryInstruction.ts:23](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/deleteNameRegistryInstruction.ts#L23)
 
 #### Parameters
 
@@ -84,7 +84,7 @@ Defined in: [instructions/deleteNameRegistryInstruction.ts:23](https://github.co
 
 > **serialize**(): `Uint8Array`
 
-Defined in: [instructions/deleteNameRegistryInstruction.ts:19](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/deleteNameRegistryInstruction.ts#L19)
+Defined in: [instructions/deleteNameRegistryInstruction.ts:19](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/deleteNameRegistryInstruction.ts#L19)
 
 #### Returns
 

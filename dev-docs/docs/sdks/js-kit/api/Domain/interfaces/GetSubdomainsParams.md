@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: GetSubdomainsParams
 
-Defined in: [domain/getSubdomains.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/domain/getSubdomains.ts#L30)
+Defined in: [domain/getSubdomains.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/domain/getSubdomains.ts#L30)
 
 Parameters for retrieving subdomains under a parent domain.
 
@@ -25,7 +25,7 @@ const params: GetSubdomainsParams = {
 
 > **domain**: `string`
 
-Defined in: [domain/getSubdomains.ts:34](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/domain/getSubdomains.ts#L34)
+Defined in: [domain/getSubdomains.ts:34](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/domain/getSubdomains.ts#L34)
 
 Full parent domain name, including its `.sns` or `.sol` suffix.
 
@@ -35,6 +35,6 @@ Full parent domain name, including its `.sns` or `.sol` suffix.
 
 > **rpc**: `Rpc`\<`GetProgramAccountsApi` & `GetSlotApi`\>
 
-Defined in: [domain/getSubdomains.ts:32](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/domain/getSubdomains.ts#L32)
+Defined in: [domain/getSubdomains.ts:32](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/domain/getSubdomains.ts#L32)
 
 RPC client.

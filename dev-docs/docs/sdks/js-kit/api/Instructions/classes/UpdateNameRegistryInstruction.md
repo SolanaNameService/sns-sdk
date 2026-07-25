@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: UpdateNameRegistryInstruction
 
-Defined in: [instructions/updateNameRegistryInstruction.ts:20](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/updateNameRegistryInstruction.ts#L20)
+Defined in: [instructions/updateNameRegistryInstruction.ts:20](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/updateNameRegistryInstruction.ts#L20)
 
 Builder for updating the data of an SNS name-registry account.
 
@@ -16,7 +16,7 @@ Builder for updating the data of an SNS name-registry account.
 
 > **new UpdateNameRegistryInstruction**(`obj`): `UpdateNameRegistryInstruction`
 
-Defined in: [instructions/updateNameRegistryInstruction.ts:36](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/updateNameRegistryInstruction.ts#L36)
+Defined in: [instructions/updateNameRegistryInstruction.ts:36](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/updateNameRegistryInstruction.ts#L36)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [instructions/updateNameRegistryInstruction.ts:36](https://github.co
 
 > **inputData**: `Uint8Array`
 
-Defined in: [instructions/updateNameRegistryInstruction.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/updateNameRegistryInstruction.ts#L26)
+Defined in: [instructions/updateNameRegistryInstruction.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/updateNameRegistryInstruction.ts#L26)
 
 Bytes to write.
 
@@ -44,7 +44,7 @@ Bytes to write.
 
 > **offset**: `number`
 
-Defined in: [instructions/updateNameRegistryInstruction.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/updateNameRegistryInstruction.ts#L24)
+Defined in: [instructions/updateNameRegistryInstruction.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/updateNameRegistryInstruction.ts#L24)
 
 Byte offset where the update begins.
 
@@ -54,7 +54,7 @@ Byte offset where the update begins.
 
 > **tag**: `number`
 
-Defined in: [instructions/updateNameRegistryInstruction.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/updateNameRegistryInstruction.ts#L22)
+Defined in: [instructions/updateNameRegistryInstruction.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/updateNameRegistryInstruction.ts#L22)
 
 Instruction discriminator.
 
@@ -64,7 +64,7 @@ Instruction discriminator.
 
 > `static` **schema**: `object`
 
-Defined in: [instructions/updateNameRegistryInstruction.ts:28](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/updateNameRegistryInstruction.ts#L28)
+Defined in: [instructions/updateNameRegistryInstruction.ts:28](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/updateNameRegistryInstruction.ts#L28)
 
 #### struct
 
@@ -96,7 +96,7 @@ Defined in: [instructions/updateNameRegistryInstruction.ts:28](https://github.co
 
 > **getInstruction**(`programAddress`, `domainAddress`, `signer`): `Instruction`
 
-Defined in: [instructions/updateNameRegistryInstruction.ts:46](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/updateNameRegistryInstruction.ts#L46)
+Defined in: [instructions/updateNameRegistryInstruction.ts:46](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/updateNameRegistryInstruction.ts#L46)
 
 #### Parameters
 
@@ -122,7 +122,7 @@ Defined in: [instructions/updateNameRegistryInstruction.ts:46](https://github.co
 
 > **serialize**(): `Uint8Array`
 
-Defined in: [instructions/updateNameRegistryInstruction.ts:42](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/updateNameRegistryInstruction.ts#L42)
+Defined in: [instructions/updateNameRegistryInstruction.ts:42](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/updateNameRegistryInstruction.ts#L42)
 
 #### Returns
 

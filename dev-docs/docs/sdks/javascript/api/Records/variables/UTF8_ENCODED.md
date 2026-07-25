@@ -8,6 +8,6 @@ displayed_sidebar: docsSidebar
 
 > `const` **UTF8\_ENCODED**: `Set`\<[`Record`](../enumerations/Record.md)\>
 
-Defined in: [record/const.ts:44](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js/src/record/const.ts#L44)
+Defined in: [record/const.ts:44](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/record/const.ts#L44)
 
 Record types encoded as UTF-8 strings.

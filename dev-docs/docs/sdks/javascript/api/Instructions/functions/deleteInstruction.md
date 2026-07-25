@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **deleteInstruction**(`nameProgramId`, `nameAccountKey`, `refundTargetKey`, `nameOwnerKey`): `TransactionInstruction`
 
-Defined in: [instructions/deleteInstruction.ts:18](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js/src/instructions/deleteInstruction.ts#L18)
+Defined in: [instructions/deleteInstruction.ts:18](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/instructions/deleteInstruction.ts#L18)
 
 Builds an SPL Name Service instruction that deletes a name registry account.
 

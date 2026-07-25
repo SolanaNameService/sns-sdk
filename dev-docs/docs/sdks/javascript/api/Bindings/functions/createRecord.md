@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **createRecord**(`domain`, `record`, `content`, `owner`, `payer`): `TransactionInstruction`
 
-Defined in: [bindings/createRecord.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js/src/bindings/createRecord.ts#L26)
+Defined in: [bindings/createRecord.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/bindings/createRecord.ts#L26)
 
 Builds an instruction to create a record for a `.sns` domain or subdomain.
 

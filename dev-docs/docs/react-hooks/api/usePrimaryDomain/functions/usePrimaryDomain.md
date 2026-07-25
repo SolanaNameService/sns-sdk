@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **usePrimaryDomain**\<`TData`\>(`connection`, `owner`, `options?`): `UseQueryResult`\<`NoInfer`\<`TData`\>, `Error`\>
 
-Defined in: [react/src/hooks/usePrimaryDomain/index.ts:37](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/react/src/hooks/usePrimaryDomain/index.ts#L37)
+Defined in: [react/src/hooks/usePrimaryDomain/index.ts:37](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/react/src/hooks/usePrimaryDomain/index.ts#L37)
 
 Retrieves the primary domain set for a wallet through React Query.
 

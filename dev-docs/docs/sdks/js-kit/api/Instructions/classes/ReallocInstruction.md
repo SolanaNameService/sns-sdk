@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: ReallocInstruction
 
-Defined in: [instructions/reallocInstruction.ts:18](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/reallocInstruction.ts#L18)
+Defined in: [instructions/reallocInstruction.ts:18](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/reallocInstruction.ts#L18)
 
 Builder for reallocating an SNS name-registry account.
 
@@ -16,7 +16,7 @@ Builder for reallocating an SNS name-registry account.
 
 > **new ReallocInstruction**(`obj`): `ReallocInstruction`
 
-Defined in: [instructions/reallocInstruction.ts:31](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/reallocInstruction.ts#L31)
+Defined in: [instructions/reallocInstruction.ts:31](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/reallocInstruction.ts#L31)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [instructions/reallocInstruction.ts:31](https://github.com/Bonfida/s
 
 > **space**: `number`
 
-Defined in: [instructions/reallocInstruction.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/reallocInstruction.ts#L22)
+Defined in: [instructions/reallocInstruction.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/reallocInstruction.ts#L22)
 
 New account data size in bytes.
 
@@ -44,7 +44,7 @@ New account data size in bytes.
 
 > **tag**: `number`
 
-Defined in: [instructions/reallocInstruction.ts:20](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/reallocInstruction.ts#L20)
+Defined in: [instructions/reallocInstruction.ts:20](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/reallocInstruction.ts#L20)
 
 Instruction discriminator.
 
@@ -54,7 +54,7 @@ Instruction discriminator.
 
 > `static` **schema**: `object`
 
-Defined in: [instructions/reallocInstruction.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/reallocInstruction.ts#L24)
+Defined in: [instructions/reallocInstruction.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/reallocInstruction.ts#L24)
 
 #### struct
 
@@ -74,7 +74,7 @@ Defined in: [instructions/reallocInstruction.ts:24](https://github.com/Bonfida/s
 
 > **getInstruction**(`programAddress`, `systemProgramId`, `payerKey`, `nameAccountKey`, `nameOwnerKey`): `Instruction`
 
-Defined in: [instructions/reallocInstruction.ts:40](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/reallocInstruction.ts#L40)
+Defined in: [instructions/reallocInstruction.ts:40](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/reallocInstruction.ts#L40)
 
 #### Parameters
 
@@ -108,7 +108,7 @@ Defined in: [instructions/reallocInstruction.ts:40](https://github.com/Bonfida/s
 
 > **serialize**(): `Uint8Array`
 
-Defined in: [instructions/reallocInstruction.ts:36](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/reallocInstruction.ts#L36)
+Defined in: [instructions/reallocInstruction.ts:36](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/reallocInstruction.ts#L36)
 
 #### Returns
 

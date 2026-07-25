@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **serializeRecordContent**(`params`): `ReadonlyUint8Array`
 
-Defined in: [utils/serializers/serializeRecordContent.ts:59](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/utils/serializers/serializeRecordContent.ts#L59)
+Defined in: [utils/serializers/serializeRecordContent.ts:59](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/utils/serializers/serializeRecordContent.ts#L59)
 
 Serializes record content according to SNS-IP 1.
 

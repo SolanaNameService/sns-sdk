@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **getSnsNftOwner**(`params`): `Promise`\<`Address` \| `null`\>
 
-Defined in: [nft/getSnsNftOwner.ts:42](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/nft/getSnsNftOwner.ts#L42)
+Defined in: [nft/getSnsNftOwner.ts:42](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/nft/getSnsNftOwner.ts#L42)
 
 Retrieves the owner of a tokenized SNS domain.
 

@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: SetRecordRoaVerifierInstruction
 
-Defined in: [instructions/setRecordRoaVerifierInstruction.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/setRecordRoaVerifierInstruction.ts#L26)
+Defined in: [instructions/setRecordRoaVerifierInstruction.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/setRecordRoaVerifierInstruction.ts#L26)
 
 Builder for setting an SNS record's Right of Association verifier.
 
@@ -16,7 +16,7 @@ Builder for setting an SNS record's Right of Association verifier.
 
 > **new SetRecordRoaVerifierInstruction**(`obj`): `SetRecordRoaVerifierInstruction`
 
-Defined in: [instructions/setRecordRoaVerifierInstruction.ts:39](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/setRecordRoaVerifierInstruction.ts#L39)
+Defined in: [instructions/setRecordRoaVerifierInstruction.ts:39](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/setRecordRoaVerifierInstruction.ts#L39)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [instructions/setRecordRoaVerifierInstruction.ts:39](https://github.
 
 > **roaId**: `ReadonlyUint8Array`
 
-Defined in: [instructions/setRecordRoaVerifierInstruction.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/setRecordRoaVerifierInstruction.ts#L30)
+Defined in: [instructions/setRecordRoaVerifierInstruction.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/setRecordRoaVerifierInstruction.ts#L30)
 
 Encoded verifier address.
 
@@ -44,7 +44,7 @@ Encoded verifier address.
 
 > **tag**: `number`
 
-Defined in: [instructions/setRecordRoaVerifierInstruction.ts:28](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/setRecordRoaVerifierInstruction.ts#L28)
+Defined in: [instructions/setRecordRoaVerifierInstruction.ts:28](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/setRecordRoaVerifierInstruction.ts#L28)
 
 Instruction discriminator.
 
@@ -54,7 +54,7 @@ Instruction discriminator.
 
 > `static` **schema**: `object`
 
-Defined in: [instructions/setRecordRoaVerifierInstruction.ts:32](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/setRecordRoaVerifierInstruction.ts#L32)
+Defined in: [instructions/setRecordRoaVerifierInstruction.ts:32](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/setRecordRoaVerifierInstruction.ts#L32)
 
 #### struct
 
@@ -82,7 +82,7 @@ Defined in: [instructions/setRecordRoaVerifierInstruction.ts:32](https://github.
 
 > **getInstruction**(`programAddress`, `systemProgram`, `splNameServiceProgram`, `feePayer`, `record`, `domain`, `domainOwner`, `centralState`): `Instruction`
 
-Defined in: [instructions/setRecordRoaVerifierInstruction.ts:48](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/setRecordRoaVerifierInstruction.ts#L48)
+Defined in: [instructions/setRecordRoaVerifierInstruction.ts:48](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/setRecordRoaVerifierInstruction.ts#L48)
 
 #### Parameters
 
@@ -128,7 +128,7 @@ Defined in: [instructions/setRecordRoaVerifierInstruction.ts:48](https://github.
 
 > **serialize**(): `Uint8Array`
 
-Defined in: [instructions/setRecordRoaVerifierInstruction.ts:44](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/setRecordRoaVerifierInstruction.ts#L44)
+Defined in: [instructions/setRecordRoaVerifierInstruction.ts:44](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/setRecordRoaVerifierInstruction.ts#L44)
 
 #### Returns
 

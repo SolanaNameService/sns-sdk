@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **validateRecordRoaEthereum**(`domain`, `record`, `owner`, `payer`, `signature`, `expectedPubkey`): `TransactionInstruction`
 
-Defined in: [bindings/validateRecordRoaEthereum.ts:35](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js/src/bindings/validateRecordRoaEthereum.ts#L35)
+Defined in: [bindings/validateRecordRoaEthereum.ts:35](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/bindings/validateRecordRoaEthereum.ts#L35)
 
 Builds an instruction to validate a record's Right of Association with an Ethereum signature.
 

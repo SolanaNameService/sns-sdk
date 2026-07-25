@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: RecordState
 
-Defined in: [states/record.ts:111](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/states/record.ts#L111)
+Defined in: [states/record.ts:111](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/record.ts#L111)
 
 Decoded SNS V2 record account, including its validation data and content.
 
@@ -16,7 +16,7 @@ Decoded SNS V2 record account, including its validation data and content.
 
 > **new RecordState**(`header`, `data`): `RecordState`
 
-Defined in: [states/record.ts:117](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/states/record.ts#L117)
+Defined in: [states/record.ts:117](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/record.ts#L117)
 
 #### Parameters
 
@@ -38,7 +38,7 @@ Defined in: [states/record.ts:117](https://github.com/Bonfida/sns-sdk-beta/blob/
 
 > **data**: `Uint8Array`
 
-Defined in: [states/record.ts:115](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/states/record.ts#L115)
+Defined in: [states/record.ts:115](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/record.ts#L115)
 
 Validation identifiers and record content.
 
@@ -48,7 +48,7 @@ Validation identifiers and record content.
 
 > **header**: [`RecordHeaderState`](RecordHeaderState.md)
 
-Defined in: [states/record.ts:113](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/states/record.ts#L113)
+Defined in: [states/record.ts:113](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/record.ts#L113)
 
 Decoded record header.
 
@@ -58,7 +58,7 @@ Decoded record header.
 
 > **getContent**(): `Uint8Array`
 
-Defined in: [states/record.ts:154](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/states/record.ts#L154)
+Defined in: [states/record.ts:154](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/record.ts#L154)
 
 #### Returns
 
@@ -70,7 +70,7 @@ Defined in: [states/record.ts:154](https://github.com/Bonfida/sns-sdk-beta/blob/
 
 > **getRoAId**(): `Uint8Array`
 
-Defined in: [states/record.ts:174](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/states/record.ts#L174)
+Defined in: [states/record.ts:174](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/record.ts#L174)
 
 #### Returns
 
@@ -82,7 +82,7 @@ Defined in: [states/record.ts:174](https://github.com/Bonfida/sns-sdk-beta/blob/
 
 > **getStalenessId**(): `Uint8Array`
 
-Defined in: [states/record.ts:168](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/states/record.ts#L168)
+Defined in: [states/record.ts:168](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/record.ts#L168)
 
 #### Returns
 
@@ -94,7 +94,7 @@ Defined in: [states/record.ts:168](https://github.com/Bonfida/sns-sdk-beta/blob/
 
 > `static` **deserialize**(`data`): `RecordState`
 
-Defined in: [states/record.ts:122](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/states/record.ts#L122)
+Defined in: [states/record.ts:122](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/record.ts#L122)
 
 #### Parameters
 
@@ -112,7 +112,7 @@ Defined in: [states/record.ts:122](https://github.com/Bonfida/sns-sdk-beta/blob/
 
 > `static` **retrieve**(`rpc`, `address`): `Promise`\<`RecordState`\>
 
-Defined in: [states/record.ts:131](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/states/record.ts#L131)
+Defined in: [states/record.ts:131](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/record.ts#L131)
 
 #### Parameters
 
@@ -134,7 +134,7 @@ Defined in: [states/record.ts:131](https://github.com/Bonfida/sns-sdk-beta/blob/
 
 > `static` **retrieveBatch**(`rpc`, `addresses`): `Promise`\<(`RecordState` \| `undefined`)[]\>
 
-Defined in: [states/record.ts:143](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/states/record.ts#L143)
+Defined in: [states/record.ts:143](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/record.ts#L143)
 
 #### Parameters
 

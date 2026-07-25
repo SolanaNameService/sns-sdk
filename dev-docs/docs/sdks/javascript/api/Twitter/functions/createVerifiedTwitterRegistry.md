@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **createVerifiedTwitterRegistry**(`connection`, `twitterHandle`, `verifiedPubkey`, `space`, `payerKey`): `Promise`\<`TransactionInstruction`[]\>
 
-Defined in: [twitter/createVerifiedTwitterRegistry.ts:37](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js/src/twitter/createVerifiedTwitterRegistry.ts#L37)
+Defined in: [twitter/createVerifiedTwitterRegistry.ts:37](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/twitter/createVerifiedTwitterRegistry.ts#L37)
 
 Builds instructions to create a verified Twitter handle registry and its reverse registry.
 

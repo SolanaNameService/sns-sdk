@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **getMultipleRecords**(`connection`, `domain`, `records`, `options?`): `Promise`\<([`RecordResult`](../interfaces/RecordResult.md) \| `undefined`)[]\>
 
-Defined in: [record/getMultipleRecords.ts:45](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js/src/record/getMultipleRecords.ts#L45)
+Defined in: [record/getMultipleRecords.ts:45](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/record/getMultipleRecords.ts#L45)
 
 Retrieves multiple records for a domain, verifies the staleness and right
 of association of each, and optionally deserializes their content.

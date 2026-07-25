@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: UpdateRecordInstruction
 
-Defined in: [instructions/updateRecordInstruction.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/updateRecordInstruction.ts#L26)
+Defined in: [instructions/updateRecordInstruction.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/updateRecordInstruction.ts#L26)
 
 Builder for updating content in an SNS V2 record account.
 
@@ -16,7 +16,7 @@ Builder for updating content in an SNS V2 record account.
 
 > **new UpdateRecordInstruction**(`obj`): `UpdateRecordInstruction`
 
-Defined in: [instructions/updateRecordInstruction.ts:42](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/updateRecordInstruction.ts#L42)
+Defined in: [instructions/updateRecordInstruction.ts:42](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/updateRecordInstruction.ts#L42)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [instructions/updateRecordInstruction.ts:42](https://github.com/Bonf
 
 > **content**: `ReadonlyUint8Array`
 
-Defined in: [instructions/updateRecordInstruction.ts:32](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/updateRecordInstruction.ts#L32)
+Defined in: [instructions/updateRecordInstruction.ts:32](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/updateRecordInstruction.ts#L32)
 
 Serialized record content.
 
@@ -44,7 +44,7 @@ Serialized record content.
 
 > **record**: `string`
 
-Defined in: [instructions/updateRecordInstruction.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/updateRecordInstruction.ts#L30)
+Defined in: [instructions/updateRecordInstruction.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/updateRecordInstruction.ts#L30)
 
 Encoded V2 record label.
 
@@ -54,7 +54,7 @@ Encoded V2 record label.
 
 > **tag**: `number`
 
-Defined in: [instructions/updateRecordInstruction.ts:28](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/updateRecordInstruction.ts#L28)
+Defined in: [instructions/updateRecordInstruction.ts:28](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/updateRecordInstruction.ts#L28)
 
 Instruction discriminator.
 
@@ -64,7 +64,7 @@ Instruction discriminator.
 
 > `static` **schema**: `object`
 
-Defined in: [instructions/updateRecordInstruction.ts:34](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/updateRecordInstruction.ts#L34)
+Defined in: [instructions/updateRecordInstruction.ts:34](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/updateRecordInstruction.ts#L34)
 
 #### struct
 
@@ -96,7 +96,7 @@ Defined in: [instructions/updateRecordInstruction.ts:34](https://github.com/Bonf
 
 > **getInstruction**(`programAddress`, `systemProgram`, `splNameServiceProgram`, `feePayer`, `record`, `domain`, `domainOwner`, `centralState`): `Instruction`
 
-Defined in: [instructions/updateRecordInstruction.ts:52](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/updateRecordInstruction.ts#L52)
+Defined in: [instructions/updateRecordInstruction.ts:52](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/updateRecordInstruction.ts#L52)
 
 #### Parameters
 
@@ -142,7 +142,7 @@ Defined in: [instructions/updateRecordInstruction.ts:52](https://github.com/Bonf
 
 > **serialize**(): `Uint8Array`
 
-Defined in: [instructions/updateRecordInstruction.ts:48](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/updateRecordInstruction.ts#L48)
+Defined in: [instructions/updateRecordInstruction.ts:48](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/updateRecordInstruction.ts#L48)
 
 #### Returns
 

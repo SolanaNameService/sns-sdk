@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: InvalidDomainError
 
-Defined in: [errors.ts:136](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/errors.ts#L136)
+Defined in: [errors.ts:136](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/errors.ts#L136)
 
 Thrown when a domain name is malformed or invalid.
 
@@ -20,7 +20,7 @@ Thrown when a domain name is malformed or invalid.
 
 > **new InvalidDomainError**(`message?`): `InvalidDomainError`
 
-Defined in: [errors.ts:137](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/errors.ts#L137)
+Defined in: [errors.ts:137](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/errors.ts#L137)
 
 #### Parameters
 
@@ -42,7 +42,7 @@ Defined in: [errors.ts:137](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8
 
 > **type**: [`ErrorType`](../enumerations/ErrorType.md)
 
-Defined in: [errors.ts:38](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/errors.ts#L38)
+Defined in: [errors.ts:38](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/errors.ts#L38)
 
 #### Inherited from
 

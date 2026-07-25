@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: RecordHeaderState
 
-Defined in: [states/record.ts:62](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/states/record.ts#L62)
+Defined in: [states/record.ts:62](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/record.ts#L62)
 
 Decoded header of an SNS V2 record account.
 
@@ -16,7 +16,7 @@ Decoded header of an SNS V2 record account.
 
 > **new RecordHeaderState**(`obj`): `RecordHeaderState`
 
-Defined in: [states/record.ts:84](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/states/record.ts#L84)
+Defined in: [states/record.ts:84](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/record.ts#L84)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [states/record.ts:84](https://github.com/Bonfida/sns-sdk-beta/blob/c
 
 > **contentLength**: `number`
 
-Defined in: [states/record.ts:68](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/states/record.ts#L68)
+Defined in: [states/record.ts:68](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/record.ts#L68)
 
 Record content length in bytes.
 
@@ -44,7 +44,7 @@ Record content length in bytes.
 
 > **rightOfAssociationValidation**: `number`
 
-Defined in: [states/record.ts:66](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/states/record.ts#L66)
+Defined in: [states/record.ts:66](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/record.ts#L66)
 
 Right of Association validation mode.
 
@@ -54,7 +54,7 @@ Right of Association validation mode.
 
 > **stalenessValidation**: `number`
 
-Defined in: [states/record.ts:64](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/states/record.ts#L64)
+Defined in: [states/record.ts:64](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/record.ts#L64)
 
 Staleness validation mode.
 
@@ -64,7 +64,7 @@ Staleness validation mode.
 
 > `static` **LEN**: `number` = `8`
 
-Defined in: [states/record.ts:82](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/states/record.ts#L82)
+Defined in: [states/record.ts:82](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/record.ts#L82)
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: [states/record.ts:82](https://github.com/Bonfida/sns-sdk-beta/blob/c
 
 > `static` **schema**: `Schema`
 
-Defined in: [states/record.ts:70](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/states/record.ts#L70)
+Defined in: [states/record.ts:70](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/record.ts#L70)
 
 ## Methods
 
@@ -80,7 +80,7 @@ Defined in: [states/record.ts:70](https://github.com/Bonfida/sns-sdk-beta/blob/c
 
 > `static` **deserialize**(`data`): `RecordHeaderState`
 
-Defined in: [states/record.ts:90](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/states/record.ts#L90)
+Defined in: [states/record.ts:90](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/record.ts#L90)
 
 #### Parameters
 
@@ -98,7 +98,7 @@ Defined in: [states/record.ts:90](https://github.com/Bonfida/sns-sdk-beta/blob/c
 
 > `static` **retrieve**(`rpc`, `address`): `Promise`\<`RecordHeaderState`\>
 
-Defined in: [states/record.ts:94](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/states/record.ts#L94)
+Defined in: [states/record.ts:94](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/record.ts#L94)
 
 #### Parameters
 

@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: TransferInstruction
 
-Defined in: [instructions/transferInstruction.ts:27](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/transferInstruction.ts#L27)
+Defined in: [instructions/transferInstruction.ts:27](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/transferInstruction.ts#L27)
 
 Builder for the SNS name-registry transfer instruction.
 
@@ -16,7 +16,7 @@ Builder for the SNS name-registry transfer instruction.
 
 > **new TransferInstruction**(`obj`): `TransferInstruction`
 
-Defined in: [instructions/transferInstruction.ts:40](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/transferInstruction.ts#L40)
+Defined in: [instructions/transferInstruction.ts:40](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/transferInstruction.ts#L40)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [instructions/transferInstruction.ts:40](https://github.com/Bonfida/
 
 > **encodedNewOwnerAddress**: `ReadonlyUint8Array`
 
-Defined in: [instructions/transferInstruction.ts:31](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/transferInstruction.ts#L31)
+Defined in: [instructions/transferInstruction.ts:31](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/transferInstruction.ts#L31)
 
 Encoded new owner address.
 
@@ -44,7 +44,7 @@ Encoded new owner address.
 
 > **tag**: `number`
 
-Defined in: [instructions/transferInstruction.ts:29](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/transferInstruction.ts#L29)
+Defined in: [instructions/transferInstruction.ts:29](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/transferInstruction.ts#L29)
 
 Instruction discriminator.
 
@@ -54,7 +54,7 @@ Instruction discriminator.
 
 > `static` **schema**: `object`
 
-Defined in: [instructions/transferInstruction.ts:33](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/transferInstruction.ts#L33)
+Defined in: [instructions/transferInstruction.ts:33](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/transferInstruction.ts#L33)
 
 #### struct
 
@@ -86,7 +86,7 @@ Defined in: [instructions/transferInstruction.ts:33](https://github.com/Bonfida/
 
 > **getInstruction**(`programAddress`, `domainAddress`, `currentOwner`, `classAddress?`, `parentAddress?`, `parentOwner?`): `Instruction`
 
-Defined in: [instructions/transferInstruction.ts:49](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/transferInstruction.ts#L49)
+Defined in: [instructions/transferInstruction.ts:49](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/transferInstruction.ts#L49)
 
 #### Parameters
 
@@ -124,7 +124,7 @@ Defined in: [instructions/transferInstruction.ts:49](https://github.com/Bonfida/
 
 > **serialize**(): `Uint8Array`
 
-Defined in: [instructions/transferInstruction.ts:45](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/transferInstruction.ts#L45)
+Defined in: [instructions/transferInstruction.ts:45](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/transferInstruction.ts#L45)
 
 #### Returns
 

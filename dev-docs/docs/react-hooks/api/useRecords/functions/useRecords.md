@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **useRecords**\<`TData`\>(`connection`, `domain`, `records`, `options?`, `queryOptions?`): `UseQueryResult`\<`NoInfer`\<`TData`\>, `Error`\>
 
-Defined in: [react/src/hooks/useRecords/index.ts:90](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/react/src/hooks/useRecords/index.ts#L90)
+Defined in: [react/src/hooks/useRecords/index.ts:90](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/react/src/hooks/useRecords/index.ts#L90)
 
 Retrieves and verifies multiple records through React Query.
 

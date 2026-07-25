@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: GetPrimaryDomainParams
 
-Defined in: [address/getPrimaryDomain.ts:25](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/address/getPrimaryDomain.ts#L25)
+Defined in: [address/getPrimaryDomain.ts:25](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/address/getPrimaryDomain.ts#L25)
 
 Parameters for retrieving a wallet's primary domain.
 
@@ -22,7 +22,7 @@ const params: GetPrimaryDomainParams = { rpc, walletAddress };
 
 > **rpc**: `Rpc`\<`GetAccountInfoApi` & `GetTokenLargestAccountsApi`\>
 
-Defined in: [address/getPrimaryDomain.ts:27](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/address/getPrimaryDomain.ts#L27)
+Defined in: [address/getPrimaryDomain.ts:27](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/address/getPrimaryDomain.ts#L27)
 
 RPC client.
 
@@ -32,6 +32,6 @@ RPC client.
 
 > **walletAddress**: `Address`
 
-Defined in: [address/getPrimaryDomain.ts:29](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/address/getPrimaryDomain.ts#L29)
+Defined in: [address/getPrimaryDomain.ts:29](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/address/getPrimaryDomain.ts#L29)
 
 Wallet address.

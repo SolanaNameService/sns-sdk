@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **getTwitterRegistry**(`connection`, `twitter_handle`): `Promise`\<[`NameRegistryState`](../../States/classes/NameRegistryState.md)\>
 
-Defined in: [twitter/getTwitterRegistry.ts:19](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js/src/twitter/getTwitterRegistry.ts#L19)
+Defined in: [twitter/getTwitterRegistry.ts:19](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/twitter/getTwitterRegistry.ts#L19)
 
 Retrieves the user-facing name registry for a Twitter handle.
 

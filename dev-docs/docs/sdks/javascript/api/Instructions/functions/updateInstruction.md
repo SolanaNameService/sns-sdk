@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **updateInstruction**(`nameProgramId`, `nameAccountKey`, `offset`, `inputData`, `nameUpdateSigner`): `TransactionInstruction`
 
-Defined in: [instructions/updateInstruction.ts:20](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js/src/instructions/updateInstruction.ts#L20)
+Defined in: [instructions/updateInstruction.ts:20](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/instructions/updateInstruction.ts#L20)
 
 Builds an SPL Name Service instruction that writes bytes to a name registry.
 

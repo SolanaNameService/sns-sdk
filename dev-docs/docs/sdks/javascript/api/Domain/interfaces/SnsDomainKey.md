@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: SnsDomainKey
 
-Defined in: [utils/getSnsDomainKeySync.ts:29](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js/src/utils/getSnsDomainKeySync.ts#L29)
+Defined in: [utils/getSnsDomainKeySync.ts:29](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/utils/getSnsDomainKeySync.ts#L29)
 
 A derived SNS domain account and its parent metadata.
 
@@ -22,7 +22,7 @@ const result: SnsDomainKey = getSnsDomainKeySync("example");
 
 > **hashed**: `Buffer`
 
-Defined in: [utils/getSnsDomainKeySync.ts:33](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js/src/utils/getSnsDomainKeySync.ts#L33)
+Defined in: [utils/getSnsDomainKeySync.ts:33](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/utils/getSnsDomainKeySync.ts#L33)
 
 Hash used to derive the account address.
 
@@ -32,7 +32,7 @@ Hash used to derive the account address.
 
 > **isSub**: `boolean`
 
-Defined in: [utils/getSnsDomainKeySync.ts:35](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js/src/utils/getSnsDomainKeySync.ts#L35)
+Defined in: [utils/getSnsDomainKeySync.ts:35](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/utils/getSnsDomainKeySync.ts#L35)
 
 Whether the input is a subdomain or subdomain record.
 
@@ -42,7 +42,7 @@ Whether the input is a subdomain or subdomain record.
 
 > `optional` **isSubRecord?**: `boolean`
 
-Defined in: [utils/getSnsDomainKeySync.ts:39](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js/src/utils/getSnsDomainKeySync.ts#L39)
+Defined in: [utils/getSnsDomainKeySync.ts:39](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/utils/getSnsDomainKeySync.ts#L39)
 
 Whether the input is a subdomain record.
 
@@ -52,7 +52,7 @@ Whether the input is a subdomain record.
 
 > `optional` **parent?**: `PublicKey`
 
-Defined in: [utils/getSnsDomainKeySync.ts:37](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js/src/utils/getSnsDomainKeySync.ts#L37)
+Defined in: [utils/getSnsDomainKeySync.ts:37](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/utils/getSnsDomainKeySync.ts#L37)
 
 Parent domain account address for subdomains.
 
@@ -62,6 +62,6 @@ Parent domain account address for subdomains.
 
 > **pubkey**: `PublicKey`
 
-Defined in: [utils/getSnsDomainKeySync.ts:31](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js/src/utils/getSnsDomainKeySync.ts#L31)
+Defined in: [utils/getSnsDomainKeySync.ts:31](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/utils/getSnsDomainKeySync.ts#L31)
 
 Derived SNS account address.

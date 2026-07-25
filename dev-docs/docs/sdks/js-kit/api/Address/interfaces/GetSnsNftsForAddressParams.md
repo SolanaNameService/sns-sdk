@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: GetSnsNftsForAddressParams
 
-Defined in: [address/getSnsNftsForAddress.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/address/getSnsNftsForAddress.ts#L22)
+Defined in: [address/getSnsNftsForAddress.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/address/getSnsNftsForAddress.ts#L22)
 
 Parameters for retrieving SNS domain NFTs owned by an address.
 
@@ -22,7 +22,7 @@ const params: GetSnsNftsForAddressParams = { rpc, address };
 
 > **address**: `Address`
 
-Defined in: [address/getSnsNftsForAddress.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/address/getSnsNftsForAddress.ts#L26)
+Defined in: [address/getSnsNftsForAddress.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/address/getSnsNftsForAddress.ts#L26)
 
 Owner address.
 
@@ -32,6 +32,6 @@ Owner address.
 
 > **rpc**: `Rpc`\<`GetMultipleAccountsApi` & `GetProgramAccountsApi`\>
 
-Defined in: [address/getSnsNftsForAddress.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/address/getSnsNftsForAddress.ts#L24)
+Defined in: [address/getSnsNftsForAddress.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/address/getSnsNftsForAddress.ts#L24)
 
 RPC client.

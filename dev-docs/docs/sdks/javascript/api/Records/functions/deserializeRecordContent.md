@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **deserializeRecordContent**(`content`, `record`): `string`
 
-Defined in: [record/deserializeRecordContent.ts:34](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js/src/record/deserializeRecordContent.ts#L34)
+Defined in: [record/deserializeRecordContent.ts:34](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/record/deserializeRecordContent.ts#L34)
 
 Deserializes record content according to SNS-IP 1.
 

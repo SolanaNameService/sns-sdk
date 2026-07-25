@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **deleteNameRegistry**(`params`): `Promise`\<`Instruction`\<`string`, readonly (`AccountLookupMeta`\<`string`, `string`\> \| `AccountMeta`\<`string`\>)[]\>\>
 
-Defined in: [bindings/deleteNameRegistry.ts:49](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/bindings/deleteNameRegistry.ts#L49)
+Defined in: [bindings/deleteNameRegistry.ts:49](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/deleteNameRegistry.ts#L49)
 
 Deletes a raw SPL Name Registry account and refunds the associated rent
 balance to the specified target.

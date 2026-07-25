@@ -80,7 +80,7 @@ const config: Config = {
     announcementBar: {
       id: "sns_suffix_migration",
       content:
-        '<strong>.sns is the primary domain suffix.</strong> Upgrade your SDK and update displayed domain names. <a href="/docs/migration/">See the migration guide.</a>',
+        '<strong>Action required:</strong> Upgrade for .sns support and update displayed domain names. <a href="/docs/migration/">Migrate now</a>',
       backgroundColor: "#b4fc75",
       textColor: "#102218",
       isCloseable: true,

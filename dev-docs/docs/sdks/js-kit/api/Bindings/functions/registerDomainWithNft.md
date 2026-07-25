@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **registerDomainWithNft**(`params`): `Promise`\<`Instruction`\<`string`, readonly (`AccountLookupMeta`\<`string`, `string`\> \| `AccountMeta`\<`string`\>)[]\>\>
 
-Defined in: [bindings/registerDomainWithNft.ts:69](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/bindings/registerDomainWithNft.ts#L69)
+Defined in: [bindings/registerDomainWithNft.ts:69](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/registerDomainWithNft.ts#L69)
 
 Builds an instruction to register a top-level `.sns` domain using a Bonfida Wolves NFT.
 

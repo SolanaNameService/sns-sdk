@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: MissingVerifierError
 
-Defined in: [error.ts:156](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js/src/error.ts#L156)
+Defined in: [error.ts:156](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/error.ts#L156)
 
 Base error for SDK failures, carrying a machine-readable [ErrorType](../enumerations/ErrorType.md).
 
@@ -20,7 +20,7 @@ Base error for SDK failures, carrying a machine-readable [ErrorType](../enumerat
 
 > **new MissingVerifierError**(`message?`): `MissingVerifierError`
 
-Defined in: [error.ts:157](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js/src/error.ts#L157)
+Defined in: [error.ts:157](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/error.ts#L157)
 
 #### Parameters
 
@@ -42,7 +42,7 @@ Defined in: [error.ts:157](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e
 
 > **type**: [`ErrorType`](../enumerations/ErrorType.md)
 
-Defined in: [error.ts:42](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js/src/error.ts#L42)
+Defined in: [error.ts:42](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/error.ts#L42)
 
 Machine-readable error category.
 

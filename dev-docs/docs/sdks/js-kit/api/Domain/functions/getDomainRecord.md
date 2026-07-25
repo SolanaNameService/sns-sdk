@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **getDomainRecord**(`params`): `Promise`\<[`GetDomainRecordResult`](../interfaces/GetDomainRecordResult.md)\>
 
-Defined in: [domain/getDomainRecord.ts:118](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/domain/getDomainRecord.ts#L118)
+Defined in: [domain/getDomainRecord.ts:118](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/domain/getDomainRecord.ts#L118)
 
 Retrieves a V2 record under a domain, verifies it, and optionally decodes its content.
 

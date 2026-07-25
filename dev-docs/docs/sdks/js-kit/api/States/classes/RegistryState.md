@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: RegistryState
 
-Defined in: [states/registry.ts:35](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/states/registry.ts#L35)
+Defined in: [states/registry.ts:35](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/registry.ts#L35)
 
 Decoded state of an SNS name-registry account.
 
@@ -16,7 +16,7 @@ Decoded state of an SNS name-registry account.
 
 > **new RegistryState**(`obj`): `RegistryState`
 
-Defined in: [states/registry.ts:59](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/states/registry.ts#L59)
+Defined in: [states/registry.ts:59](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/registry.ts#L59)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [states/registry.ts:59](https://github.com/Bonfida/sns-sdk-beta/blob
 
 > **class**: `Address`
 
-Defined in: [states/registry.ts:41](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/states/registry.ts#L41)
+Defined in: [states/registry.ts:41](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/registry.ts#L41)
 
 Registry class address.
 
@@ -44,7 +44,7 @@ Registry class address.
 
 > **data**: `Uint8Array`\<`ArrayBufferLike`\> \| `undefined`
 
-Defined in: [states/registry.ts:43](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/states/registry.ts#L43)
+Defined in: [states/registry.ts:43](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/registry.ts#L43)
 
 Registry data after the fixed header.
 
@@ -54,7 +54,7 @@ Registry data after the fixed header.
 
 > **owner**: `Address`
 
-Defined in: [states/registry.ts:39](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/states/registry.ts#L39)
+Defined in: [states/registry.ts:39](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/registry.ts#L39)
 
 Registry owner address.
 
@@ -64,7 +64,7 @@ Registry owner address.
 
 > **parentName**: `Address`
 
-Defined in: [states/registry.ts:37](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/states/registry.ts#L37)
+Defined in: [states/registry.ts:37](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/registry.ts#L37)
 
 Parent registry address.
 
@@ -74,7 +74,7 @@ Parent registry address.
 
 > `static` **HEADER\_LEN**: `number` = `96`
 
-Defined in: [states/registry.ts:57](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/states/registry.ts#L57)
+Defined in: [states/registry.ts:57](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/registry.ts#L57)
 
 ***
 
@@ -82,7 +82,7 @@ Defined in: [states/registry.ts:57](https://github.com/Bonfida/sns-sdk-beta/blob
 
 > `static` **schema**: `object`
 
-Defined in: [states/registry.ts:45](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/states/registry.ts#L45)
+Defined in: [states/registry.ts:45](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/registry.ts#L45)
 
 #### struct
 
@@ -142,7 +142,7 @@ Defined in: [states/registry.ts:45](https://github.com/Bonfida/sns-sdk-beta/blob
 
 > `static` **\_retrieveBatch**(`rpc`, `domainAddresses`): `Promise`\<(`RegistryState` \| `undefined`)[]\>
 
-Defined in: [states/registry.ts:90](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/states/registry.ts#L90)
+Defined in: [states/registry.ts:90](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/registry.ts#L90)
 
 #### Parameters
 
@@ -164,7 +164,7 @@ Defined in: [states/registry.ts:90](https://github.com/Bonfida/sns-sdk-beta/blob
 
 > `static` **deserialize**(`data`): `RegistryState`
 
-Defined in: [states/registry.ts:65](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/states/registry.ts#L65)
+Defined in: [states/registry.ts:65](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/registry.ts#L65)
 
 #### Parameters
 
@@ -182,7 +182,7 @@ Defined in: [states/registry.ts:65](https://github.com/Bonfida/sns-sdk-beta/blob
 
 > `static` **retrieve**(`rpc`, `address`): `Promise`\<`RegistryState`\>
 
-Defined in: [states/registry.ts:78](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/states/registry.ts#L78)
+Defined in: [states/registry.ts:78](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/registry.ts#L78)
 
 #### Parameters
 
@@ -204,7 +204,7 @@ Defined in: [states/registry.ts:78](https://github.com/Bonfida/sns-sdk-beta/blob
 
 > `static` **retrieveBatch**(`rpc`, `domainAddresses`): `Promise`\<(`RegistryState` \| `undefined`)[]\>
 
-Defined in: [states/registry.ts:101](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/states/registry.ts#L101)
+Defined in: [states/registry.ts:101](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/registry.ts#L101)
 
 #### Parameters
 

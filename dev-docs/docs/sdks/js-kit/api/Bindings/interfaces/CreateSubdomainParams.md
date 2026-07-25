@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: CreateSubdomainParams
 
-Defined in: [bindings/createSubdomain.ts:29](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/bindings/createSubdomain.ts#L29)
+Defined in: [bindings/createSubdomain.ts:29](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/createSubdomain.ts#L29)
 
 Parameters for creating an SNS subdomain.
 
@@ -26,7 +26,7 @@ const params: CreateSubdomainParams = {
 
 > `optional` **feePayer?**: `Address`
 
-Defined in: [bindings/createSubdomain.ts:39](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/bindings/createSubdomain.ts#L39)
+Defined in: [bindings/createSubdomain.ts:39](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/createSubdomain.ts#L39)
 
 Account funding creation. Defaults to `owner`.
 
@@ -36,7 +36,7 @@ Account funding creation. Defaults to `owner`.
 
 > **owner**: `Address`
 
-Defined in: [bindings/createSubdomain.ts:35](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/bindings/createSubdomain.ts#L35)
+Defined in: [bindings/createSubdomain.ts:35](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/createSubdomain.ts#L35)
 
 New subdomain owner.
 
@@ -46,7 +46,7 @@ New subdomain owner.
 
 > **rpc**: `Rpc`\<`GetAccountInfoApi` & `GetMinimumBalanceForRentExemptionApi`\>
 
-Defined in: [bindings/createSubdomain.ts:31](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/bindings/createSubdomain.ts#L31)
+Defined in: [bindings/createSubdomain.ts:31](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/createSubdomain.ts#L31)
 
 RPC client.
 
@@ -56,7 +56,7 @@ RPC client.
 
 > `optional` **space?**: `number`
 
-Defined in: [bindings/createSubdomain.ts:37](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/bindings/createSubdomain.ts#L37)
+Defined in: [bindings/createSubdomain.ts:37](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/createSubdomain.ts#L37)
 
 Account data size in bytes. Defaults to 2,000.
 
@@ -66,6 +66,6 @@ Account data size in bytes. Defaults to 2,000.
 
 > **subdomain**: `string`
 
-Defined in: [bindings/createSubdomain.ts:33](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/bindings/createSubdomain.ts#L33)
+Defined in: [bindings/createSubdomain.ts:33](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/createSubdomain.ts#L33)
 
 Full `.sns` subdomain name.

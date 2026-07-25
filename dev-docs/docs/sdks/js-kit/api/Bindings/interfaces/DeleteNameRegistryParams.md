@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: DeleteNameRegistryParams
 
-Defined in: [bindings/deleteNameRegistry.ts:16](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/bindings/deleteNameRegistry.ts#L16)
+Defined in: [bindings/deleteNameRegistry.ts:16](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/deleteNameRegistry.ts#L16)
 
 Parameters for deleting a name registry.
 
@@ -22,7 +22,7 @@ const params: DeleteNameRegistryParams = { rpc, name: "example", refundAddress }
 
 > `optional` **classAddress?**: `Address`
 
-Defined in: [bindings/deleteNameRegistry.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/bindings/deleteNameRegistry.ts#L24)
+Defined in: [bindings/deleteNameRegistry.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/deleteNameRegistry.ts#L24)
 
 Registry class address.
 
@@ -32,7 +32,7 @@ Registry class address.
 
 > **name**: `string`
 
-Defined in: [bindings/deleteNameRegistry.ts:20](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/bindings/deleteNameRegistry.ts#L20)
+Defined in: [bindings/deleteNameRegistry.ts:20](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/deleteNameRegistry.ts#L20)
 
 Raw registry name.
 
@@ -42,7 +42,7 @@ Raw registry name.
 
 > `optional` **parentAddress?**: `Address`
 
-Defined in: [bindings/deleteNameRegistry.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/bindings/deleteNameRegistry.ts#L26)
+Defined in: [bindings/deleteNameRegistry.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/deleteNameRegistry.ts#L26)
 
 Parent registry address.
 
@@ -52,7 +52,7 @@ Parent registry address.
 
 > **refundAddress**: `Address`
 
-Defined in: [bindings/deleteNameRegistry.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/bindings/deleteNameRegistry.ts#L22)
+Defined in: [bindings/deleteNameRegistry.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/deleteNameRegistry.ts#L22)
 
 Account receiving refunded rent.
 
@@ -62,6 +62,6 @@ Account receiving refunded rent.
 
 > **rpc**: `Rpc`\<`GetAccountInfoApi`\>
 
-Defined in: [bindings/deleteNameRegistry.ts:18](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/bindings/deleteNameRegistry.ts#L18)
+Defined in: [bindings/deleteNameRegistry.ts:18](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/deleteNameRegistry.ts#L18)
 
 RPC client.

@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **getTwitterRegistryData**(`connection`, `verifiedPubkey`): `Promise`\<`Buffer`\<`ArrayBufferLike`\>\>
 
-Defined in: [twitter/getTwitterRegistryData.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js/src/twitter/getTwitterRegistryData.ts#L26)
+Defined in: [twitter/getTwitterRegistryData.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/twitter/getTwitterRegistryData.ts#L26)
 
 Retrieves raw user-facing registry data for a verified Twitter public key.
 

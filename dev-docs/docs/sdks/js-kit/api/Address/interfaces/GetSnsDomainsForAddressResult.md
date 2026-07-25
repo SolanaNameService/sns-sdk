@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: GetSnsDomainsForAddressResult
 
-Defined in: [address/getSnsDomainsForAddress.ts:41](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/address/getSnsDomainsForAddress.ts#L41)
+Defined in: [address/getSnsDomainsForAddress.ts:41](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/address/getSnsDomainsForAddress.ts#L41)
 
 An SNS domain owned directly by a registry address.
 
@@ -25,7 +25,7 @@ const domain: GetSnsDomainsForAddressResult = {
 
 > **domain**: `string`
 
-Defined in: [address/getSnsDomainsForAddress.ts:43](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/address/getSnsDomainsForAddress.ts#L43)
+Defined in: [address/getSnsDomainsForAddress.ts:43](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/address/getSnsDomainsForAddress.ts#L43)
 
 TLD-less domain name.
 
@@ -35,6 +35,6 @@ TLD-less domain name.
 
 > **domainAddress**: `Address`
 
-Defined in: [address/getSnsDomainsForAddress.ts:45](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/address/getSnsDomainsForAddress.ts#L45)
+Defined in: [address/getSnsDomainsForAddress.ts:45](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/address/getSnsDomainsForAddress.ts#L45)
 
 Domain account address.

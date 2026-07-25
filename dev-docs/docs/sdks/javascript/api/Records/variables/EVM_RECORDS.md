@@ -8,6 +8,6 @@ displayed_sidebar: docsSidebar
 
 > `const` **EVM\_RECORDS**: `Set`\<[`Record`](../enumerations/Record.md)\>
 
-Defined in: [record/const.ts:35](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js/src/record/const.ts#L35)
+Defined in: [record/const.ts:35](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/record/const.ts#L35)
 
 Record types whose values use EVM address encoding.

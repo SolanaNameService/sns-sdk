@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **updateNameRegistry**(`params`): `Promise`\<`Instruction`\<`string`, readonly (`AccountLookupMeta`\<`string`, `string`\> \| `AccountMeta`\<`string`\>)[]\>\>
 
-Defined in: [bindings/updateNameRegistry.ts:67](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/bindings/updateNameRegistry.ts#L67)
+Defined in: [bindings/updateNameRegistry.ts:67](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/updateNameRegistry.ts#L67)
 
 Updates the data of a raw SPL Name Registry account.
 

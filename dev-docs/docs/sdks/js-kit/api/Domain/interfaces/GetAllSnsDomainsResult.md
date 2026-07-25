@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: GetAllSnsDomainsResult
 
-Defined in: [domain/getAllSnsDomains.ts:35](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/domain/getAllSnsDomains.ts#L35)
+Defined in: [domain/getAllSnsDomains.ts:35](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/domain/getAllSnsDomains.ts#L35)
 
 A top-level SNS domain account.
 
@@ -22,7 +22,7 @@ const domain: GetAllSnsDomainsResult = { domainAddress, owner };
 
 > **domainAddress**: `Address`
 
-Defined in: [domain/getAllSnsDomains.ts:37](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/domain/getAllSnsDomains.ts#L37)
+Defined in: [domain/getAllSnsDomains.ts:37](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/domain/getAllSnsDomains.ts#L37)
 
 Domain account address.
 
@@ -32,6 +32,6 @@ Domain account address.
 
 > **owner**: `Address`
 
-Defined in: [domain/getAllSnsDomains.ts:39](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/domain/getAllSnsDomains.ts#L39)
+Defined in: [domain/getAllSnsDomains.ts:39](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/domain/getAllSnsDomains.ts#L39)
 
 Registry owner address.

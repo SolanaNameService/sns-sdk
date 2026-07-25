@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **reallocInstruction**(`nameProgramId`, `systemProgramId`, `payerKey`, `nameAccountKey`, `nameOwnerKey`, `space`): `TransactionInstruction`
 
-Defined in: [instructions/reallocInstruction.ts:28](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js/src/instructions/reallocInstruction.ts#L28)
+Defined in: [instructions/reallocInstruction.ts:28](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/instructions/reallocInstruction.ts#L28)
 
 Builds an SPL Name Service instruction that resizes a name registry account.
 

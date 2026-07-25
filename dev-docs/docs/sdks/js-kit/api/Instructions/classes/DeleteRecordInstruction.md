@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: DeleteRecordInstruction
 
-Defined in: [instructions/deleteRecordInstruction.ts:5](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/deleteRecordInstruction.ts#L5)
+Defined in: [instructions/deleteRecordInstruction.ts:5](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/deleteRecordInstruction.ts#L5)
 
 Builder for deleting an SNS V2 record account.
 
@@ -16,7 +16,7 @@ Builder for deleting an SNS V2 record account.
 
 > **new DeleteRecordInstruction**(): `DeleteRecordInstruction`
 
-Defined in: [instructions/deleteRecordInstruction.ts:15](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/deleteRecordInstruction.ts#L15)
+Defined in: [instructions/deleteRecordInstruction.ts:15](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/deleteRecordInstruction.ts#L15)
 
 #### Returns
 
@@ -28,7 +28,7 @@ Defined in: [instructions/deleteRecordInstruction.ts:15](https://github.com/Bonf
 
 > **tag**: `number`
 
-Defined in: [instructions/deleteRecordInstruction.ts:7](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/deleteRecordInstruction.ts#L7)
+Defined in: [instructions/deleteRecordInstruction.ts:7](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/deleteRecordInstruction.ts#L7)
 
 Instruction discriminator.
 
@@ -38,7 +38,7 @@ Instruction discriminator.
 
 > `static` **schema**: `object`
 
-Defined in: [instructions/deleteRecordInstruction.ts:9](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/deleteRecordInstruction.ts#L9)
+Defined in: [instructions/deleteRecordInstruction.ts:9](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/deleteRecordInstruction.ts#L9)
 
 #### struct
 
@@ -54,7 +54,7 @@ Defined in: [instructions/deleteRecordInstruction.ts:9](https://github.com/Bonfi
 
 > **getInstruction**(`programAddress`, `systemProgram`, `splNameServiceProgram`, `payer`, `record`, `domainAddress`, `domainOwner`, `centralState`): `Instruction`
 
-Defined in: [instructions/deleteRecordInstruction.ts:23](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/deleteRecordInstruction.ts#L23)
+Defined in: [instructions/deleteRecordInstruction.ts:23](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/deleteRecordInstruction.ts#L23)
 
 #### Parameters
 
@@ -100,7 +100,7 @@ Defined in: [instructions/deleteRecordInstruction.ts:23](https://github.com/Bonf
 
 > **serialize**(): `Uint8Array`
 
-Defined in: [instructions/deleteRecordInstruction.ts:19](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/deleteRecordInstruction.ts#L19)
+Defined in: [instructions/deleteRecordInstruction.ts:19](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/deleteRecordInstruction.ts#L19)
 
 #### Returns
 

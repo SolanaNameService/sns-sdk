@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: RegisterPrimaryInstruction
 
-Defined in: [instructions/registerPrimaryInstruction.ts:5](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/registerPrimaryInstruction.ts#L5)
+Defined in: [instructions/registerPrimaryInstruction.ts:5](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/registerPrimaryInstruction.ts#L5)
 
 Builder for registering an address's SNS primary domain.
 
@@ -16,7 +16,7 @@ Builder for registering an address's SNS primary domain.
 
 > **new RegisterPrimaryInstruction**(): `RegisterPrimaryInstruction`
 
-Defined in: [instructions/registerPrimaryInstruction.ts:14](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/registerPrimaryInstruction.ts#L14)
+Defined in: [instructions/registerPrimaryInstruction.ts:14](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/registerPrimaryInstruction.ts#L14)
 
 #### Returns
 
@@ -28,7 +28,7 @@ Defined in: [instructions/registerPrimaryInstruction.ts:14](https://github.com/B
 
 > **tag**: `number`
 
-Defined in: [instructions/registerPrimaryInstruction.ts:7](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/registerPrimaryInstruction.ts#L7)
+Defined in: [instructions/registerPrimaryInstruction.ts:7](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/registerPrimaryInstruction.ts#L7)
 
 Instruction discriminator.
 
@@ -38,7 +38,7 @@ Instruction discriminator.
 
 > `static` **schema**: `object`
 
-Defined in: [instructions/registerPrimaryInstruction.ts:8](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/registerPrimaryInstruction.ts#L8)
+Defined in: [instructions/registerPrimaryInstruction.ts:8](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/registerPrimaryInstruction.ts#L8)
 
 #### struct
 
@@ -54,7 +54,7 @@ Defined in: [instructions/registerPrimaryInstruction.ts:8](https://github.com/Bo
 
 > **getInstruction**(`programAddress`, `nameAccount`, `primaryAccount`, `owner`, `systemProgram`, `optParent?`): `Instruction`
 
-Defined in: [instructions/registerPrimaryInstruction.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/registerPrimaryInstruction.ts#L22)
+Defined in: [instructions/registerPrimaryInstruction.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/registerPrimaryInstruction.ts#L22)
 
 #### Parameters
 
@@ -92,7 +92,7 @@ Defined in: [instructions/registerPrimaryInstruction.ts:22](https://github.com/B
 
 > **serialize**(): `Uint8Array`
 
-Defined in: [instructions/registerPrimaryInstruction.ts:18](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/instructions/registerPrimaryInstruction.ts#L18)
+Defined in: [instructions/registerPrimaryInstruction.ts:18](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/registerPrimaryInstruction.ts#L18)
 
 #### Returns
 

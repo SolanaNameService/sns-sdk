@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **resolve**(`connection`, `domain`, `config?`): `Promise`\<`PublicKey`\>
 
-Defined in: [resolve/index.ts:39](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js/src/resolve/index.ts#L39)
+Defined in: [resolve/index.ts:39](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/resolve/index.ts#L39)
 
 Resolves a full `.sns` or `.sol` domain name to its effective target public key.
 

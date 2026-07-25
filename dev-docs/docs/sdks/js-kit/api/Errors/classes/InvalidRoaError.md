@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: InvalidRoaError
 
-Defined in: [errors.ts:157](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/errors.ts#L157)
+Defined in: [errors.ts:157](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/errors.ts#L157)
 
 Thrown when a Right of Association proof is invalid.
 
@@ -20,7 +20,7 @@ Thrown when a Right of Association proof is invalid.
 
 > **new InvalidRoaError**(`message?`): `InvalidRoaError`
 
-Defined in: [errors.ts:158](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/errors.ts#L158)
+Defined in: [errors.ts:158](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/errors.ts#L158)
 
 #### Parameters
 
@@ -42,7 +42,7 @@ Defined in: [errors.ts:158](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8
 
 > **type**: [`ErrorType`](../enumerations/ErrorType.md)
 
-Defined in: [errors.ts:38](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/errors.ts#L38)
+Defined in: [errors.ts:38](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/errors.ts#L38)
 
 #### Inherited from
 

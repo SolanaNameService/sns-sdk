@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **getSnsDomainsForAddress**(`params`): `Promise`\<[`GetSnsDomainsForAddressResult`](../interfaces/GetSnsDomainsForAddressResult.md)[]\>
 
-Defined in: [address/getSnsDomainsForAddress.ts:64](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/address/getSnsDomainsForAddress.ts#L64)
+Defined in: [address/getSnsDomainsForAddress.ts:64](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/address/getSnsDomainsForAddress.ts#L64)
 
 Retrieves directly registry-owned top-level SNS domains for an address.
 

@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: NftRecordParams
 
-Defined in: [nft/state.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js/src/nft/state.ts#L26)
+Defined in: [nft/state.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/nft/state.ts#L26)
 
 Input for decoding a name-tokenizer record.
 
@@ -22,7 +22,7 @@ const params: NftRecordParams = { tag: 2, nonce: 0, nameAccount, owner, nftMint 
 
 > **nameAccount**: `Uint8Array`
 
-Defined in: [nft/state.ts:32](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js/src/nft/state.ts#L32)
+Defined in: [nft/state.ts:32](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/nft/state.ts#L32)
 
 Encoded SNS domain account address.
 
@@ -32,7 +32,7 @@ Encoded SNS domain account address.
 
 > **nftMint**: `Uint8Array`
 
-Defined in: [nft/state.ts:36](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js/src/nft/state.ts#L36)
+Defined in: [nft/state.ts:36](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/nft/state.ts#L36)
 
 Encoded NFT mint address.
 
@@ -42,7 +42,7 @@ Encoded NFT mint address.
 
 > **nonce**: `number`
 
-Defined in: [nft/state.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js/src/nft/state.ts#L30)
+Defined in: [nft/state.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/nft/state.ts#L30)
 
 NFT record nonce.
 
@@ -52,7 +52,7 @@ NFT record nonce.
 
 > **owner**: `Uint8Array`
 
-Defined in: [nft/state.ts:34](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js/src/nft/state.ts#L34)
+Defined in: [nft/state.ts:34](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/nft/state.ts#L34)
 
 Encoded NFT owner address.
 
@@ -62,6 +62,6 @@ Encoded NFT owner address.
 
 > **tag**: `number`
 
-Defined in: [nft/state.ts:28](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js/src/nft/state.ts#L28)
+Defined in: [nft/state.ts:28](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/nft/state.ts#L28)
 
 NFT state tag.

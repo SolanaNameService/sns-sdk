@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **getHashedNameSync**(`name`): `Buffer`
 
-Defined in: [utils/getHashedNameSync.ts:16](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js/src/utils/getHashedNameSync.ts#L16)
+Defined in: [utils/getHashedNameSync.ts:16](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/utils/getHashedNameSync.ts#L16)
 
 Hashes a name using the SNS name-service seed derivation.
 

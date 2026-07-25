@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: TransferDomainParams
 
-Defined in: [bindings/transferDomain.ts:20](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/bindings/transferDomain.ts#L20)
+Defined in: [bindings/transferDomain.ts:20](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/transferDomain.ts#L20)
 
 Parameters for transferring an SNS domain.
 
@@ -22,7 +22,7 @@ const params: TransferDomainParams = { rpc, domain: "example.sns", newOwner };
 
 > **domain**: `string`
 
-Defined in: [bindings/transferDomain.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/bindings/transferDomain.ts#L24)
+Defined in: [bindings/transferDomain.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/transferDomain.ts#L24)
 
 Full `.sns` domain name.
 
@@ -32,7 +32,7 @@ Full `.sns` domain name.
 
 > **newOwner**: `Address`
 
-Defined in: [bindings/transferDomain.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/bindings/transferDomain.ts#L26)
+Defined in: [bindings/transferDomain.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/transferDomain.ts#L26)
 
 New domain owner.
 
@@ -42,6 +42,6 @@ New domain owner.
 
 > **rpc**: `Rpc`\<`GetAccountInfoApi`\>
 
-Defined in: [bindings/transferDomain.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/bindings/transferDomain.ts#L22)
+Defined in: [bindings/transferDomain.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/transferDomain.ts#L22)
 
 RPC client.

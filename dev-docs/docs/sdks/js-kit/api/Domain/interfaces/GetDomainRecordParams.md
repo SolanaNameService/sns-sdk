@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: GetDomainRecordParams
 
-Defined in: [domain/getDomainRecord.ts:49](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/domain/getDomainRecord.ts#L49)
+Defined in: [domain/getDomainRecord.ts:49](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/domain/getDomainRecord.ts#L49)
 
 Parameters for retrieving a domain record.
 
@@ -26,7 +26,7 @@ const params: GetDomainRecordParams = {
 
 > **domain**: `string`
 
-Defined in: [domain/getDomainRecord.ts:58](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/domain/getDomainRecord.ts#L58)
+Defined in: [domain/getDomainRecord.ts:58](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/domain/getDomainRecord.ts#L58)
 
 Full domain name.
 
@@ -36,7 +36,7 @@ Full domain name.
 
 > `optional` **options?**: [`GetDomainRecordOptions`](GetDomainRecordOptions.md)
 
-Defined in: [domain/getDomainRecord.ts:62](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/domain/getDomainRecord.ts#L62)
+Defined in: [domain/getDomainRecord.ts:62](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/domain/getDomainRecord.ts#L62)
 
 Record retrieval options.
 
@@ -46,7 +46,7 @@ Record retrieval options.
 
 > **record**: [`Record`](../../Types/enumerations/Record.md)
 
-Defined in: [domain/getDomainRecord.ts:60](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/domain/getDomainRecord.ts#L60)
+Defined in: [domain/getDomainRecord.ts:60](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/domain/getDomainRecord.ts#L60)
 
 Record type to retrieve.
 
@@ -56,6 +56,6 @@ Record type to retrieve.
 
 > **rpc**: `Rpc`\<`GetAccountInfoApi` & `GetMultipleAccountsApi` & `GetTokenLargestAccountsApi` & `GetSlotApi`\>
 
-Defined in: [domain/getDomainRecord.ts:51](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/domain/getDomainRecord.ts#L51)
+Defined in: [domain/getDomainRecord.ts:51](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/domain/getDomainRecord.ts#L51)
 
 RPC client.

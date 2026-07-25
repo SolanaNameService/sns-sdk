@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: PrimaryDomainStateParams
 
-Defined in: [states/primaryDomain.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/states/primaryDomain.ts#L26)
+Defined in: [states/primaryDomain.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/primaryDomain.ts#L26)
 
 Input for decoding an SNS primary-domain account.
 
@@ -22,7 +22,7 @@ const params: PrimaryDomainStateParams = { tag: 0, nameAccount };
 
 > **nameAccount**: `Uint8Array`
 
-Defined in: [states/primaryDomain.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/states/primaryDomain.ts#L30)
+Defined in: [states/primaryDomain.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/primaryDomain.ts#L30)
 
 Encoded primary domain account address.
 
@@ -32,6 +32,6 @@ Encoded primary domain account address.
 
 > **tag**: `number`
 
-Defined in: [states/primaryDomain.ts:28](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/states/primaryDomain.ts#L28)
+Defined in: [states/primaryDomain.ts:28](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/primaryDomain.ts#L28)
 
 Account state tag.

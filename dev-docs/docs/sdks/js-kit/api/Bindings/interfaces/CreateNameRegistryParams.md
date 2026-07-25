@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: CreateNameRegistryParams
 
-Defined in: [bindings/createNameRegistry.ts:25](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/bindings/createNameRegistry.ts#L25)
+Defined in: [bindings/createNameRegistry.ts:25](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/createNameRegistry.ts#L25)
 
 Parameters for creating a name registry.
 
@@ -22,7 +22,7 @@ const params: CreateNameRegistryParams = { rpc, name: "example", space: 32, paye
 
 > `optional` **classAddress?**: `Address`
 
-Defined in: [bindings/createNameRegistry.ts:39](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/bindings/createNameRegistry.ts#L39)
+Defined in: [bindings/createNameRegistry.ts:39](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/createNameRegistry.ts#L39)
 
 Registry class address.
 
@@ -32,7 +32,7 @@ Registry class address.
 
 > `optional` **lamports?**: `bigint`
 
-Defined in: [bindings/createNameRegistry.ts:37](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/bindings/createNameRegistry.ts#L37)
+Defined in: [bindings/createNameRegistry.ts:37](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/createNameRegistry.ts#L37)
 
 Account funding amount. Defaults to the rent-exempt minimum.
 
@@ -42,7 +42,7 @@ Account funding amount. Defaults to the rent-exempt minimum.
 
 > **name**: `string`
 
-Defined in: [bindings/createNameRegistry.ts:29](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/bindings/createNameRegistry.ts#L29)
+Defined in: [bindings/createNameRegistry.ts:29](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/createNameRegistry.ts#L29)
 
 Raw registry name.
 
@@ -52,7 +52,7 @@ Raw registry name.
 
 > **owner**: `Address`
 
-Defined in: [bindings/createNameRegistry.ts:35](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/bindings/createNameRegistry.ts#L35)
+Defined in: [bindings/createNameRegistry.ts:35](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/createNameRegistry.ts#L35)
 
 Owner of the new registry.
 
@@ -62,7 +62,7 @@ Owner of the new registry.
 
 > `optional` **parentAddress?**: `Address`
 
-Defined in: [bindings/createNameRegistry.ts:41](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/bindings/createNameRegistry.ts#L41)
+Defined in: [bindings/createNameRegistry.ts:41](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/createNameRegistry.ts#L41)
 
 Parent registry address.
 
@@ -72,7 +72,7 @@ Parent registry address.
 
 > **payer**: `Address`
 
-Defined in: [bindings/createNameRegistry.ts:33](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/bindings/createNameRegistry.ts#L33)
+Defined in: [bindings/createNameRegistry.ts:33](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/createNameRegistry.ts#L33)
 
 Account paying for creation.
 
@@ -82,7 +82,7 @@ Account paying for creation.
 
 > **rpc**: `Rpc`\<`GetAccountInfoApi` & `GetMinimumBalanceForRentExemptionApi`\>
 
-Defined in: [bindings/createNameRegistry.ts:27](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/bindings/createNameRegistry.ts#L27)
+Defined in: [bindings/createNameRegistry.ts:27](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/createNameRegistry.ts#L27)
 
 RPC client.
 
@@ -92,6 +92,6 @@ RPC client.
 
 > **space**: `number`
 
-Defined in: [bindings/createNameRegistry.ts:31](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/bindings/createNameRegistry.ts#L31)
+Defined in: [bindings/createNameRegistry.ts:31](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/createNameRegistry.ts#L31)
 
 Account data size in bytes.

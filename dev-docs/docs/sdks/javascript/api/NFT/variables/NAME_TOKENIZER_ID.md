@@ -8,6 +8,6 @@ displayed_sidebar: docsSidebar
 
 > `const` **NAME\_TOKENIZER\_ID**: `PublicKey`
 
-Defined in: [nft/const.ts:5](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js/src/nft/const.ts#L5)
+Defined in: [nft/const.ts:5](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/nft/const.ts#L5)
 
 Program ID for the SNS name-tokenizer program.

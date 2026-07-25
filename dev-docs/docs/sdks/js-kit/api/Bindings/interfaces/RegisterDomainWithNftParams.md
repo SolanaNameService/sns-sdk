@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: RegisterDomainWithNftParams
 
-Defined in: [bindings/registerDomainWithNft.ts:34](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/bindings/registerDomainWithNft.ts#L34)
+Defined in: [bindings/registerDomainWithNft.ts:34](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/registerDomainWithNft.ts#L34)
 
 Parameters for registering an SNS domain with an NFT.
 
@@ -28,7 +28,7 @@ const params: RegisterDomainWithNftParams = {
 
 > **buyer**: `Address`
 
-Defined in: [bindings/registerDomainWithNft.ts:40](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/bindings/registerDomainWithNft.ts#L40)
+Defined in: [bindings/registerDomainWithNft.ts:40](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/registerDomainWithNft.ts#L40)
 
 Account registering the domain.
 
@@ -38,7 +38,7 @@ Account registering the domain.
 
 > **domain**: `string`
 
-Defined in: [bindings/registerDomainWithNft.ts:36](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/bindings/registerDomainWithNft.ts#L36)
+Defined in: [bindings/registerDomainWithNft.ts:36](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/registerDomainWithNft.ts#L36)
 
 Full `.sns` domain name.
 
@@ -48,7 +48,7 @@ Full `.sns` domain name.
 
 > **nftMint**: `Address`
 
-Defined in: [bindings/registerDomainWithNft.ts:44](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/bindings/registerDomainWithNft.ts#L44)
+Defined in: [bindings/registerDomainWithNft.ts:44](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/registerDomainWithNft.ts#L44)
 
 Bonfida Wolves NFT mint.
 
@@ -58,7 +58,7 @@ Bonfida Wolves NFT mint.
 
 > **nftSource**: `Address`
 
-Defined in: [bindings/registerDomainWithNft.ts:42](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/bindings/registerDomainWithNft.ts#L42)
+Defined in: [bindings/registerDomainWithNft.ts:42](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/registerDomainWithNft.ts#L42)
 
 Source token account for the NFT.
 
@@ -68,6 +68,6 @@ Source token account for the NFT.
 
 > **space**: `number`
 
-Defined in: [bindings/registerDomainWithNft.ts:38](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/bindings/registerDomainWithNft.ts#L38)
+Defined in: [bindings/registerDomainWithNft.ts:38](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/registerDomainWithNft.ts#L38)
 
 Domain registry size in bytes.

@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **deleteRecord**(`domain`, `record`, `owner`, `payer`): `TransactionInstruction`
 
-Defined in: [bindings/deleteRecord.ts:27](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js/src/bindings/deleteRecord.ts#L27)
+Defined in: [bindings/deleteRecord.ts:27](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/bindings/deleteRecord.ts#L27)
 
 Builds an instruction to delete a record for a `.sns` domain or subdomain.
 

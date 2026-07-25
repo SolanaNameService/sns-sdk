@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: DeserializeRecordContentParams
 
-Defined in: [utils/deserializers/deserializeRecordContent.ts:20](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/utils/deserializers/deserializeRecordContent.ts#L20)
+Defined in: [utils/deserializers/deserializeRecordContent.ts:20](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/utils/deserializers/deserializeRecordContent.ts#L20)
 
 Parameters for deserializing record content.
 
@@ -22,7 +22,7 @@ const params: DeserializeRecordContentParams = { content, record: Record.Url };
 
 > **content**: `ReadonlyUint8Array`
 
-Defined in: [utils/deserializers/deserializeRecordContent.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/utils/deserializers/deserializeRecordContent.ts#L22)
+Defined in: [utils/deserializers/deserializeRecordContent.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/utils/deserializers/deserializeRecordContent.ts#L22)
 
 Serialized record content.
 
@@ -32,6 +32,6 @@ Serialized record content.
 
 > **record**: [`Record`](../../Types/enumerations/Record.md)
 
-Defined in: [utils/deserializers/deserializeRecordContent.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/c5f5eb8e0f323479c489bfc027c5ce38cc92f14f/js-kit/src/utils/deserializers/deserializeRecordContent.ts#L24)
+Defined in: [utils/deserializers/deserializeRecordContent.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/utils/deserializers/deserializeRecordContent.ts#L24)
 
 Record type.
