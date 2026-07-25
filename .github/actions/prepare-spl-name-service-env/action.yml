@@ -1,9 +1,5 @@
 name: Prepare local env
-description: Prepare local environment by setup node, and cache dependencies
-outputs:
-  cache-hit:
-    description: Whether the dependencies were cached
-    value: ${{ steps.npm-cache.outputs.cache-hit }}
+description: Set up Node and cache npm downloads
 runs:
   using: composite
   steps:
@@ -14,13 +10,11 @@ runs:
       shell: bash
       id: npm-cache-dir
       run: |
-        echo "::set-output name=dir::$(npm config get cache)"
-    - uses: actions/cache@v3
-      id: npm-cache
+        echo "dir=$(npm config get cache)" >> "$GITHUB_OUTPUT"
+    - name: Cache npm downloads
+      uses: actions/cache@v4
       with:
-        path: |
-          **/node_modules
-          ${{ steps.npm-cache-dir.outputs.dir }}
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        path: ${{ steps.npm-cache-dir.outputs.dir }}
+        key: ${{ runner.os }}-npm-js-${{ hashFiles('js/package-lock.json') }}
         restore-keys: |
-          ${{ runner.os }}-node-
+          ${{ runner.os }}-npm-js-

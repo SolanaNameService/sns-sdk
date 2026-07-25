@@ -1,9 +1,5 @@
 name: Prepare local env
-description: Prepare local environment by setup node, and cache dependencies
-outputs:
-  cache-hit:
-    description: Whether the dependencies were cached
-    value: ${{ steps.npm-cache.outputs.cache-hit }}
+description: Set up Node and cache npm downloads
 runs:
   using: composite
   steps:
@@ -11,26 +7,16 @@ runs:
       # Use Node version specified in Volta config inside package.json
       uses: volta-cli/action@v4
 
-    - name: Get working directory hash
-      id: dir-hash
-      shell: bash
-      run: |
-        # Generate short hash of relative path from repo root
-        REL_PATH=$(git rev-parse --show-prefix)
-        echo "hash=$(echo "$REL_PATH" | sha256sum | cut -c1-8)" >> $GITHUB_OUTPUT
-
     - name: Get npm cache directory
       id: npm-cache-dir
       shell: bash
       run: |
-        echo "dir=$(npm config get cache)" >> $GITHUB_OUTPUT
+        echo "dir=$(npm config get cache)" >> "$GITHUB_OUTPUT"
 
-    - uses: actions/cache@v3
-      id: npm-cache
+    - name: Cache npm downloads
+      uses: actions/cache@v4
       with:
-        path: |
-          **/node_modules
-          ${{ steps.npm-cache-dir.outputs.dir }}
-        key: ${{ runner.os }}-node-${{ steps.dir-hash.outputs.hash }}-${{ hashFiles('**/package-lock.json') }}
+        path: ${{ steps.npm-cache-dir.outputs.dir }}
+        key: ${{ runner.os }}-npm-js-kit-${{ hashFiles('js-kit/package-lock.json') }}
         restore-keys: |
-          ${{ runner.os }}-node-${{ steps.dir-hash.outputs.hash }}-
+          ${{ runner.os }}-npm-js-kit-
