@@ -77,7 +77,7 @@ const transport = createDefaultRpcTransport({
 });
 const rpc = createSolanaRpcFromTransport(transport);
 
-const owner = await resolve({ rpc, domain: "mydomain.sns" });
+const owner = await resolve({ rpc, domain: "mydomain.sns" }); // Or use `safeResolve`.
 ```
 
 See the [JS Kit package guide](./js-kit/README.md) and [v1 migration guide](./js-kit/CHANGELOG.md).

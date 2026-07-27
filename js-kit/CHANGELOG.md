@@ -7,9 +7,10 @@ Use this changelog as a migration guide from v0.10.0 to v1.0.0.
 ## Table of contents
 
 1. [Domain suffix handling](#1-domain-suffix-handling)
-2. [Renamed public APIs](#2-renamed-public-apis)
-3. [Record reads and validation](#3-record-reads-and-validation)
-4. [Instruction builders](#4-instruction-builders)
+2. [New APIs](#2-new-apis)
+3. [Renamed public APIs](#3-renamed-public-apis)
+4. [Record reads and validation](#4-record-reads-and-validation)
+5. [Instruction builders](#5-instruction-builders)
 
 ## 1. Domain suffix handling
 
@@ -35,6 +36,7 @@ Bare names now throw an unsupported TLD error.
 This applies to:
 
 - `resolve`
+- `safeResolve`
 - `getDomainOwner`
 - `getDomainRecord`
 - `getDomainRecords`
@@ -44,7 +46,7 @@ Example:
 
 ```ts
 await resolve({ rpc, domain: "mydomain.sns" });
-await resolve({ rpc, domain: "mydomain.sol" });
+await safeResolve({ rpc, domain: "mydomain.sol" });
 
 await getDomainOwner({ rpc, domain: "mydomain.sns" });
 await getSubdomains({ rpc, domain: "mydomain.sns" });
@@ -168,7 +170,17 @@ These APIs expect the raw name used for account derivation: `createNameRegistry`
 
 For example, use `"mydomain"` rather than `"mydomain.sns"` when directly creating or updating a raw name-registry account.
 
-## 2. Renamed public APIs
+## 2. New APIs
+
+### `safeResolve`
+
+`safeResolve` follows the same routing as `resolve`, except that when SRS-backed `.sol` resolution is enabled, it requires the `.sol` domain and its corresponding `.sns` domain to resolve to the same target; otherwise, it throws `SnsSolResolutionMismatchError`.
+
+```ts
+const target = await safeResolve({ rpc, domain: "mydomain.sol" });
+```
+
+## 3. Renamed public APIs
 
 Several public APIs were renamed to keep method names consistent across the JS Kit SDK and the JS SDK.
 
@@ -207,7 +219,7 @@ import {
 } from "@solana-name-service/sns-sdk-kit";
 ```
 
-## 3. Record reads and validation
+## 4. Record reads and validation
 
 Record read results already included verification data in v0.10.0. In v1.0.0, the RoA verification field is aligned with the renamed RoA APIs:
 
@@ -230,7 +242,7 @@ The record verification bindings are now split by what they do:
 
 This replaces the older, less explicit split where `writeRoa` wrote verifier metadata and `validateRoa` / `validateRoaEthereum` performed validation. The new names make the difference between storing verifier metadata and validating a record association explicit.
 
-## 4. Instruction builders
+## 5. Instruction builders
 
 Instruction builder classes now use PascalCase class names. This only affects consumers who import low-level instruction builders directly.
 

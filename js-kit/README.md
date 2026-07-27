@@ -53,7 +53,7 @@ const owner = await resolve({
   rpc,
   domain: "wallet-guide-9.sns",
   options: { allowPda: false },
-});
+}); // Or use `safeResolve`.
 
 console.log(owner);
 ```
@@ -86,16 +86,16 @@ console.log(domains);
 
 Use the form required by each API rather than normalizing names yourself:
 
-| API family                                                                                      | Required input                                             | Scope                                                                                        |
-| ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| High-level reads such as `resolve`, `getDomainOwner`, `getDomainRecord`, and `getDomainRecords` | Full suffixed name, for example `mydomain.sns`             | `.sns`; legacy `.sol` reads have the transition rule below                                   |
-| Subdomain reads such as `getSubdomains`                                                         | Full suffixed top-level name, for example `mydomain.sns`   | `.sns`                                                                                       |
-| Top-level writes such as registration, transfer, and burn                                       | Canonical lowercase `mydomain.sns`                         | Exactly one label before `.sns`                                                              |
-| Record writes                                                                                   | Canonical lowercase `mydomain.sns` or `sub.mydomain.sns`   | Top-level domain or one-level subdomain                                                      |
-| Subdomain creation and transfer                                                                 | Canonical lowercase `sub.mydomain.sns`                     | Exactly one subdomain level                                                                  |
-| SNS derivation and record-address helpers                                                       | TLD-trimmed name, for example `mydomain` or `sub.mydomain` | Pass to `getSnsDomainAddress`; it derives domain, subdomain, and record addresses            |
-| SRS derivation                                                                                  | TLD-trimmed `.sol` label, for example `mydomain`           | Pass to `getSrsDomainAddress` only when an SRS address is specifically needed                |
-| Raw registry helpers                                                                            | Raw labels and explicit parent/class addresses             | Use the advanced name-registry helpers when the higher-level `.sns` conventions do not apply |
+| API family                                                                                                     | Required input                                             | Scope                                                                                        |
+| -------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| High-level reads such as `resolve`, `safeResolve`, `getDomainOwner`, `getDomainRecord`, and `getDomainRecords` | Full suffixed name, for example `mydomain.sns`             | `.sns`; legacy `.sol` reads have the transition rule below                                   |
+| Subdomain reads such as `getSubdomains`                                                                        | Full suffixed top-level name, for example `mydomain.sns`   | `.sns`                                                                                       |
+| Top-level writes such as registration, transfer, and burn                                                      | Canonical lowercase `mydomain.sns`                         | Exactly one label before `.sns`                                                              |
+| Record writes                                                                                                  | Canonical lowercase `mydomain.sns` or `sub.mydomain.sns`   | Top-level domain or one-level subdomain                                                      |
+| Subdomain creation and transfer                                                                                | Canonical lowercase `sub.mydomain.sns`                     | Exactly one subdomain level                                                                  |
+| SNS derivation and record-address helpers                                                                      | TLD-trimmed name, for example `mydomain` or `sub.mydomain` | Pass to `getSnsDomainAddress`; it derives domain, subdomain, and record addresses            |
+| SRS derivation                                                                                                 | TLD-trimmed `.sol` label, for example `mydomain`           | Pass to `getSrsDomainAddress` only when an SRS address is specifically needed                |
+| Raw registry helpers                                                                                           | Raw labels and explicit parent/class addresses             | Use the advanced name-registry helpers when the higher-level `.sns` conventions do not apply |
 
 High-level `.sol` reads use the legacy SNS-backed path only before finalized slot `452,825,395`. At and after that slot, `.sol` is rejected. `.sol` writes are not supported.
 
@@ -107,6 +107,12 @@ High-level `.sol` reads use the legacy SNS-backed path only before finalized slo
 
   ```ts
   resolve({ rpc, domain, options? }): Promise<Address>
+  ```
+
+- **`safeResolve`** — follows the same routing as `resolve`, except that when SRS-backed `.sol` resolution is enabled, it requires the `.sol` domain and its corresponding `.sns` domain to resolve to the same target; otherwise, it throws `SnsSolResolutionMismatchError`.
+
+  ```ts
+  safeResolve({ rpc, domain, options? }): Promise<Address>
   ```
 
 ### Record Reads And Validation

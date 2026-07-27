@@ -31,6 +31,7 @@ export enum ErrorType {
   UnsupportedTld = "UnsupportedTld",
   DomainExpired = "DomainExpired",
   CouldNotFindSrsOwner = "CouldNotFindSrsOwner",
+  SnsSolResolutionMismatch = "SnsSolResolutionMismatch",
 }
 
 /** Base error thrown by SNS SDK operations. Inspect `type` for a stable error code. */
@@ -234,5 +235,12 @@ export class DomainExpiredError extends SNSError {
 export class CouldNotFindSrsOwnerError extends SNSError {
   constructor(message?: string) {
     super(ErrorType.CouldNotFindSrsOwner, message);
+  }
+}
+
+/** Thrown when .sns and .sol resolve the same domain to different addresses. */
+export class SnsSolResolutionMismatchError extends SNSError {
+  constructor(message?: string) {
+    super(ErrorType.SnsSolResolutionMismatch, message);
   }
 }

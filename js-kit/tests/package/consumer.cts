@@ -14,11 +14,13 @@ import utils = require("@solana-name-service/sns-sdk-kit/utils");
 
 void [
   sdk.resolve,
+  sdk.safeResolve,
   address.getPrimaryDomain,
   bindings.registerDomain,
   codecs.addressCodec,
   constants.NAME_PROGRAM_ADDRESS,
   domain.resolve,
+  domain.safeResolve,
   errors.SNSError,
   instructions.TransferInstruction,
   nft.getSnsNftMint,

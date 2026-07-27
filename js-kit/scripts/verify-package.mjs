@@ -1,22 +1,25 @@
 import { execFileSync } from "node:child_process";
+import { access, readFile, readdir } from "node:fs/promises";
 import { createRequire } from "node:module";
-import { access, readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const require = createRequire(import.meta.url);
-const packageRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const packageRoot = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  ".."
+);
 const packageJson = JSON.parse(
   await readFile(path.join(packageRoot, "package.json"), "utf8")
 );
 
 const representativeExports = new Map([
-  [".", "resolve"],
+  [".", ["resolve", "safeResolve"]],
   ["./address", "getPrimaryDomain"],
   ["./bindings", "registerDomain"],
   ["./codecs", "addressCodec"],
   ["./constants", "NAME_PROGRAM_ADDRESS"],
-  ["./domain", "resolve"],
+  ["./domain", ["resolve", "safeResolve"]],
   ["./errors", "SNSError"],
   ["./instructions", "TransferInstruction"],
   ["./nft", "getSnsNftMint"],
@@ -99,7 +102,9 @@ assert(
   "Temporary declaration files were not removed"
 );
 
-const declarationFiles = relativeDistFiles.filter((file) => file.endsWith(".d.ts"));
+const declarationFiles = relativeDistFiles.filter((file) =>
+  file.endsWith(".d.ts")
+);
 const declarationTargets = [...exportTargets].filter((target) =>
   target.endsWith(".d.ts")
 );
@@ -108,32 +113,37 @@ assert(
   `Expected ${declarationTargets.length} public declarations, found ${declarationFiles.length}`
 );
 
-for (const [subpath, representativeExport] of representativeExports) {
+for (const [
+  subpath,
+  representativeExportsForSubpath,
+] of representativeExports) {
   const specifier =
-    subpath === "." ? packageJson.name : `${packageJson.name}/${subpath.slice(2)}`;
+    subpath === "."
+      ? packageJson.name
+      : `${packageJson.name}/${subpath.slice(2)}`;
   const esmModule = await import(specifier);
   const cjsModule = require(specifier);
 
-  assert(
-    representativeExport in esmModule,
-    `ESM entry ${specifier} is missing ${representativeExport}`
-  );
-  assert(
-    representativeExport in cjsModule,
-    `CommonJS entry ${specifier} is missing ${representativeExport}`
-  );
+  for (const representativeExport of Array.isArray(
+    representativeExportsForSubpath
+  )
+    ? representativeExportsForSubpath
+    : [representativeExportsForSubpath]) {
+    assert(
+      representativeExport in esmModule,
+      `ESM entry ${specifier} is missing ${representativeExport}`
+    );
+    assert(
+      representativeExport in cjsModule,
+      `CommonJS entry ${specifier} is missing ${representativeExport}`
+    );
+  }
 }
 
 assert(process.env.npm_execpath, "npm_execpath is unavailable");
 const packOutput = execFileSync(
   process.execPath,
-  [
-    process.env.npm_execpath,
-    "pack",
-    "--dry-run",
-    "--ignore-scripts",
-    "--json",
-  ],
+  [process.env.npm_execpath, "pack", "--dry-run", "--ignore-scripts", "--json"],
   {
     cwd: packageRoot,
     encoding: "utf8",
@@ -149,7 +159,10 @@ for (const target of exportTargets) {
   );
 }
 for (const requiredFile of ["LICENSE", "README.md", "package.json"]) {
-  assert(packedFiles.has(requiredFile), `Package tarball is missing ${requiredFile}`);
+  assert(
+    packedFiles.has(requiredFile),
+    `Package tarball is missing ${requiredFile}`
+  );
 }
 
 console.log(
