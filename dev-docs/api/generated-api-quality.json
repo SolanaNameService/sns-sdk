@@ -9,9 +9,9 @@
       "page": "docs/sdks/javascript/api/Address/functions/getMultiplePrimaryDomains.md",
       "symbol": "getMultiplePrimaryDomains",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Address/functions/getPrimaryDomain",
@@ -21,9 +21,9 @@
       "page": "docs/sdks/javascript/api/Address/functions/getPrimaryDomain.md",
       "symbol": "getPrimaryDomain",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Address/functions/getSnsDomainKeysForOwner",
@@ -33,9 +33,9 @@
       "page": "docs/sdks/javascript/api/Address/functions/getSnsDomainKeysForOwner.md",
       "symbol": "getSnsDomainKeysForOwner",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Address/functions/getSnsDomainsForOwner",
@@ -45,9 +45,9 @@
       "page": "docs/sdks/javascript/api/Address/functions/getSnsDomainsForOwner.md",
       "symbol": "getSnsDomainsForOwner",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Address/functions/getSnsNftsForOwner",
@@ -57,33 +57,9 @@
       "page": "docs/sdks/javascript/api/Address/functions/getSnsNftsForOwner.md",
       "symbol": "getSnsNftsForOwner",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "javascript:Address/interfaces/SnsDomain",
-      "product": "javascript",
-      "kind": "interface",
-      "source": "js/src/utils/getSnsDomainsForOwner.ts",
-      "page": "docs/sdks/javascript/api/Address/interfaces/SnsDomain.md",
-      "symbol": "SnsDomain",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "javascript:Address/interfaces/SnsNft",
-      "product": "javascript",
-      "kind": "interface",
-      "source": "js/src/utils/getSnsNftsForOwner.ts",
-      "page": "docs/sdks/javascript/api/Address/interfaces/SnsNft.md",
-      "symbol": "SnsNft",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Address/interfaces/PrimaryDomainParams",
@@ -93,9 +69,33 @@
       "page": "docs/sdks/javascript/api/Address/interfaces/PrimaryDomainParams.md",
       "symbol": "PrimaryDomainParams",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "javascript:Address/interfaces/SnsDomain",
+      "product": "javascript",
+      "kind": "interface",
+      "source": "js/src/utils/getSnsDomainsForOwner.ts",
+      "page": "docs/sdks/javascript/api/Address/interfaces/SnsDomain.md",
+      "symbol": "SnsDomain",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "javascript:Address/interfaces/SnsNft",
+      "product": "javascript",
+      "kind": "interface",
+      "source": "js/src/utils/getSnsNftsForOwner.ts",
+      "page": "docs/sdks/javascript/api/Address/interfaces/SnsNft.md",
+      "symbol": "SnsNft",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Bindings/functions/burnDomain",
@@ -105,9 +105,9 @@
       "page": "docs/sdks/javascript/api/Bindings/functions/burnDomain.md",
       "symbol": "burnDomain",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Bindings/functions/createNameRegistry",
@@ -117,9 +117,9 @@
       "page": "docs/sdks/javascript/api/Bindings/functions/createNameRegistry.md",
       "symbol": "createNameRegistry",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Bindings/functions/createRecord",
@@ -129,9 +129,9 @@
       "page": "docs/sdks/javascript/api/Bindings/functions/createRecord.md",
       "symbol": "createRecord",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Bindings/functions/createReverse",
@@ -141,9 +141,9 @@
       "page": "docs/sdks/javascript/api/Bindings/functions/createReverse.md",
       "symbol": "createReverse",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Bindings/functions/createSubdomain",
@@ -153,9 +153,9 @@
       "page": "docs/sdks/javascript/api/Bindings/functions/createSubdomain.md",
       "symbol": "createSubdomain",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Bindings/functions/deleteNameRegistry",
@@ -165,9 +165,9 @@
       "page": "docs/sdks/javascript/api/Bindings/functions/deleteNameRegistry.md",
       "symbol": "deleteNameRegistry",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Bindings/functions/deleteRecord",
@@ -177,9 +177,9 @@
       "page": "docs/sdks/javascript/api/Bindings/functions/deleteRecord.md",
       "symbol": "deleteRecord",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Bindings/functions/registerDomain",
@@ -189,9 +189,9 @@
       "page": "docs/sdks/javascript/api/Bindings/functions/registerDomain.md",
       "symbol": "registerDomain",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Bindings/functions/registerDomainWithNft",
@@ -201,9 +201,9 @@
       "page": "docs/sdks/javascript/api/Bindings/functions/registerDomainWithNft.md",
       "symbol": "registerDomainWithNft",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Bindings/functions/setBackground",
@@ -213,9 +213,9 @@
       "page": "docs/sdks/javascript/api/Bindings/functions/setBackground.md",
       "symbol": "setBackground",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Bindings/functions/setPrimaryDomain",
@@ -225,9 +225,9 @@
       "page": "docs/sdks/javascript/api/Bindings/functions/setPrimaryDomain.md",
       "symbol": "setPrimaryDomain",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Bindings/functions/setRecordRoaVerifier",
@@ -237,9 +237,9 @@
       "page": "docs/sdks/javascript/api/Bindings/functions/setRecordRoaVerifier.md",
       "symbol": "setRecordRoaVerifier",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Bindings/functions/setRecordStalenessVerifier",
@@ -249,9 +249,9 @@
       "page": "docs/sdks/javascript/api/Bindings/functions/setRecordStalenessVerifier.md",
       "symbol": "setRecordStalenessVerifier",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Bindings/functions/transferDomain",
@@ -261,9 +261,9 @@
       "page": "docs/sdks/javascript/api/Bindings/functions/transferDomain.md",
       "symbol": "transferDomain",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Bindings/functions/transferSubdomain",
@@ -273,9 +273,9 @@
       "page": "docs/sdks/javascript/api/Bindings/functions/transferSubdomain.md",
       "symbol": "transferSubdomain",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Bindings/functions/updateNameRegistry",
@@ -285,9 +285,9 @@
       "page": "docs/sdks/javascript/api/Bindings/functions/updateNameRegistry.md",
       "symbol": "updateNameRegistry",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Bindings/functions/updateRecord",
@@ -297,9 +297,9 @@
       "page": "docs/sdks/javascript/api/Bindings/functions/updateRecord.md",
       "symbol": "updateRecord",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Bindings/functions/validateRecordRoa",
@@ -309,9 +309,9 @@
       "page": "docs/sdks/javascript/api/Bindings/functions/validateRecordRoa.md",
       "symbol": "validateRecordRoa",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Bindings/functions/validateRecordRoaEthereum",
@@ -321,9 +321,9 @@
       "page": "docs/sdks/javascript/api/Bindings/functions/validateRecordRoaEthereum.md",
       "symbol": "validateRecordRoaEthereum",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Domain/functions/findSubdomains",
@@ -333,9 +333,9 @@
       "page": "docs/sdks/javascript/api/Domain/functions/findSubdomains.md",
       "symbol": "findSubdomains",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Domain/functions/getAllSnsDomains",
@@ -345,9 +345,9 @@
       "page": "docs/sdks/javascript/api/Domain/functions/getAllSnsDomains.md",
       "symbol": "getAllSnsDomains",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Domain/functions/getDomainPriceFromName",
@@ -357,9 +357,9 @@
       "page": "docs/sdks/javascript/api/Domain/functions/getDomainPriceFromName.md",
       "symbol": "getDomainPriceFromName",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Domain/functions/getSnsDomainKeySync",
@@ -369,18 +369,6 @@
       "page": "docs/sdks/javascript/api/Domain/functions/getSnsDomainKeySync.md",
       "symbol": "getSnsDomainKeySync",
       "errorMode": "throws",
-      "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "javascript:Domain/interfaces/SnsDomainKey",
-      "product": "javascript",
-      "kind": "interface",
-      "source": "js/src/utils/getSnsDomainKeySync.ts",
-      "page": "docs/sdks/javascript/api/Domain/interfaces/SnsDomainKey.md",
-      "symbol": "SnsDomainKey",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
       "requiredLinks": []
     },
@@ -403,9 +391,9 @@
       "page": "docs/sdks/javascript/api/Domain/functions/reverseLookup.md",
       "symbol": "reverseLookup",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Domain/functions/reverseLookupBatch",
@@ -415,9 +403,9 @@
       "page": "docs/sdks/javascript/api/Domain/functions/reverseLookupBatch.md",
       "symbol": "reverseLookupBatch",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Domain/functions/safeResolve",
@@ -431,6 +419,18 @@
       "requiredLinks": []
     },
     {
+      "id": "javascript:Domain/interfaces/SnsDomainKey",
+      "product": "javascript",
+      "kind": "interface",
+      "source": "js/src/utils/getSnsDomainKeySync.ts",
+      "page": "docs/sdks/javascript/api/Domain/interfaces/SnsDomainKey.md",
+      "symbol": "SnsDomainKey",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
       "id": "javascript:Instructions/functions/createInstruction",
       "product": "javascript",
       "kind": "function",
@@ -438,9 +438,9 @@
       "page": "docs/sdks/javascript/api/Instructions/functions/createInstruction.md",
       "symbol": "createInstruction",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Instructions/functions/deleteInstruction",
@@ -450,9 +450,9 @@
       "page": "docs/sdks/javascript/api/Instructions/functions/deleteInstruction.md",
       "symbol": "deleteInstruction",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Instructions/functions/reallocInstruction",
@@ -462,9 +462,9 @@
       "page": "docs/sdks/javascript/api/Instructions/functions/reallocInstruction.md",
       "symbol": "reallocInstruction",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Instructions/functions/transferInstruction",
@@ -474,9 +474,9 @@
       "page": "docs/sdks/javascript/api/Instructions/functions/transferInstruction.md",
       "symbol": "transferInstruction",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Instructions/functions/updateInstruction",
@@ -486,9 +486,9 @@
       "page": "docs/sdks/javascript/api/Instructions/functions/updateInstruction.md",
       "symbol": "updateInstruction",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Instructions/interfaces/AccountKey",
@@ -498,9 +498,9 @@
       "page": "docs/sdks/javascript/api/Instructions/interfaces/AccountKey.md",
       "symbol": "AccountKey",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Instructions/interfaces/CreateReverseInstructionParams",
@@ -510,9 +510,9 @@
       "page": "docs/sdks/javascript/api/Instructions/interfaces/CreateReverseInstructionParams.md",
       "symbol": "CreateReverseInstructionParams",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Instructions/interfaces/CreateSplitV2InstructionParams",
@@ -522,9 +522,9 @@
       "page": "docs/sdks/javascript/api/Instructions/interfaces/CreateSplitV2InstructionParams.md",
       "symbol": "CreateSplitV2InstructionParams",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Instructions/interfaces/CreateWithNftInstructionParams",
@@ -534,9 +534,9 @@
       "page": "docs/sdks/javascript/api/Instructions/interfaces/CreateWithNftInstructionParams.md",
       "symbol": "CreateWithNftInstructionParams",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:NFT/functions/getDomainMint",
@@ -546,21 +546,9 @@
       "page": "docs/sdks/javascript/api/NFT/functions/getDomainMint.md",
       "symbol": "getDomainMint",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "javascript:NFT/interfaces/NftRecordParams",
-      "product": "javascript",
-      "kind": "interface",
-      "source": "js/src/nft/state.ts",
-      "page": "docs/sdks/javascript/api/NFT/interfaces/NftRecordParams.md",
-      "symbol": "NftRecordParams",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:NFT/functions/getRecordFromMint",
@@ -570,9 +558,9 @@
       "page": "docs/sdks/javascript/api/NFT/functions/getRecordFromMint.md",
       "symbol": "getRecordFromMint",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:NFT/functions/retrieveNftOwner",
@@ -582,9 +570,9 @@
       "page": "docs/sdks/javascript/api/NFT/functions/retrieveNftOwner.md",
       "symbol": "retrieveNftOwner",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:NFT/functions/retrieveNftOwnerV2",
@@ -594,9 +582,9 @@
       "page": "docs/sdks/javascript/api/NFT/functions/retrieveNftOwnerV2.md",
       "symbol": "retrieveNftOwnerV2",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:NFT/functions/retrieveNfts",
@@ -606,9 +594,9 @@
       "page": "docs/sdks/javascript/api/NFT/functions/retrieveNfts.md",
       "symbol": "retrieveNfts",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:NFT/functions/retrieveRecords",
@@ -618,9 +606,21 @@
       "page": "docs/sdks/javascript/api/NFT/functions/retrieveRecords.md",
       "symbol": "retrieveRecords",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "javascript:NFT/interfaces/NftRecordParams",
+      "product": "javascript",
+      "kind": "interface",
+      "source": "js/src/nft/state.ts",
+      "page": "docs/sdks/javascript/api/NFT/interfaces/NftRecordParams.md",
+      "symbol": "NftRecordParams",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Records/functions/deserializeRecordContent",
@@ -630,9 +630,9 @@
       "page": "docs/sdks/javascript/api/Records/functions/deserializeRecordContent.md",
       "symbol": "deserializeRecordContent",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Records/functions/getMultipleRecords",
@@ -642,9 +642,9 @@
       "page": "docs/sdks/javascript/api/Records/functions/getMultipleRecords.md",
       "symbol": "getMultipleRecords",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Records/functions/getRecord",
@@ -654,9 +654,9 @@
       "page": "docs/sdks/javascript/api/Records/functions/getRecord.md",
       "symbol": "getRecord",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Records/functions/getRecordV1Key",
@@ -666,9 +666,9 @@
       "page": "docs/sdks/javascript/api/Records/functions/getRecordV1Key.md",
       "symbol": "getRecordV1Key",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Records/functions/getRecordV2Key",
@@ -678,9 +678,9 @@
       "page": "docs/sdks/javascript/api/Records/functions/getRecordV2Key.md",
       "symbol": "getRecordV2Key",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Records/functions/serializeRecordContent",
@@ -690,9 +690,9 @@
       "page": "docs/sdks/javascript/api/Records/functions/serializeRecordContent.md",
       "symbol": "serializeRecordContent",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Records/functions/verifyRightOfAssociation",
@@ -702,9 +702,9 @@
       "page": "docs/sdks/javascript/api/Records/functions/verifyRightOfAssociation.md",
       "symbol": "verifyRightOfAssociation",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Records/functions/verifyStaleness",
@@ -714,33 +714,9 @@
       "page": "docs/sdks/javascript/api/Records/functions/verifyStaleness.md",
       "symbol": "verifyStaleness",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "javascript:Records/interfaces/RecordResult",
-      "product": "javascript",
-      "kind": "interface",
-      "source": "js/src/record/getRecord.ts",
-      "page": "docs/sdks/javascript/api/Records/interfaces/RecordResult.md",
-      "symbol": "RecordResult",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "javascript:Records/interfaces/RetrievedRecord",
-      "product": "javascript",
-      "kind": "interface",
-      "source": "js/src/record/getRecord.ts",
-      "page": "docs/sdks/javascript/api/Records/interfaces/RetrievedRecord.md",
-      "symbol": "RetrievedRecord",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Records/interfaces/GetMultipleRecordsOptions",
@@ -750,9 +726,9 @@
       "page": "docs/sdks/javascript/api/Records/interfaces/GetMultipleRecordsOptions.md",
       "symbol": "GetMultipleRecordsOptions",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Records/interfaces/GetRecordOptions",
@@ -762,9 +738,33 @@
       "page": "docs/sdks/javascript/api/Records/interfaces/GetRecordOptions.md",
       "symbol": "GetRecordOptions",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "javascript:Records/interfaces/RecordResult",
+      "product": "javascript",
+      "kind": "interface",
+      "source": "js/src/record/getRecord.ts",
+      "page": "docs/sdks/javascript/api/Records/interfaces/RecordResult.md",
+      "symbol": "RecordResult",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "javascript:Records/interfaces/RetrievedRecord",
+      "product": "javascript",
+      "kind": "interface",
+      "source": "js/src/record/getRecord.ts",
+      "page": "docs/sdks/javascript/api/Records/interfaces/RetrievedRecord.md",
+      "symbol": "RetrievedRecord",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:States/interfaces/NameRegistryStateParams",
@@ -774,9 +774,9 @@
       "page": "docs/sdks/javascript/api/States/interfaces/NameRegistryStateParams.md",
       "symbol": "NameRegistryStateParams",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Twitter/functions/changeTwitterRegistryData",
@@ -786,9 +786,9 @@
       "page": "docs/sdks/javascript/api/Twitter/functions/changeTwitterRegistryData.md",
       "symbol": "changeTwitterRegistryData",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Twitter/functions/changeVerifiedPubkey",
@@ -798,9 +798,9 @@
       "page": "docs/sdks/javascript/api/Twitter/functions/changeVerifiedPubkey.md",
       "symbol": "changeVerifiedPubkey",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Twitter/functions/createReverseTwitterRegistry",
@@ -810,9 +810,9 @@
       "page": "docs/sdks/javascript/api/Twitter/functions/createReverseTwitterRegistry.md",
       "symbol": "createReverseTwitterRegistry",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Twitter/functions/createVerifiedTwitterRegistry",
@@ -822,9 +822,9 @@
       "page": "docs/sdks/javascript/api/Twitter/functions/createVerifiedTwitterRegistry.md",
       "symbol": "createVerifiedTwitterRegistry",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Twitter/functions/deleteTwitterRegistry",
@@ -834,9 +834,9 @@
       "page": "docs/sdks/javascript/api/Twitter/functions/deleteTwitterRegistry.md",
       "symbol": "deleteTwitterRegistry",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Twitter/functions/getHandleAndRegistryKey",
@@ -846,9 +846,9 @@
       "page": "docs/sdks/javascript/api/Twitter/functions/getHandleAndRegistryKey.md",
       "symbol": "getHandleAndRegistryKey",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Twitter/functions/getTwitterHandleandRegistryKeyViaFilters",
@@ -858,9 +858,9 @@
       "page": "docs/sdks/javascript/api/Twitter/functions/getTwitterHandleandRegistryKeyViaFilters.md",
       "symbol": "getTwitterHandleandRegistryKeyViaFilters",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Twitter/functions/getTwitterRegistry",
@@ -870,9 +870,9 @@
       "page": "docs/sdks/javascript/api/Twitter/functions/getTwitterRegistry.md",
       "symbol": "getTwitterRegistry",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Twitter/functions/getTwitterRegistryData",
@@ -882,9 +882,9 @@
       "page": "docs/sdks/javascript/api/Twitter/functions/getTwitterRegistryData.md",
       "symbol": "getTwitterRegistryData",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Twitter/functions/getTwitterRegistryKey",
@@ -894,9 +894,9 @@
       "page": "docs/sdks/javascript/api/Twitter/functions/getTwitterRegistryKey.md",
       "symbol": "getTwitterRegistryKey",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Twitter/interfaces/ReverseTwitterRegistryStateParams",
@@ -906,9 +906,9 @@
       "page": "docs/sdks/javascript/api/Twitter/interfaces/ReverseTwitterRegistryStateParams.md",
       "symbol": "ReverseTwitterRegistryStateParams",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Utilities/functions/check",
@@ -918,9 +918,9 @@
       "page": "docs/sdks/javascript/api/Utilities/functions/check.md",
       "symbol": "check",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Utilities/functions/deserializeReverse",
@@ -930,9 +930,9 @@
       "page": "docs/sdks/javascript/api/Utilities/functions/deserializeReverse.md",
       "symbol": "deserializeReverse",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Utilities/functions/getArtistPubkey",
@@ -942,9 +942,9 @@
       "page": "docs/sdks/javascript/api/Utilities/functions/getArtistPubkey.md",
       "symbol": "getArtistPubkey",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Utilities/functions/getCustomBgKeys",
@@ -954,9 +954,9 @@
       "page": "docs/sdks/javascript/api/Utilities/functions/getCustomBgKeys.md",
       "symbol": "getCustomBgKeys",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Utilities/functions/getHashedNameSync",
@@ -966,9 +966,9 @@
       "page": "docs/sdks/javascript/api/Utilities/functions/getHashedNameSync.md",
       "symbol": "getHashedNameSync",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Utilities/functions/getNameAccountKeySync",
@@ -978,9 +978,9 @@
       "page": "docs/sdks/javascript/api/Utilities/functions/getNameAccountKeySync.md",
       "symbol": "getNameAccountKeySync",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Utilities/functions/getPythFeedAccountKey",
@@ -990,9 +990,9 @@
       "page": "docs/sdks/javascript/api/Utilities/functions/getPythFeedAccountKey.md",
       "symbol": "getPythFeedAccountKey",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Utilities/functions/getReverseKeyFromDomainKey",
@@ -1002,9 +1002,9 @@
       "page": "docs/sdks/javascript/api/Utilities/functions/getReverseKeyFromDomainKey.md",
       "symbol": "getReverseKeyFromDomainKey",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Utilities/functions/getReverseKeySync",
@@ -1014,9 +1014,9 @@
       "page": "docs/sdks/javascript/api/Utilities/functions/getReverseKeySync.md",
       "symbol": "getReverseKeySync",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Utilities/functions/getTld",
@@ -1026,9 +1026,9 @@
       "page": "docs/sdks/javascript/api/Utilities/functions/getTld.md",
       "symbol": "getTld",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Utilities/functions/parseSnsTld",
@@ -1038,9 +1038,9 @@
       "page": "docs/sdks/javascript/api/Utilities/functions/parseSnsTld.md",
       "symbol": "parseSnsTld",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "javascript:Utilities/functions/parseSupportedTld",
@@ -1050,9 +1050,9 @@
       "page": "docs/sdks/javascript/api/Utilities/functions/parseSupportedTld.md",
       "symbol": "parseSupportedTld",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Address/functions/getPrimaryDomain",
@@ -1062,9 +1062,9 @@
       "page": "docs/sdks/js-kit/api/Address/functions/getPrimaryDomain.md",
       "symbol": "getPrimaryDomain",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Address/functions/getPrimaryDomainsBatch",
@@ -1074,9 +1074,9 @@
       "page": "docs/sdks/js-kit/api/Address/functions/getPrimaryDomainsBatch.md",
       "symbol": "getPrimaryDomainsBatch",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Address/functions/getSnsDomainsForAddress",
@@ -1086,9 +1086,9 @@
       "page": "docs/sdks/js-kit/api/Address/functions/getSnsDomainsForAddress.md",
       "symbol": "getSnsDomainsForAddress",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Address/functions/getSnsNftsForAddress",
@@ -1098,9 +1098,9 @@
       "page": "docs/sdks/js-kit/api/Address/functions/getSnsNftsForAddress.md",
       "symbol": "getSnsNftsForAddress",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Address/interfaces/GetPrimaryDomainParams",
@@ -1110,9 +1110,9 @@
       "page": "docs/sdks/js-kit/api/Address/interfaces/GetPrimaryDomainParams.md",
       "symbol": "GetPrimaryDomainParams",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Address/interfaces/GetPrimaryDomainResult",
@@ -1122,9 +1122,9 @@
       "page": "docs/sdks/js-kit/api/Address/interfaces/GetPrimaryDomainResult.md",
       "symbol": "GetPrimaryDomainResult",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Address/interfaces/GetPrimaryDomainsBatchParams",
@@ -1134,9 +1134,9 @@
       "page": "docs/sdks/js-kit/api/Address/interfaces/GetPrimaryDomainsBatchParams.md",
       "symbol": "GetPrimaryDomainsBatchParams",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Address/interfaces/GetSnsDomainsForAddressParams",
@@ -1146,9 +1146,9 @@
       "page": "docs/sdks/js-kit/api/Address/interfaces/GetSnsDomainsForAddressParams.md",
       "symbol": "GetSnsDomainsForAddressParams",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Address/interfaces/GetSnsDomainsForAddressResult",
@@ -1158,9 +1158,9 @@
       "page": "docs/sdks/js-kit/api/Address/interfaces/GetSnsDomainsForAddressResult.md",
       "symbol": "GetSnsDomainsForAddressResult",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Address/interfaces/GetSnsNftsForAddressParams",
@@ -1170,9 +1170,9 @@
       "page": "docs/sdks/js-kit/api/Address/interfaces/GetSnsNftsForAddressParams.md",
       "symbol": "GetSnsNftsForAddressParams",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Address/interfaces/GetSnsNftsForAddressResult",
@@ -1182,9 +1182,9 @@
       "page": "docs/sdks/js-kit/api/Address/interfaces/GetSnsNftsForAddressResult.md",
       "symbol": "GetSnsNftsForAddressResult",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Bindings/functions/burnDomain",
@@ -1194,165 +1194,9 @@
       "page": "docs/sdks/js-kit/api/Bindings/functions/burnDomain.md",
       "symbol": "burnDomain",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "js-kit:Bindings/interfaces/BurnDomainParams",
-      "product": "js-kit",
-      "kind": "interface",
-      "source": "js-kit/src/bindings/burnDomain.ts",
-      "page": "docs/sdks/js-kit/api/Bindings/interfaces/BurnDomainParams.md",
-      "symbol": "BurnDomainParams",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "js-kit:Bindings/interfaces/CreateNameRegistryParams",
-      "product": "js-kit",
-      "kind": "interface",
-      "source": "js-kit/src/bindings/createNameRegistry.ts",
-      "page": "docs/sdks/js-kit/api/Bindings/interfaces/CreateNameRegistryParams.md",
-      "symbol": "CreateNameRegistryParams",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "js-kit:Bindings/interfaces/CreateRecordParams",
-      "product": "js-kit",
-      "kind": "interface",
-      "source": "js-kit/src/bindings/createRecord.ts",
-      "page": "docs/sdks/js-kit/api/Bindings/interfaces/CreateRecordParams.md",
-      "symbol": "CreateRecordParams",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "js-kit:Bindings/interfaces/CreateReverseParams",
-      "product": "js-kit",
-      "kind": "interface",
-      "source": "js-kit/src/bindings/createReverse.ts",
-      "page": "docs/sdks/js-kit/api/Bindings/interfaces/CreateReverseParams.md",
-      "symbol": "CreateReverseParams",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "js-kit:Bindings/interfaces/CreateSubdomainParams",
-      "product": "js-kit",
-      "kind": "interface",
-      "source": "js-kit/src/bindings/createSubdomain.ts",
-      "page": "docs/sdks/js-kit/api/Bindings/interfaces/CreateSubdomainParams.md",
-      "symbol": "CreateSubdomainParams",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "js-kit:Bindings/interfaces/DeleteNameRegistryParams",
-      "product": "js-kit",
-      "kind": "interface",
-      "source": "js-kit/src/bindings/deleteNameRegistry.ts",
-      "page": "docs/sdks/js-kit/api/Bindings/interfaces/DeleteNameRegistryParams.md",
-      "symbol": "DeleteNameRegistryParams",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "js-kit:Bindings/interfaces/DeleteRecordParams",
-      "product": "js-kit",
-      "kind": "interface",
-      "source": "js-kit/src/bindings/deleteRecord.ts",
-      "page": "docs/sdks/js-kit/api/Bindings/interfaces/DeleteRecordParams.md",
-      "symbol": "DeleteRecordParams",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "js-kit:Bindings/interfaces/RegisterDomainParams",
-      "product": "js-kit",
-      "kind": "interface",
-      "source": "js-kit/src/bindings/registerDomain.ts",
-      "page": "docs/sdks/js-kit/api/Bindings/interfaces/RegisterDomainParams.md",
-      "symbol": "RegisterDomainParams",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "js-kit:Bindings/interfaces/RegisterDomainWithNftParams",
-      "product": "js-kit",
-      "kind": "interface",
-      "source": "js-kit/src/bindings/registerDomainWithNft.ts",
-      "page": "docs/sdks/js-kit/api/Bindings/interfaces/RegisterDomainWithNftParams.md",
-      "symbol": "RegisterDomainWithNftParams",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "js-kit:Bindings/interfaces/TransferDomainParams",
-      "product": "js-kit",
-      "kind": "interface",
-      "source": "js-kit/src/bindings/transferDomain.ts",
-      "page": "docs/sdks/js-kit/api/Bindings/interfaces/TransferDomainParams.md",
-      "symbol": "TransferDomainParams",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "js-kit:Bindings/interfaces/TransferSubdomainParams",
-      "product": "js-kit",
-      "kind": "interface",
-      "source": "js-kit/src/bindings/transferSubdomain.ts",
-      "page": "docs/sdks/js-kit/api/Bindings/interfaces/TransferSubdomainParams.md",
-      "symbol": "TransferSubdomainParams",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "js-kit:Bindings/interfaces/UpdateRecordParams",
-      "product": "js-kit",
-      "kind": "interface",
-      "source": "js-kit/src/bindings/updateRecord.ts",
-      "page": "docs/sdks/js-kit/api/Bindings/interfaces/UpdateRecordParams.md",
-      "symbol": "UpdateRecordParams",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "js-kit:Bindings/interfaces/ValidateRecordRoaEthereumParams",
-      "product": "js-kit",
-      "kind": "interface",
-      "source": "js-kit/src/bindings/validateRecordRoaEthereum.ts",
-      "page": "docs/sdks/js-kit/api/Bindings/interfaces/ValidateRecordRoaEthereumParams.md",
-      "symbol": "ValidateRecordRoaEthereumParams",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Bindings/functions/createNameRegistry",
@@ -1362,9 +1206,9 @@
       "page": "docs/sdks/js-kit/api/Bindings/functions/createNameRegistry.md",
       "symbol": "createNameRegistry",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Bindings/functions/createRecord",
@@ -1374,9 +1218,9 @@
       "page": "docs/sdks/js-kit/api/Bindings/functions/createRecord.md",
       "symbol": "createRecord",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Bindings/functions/createReverse",
@@ -1386,9 +1230,9 @@
       "page": "docs/sdks/js-kit/api/Bindings/functions/createReverse.md",
       "symbol": "createReverse",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Bindings/functions/createSubdomain",
@@ -1398,9 +1242,9 @@
       "page": "docs/sdks/js-kit/api/Bindings/functions/createSubdomain.md",
       "symbol": "createSubdomain",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Bindings/functions/deleteNameRegistry",
@@ -1410,9 +1254,9 @@
       "page": "docs/sdks/js-kit/api/Bindings/functions/deleteNameRegistry.md",
       "symbol": "deleteNameRegistry",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Bindings/functions/deleteRecord",
@@ -1422,9 +1266,9 @@
       "page": "docs/sdks/js-kit/api/Bindings/functions/deleteRecord.md",
       "symbol": "deleteRecord",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Bindings/functions/registerDomain",
@@ -1434,9 +1278,9 @@
       "page": "docs/sdks/js-kit/api/Bindings/functions/registerDomain.md",
       "symbol": "registerDomain",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Bindings/functions/registerDomainWithNft",
@@ -1446,9 +1290,9 @@
       "page": "docs/sdks/js-kit/api/Bindings/functions/registerDomainWithNft.md",
       "symbol": "registerDomainWithNft",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Bindings/functions/setPrimaryDomain",
@@ -1458,9 +1302,9 @@
       "page": "docs/sdks/js-kit/api/Bindings/functions/setPrimaryDomain.md",
       "symbol": "setPrimaryDomain",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Bindings/functions/setRecordRoaVerifier",
@@ -1470,9 +1314,9 @@
       "page": "docs/sdks/js-kit/api/Bindings/functions/setRecordRoaVerifier.md",
       "symbol": "setRecordRoaVerifier",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Bindings/functions/setRecordStalenessVerifier",
@@ -1482,9 +1326,9 @@
       "page": "docs/sdks/js-kit/api/Bindings/functions/setRecordStalenessVerifier.md",
       "symbol": "setRecordStalenessVerifier",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Bindings/functions/transferDomain",
@@ -1494,9 +1338,9 @@
       "page": "docs/sdks/js-kit/api/Bindings/functions/transferDomain.md",
       "symbol": "transferDomain",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Bindings/functions/transferSubdomain",
@@ -1506,9 +1350,9 @@
       "page": "docs/sdks/js-kit/api/Bindings/functions/transferSubdomain.md",
       "symbol": "transferSubdomain",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Bindings/functions/updateNameRegistry",
@@ -1518,9 +1362,9 @@
       "page": "docs/sdks/js-kit/api/Bindings/functions/updateNameRegistry.md",
       "symbol": "updateNameRegistry",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Bindings/functions/updateRecord",
@@ -1530,9 +1374,9 @@
       "page": "docs/sdks/js-kit/api/Bindings/functions/updateRecord.md",
       "symbol": "updateRecord",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Bindings/functions/validateRecordRoa",
@@ -1542,9 +1386,9 @@
       "page": "docs/sdks/js-kit/api/Bindings/functions/validateRecordRoa.md",
       "symbol": "validateRecordRoa",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Bindings/functions/validateRecordRoaEthereum",
@@ -1554,9 +1398,93 @@
       "page": "docs/sdks/js-kit/api/Bindings/functions/validateRecordRoaEthereum.md",
       "symbol": "validateRecordRoaEthereum",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "js-kit:Bindings/interfaces/BurnDomainParams",
+      "product": "js-kit",
+      "kind": "interface",
+      "source": "js-kit/src/bindings/burnDomain.ts",
+      "page": "docs/sdks/js-kit/api/Bindings/interfaces/BurnDomainParams.md",
+      "symbol": "BurnDomainParams",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "js-kit:Bindings/interfaces/CreateNameRegistryParams",
+      "product": "js-kit",
+      "kind": "interface",
+      "source": "js-kit/src/bindings/createNameRegistry.ts",
+      "page": "docs/sdks/js-kit/api/Bindings/interfaces/CreateNameRegistryParams.md",
+      "symbol": "CreateNameRegistryParams",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "js-kit:Bindings/interfaces/CreateRecordParams",
+      "product": "js-kit",
+      "kind": "interface",
+      "source": "js-kit/src/bindings/createRecord.ts",
+      "page": "docs/sdks/js-kit/api/Bindings/interfaces/CreateRecordParams.md",
+      "symbol": "CreateRecordParams",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "js-kit:Bindings/interfaces/CreateReverseParams",
+      "product": "js-kit",
+      "kind": "interface",
+      "source": "js-kit/src/bindings/createReverse.ts",
+      "page": "docs/sdks/js-kit/api/Bindings/interfaces/CreateReverseParams.md",
+      "symbol": "CreateReverseParams",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "js-kit:Bindings/interfaces/CreateSubdomainParams",
+      "product": "js-kit",
+      "kind": "interface",
+      "source": "js-kit/src/bindings/createSubdomain.ts",
+      "page": "docs/sdks/js-kit/api/Bindings/interfaces/CreateSubdomainParams.md",
+      "symbol": "CreateSubdomainParams",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "js-kit:Bindings/interfaces/DeleteNameRegistryParams",
+      "product": "js-kit",
+      "kind": "interface",
+      "source": "js-kit/src/bindings/deleteNameRegistry.ts",
+      "page": "docs/sdks/js-kit/api/Bindings/interfaces/DeleteNameRegistryParams.md",
+      "symbol": "DeleteNameRegistryParams",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "js-kit:Bindings/interfaces/DeleteRecordParams",
+      "product": "js-kit",
+      "kind": "interface",
+      "source": "js-kit/src/bindings/deleteRecord.ts",
+      "page": "docs/sdks/js-kit/api/Bindings/interfaces/DeleteRecordParams.md",
+      "symbol": "DeleteRecordParams",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Bindings/interfaces/RecordVerificationParams",
@@ -1566,9 +1494,33 @@
       "page": "docs/sdks/js-kit/api/Bindings/interfaces/RecordVerificationParams.md",
       "symbol": "RecordVerificationParams",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "js-kit:Bindings/interfaces/RegisterDomainParams",
+      "product": "js-kit",
+      "kind": "interface",
+      "source": "js-kit/src/bindings/registerDomain.ts",
+      "page": "docs/sdks/js-kit/api/Bindings/interfaces/RegisterDomainParams.md",
+      "symbol": "RegisterDomainParams",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "js-kit:Bindings/interfaces/RegisterDomainWithNftParams",
+      "product": "js-kit",
+      "kind": "interface",
+      "source": "js-kit/src/bindings/registerDomainWithNft.ts",
+      "page": "docs/sdks/js-kit/api/Bindings/interfaces/RegisterDomainWithNftParams.md",
+      "symbol": "RegisterDomainWithNftParams",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Bindings/interfaces/SetPrimaryDomainParams",
@@ -1578,9 +1530,33 @@
       "page": "docs/sdks/js-kit/api/Bindings/interfaces/SetPrimaryDomainParams.md",
       "symbol": "SetPrimaryDomainParams",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "js-kit:Bindings/interfaces/TransferDomainParams",
+      "product": "js-kit",
+      "kind": "interface",
+      "source": "js-kit/src/bindings/transferDomain.ts",
+      "page": "docs/sdks/js-kit/api/Bindings/interfaces/TransferDomainParams.md",
+      "symbol": "TransferDomainParams",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "js-kit:Bindings/interfaces/TransferSubdomainParams",
+      "product": "js-kit",
+      "kind": "interface",
+      "source": "js-kit/src/bindings/transferSubdomain.ts",
+      "page": "docs/sdks/js-kit/api/Bindings/interfaces/TransferSubdomainParams.md",
+      "symbol": "TransferSubdomainParams",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Bindings/interfaces/UpdateNameRegistryParams",
@@ -1590,9 +1566,33 @@
       "page": "docs/sdks/js-kit/api/Bindings/interfaces/UpdateNameRegistryParams.md",
       "symbol": "UpdateNameRegistryParams",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "js-kit:Bindings/interfaces/UpdateRecordParams",
+      "product": "js-kit",
+      "kind": "interface",
+      "source": "js-kit/src/bindings/updateRecord.ts",
+      "page": "docs/sdks/js-kit/api/Bindings/interfaces/UpdateRecordParams.md",
+      "symbol": "UpdateRecordParams",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "js-kit:Bindings/interfaces/ValidateRecordRoaEthereumParams",
+      "product": "js-kit",
+      "kind": "interface",
+      "source": "js-kit/src/bindings/validateRecordRoaEthereum.ts",
+      "page": "docs/sdks/js-kit/api/Bindings/interfaces/ValidateRecordRoaEthereumParams.md",
+      "symbol": "ValidateRecordRoaEthereumParams",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Domain/functions/getAllSnsDomains",
@@ -1602,201 +1602,9 @@
       "page": "docs/sdks/js-kit/api/Domain/functions/getAllSnsDomains.md",
       "symbol": "getAllSnsDomains",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "js-kit:Domain/interfaces/GetAllSnsDomainsParams",
-      "product": "js-kit",
-      "kind": "interface",
-      "source": "js-kit/src/domain/getAllSnsDomains.ts",
-      "page": "docs/sdks/js-kit/api/Domain/interfaces/GetAllSnsDomainsParams.md",
-      "symbol": "GetAllSnsDomainsParams",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "js-kit:Domain/interfaces/GetAllSnsDomainsResult",
-      "product": "js-kit",
-      "kind": "interface",
-      "source": "js-kit/src/domain/getAllSnsDomains.ts",
-      "page": "docs/sdks/js-kit/api/Domain/interfaces/GetAllSnsDomainsResult.md",
-      "symbol": "GetAllSnsDomainsResult",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "js-kit:Domain/interfaces/GetDomainOwnerParams",
-      "product": "js-kit",
-      "kind": "interface",
-      "source": "js-kit/src/domain/getDomainOwner.ts",
-      "page": "docs/sdks/js-kit/api/Domain/interfaces/GetDomainOwnerParams.md",
-      "symbol": "GetDomainOwnerParams",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "js-kit:Domain/interfaces/GetDomainRecordOptions",
-      "product": "js-kit",
-      "kind": "interface",
-      "source": "js-kit/src/domain/getDomainRecord.ts",
-      "page": "docs/sdks/js-kit/api/Domain/interfaces/GetDomainRecordOptions.md",
-      "symbol": "GetDomainRecordOptions",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "js-kit:Domain/interfaces/GetDomainRecordParams",
-      "product": "js-kit",
-      "kind": "interface",
-      "source": "js-kit/src/domain/getDomainRecord.ts",
-      "page": "docs/sdks/js-kit/api/Domain/interfaces/GetDomainRecordParams.md",
-      "symbol": "GetDomainRecordParams",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "js-kit:Domain/interfaces/GetDomainRecordResult",
-      "product": "js-kit",
-      "kind": "interface",
-      "source": "js-kit/src/domain/getDomainRecord.ts",
-      "page": "docs/sdks/js-kit/api/Domain/interfaces/GetDomainRecordResult.md",
-      "symbol": "GetDomainRecordResult",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "js-kit:Domain/interfaces/GetDomainRecordVerification",
-      "product": "js-kit",
-      "kind": "interface",
-      "source": "js-kit/src/domain/getDomainRecord.ts",
-      "page": "docs/sdks/js-kit/api/Domain/interfaces/GetDomainRecordVerification.md",
-      "symbol": "GetDomainRecordVerification",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "js-kit:Domain/interfaces/GetDomainRecordsOptions",
-      "product": "js-kit",
-      "kind": "interface",
-      "source": "js-kit/src/domain/getDomainRecords.ts",
-      "page": "docs/sdks/js-kit/api/Domain/interfaces/GetDomainRecordsOptions.md",
-      "symbol": "GetDomainRecordsOptions",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "js-kit:Domain/interfaces/GetDomainRecordsParams",
-      "product": "js-kit",
-      "kind": "interface",
-      "source": "js-kit/src/domain/getDomainRecords.ts",
-      "page": "docs/sdks/js-kit/api/Domain/interfaces/GetDomainRecordsParams.md",
-      "symbol": "GetDomainRecordsParams",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "js-kit:Domain/interfaces/GetDomainRecordsResult",
-      "product": "js-kit",
-      "kind": "interface",
-      "source": "js-kit/src/domain/getDomainRecords.ts",
-      "page": "docs/sdks/js-kit/api/Domain/interfaces/GetDomainRecordsResult.md",
-      "symbol": "GetDomainRecordsResult",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "js-kit:Domain/interfaces/GetDomainRecordsVerification",
-      "product": "js-kit",
-      "kind": "interface",
-      "source": "js-kit/src/domain/getDomainRecords.ts",
-      "page": "docs/sdks/js-kit/api/Domain/interfaces/GetDomainRecordsVerification.md",
-      "symbol": "GetDomainRecordsVerification",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "js-kit:Domain/interfaces/GetSnsDomainAddressParams",
-      "product": "js-kit",
-      "kind": "interface",
-      "source": "js-kit/src/domain/getSnsDomainAddress.ts",
-      "page": "docs/sdks/js-kit/api/Domain/interfaces/GetSnsDomainAddressParams.md",
-      "symbol": "GetSnsDomainAddressParams",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "js-kit:Domain/interfaces/GetSnsDomainAddressResult",
-      "product": "js-kit",
-      "kind": "interface",
-      "source": "js-kit/src/domain/getSnsDomainAddress.ts",
-      "page": "docs/sdks/js-kit/api/Domain/interfaces/GetSnsDomainAddressResult.md",
-      "symbol": "GetSnsDomainAddressResult",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "js-kit:Domain/interfaces/GetSrsDomainAddressParams",
-      "product": "js-kit",
-      "kind": "interface",
-      "source": "js-kit/src/domain/getSrsDomainAddress.ts",
-      "page": "docs/sdks/js-kit/api/Domain/interfaces/GetSrsDomainAddressParams.md",
-      "symbol": "GetSrsDomainAddressParams",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "js-kit:Domain/interfaces/GetSrsDomainAddressResult",
-      "product": "js-kit",
-      "kind": "interface",
-      "source": "js-kit/src/domain/getSrsDomainAddress.ts",
-      "page": "docs/sdks/js-kit/api/Domain/interfaces/GetSrsDomainAddressResult.md",
-      "symbol": "GetSrsDomainAddressResult",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "js-kit:Domain/interfaces/ResolveParams",
-      "product": "js-kit",
-      "kind": "interface",
-      "source": "js-kit/src/domain/resolveTypes.ts",
-      "page": "docs/sdks/js-kit/api/Domain/interfaces/ResolveParams.md",
-      "symbol": "ResolveParams",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Domain/functions/getDomainOwner",
@@ -1806,9 +1614,9 @@
       "page": "docs/sdks/js-kit/api/Domain/functions/getDomainOwner.md",
       "symbol": "getDomainOwner",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Domain/functions/getDomainRecord",
@@ -1818,9 +1626,9 @@
       "page": "docs/sdks/js-kit/api/Domain/functions/getDomainRecord.md",
       "symbol": "getDomainRecord",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Domain/functions/getDomainRecords",
@@ -1830,9 +1638,9 @@
       "page": "docs/sdks/js-kit/api/Domain/functions/getDomainRecords.md",
       "symbol": "getDomainRecords",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Domain/functions/getSnsDomainAddress",
@@ -1842,9 +1650,9 @@
       "page": "docs/sdks/js-kit/api/Domain/functions/getSnsDomainAddress.md",
       "symbol": "getSnsDomainAddress",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Domain/functions/getSrsDomainAddress",
@@ -1854,9 +1662,9 @@
       "page": "docs/sdks/js-kit/api/Domain/functions/getSrsDomainAddress.md",
       "symbol": "getSrsDomainAddress",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Domain/functions/getSubdomains",
@@ -1866,9 +1674,9 @@
       "page": "docs/sdks/js-kit/api/Domain/functions/getSubdomains.md",
       "symbol": "getSubdomains",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Domain/functions/resolve",
@@ -1878,9 +1686,9 @@
       "page": "docs/sdks/js-kit/api/Domain/functions/resolve.md",
       "symbol": "resolve",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Domain/functions/safeResolve",
@@ -1894,6 +1702,186 @@
       "requiredLinks": []
     },
     {
+      "id": "js-kit:Domain/interfaces/GetAllSnsDomainsParams",
+      "product": "js-kit",
+      "kind": "interface",
+      "source": "js-kit/src/domain/getAllSnsDomains.ts",
+      "page": "docs/sdks/js-kit/api/Domain/interfaces/GetAllSnsDomainsParams.md",
+      "symbol": "GetAllSnsDomainsParams",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "js-kit:Domain/interfaces/GetAllSnsDomainsResult",
+      "product": "js-kit",
+      "kind": "interface",
+      "source": "js-kit/src/domain/getAllSnsDomains.ts",
+      "page": "docs/sdks/js-kit/api/Domain/interfaces/GetAllSnsDomainsResult.md",
+      "symbol": "GetAllSnsDomainsResult",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "js-kit:Domain/interfaces/GetDomainOwnerParams",
+      "product": "js-kit",
+      "kind": "interface",
+      "source": "js-kit/src/domain/getDomainOwner.ts",
+      "page": "docs/sdks/js-kit/api/Domain/interfaces/GetDomainOwnerParams.md",
+      "symbol": "GetDomainOwnerParams",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "js-kit:Domain/interfaces/GetDomainRecordOptions",
+      "product": "js-kit",
+      "kind": "interface",
+      "source": "js-kit/src/domain/getDomainRecord.ts",
+      "page": "docs/sdks/js-kit/api/Domain/interfaces/GetDomainRecordOptions.md",
+      "symbol": "GetDomainRecordOptions",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "js-kit:Domain/interfaces/GetDomainRecordParams",
+      "product": "js-kit",
+      "kind": "interface",
+      "source": "js-kit/src/domain/getDomainRecord.ts",
+      "page": "docs/sdks/js-kit/api/Domain/interfaces/GetDomainRecordParams.md",
+      "symbol": "GetDomainRecordParams",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "js-kit:Domain/interfaces/GetDomainRecordResult",
+      "product": "js-kit",
+      "kind": "interface",
+      "source": "js-kit/src/domain/getDomainRecord.ts",
+      "page": "docs/sdks/js-kit/api/Domain/interfaces/GetDomainRecordResult.md",
+      "symbol": "GetDomainRecordResult",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "js-kit:Domain/interfaces/GetDomainRecordVerification",
+      "product": "js-kit",
+      "kind": "interface",
+      "source": "js-kit/src/domain/getDomainRecord.ts",
+      "page": "docs/sdks/js-kit/api/Domain/interfaces/GetDomainRecordVerification.md",
+      "symbol": "GetDomainRecordVerification",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "js-kit:Domain/interfaces/GetDomainRecordsOptions",
+      "product": "js-kit",
+      "kind": "interface",
+      "source": "js-kit/src/domain/getDomainRecords.ts",
+      "page": "docs/sdks/js-kit/api/Domain/interfaces/GetDomainRecordsOptions.md",
+      "symbol": "GetDomainRecordsOptions",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "js-kit:Domain/interfaces/GetDomainRecordsParams",
+      "product": "js-kit",
+      "kind": "interface",
+      "source": "js-kit/src/domain/getDomainRecords.ts",
+      "page": "docs/sdks/js-kit/api/Domain/interfaces/GetDomainRecordsParams.md",
+      "symbol": "GetDomainRecordsParams",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "js-kit:Domain/interfaces/GetDomainRecordsResult",
+      "product": "js-kit",
+      "kind": "interface",
+      "source": "js-kit/src/domain/getDomainRecords.ts",
+      "page": "docs/sdks/js-kit/api/Domain/interfaces/GetDomainRecordsResult.md",
+      "symbol": "GetDomainRecordsResult",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "js-kit:Domain/interfaces/GetDomainRecordsVerification",
+      "product": "js-kit",
+      "kind": "interface",
+      "source": "js-kit/src/domain/getDomainRecords.ts",
+      "page": "docs/sdks/js-kit/api/Domain/interfaces/GetDomainRecordsVerification.md",
+      "symbol": "GetDomainRecordsVerification",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "js-kit:Domain/interfaces/GetSnsDomainAddressParams",
+      "product": "js-kit",
+      "kind": "interface",
+      "source": "js-kit/src/domain/getSnsDomainAddress.ts",
+      "page": "docs/sdks/js-kit/api/Domain/interfaces/GetSnsDomainAddressParams.md",
+      "symbol": "GetSnsDomainAddressParams",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "js-kit:Domain/interfaces/GetSnsDomainAddressResult",
+      "product": "js-kit",
+      "kind": "interface",
+      "source": "js-kit/src/domain/getSnsDomainAddress.ts",
+      "page": "docs/sdks/js-kit/api/Domain/interfaces/GetSnsDomainAddressResult.md",
+      "symbol": "GetSnsDomainAddressResult",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "js-kit:Domain/interfaces/GetSrsDomainAddressParams",
+      "product": "js-kit",
+      "kind": "interface",
+      "source": "js-kit/src/domain/getSrsDomainAddress.ts",
+      "page": "docs/sdks/js-kit/api/Domain/interfaces/GetSrsDomainAddressParams.md",
+      "symbol": "GetSrsDomainAddressParams",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "js-kit:Domain/interfaces/GetSrsDomainAddressResult",
+      "product": "js-kit",
+      "kind": "interface",
+      "source": "js-kit/src/domain/getSrsDomainAddress.ts",
+      "page": "docs/sdks/js-kit/api/Domain/interfaces/GetSrsDomainAddressResult.md",
+      "symbol": "GetSrsDomainAddressResult",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
       "id": "js-kit:Domain/interfaces/GetSubdomainsParams",
       "product": "js-kit",
       "kind": "interface",
@@ -1901,9 +1889,9 @@
       "page": "docs/sdks/js-kit/api/Domain/interfaces/GetSubdomainsParams.md",
       "symbol": "GetSubdomainsParams",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Domain/interfaces/GetSubdomainsResult",
@@ -1913,9 +1901,21 @@
       "page": "docs/sdks/js-kit/api/Domain/interfaces/GetSubdomainsResult.md",
       "symbol": "GetSubdomainsResult",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "js-kit:Domain/interfaces/ResolveParams",
+      "product": "js-kit",
+      "kind": "interface",
+      "source": "js-kit/src/domain/resolveTypes.ts",
+      "page": "docs/sdks/js-kit/api/Domain/interfaces/ResolveParams.md",
+      "symbol": "ResolveParams",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Instructions/functions/createAtaIdempotentInstruction",
@@ -1925,9 +1925,9 @@
       "page": "docs/sdks/js-kit/api/Instructions/functions/createAtaIdempotentInstruction.md",
       "symbol": "_createAtaIdempotentInstruction",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Instructions/interfaces/AllocateAndPostRecordInstructionParams",
@@ -1937,21 +1937,9 @@
       "page": "docs/sdks/js-kit/api/Instructions/interfaces/AllocateAndPostRecordInstructionParams.md",
       "symbol": "AllocateAndPostRecordInstructionParams",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "js-kit:Instructions/interfaces/CreateReverseInstructionParams",
-      "product": "js-kit",
-      "kind": "interface",
-      "source": "js-kit/src/instructions/createReverseInstruction.ts",
-      "page": "docs/sdks/js-kit/api/Instructions/interfaces/CreateReverseInstructionParams.md",
-      "symbol": "CreateReverseInstructionParams",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Instructions/interfaces/CreateNameRegistryInstructionParams",
@@ -1961,9 +1949,21 @@
       "page": "docs/sdks/js-kit/api/Instructions/interfaces/CreateNameRegistryInstructionParams.md",
       "symbol": "CreateNameRegistryInstructionParams",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "js-kit:Instructions/interfaces/CreateReverseInstructionParams",
+      "product": "js-kit",
+      "kind": "interface",
+      "source": "js-kit/src/instructions/createReverseInstruction.ts",
+      "page": "docs/sdks/js-kit/api/Instructions/interfaces/CreateReverseInstructionParams.md",
+      "symbol": "CreateReverseInstructionParams",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Instructions/interfaces/CreateSplitV2InstructionParams",
@@ -1973,9 +1973,9 @@
       "page": "docs/sdks/js-kit/api/Instructions/interfaces/CreateSplitV2InstructionParams.md",
       "symbol": "CreateSplitV2InstructionParams",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Instructions/interfaces/CreateWithNftInstructionParams",
@@ -1985,9 +1985,9 @@
       "page": "docs/sdks/js-kit/api/Instructions/interfaces/CreateWithNftInstructionParams.md",
       "symbol": "CreateWithNftInstructionParams",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Instructions/interfaces/ReallocInstructionParams",
@@ -1997,9 +1997,9 @@
       "page": "docs/sdks/js-kit/api/Instructions/interfaces/ReallocInstructionParams.md",
       "symbol": "ReallocInstructionParams",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Instructions/interfaces/SetRecordRoaVerifierInstructionParams",
@@ -2009,9 +2009,9 @@
       "page": "docs/sdks/js-kit/api/Instructions/interfaces/SetRecordRoaVerifierInstructionParams.md",
       "symbol": "SetRecordRoaVerifierInstructionParams",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Instructions/interfaces/TransferInstructionParams",
@@ -2021,9 +2021,9 @@
       "page": "docs/sdks/js-kit/api/Instructions/interfaces/TransferInstructionParams.md",
       "symbol": "TransferInstructionParams",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Instructions/interfaces/UpdateNameRegistryInstructionParams",
@@ -2033,9 +2033,9 @@
       "page": "docs/sdks/js-kit/api/Instructions/interfaces/UpdateNameRegistryInstructionParams.md",
       "symbol": "UpdateNameRegistryInstructionParams",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Instructions/interfaces/UpdateRecordInstructionParams",
@@ -2045,9 +2045,9 @@
       "page": "docs/sdks/js-kit/api/Instructions/interfaces/UpdateRecordInstructionParams.md",
       "symbol": "UpdateRecordInstructionParams",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Instructions/interfaces/ValidateEthereumSignatureInstructionParams",
@@ -2057,9 +2057,9 @@
       "page": "docs/sdks/js-kit/api/Instructions/interfaces/ValidateEthereumSignatureInstructionParams.md",
       "symbol": "ValidateEthereumSignatureInstructionParams",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Instructions/interfaces/ValidateSolanaSignatureInstructionParams",
@@ -2069,9 +2069,9 @@
       "page": "docs/sdks/js-kit/api/Instructions/interfaces/ValidateSolanaSignatureInstructionParams.md",
       "symbol": "ValidateSolanaSignatureInstructionParams",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:NFT/functions/getSnsNftMint",
@@ -2081,33 +2081,9 @@
       "page": "docs/sdks/js-kit/api/NFT/functions/getSnsNftMint.md",
       "symbol": "getSnsNftMint",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "js-kit:NFT/interfaces/GetSnsNftMintParams",
-      "product": "js-kit",
-      "kind": "interface",
-      "source": "js-kit/src/nft/getSnsNftMint.ts",
-      "page": "docs/sdks/js-kit/api/NFT/interfaces/GetSnsNftMintParams.md",
-      "symbol": "GetSnsNftMintParams",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "js-kit:NFT/interfaces/GetSnsNftOwnerParams",
-      "product": "js-kit",
-      "kind": "interface",
-      "source": "js-kit/src/nft/getSnsNftOwner.ts",
-      "page": "docs/sdks/js-kit/api/NFT/interfaces/GetSnsNftOwnerParams.md",
-      "symbol": "GetSnsNftOwnerParams",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:NFT/functions/getSnsNftOwner",
@@ -2117,9 +2093,33 @@
       "page": "docs/sdks/js-kit/api/NFT/functions/getSnsNftOwner.md",
       "symbol": "getSnsNftOwner",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "js-kit:NFT/interfaces/GetSnsNftMintParams",
+      "product": "js-kit",
+      "kind": "interface",
+      "source": "js-kit/src/nft/getSnsNftMint.ts",
+      "page": "docs/sdks/js-kit/api/NFT/interfaces/GetSnsNftMintParams.md",
+      "symbol": "GetSnsNftMintParams",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "js-kit:NFT/interfaces/GetSnsNftOwnerParams",
+      "product": "js-kit",
+      "kind": "interface",
+      "source": "js-kit/src/nft/getSnsNftOwner.ts",
+      "page": "docs/sdks/js-kit/api/NFT/interfaces/GetSnsNftOwnerParams.md",
+      "symbol": "GetSnsNftOwnerParams",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Records/functions/getDefaultVerifier",
@@ -2129,9 +2129,9 @@
       "page": "docs/sdks/js-kit/api/Records/functions/getDefaultVerifier.md",
       "symbol": "_getDefaultVerifier",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Records/functions/getRecordV1Address",
@@ -2141,21 +2141,9 @@
       "page": "docs/sdks/js-kit/api/Records/functions/getRecordV1Address.md",
       "symbol": "getRecordV1Address",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "js-kit:Records/interfaces/GetRecordV1AddressParams",
-      "product": "js-kit",
-      "kind": "interface",
-      "source": "js-kit/src/record/getRecordV1Address.ts",
-      "page": "docs/sdks/js-kit/api/Records/interfaces/GetRecordV1AddressParams.md",
-      "symbol": "GetRecordV1AddressParams",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Records/functions/getRecordV2Address",
@@ -2165,21 +2153,9 @@
       "page": "docs/sdks/js-kit/api/Records/functions/getRecordV2Address.md",
       "symbol": "getRecordV2Address",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "js-kit:Records/interfaces/GetRecordV2AddressParams",
-      "product": "js-kit",
-      "kind": "interface",
-      "source": "js-kit/src/record/getRecordV2Address.ts",
-      "page": "docs/sdks/js-kit/api/Records/interfaces/GetRecordV2AddressParams.md",
-      "symbol": "GetRecordV2AddressParams",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Records/functions/verifyRecordRightOfAssociation",
@@ -2200,21 +2176,9 @@
       "page": "docs/sdks/js-kit/api/Records/functions/verifyRecordStaleness.md",
       "symbol": "verifyRecordStaleness",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "js-kit:Records/interfaces/VerifyRecordStalenessParams",
-      "product": "js-kit",
-      "kind": "interface",
-      "source": "js-kit/src/record/verifyRecordStaleness.ts",
-      "page": "docs/sdks/js-kit/api/Records/interfaces/VerifyRecordStalenessParams.md",
-      "symbol": "VerifyRecordStalenessParams",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Records/functions/verifyRoaSync",
@@ -2224,9 +2188,9 @@
       "page": "docs/sdks/js-kit/api/Records/functions/verifyRoaSync.md",
       "symbol": "_verifyRoaSync",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Records/functions/verifyStalenessSync",
@@ -2236,9 +2200,45 @@
       "page": "docs/sdks/js-kit/api/Records/functions/verifyStalenessSync.md",
       "symbol": "_verifyStalenessSync",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "js-kit:Records/interfaces/GetRecordV1AddressParams",
+      "product": "js-kit",
+      "kind": "interface",
+      "source": "js-kit/src/record/getRecordV1Address.ts",
+      "page": "docs/sdks/js-kit/api/Records/interfaces/GetRecordV1AddressParams.md",
+      "symbol": "GetRecordV1AddressParams",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "js-kit:Records/interfaces/GetRecordV2AddressParams",
+      "product": "js-kit",
+      "kind": "interface",
+      "source": "js-kit/src/record/getRecordV2Address.ts",
+      "page": "docs/sdks/js-kit/api/Records/interfaces/GetRecordV2AddressParams.md",
+      "symbol": "GetRecordV2AddressParams",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "js-kit:Records/interfaces/VerifyRecordStalenessParams",
+      "product": "js-kit",
+      "kind": "interface",
+      "source": "js-kit/src/record/verifyRecordStaleness.ts",
+      "page": "docs/sdks/js-kit/api/Records/interfaces/VerifyRecordStalenessParams.md",
+      "symbol": "VerifyRecordStalenessParams",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:States/functions/getValidationLength",
@@ -2248,9 +2248,9 @@
       "page": "docs/sdks/js-kit/api/States/functions/getValidationLength.md",
       "symbol": "getValidationLength",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:States/interfaces/NftStateParams",
@@ -2260,9 +2260,9 @@
       "page": "docs/sdks/js-kit/api/States/interfaces/NftStateParams.md",
       "symbol": "NftStateParams",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:States/interfaces/PrimaryDomainStateParams",
@@ -2272,9 +2272,9 @@
       "page": "docs/sdks/js-kit/api/States/interfaces/PrimaryDomainStateParams.md",
       "symbol": "PrimaryDomainStateParams",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:States/interfaces/RecordHeaderStateParams",
@@ -2284,9 +2284,9 @@
       "page": "docs/sdks/js-kit/api/States/interfaces/RecordHeaderStateParams.md",
       "symbol": "RecordHeaderStateParams",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:States/interfaces/RegistryStateParams",
@@ -2296,9 +2296,9 @@
       "page": "docs/sdks/js-kit/api/States/interfaces/RegistryStateParams.md",
       "symbol": "RegistryStateParams",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Utilities/functions/checkAddressOnCurve",
@@ -2308,9 +2308,9 @@
       "page": "docs/sdks/js-kit/api/Utilities/functions/checkAddressOnCurve.md",
       "symbol": "checkAddressOnCurve",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Utilities/functions/deserializeRecordContent",
@@ -2324,18 +2324,6 @@
       "requiredLinks": []
     },
     {
-      "id": "js-kit:Utilities/interfaces/DeserializeRecordContentParams",
-      "product": "js-kit",
-      "kind": "interface",
-      "source": "js-kit/src/utils/deserializers/deserializeRecordContent.ts",
-      "page": "docs/sdks/js-kit/api/Utilities/interfaces/DeserializeRecordContentParams.md",
-      "symbol": "DeserializeRecordContentParams",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
       "id": "js-kit:Utilities/functions/deserializeReverse",
       "product": "js-kit",
       "kind": "function",
@@ -2343,21 +2331,9 @@
       "page": "docs/sdks/js-kit/api/Utilities/functions/deserializeReverse.md",
       "symbol": "deserializeReverse",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "js-kit:Utilities/interfaces/DeserializeReverseParams",
-      "product": "js-kit",
-      "kind": "interface",
-      "source": "js-kit/src/utils/deserializers/deserializeReverse.ts",
-      "page": "docs/sdks/js-kit/api/Utilities/interfaces/DeserializeReverseParams.md",
-      "symbol": "DeserializeReverseParams",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Utilities/functions/getPythFeedAddress",
@@ -2367,21 +2343,9 @@
       "page": "docs/sdks/js-kit/api/Utilities/functions/getPythFeedAddress.md",
       "symbol": "getPythFeedAddress",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "js-kit:Utilities/interfaces/GetPythFeedAddressParams",
-      "product": "js-kit",
-      "kind": "interface",
-      "source": "js-kit/src/utils/getPythFeedAddress.ts",
-      "page": "docs/sdks/js-kit/api/Utilities/interfaces/GetPythFeedAddressParams.md",
-      "symbol": "GetPythFeedAddressParams",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Utilities/functions/getReverseAddress",
@@ -2391,9 +2355,9 @@
       "page": "docs/sdks/js-kit/api/Utilities/functions/getReverseAddress.md",
       "symbol": "getReverseAddress",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Utilities/functions/getReverseAddressFromDomainAddress",
@@ -2403,21 +2367,9 @@
       "page": "docs/sdks/js-kit/api/Utilities/functions/getReverseAddressFromDomainAddress.md",
       "symbol": "getReverseAddressFromDomainAddress",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "js-kit:Utilities/interfaces/GetReverseAddressFromDomainAddressParams",
-      "product": "js-kit",
-      "kind": "interface",
-      "source": "js-kit/src/utils/getReverseAddressFromDomainAddress.ts",
-      "page": "docs/sdks/js-kit/api/Utilities/interfaces/GetReverseAddressFromDomainAddressParams.md",
-      "symbol": "GetReverseAddressFromDomainAddressParams",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Utilities/functions/getTld",
@@ -2427,9 +2379,9 @@
       "page": "docs/sdks/js-kit/api/Utilities/functions/getTld.md",
       "symbol": "getTld",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Utilities/functions/parseSnsTld",
@@ -2465,18 +2417,6 @@
       "requiredLinks": []
     },
     {
-      "id": "js-kit:Utilities/interfaces/ReverseLookupParams",
-      "product": "js-kit",
-      "kind": "interface",
-      "source": "js-kit/src/utils/reverseLookup.ts",
-      "page": "docs/sdks/js-kit/api/Utilities/interfaces/ReverseLookupParams.md",
-      "symbol": "ReverseLookupParams",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
       "id": "js-kit:Utilities/functions/reverseLookupBatch",
       "product": "js-kit",
       "kind": "function",
@@ -2484,21 +2424,9 @@
       "page": "docs/sdks/js-kit/api/Utilities/functions/reverseLookupBatch.md",
       "symbol": "reverseLookupBatch",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
-      "id": "js-kit:Utilities/interfaces/ReverseLookupBatchParams",
-      "product": "js-kit",
-      "kind": "interface",
-      "source": "js-kit/src/utils/reverseLookupBatch.ts",
-      "page": "docs/sdks/js-kit/api/Utilities/interfaces/ReverseLookupBatchParams.md",
-      "symbol": "ReverseLookupBatchParams",
-      "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
-      "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "js-kit:Utilities/functions/serializeRecordContent",
@@ -2512,6 +2440,78 @@
       "requiredLinks": []
     },
     {
+      "id": "js-kit:Utilities/interfaces/DeserializeRecordContentParams",
+      "product": "js-kit",
+      "kind": "interface",
+      "source": "js-kit/src/utils/deserializers/deserializeRecordContent.ts",
+      "page": "docs/sdks/js-kit/api/Utilities/interfaces/DeserializeRecordContentParams.md",
+      "symbol": "DeserializeRecordContentParams",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "js-kit:Utilities/interfaces/DeserializeReverseParams",
+      "product": "js-kit",
+      "kind": "interface",
+      "source": "js-kit/src/utils/deserializers/deserializeReverse.ts",
+      "page": "docs/sdks/js-kit/api/Utilities/interfaces/DeserializeReverseParams.md",
+      "symbol": "DeserializeReverseParams",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "js-kit:Utilities/interfaces/GetPythFeedAddressParams",
+      "product": "js-kit",
+      "kind": "interface",
+      "source": "js-kit/src/utils/getPythFeedAddress.ts",
+      "page": "docs/sdks/js-kit/api/Utilities/interfaces/GetPythFeedAddressParams.md",
+      "symbol": "GetPythFeedAddressParams",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "js-kit:Utilities/interfaces/GetReverseAddressFromDomainAddressParams",
+      "product": "js-kit",
+      "kind": "interface",
+      "source": "js-kit/src/utils/getReverseAddressFromDomainAddress.ts",
+      "page": "docs/sdks/js-kit/api/Utilities/interfaces/GetReverseAddressFromDomainAddressParams.md",
+      "symbol": "GetReverseAddressFromDomainAddressParams",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "js-kit:Utilities/interfaces/ReverseLookupBatchParams",
+      "product": "js-kit",
+      "kind": "interface",
+      "source": "js-kit/src/utils/reverseLookupBatch.ts",
+      "page": "docs/sdks/js-kit/api/Utilities/interfaces/ReverseLookupBatchParams.md",
+      "symbol": "ReverseLookupBatchParams",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
+      "id": "js-kit:Utilities/interfaces/ReverseLookupParams",
+      "product": "js-kit",
+      "kind": "interface",
+      "source": "js-kit/src/utils/reverseLookup.ts",
+      "page": "docs/sdks/js-kit/api/Utilities/interfaces/ReverseLookupParams.md",
+      "symbol": "ReverseLookupParams",
+      "errorMode": "none",
+      "transitionSensitive": false,
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
+    },
+    {
       "id": "js-kit:Utilities/interfaces/SerializeRecordContentParams",
       "product": "js-kit",
       "kind": "interface",
@@ -2519,9 +2519,9 @@
       "page": "docs/sdks/js-kit/api/Utilities/interfaces/SerializeRecordContentParams.md",
       "symbol": "SerializeRecordContentParams",
       "errorMode": "none",
-      "errorRationale": "Pending source-level stable error classification.",
       "transitionSensitive": false,
-      "requiredLinks": []
+      "requiredLinks": [],
+      "errorRationale": "Pending source-level stable error classification."
     },
     {
       "id": "react:usePrimaryDomain/functions/usePrimaryDomain",
@@ -2590,23 +2590,23 @@
       "requiredLinks": []
     },
     {
-      "id": "react:useSafeResolve/functions/useSafeResolve",
-      "product": "react",
-      "kind": "function",
-      "source": "react/src/hooks/useSafeResolve/index.ts",
-      "page": "docs/react-hooks/api/useSafeResolve/functions/useSafeResolve.md",
-      "symbol": "useSafeResolve",
-      "errorMode": "query-result",
-      "transitionSensitive": false,
-      "requiredLinks": []
-    },
-    {
       "id": "react:useReverseLookup/functions/useReverseLookup",
       "product": "react",
       "kind": "function",
       "source": "react/src/hooks/useReverseLookup/index.ts",
       "page": "docs/react-hooks/api/useReverseLookup/functions/useReverseLookup.md",
       "symbol": "useReverseLookup",
+      "errorMode": "query-result",
+      "transitionSensitive": false,
+      "requiredLinks": []
+    },
+    {
+      "id": "react:useSafeResolve/functions/useSafeResolve",
+      "product": "react",
+      "kind": "function",
+      "source": "react/src/hooks/useSafeResolve/index.ts",
+      "page": "docs/react-hooks/api/useSafeResolve/functions/useSafeResolve.md",
+      "symbol": "useSafeResolve",
       "errorMode": "query-result",
       "transitionSensitive": false,
       "requiredLinks": []

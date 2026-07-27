@@ -1,11 +1,13 @@
-import { access, readFile, writeFile } from "node:fs/promises";
+import assert from "node:assert/strict";
+import { access, readFile, readdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const docsRoot = path.resolve(scriptDirectory, "..");
-const repoRoot = path.resolve(docsRoot, "..");
 const inventoryPath = path.join(docsRoot, "api/generated-api-quality.json");
+const defaultErrorRationale =
+  "Pending source-level stable error classification.";
 
 const products = {
   javascript: {
@@ -25,6 +27,14 @@ const products = {
 const isNonEmpty = (value) =>
   typeof value === "string" && value.trim().length > 0;
 
+function compareText(left, right) {
+  if (left < right) return -1;
+  if (left > right) return 1;
+  return 0;
+}
+
+const compareIds = (left, right) => compareText(left.id, right.id);
+
 async function exists(filePath) {
   try {
     await access(filePath);
@@ -35,10 +45,11 @@ async function exists(filePath) {
 }
 
 async function collectFiles(directory) {
-  const { readdir } = await import("node:fs/promises");
   const entries = await readdir(directory, { withFileTypes: true });
   const files = [];
-  for (const entry of entries) {
+  for (const entry of entries.sort((left, right) =>
+    compareText(left.name, right.name),
+  )) {
     const entryPath = path.join(directory, entry.name);
     if (entry.isDirectory()) files.push(...(await collectFiles(entryPath)));
     else files.push(entryPath);
@@ -241,8 +252,7 @@ async function scanPages() {
           product === "react" ? "query-result" : hasThrows ? "throws" : "none",
         ...(product !== "react" && !hasThrows
           ? {
-              errorRationale:
-                "Pending source-level stable error classification.",
+              errorRationale: defaultErrorRationale,
             }
           : {}),
         transitionSensitive: false,
@@ -250,11 +260,57 @@ async function scanPages() {
       });
     }
   }
-  return entries.sort((a, b) => a.id.localeCompare(b.id));
+  return entries;
+}
+
+function mergeInventoryEntries(scannedEntries, existingEntries) {
+  const existingById = new Map(
+    existingEntries.map((entry) => [entry.id, entry]),
+  );
+
+  return scannedEntries
+    .map((scanned) => {
+      const existing = existingById.get(scanned.id);
+      if (!existing) return scanned;
+
+      const merged = {
+        ...scanned,
+        errorMode: existing.errorMode ?? scanned.errorMode,
+        transitionSensitive:
+          existing.transitionSensitive ?? scanned.transitionSensitive,
+        requiredLinks: existing.requiredLinks ?? scanned.requiredLinks,
+      };
+
+      delete merged.errorRationale;
+      if (Object.hasOwn(existing, "errorRationale"))
+        merged.errorRationale = existing.errorRationale;
+      else if (merged.errorMode === "none")
+        merged.errorRationale = scanned.errorRationale ?? defaultErrorRationale;
+
+      return merged;
+    })
+    .sort(compareIds);
+}
+
+async function readInventory() {
+  if (!(await exists(inventoryPath))) return { schemaVersion: 1, entries: [] };
+
+  const inventory = JSON.parse(await readFile(inventoryPath, "utf8"));
+  if (inventory.schemaVersion !== 1 || !Array.isArray(inventory.entries))
+    throw new Error(`Invalid generated API inventory: ${inventoryPath}`);
+  return inventory;
 }
 
 async function syncInventory() {
-  const entries = await scanPages();
+  const [scannedEntries, existingInventory] = await Promise.all([
+    scanPages(),
+    readInventory(),
+  ]);
+  const entries = mergeInventoryEntries(
+    scannedEntries,
+    existingInventory.entries,
+  );
+
   const inventory = { schemaVersion: 1, entries };
   await writeFile(inventoryPath, `${JSON.stringify(inventory, null, 2)}\n`);
   console.log(`Wrote ${entries.length} entries to ${inventoryPath}.`);
@@ -285,6 +341,46 @@ async function selfTest() {
         `Quality checker self-test failed: ${JSON.stringify(test)}`,
       );
   }
+
+  const scannedEntries = [
+    {
+      id: "product:b",
+      source: "b.ts",
+      errorMode: "none",
+      errorRationale: defaultErrorRationale,
+      transitionSensitive: false,
+      requiredLinks: [],
+    },
+    {
+      id: "product:a",
+      source: "new-a.ts",
+      errorMode: "throws",
+      transitionSensitive: false,
+      requiredLinks: [],
+    },
+  ];
+  const mergedEntries = mergeInventoryEntries(scannedEntries, [
+    {
+      id: "product:a",
+      source: "old-a.ts",
+      errorMode: "none",
+      errorRationale: "Curated rationale.",
+      transitionSensitive: true,
+      requiredLinks: ["Required link"],
+    },
+  ]);
+  assert.deepEqual(
+    mergedEntries.map(({ id }) => id),
+    ["product:a", "product:b"],
+  );
+  assert.deepEqual(mergedEntries[0], {
+    id: "product:a",
+    source: "new-a.ts",
+    errorMode: "none",
+    errorRationale: "Curated rationale.",
+    transitionSensitive: true,
+    requiredLinks: ["Required link"],
+  });
   console.log("Generated API quality checker self-test passed.");
 }
 
@@ -294,11 +390,20 @@ async function checkInventory() {
     process.exitCode = 1;
     return;
   }
-  const inventory = JSON.parse(await readFile(inventoryPath, "utf8"));
+  const inventory = await readInventory();
   const scanned = await scanPages();
   const scannedIds = new Set(scanned.map(({ id }) => id));
   const inventoryIds = new Set(inventory.entries.map(({ id }) => id));
   const errors = [];
+  if (inventoryIds.size !== inventory.entries.length)
+    errors.push("Generated API inventory contains duplicate IDs.");
+  const canonicalIds = [...inventory.entries]
+    .sort(compareIds)
+    .map(({ id }) => id);
+  if (canonicalIds.some((id, index) => id !== inventory.entries[index]?.id))
+    errors.push(
+      "Generated API inventory is not in canonical order. Run api:quality:sync.",
+    );
   for (const id of scannedIds)
     if (!inventoryIds.has(id))
       errors.push(`Uninventoried generated page: ${id}`);
