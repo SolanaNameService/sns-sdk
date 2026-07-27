@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: CreateWithNftInstructionParams
 
-Defined in: [instructions/createWithNftInstruction.ts:14](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/instructions/createWithNftInstruction.ts#L14)
+Defined in: [instructions/createWithNftInstruction.ts:14](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/instructions/createWithNftInstruction.ts#L14)
 
 Input for registration with an eligible NFT.
 
@@ -22,7 +22,7 @@ const params: CreateWithNftInstructionParams = { name: "example", space: 1_000 }
 
 > **name**: `string`
 
-Defined in: [instructions/createWithNftInstruction.ts:16](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/instructions/createWithNftInstruction.ts#L16)
+Defined in: [instructions/createWithNftInstruction.ts:16](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/instructions/createWithNftInstruction.ts#L16)
 
 TLD-less domain name.
 
@@ -32,6 +32,6 @@ TLD-less domain name.
 
 > **space**: `number`
 
-Defined in: [instructions/createWithNftInstruction.ts:18](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/instructions/createWithNftInstruction.ts#L18)
+Defined in: [instructions/createWithNftInstruction.ts:18](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/instructions/createWithNftInstruction.ts#L18)
 
 Account data size in bytes.

@@ -48,4 +48,5 @@ Error classes and stable error categories emitted by SDK operations.
 | [PythFeedNotFoundError](classes/PythFeedNotFoundError.md) | Thrown when no Pyth price feed is configured for a mint. |
 | [RecordMalformedError](classes/RecordMalformedError.md) | Thrown when serialized record data cannot be decoded safely. |
 | [SNSError](classes/SNSError.md) | Base error thrown by SNS SDK operations. Inspect `type` for a stable error code. |
+| [SnsSolResolutionMismatchError](classes/SnsSolResolutionMismatchError.md) | Thrown when .sns and .sol resolve the same domain to different addresses. |
 | [UnsupportedTldError](classes/UnsupportedTldError.md) | Thrown when a domain does not use a supported top-level domain. |

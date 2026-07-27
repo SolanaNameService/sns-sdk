@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: CouldNotFindSrsOwnerError
 
-Defined in: [errors.ts:234](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/errors.ts#L234)
+Defined in: [errors.ts:235](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L235)
 
 Thrown when a Solana Registration Service domain owner cannot be resolved.
 
@@ -20,7 +20,7 @@ Thrown when a Solana Registration Service domain owner cannot be resolved.
 
 > **new CouldNotFindSrsOwnerError**(`message?`): `CouldNotFindSrsOwnerError`
 
-Defined in: [errors.ts:235](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/errors.ts#L235)
+Defined in: [errors.ts:236](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L236)
 
 #### Parameters
 
@@ -42,7 +42,7 @@ Defined in: [errors.ts:235](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005d
 
 > **type**: [`ErrorType`](../enumerations/ErrorType.md)
 
-Defined in: [errors.ts:38](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/errors.ts#L38)
+Defined in: [errors.ts:39](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L39)
 
 #### Inherited from
 

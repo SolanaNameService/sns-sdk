@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **useSubdomains**\<`TData`\>(`connection`, `domain`, `options?`): `UseQueryResult`\<`NoInfer`\<`TData`\>, `Error`\>
 
-Defined in: [react/src/hooks/useSubdomains/index.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/react/src/hooks/useSubdomains/index.ts#L30)
+Defined in: [react/src/hooks/useSubdomains/index.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/react/src/hooks/useSubdomains/index.ts#L30)
 
 Finds subdomains for an SNS parent domain through React Query.
 

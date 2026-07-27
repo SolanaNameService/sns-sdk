@@ -8,6 +8,6 @@ displayed_sidebar: docsSidebar
 
 > `const` **RECORD\_V1\_SIZE**: `Map`\<[`Record`](../enumerations/Record.md), `number`\>
 
-Defined in: [types/record.ts:36](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/types/record.ts#L36)
+Defined in: [types/record.ts:36](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/types/record.ts#L36)
 
 Fixed content sizes, in bytes, for V1 record types.

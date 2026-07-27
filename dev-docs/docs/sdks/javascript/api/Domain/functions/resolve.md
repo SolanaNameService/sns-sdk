@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **resolve**(`connection`, `domain`, `config?`): `Promise`\<`PublicKey`\>
 
-Defined in: [resolve/index.ts:39](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/resolve/index.ts#L39)
+Defined in: [resolve/index.ts:42](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/resolve/index.ts#L42)
 
 Resolves a full `.sns` or `.sol` domain name to its effective target public key.
 
@@ -44,6 +44,11 @@ PDA allowance policy. Defaults to `{ allowPda: false }`
 `Promise`\<`PublicKey`\>
 
 Effective target as a web3.js `PublicKey`
+
+## See
+
+[safeResolve](safeResolve.md) for `.sol` resolution that verifies the SRS and
+corresponding SNS targets match when SRS-backed resolution is enabled.
 
 ## Throws
 

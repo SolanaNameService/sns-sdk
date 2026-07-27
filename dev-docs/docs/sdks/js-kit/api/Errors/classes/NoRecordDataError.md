@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: NoRecordDataError
 
-Defined in: [errors.ts:66](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/errors.ts#L66)
+Defined in: [errors.ts:67](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L67)
 
 Thrown when a requested record account has no readable data.
 
@@ -20,7 +20,7 @@ Thrown when a requested record account has no readable data.
 
 > **new NoRecordDataError**(`message?`): `NoRecordDataError`
 
-Defined in: [errors.ts:67](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/errors.ts#L67)
+Defined in: [errors.ts:68](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L68)
 
 #### Parameters
 
@@ -42,7 +42,7 @@ Defined in: [errors.ts:67](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005df
 
 > **type**: [`ErrorType`](../enumerations/ErrorType.md)
 
-Defined in: [errors.ts:38](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/errors.ts#L38)
+Defined in: [errors.ts:39](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L39)
 
 #### Inherited from
 

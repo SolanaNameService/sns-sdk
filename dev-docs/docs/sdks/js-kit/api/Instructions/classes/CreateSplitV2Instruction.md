@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: CreateSplitV2Instruction
 
-Defined in: [instructions/createSplitV2Instruction.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/createSplitV2Instruction.ts#L22)
+Defined in: [instructions/createSplitV2Instruction.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/createSplitV2Instruction.ts#L22)
 
 Builder for creating a split SNS V2 domain account.
 
@@ -16,7 +16,7 @@ Builder for creating a split SNS V2 domain account.
 
 > **new CreateSplitV2Instruction**(`obj`): `CreateSplitV2Instruction`
 
-Defined in: [instructions/createSplitV2Instruction.ts:41](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/createSplitV2Instruction.ts#L41)
+Defined in: [instructions/createSplitV2Instruction.ts:41](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/createSplitV2Instruction.ts#L41)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [instructions/createSplitV2Instruction.ts:41](https://github.com/Bon
 
 > **name**: `string`
 
-Defined in: [instructions/createSplitV2Instruction.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/createSplitV2Instruction.ts#L26)
+Defined in: [instructions/createSplitV2Instruction.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/createSplitV2Instruction.ts#L26)
 
 TLD-less domain name.
 
@@ -44,7 +44,7 @@ TLD-less domain name.
 
 > **referrerIdxOpt**: `number` \| `null`
 
-Defined in: [instructions/createSplitV2Instruction.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/createSplitV2Instruction.ts#L30)
+Defined in: [instructions/createSplitV2Instruction.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/createSplitV2Instruction.ts#L30)
 
 Approved referrer index, if any.
 
@@ -54,7 +54,7 @@ Approved referrer index, if any.
 
 > **space**: `number`
 
-Defined in: [instructions/createSplitV2Instruction.ts:28](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/createSplitV2Instruction.ts#L28)
+Defined in: [instructions/createSplitV2Instruction.ts:28](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/createSplitV2Instruction.ts#L28)
 
 Account data size in bytes.
 
@@ -64,7 +64,7 @@ Account data size in bytes.
 
 > **tag**: `number`
 
-Defined in: [instructions/createSplitV2Instruction.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/createSplitV2Instruction.ts#L24)
+Defined in: [instructions/createSplitV2Instruction.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/createSplitV2Instruction.ts#L24)
 
 Instruction discriminator.
 
@@ -74,7 +74,7 @@ Instruction discriminator.
 
 > `static` **schema**: `object`
 
-Defined in: [instructions/createSplitV2Instruction.ts:32](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/createSplitV2Instruction.ts#L32)
+Defined in: [instructions/createSplitV2Instruction.ts:32](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/createSplitV2Instruction.ts#L32)
 
 #### struct
 
@@ -106,7 +106,7 @@ Defined in: [instructions/createSplitV2Instruction.ts:32](https://github.com/Bon
 
 > **getInstruction**(`programAddress`, `namingServiceProgram`, `rootDomain`, `name`, `reverseLookup`, `systemProgram`, `centralState`, `buyer`, `domainOwner`, `feePayer`, `buyerTokenSource`, `pythFeedAccount`, `vault`, `splTokenProgram`, `rentSysvar`, `state`, `referrerAccountOpt?`): `Instruction`
 
-Defined in: [instructions/createSplitV2Instruction.ts:52](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/createSplitV2Instruction.ts#L52)
+Defined in: [instructions/createSplitV2Instruction.ts:52](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/createSplitV2Instruction.ts#L52)
 
 #### Parameters
 
@@ -188,7 +188,7 @@ Defined in: [instructions/createSplitV2Instruction.ts:52](https://github.com/Bon
 
 > **serialize**(): `Uint8Array`
 
-Defined in: [instructions/createSplitV2Instruction.ts:48](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/createSplitV2Instruction.ts#L48)
+Defined in: [instructions/createSplitV2Instruction.ts:48](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/createSplitV2Instruction.ts#L48)
 
 #### Returns
 

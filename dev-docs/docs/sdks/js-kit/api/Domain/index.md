@@ -52,3 +52,4 @@ Domain resolution, derivation, records, and subdomain APIs.
 | [getSrsDomainAddress](functions/getSrsDomainAddress.md) | Derives the canonical SRS record address for a TLD-trimmed `.sol` name. |
 | [getSubdomains](functions/getSubdomains.md) | Retrieves subdomains under a parent domain, including their owners. |
 | [resolve](functions/resolve.md) | Resolves a `.sns` or `.sol` domain to its target address. |
+| [safeResolve](functions/safeResolve.md) | Resolves a `.sns` or `.sol` domain using the same routing as [resolve](functions/resolve.md). |

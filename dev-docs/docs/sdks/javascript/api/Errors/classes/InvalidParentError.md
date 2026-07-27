@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: InvalidParentError
 
-Defined in: [error.ts:174](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/error.ts#L174)
+Defined in: [error.ts:175](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/error.ts#L175)
 
 Base error for SDK failures, carrying a machine-readable [ErrorType](../enumerations/ErrorType.md).
 
@@ -20,7 +20,7 @@ Base error for SDK failures, carrying a machine-readable [ErrorType](../enumerat
 
 > **new InvalidParentError**(`message?`): `InvalidParentError`
 
-Defined in: [error.ts:175](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/error.ts#L175)
+Defined in: [error.ts:176](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/error.ts#L176)
 
 #### Parameters
 
@@ -42,7 +42,7 @@ Defined in: [error.ts:175](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005df
 
 > **type**: [`ErrorType`](../enumerations/ErrorType.md)
 
-Defined in: [error.ts:42](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/error.ts#L42)
+Defined in: [error.ts:43](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/error.ts#L43)
 
 Machine-readable error category.
 

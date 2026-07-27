@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: ReallocInstructionParams
 
-Defined in: [instructions/reallocInstruction.ts:12](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/reallocInstruction.ts#L12)
+Defined in: [instructions/reallocInstruction.ts:12](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/reallocInstruction.ts#L12)
 
 Input for reallocating an SNS name-registry account.
 
@@ -22,6 +22,6 @@ const params: ReallocInstructionParams = { space: 1_000 };
 
 > **space**: `number`
 
-Defined in: [instructions/reallocInstruction.ts:14](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/reallocInstruction.ts#L14)
+Defined in: [instructions/reallocInstruction.ts:14](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/reallocInstruction.ts#L14)
 
 New account data size in bytes.

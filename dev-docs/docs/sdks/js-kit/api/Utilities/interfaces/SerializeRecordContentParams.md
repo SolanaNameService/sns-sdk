@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: SerializeRecordContentParams
 
-Defined in: [utils/serializers/serializeRecordContent.ts:32](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/utils/serializers/serializeRecordContent.ts#L32)
+Defined in: [utils/serializers/serializeRecordContent.ts:32](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/utils/serializers/serializeRecordContent.ts#L32)
 
 Parameters for serializing record content.
 
@@ -25,7 +25,7 @@ const params: SerializeRecordContentParams = {
 
 > **content**: `string`
 
-Defined in: [utils/serializers/serializeRecordContent.ts:34](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/utils/serializers/serializeRecordContent.ts#L34)
+Defined in: [utils/serializers/serializeRecordContent.ts:34](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/utils/serializers/serializeRecordContent.ts#L34)
 
 Record content.
 
@@ -35,6 +35,6 @@ Record content.
 
 > **record**: [`Record`](../../Types/enumerations/Record.md)
 
-Defined in: [utils/serializers/serializeRecordContent.ts:36](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/utils/serializers/serializeRecordContent.ts#L36)
+Defined in: [utils/serializers/serializeRecordContent.ts:36](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/utils/serializers/serializeRecordContent.ts#L36)
 
 Record type.

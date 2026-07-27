@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **Options**\<`TQueryFnData`, `TData`, `TError`\> = `Omit`\<`UseQueryOptions`\<`TQueryFnData`, `TError`, `TData`, `QueryKey`\>, `"queryFn"` \| `"queryKey"`\> & `object`
 
-Defined in: [react/src/types.ts:12](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/react/src/types.ts#L12)
+Defined in: [react/src/types.ts:12](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/react/src/types.ts#L12)
 
 React Query options supported by SNS React hooks.
 

@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: CreateWithNftInstruction
 
-Defined in: [instructions/createWithNftInstruction.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/instructions/createWithNftInstruction.ts#L22)
+Defined in: [instructions/createWithNftInstruction.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/instructions/createWithNftInstruction.ts#L22)
 
 Serializable registrar instruction for registration with an eligible NFT.
 
@@ -16,7 +16,7 @@ Serializable registrar instruction for registration with an eligible NFT.
 
 > **new CreateWithNftInstruction**(`obj`): `CreateWithNftInstruction`
 
-Defined in: [instructions/createWithNftInstruction.ts:37](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/instructions/createWithNftInstruction.ts#L37)
+Defined in: [instructions/createWithNftInstruction.ts:37](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/instructions/createWithNftInstruction.ts#L37)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [instructions/createWithNftInstruction.ts:37](https://github.com/Bon
 
 > **name**: `string`
 
-Defined in: [instructions/createWithNftInstruction.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/instructions/createWithNftInstruction.ts#L26)
+Defined in: [instructions/createWithNftInstruction.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/instructions/createWithNftInstruction.ts#L26)
 
 TLD-less domain name.
 
@@ -44,7 +44,7 @@ TLD-less domain name.
 
 > **space**: `number`
 
-Defined in: [instructions/createWithNftInstruction.ts:28](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/instructions/createWithNftInstruction.ts#L28)
+Defined in: [instructions/createWithNftInstruction.ts:28](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/instructions/createWithNftInstruction.ts#L28)
 
 Account data size in bytes.
 
@@ -54,7 +54,7 @@ Account data size in bytes.
 
 > **tag**: `number`
 
-Defined in: [instructions/createWithNftInstruction.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/instructions/createWithNftInstruction.ts#L24)
+Defined in: [instructions/createWithNftInstruction.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/instructions/createWithNftInstruction.ts#L24)
 
 Instruction discriminator.
 
@@ -64,7 +64,7 @@ Instruction discriminator.
 
 > `static` **schema**: `object`
 
-Defined in: [instructions/createWithNftInstruction.ts:29](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/instructions/createWithNftInstruction.ts#L29)
+Defined in: [instructions/createWithNftInstruction.ts:29](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/instructions/createWithNftInstruction.ts#L29)
 
 #### struct
 
@@ -88,7 +88,7 @@ Defined in: [instructions/createWithNftInstruction.ts:29](https://github.com/Bon
 
 > **getInstruction**(`programId`, `namingServiceProgram`, `rootDomain`, `name`, `reverseLookup`, `systemProgram`, `centralState`, `buyer`, `nftSource`, `nftMetadata`, `nftMint`, `masterEdition`, `collection`, `splTokenProgram`, `rentSysvar`, `state`, `mplTokenMetadata`): `TransactionInstruction`
 
-Defined in: [instructions/createWithNftInstruction.ts:47](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/instructions/createWithNftInstruction.ts#L47)
+Defined in: [instructions/createWithNftInstruction.ts:47](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/instructions/createWithNftInstruction.ts#L47)
 
 Builds the transaction instruction with the required NFT-registration accounts.
 
@@ -172,7 +172,7 @@ Builds the transaction instruction with the required NFT-registration accounts.
 
 > **serialize**(): `Uint8Array`
 
-Defined in: [instructions/createWithNftInstruction.ts:43](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/instructions/createWithNftInstruction.ts#L43)
+Defined in: [instructions/createWithNftInstruction.ts:43](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/instructions/createWithNftInstruction.ts#L43)
 
 Serializes the registrar instruction payload.
 

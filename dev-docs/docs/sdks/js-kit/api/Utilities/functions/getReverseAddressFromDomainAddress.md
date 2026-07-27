@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **getReverseAddressFromDomainAddress**(`params`): `Promise`\<`Address`\>
 
-Defined in: [utils/getReverseAddressFromDomainAddress.ts:34](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/utils/getReverseAddressFromDomainAddress.ts#L34)
+Defined in: [utils/getReverseAddressFromDomainAddress.ts:34](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/utils/getReverseAddressFromDomainAddress.ts#L34)
 
 Derives the reverse lookup account address from a domain address.
 

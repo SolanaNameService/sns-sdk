@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: BurnDomainInstruction
 
-Defined in: [instructions/burnDomainInstruction.ts:5](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/burnDomainInstruction.ts#L5)
+Defined in: [instructions/burnDomainInstruction.ts:5](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/burnDomainInstruction.ts#L5)
 
 Builder for burning an SNS domain NFT and registry account.
 
@@ -16,7 +16,7 @@ Builder for burning an SNS domain NFT and registry account.
 
 > **new BurnDomainInstruction**(): `BurnDomainInstruction`
 
-Defined in: [instructions/burnDomainInstruction.ts:15](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/burnDomainInstruction.ts#L15)
+Defined in: [instructions/burnDomainInstruction.ts:15](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/burnDomainInstruction.ts#L15)
 
 #### Returns
 
@@ -28,7 +28,7 @@ Defined in: [instructions/burnDomainInstruction.ts:15](https://github.com/Bonfid
 
 > **tag**: `number`
 
-Defined in: [instructions/burnDomainInstruction.ts:7](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/burnDomainInstruction.ts#L7)
+Defined in: [instructions/burnDomainInstruction.ts:7](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/burnDomainInstruction.ts#L7)
 
 Instruction discriminator.
 
@@ -38,7 +38,7 @@ Instruction discriminator.
 
 > `static` **schema**: `object`
 
-Defined in: [instructions/burnDomainInstruction.ts:9](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/burnDomainInstruction.ts#L9)
+Defined in: [instructions/burnDomainInstruction.ts:9](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/burnDomainInstruction.ts#L9)
 
 #### struct
 
@@ -54,7 +54,7 @@ Defined in: [instructions/burnDomainInstruction.ts:9](https://github.com/Bonfida
 
 > **getInstruction**(`programAddress`, `nameServiceId`, `systemProgram`, `domainAddress`, `reverse`, `resellingState`, `state`, `centralState`, `owner`, `target`): `Instruction`
 
-Defined in: [instructions/burnDomainInstruction.ts:23](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/burnDomainInstruction.ts#L23)
+Defined in: [instructions/burnDomainInstruction.ts:23](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/burnDomainInstruction.ts#L23)
 
 #### Parameters
 
@@ -108,7 +108,7 @@ Defined in: [instructions/burnDomainInstruction.ts:23](https://github.com/Bonfid
 
 > **serialize**(): `Uint8Array`
 
-Defined in: [instructions/burnDomainInstruction.ts:19](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/burnDomainInstruction.ts#L19)
+Defined in: [instructions/burnDomainInstruction.ts:19](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/burnDomainInstruction.ts#L19)
 
 #### Returns
 

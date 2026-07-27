@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **getDomainOwner**(`params`): `Promise`\<`Address`\>
 
-Defined in: [domain/getDomainOwner.ts:40](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/domain/getDomainOwner.ts#L40)
+Defined in: [domain/getDomainOwner.ts:40](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/domain/getDomainOwner.ts#L40)
 
 Retrieves the owner of the specified domain. If the domain is tokenized,
 the NFT's owner is returned; otherwise, the registry owner is returned.

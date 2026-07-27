@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: SNSError
 
-Defined in: [error.ts:40](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/error.ts#L40)
+Defined in: [error.ts:41](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/error.ts#L41)
 
 Base error for SDK failures, carrying a machine-readable [ErrorType](../enumerations/ErrorType.md).
 
@@ -46,6 +46,7 @@ Base error for SDK failures, carrying a machine-readable [ErrorType](../enumerat
 - [`UnsupportedTldError`](UnsupportedTldError.md)
 - [`DomainExpired`](DomainExpired.md)
 - [`CouldNotFindSrsOwner`](CouldNotFindSrsOwner.md)
+- [`SnsSolResolutionMismatchError`](SnsSolResolutionMismatchError.md)
 
 ## Constructors
 
@@ -53,7 +54,7 @@ Base error for SDK failures, carrying a machine-readable [ErrorType](../enumerat
 
 > **new SNSError**(`type`, `message?`): `SNSError`
 
-Defined in: [error.ts:44](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/error.ts#L44)
+Defined in: [error.ts:45](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/error.ts#L45)
 
 #### Parameters
 
@@ -79,6 +80,6 @@ Defined in: [error.ts:44](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dff
 
 > **type**: [`ErrorType`](../enumerations/ErrorType.md)
 
-Defined in: [error.ts:42](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/error.ts#L42)
+Defined in: [error.ts:43](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/error.ts#L43)
 
 Machine-readable error category.

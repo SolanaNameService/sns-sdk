@@ -34,3 +34,4 @@ Domain resolution, derivation, reverse lookup, and discovery APIs.
 | [resolve](functions/resolve.md) | Resolves a full `.sns` or `.sol` domain name to its effective target public key. |
 | [reverseLookup](functions/reverseLookup.md) | Performs a reverse lookup for a domain account. |
 | [reverseLookupBatch](functions/reverseLookupBatch.md) | Performs reverse lookups for domain accounts. |
+| [safeResolve](functions/safeResolve.md) | Resolves a full `.sns` or `.sol` domain using the same routing as [resolve](functions/resolve.md). |

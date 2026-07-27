@@ -73,19 +73,28 @@ Rename `resolve_owner` to `resolve`, pass a full `.sns` name, and add the requir
 use sns_sdk::non_blocking::resolve::resolve_owner;
 
 let owner = resolve_owner(&client, "name").await?;
-// Result<Option<Pubkey>, SnsError>
 ```
 
 ```rust title="v2"
 use sns_sdk::non_blocking::resolve::{resolve, AllowPda};
 
 let owner = resolve(&client, "name.sns", AllowPda::Deny).await?;
-// Result<Pubkey, SnsError>
+// Or use `safe_resolve`.
 ```
 
 Remove `None` handling from successful resolution. A domain that does not exist now returns `SnsError::DomainDoesNotExist`.
 
 Use `AllowPda::Deny` unless the application intentionally supports program-derived resolution targets.
+
+:::info New API: `safe_resolve`
+
+A new `safe_resolve` API has also been added, currently functioning identically to `resolve`. Once SRS-backed .sol resolution is enabled in a future update, `safe_resolve` will only return an address if the `.sol` domain and the corresponding `.sns` domain resolve to the same address — returning an error on mismatch.
+
+This is intended as a short-term safety measure for the period immediately following SRS-backed .sol enablement. In the long term, `.sns` and `.sol` should be treated as separate namespaces, and integrations should use `resolve` instead.
+
+**Recommended alternative:** rather than relying on `safe_resolve` (which throws on mismatch), apps and wallets can implement custom logic to detect resolution mismatches and surface a warning or confirmation dialog to the user.
+
+:::
 
 ## Update primary-domain lookup
 

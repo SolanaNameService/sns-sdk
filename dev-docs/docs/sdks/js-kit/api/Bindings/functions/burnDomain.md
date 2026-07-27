@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **burnDomain**(`params`): `Promise`\<`Instruction`\<`string`, readonly (`AccountLookupMeta`\<`string`, `string`\> \| `AccountMeta`\<`string`\>)[]\>\>
 
-Defined in: [bindings/burnDomain.ts:50](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/burnDomain.ts#L50)
+Defined in: [bindings/burnDomain.ts:50](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/burnDomain.ts#L50)
 
 Builds an instruction to burn a top-level `.sns` domain.
 

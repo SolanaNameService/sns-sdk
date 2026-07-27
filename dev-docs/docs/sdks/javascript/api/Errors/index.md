@@ -49,6 +49,7 @@ Error classes and stable error categories emitted by SDK operations.
 | [PythFeedNotFoundError](classes/PythFeedNotFoundError.md) | Base error for SDK failures, carrying a machine-readable [ErrorType](enumerations/ErrorType.md). |
 | [RecordMalformed](classes/RecordMalformed.md) | Base error for SDK failures, carrying a machine-readable [ErrorType](enumerations/ErrorType.md). |
 | [SNSError](classes/SNSError.md) | Base error for SDK failures, carrying a machine-readable [ErrorType](enumerations/ErrorType.md). |
+| [SnsSolResolutionMismatchError](classes/SnsSolResolutionMismatchError.md) | Base error for SDK failures, carrying a machine-readable [ErrorType](enumerations/ErrorType.md). |
 | [U64OverflowError](classes/U64OverflowError.md) | Base error for SDK failures, carrying a machine-readable [ErrorType](enumerations/ErrorType.md). |
 | [UnsupportedTldError](classes/UnsupportedTldError.md) | Base error for SDK failures, carrying a machine-readable [ErrorType](enumerations/ErrorType.md). |
 | [WrongValidation](classes/WrongValidation.md) | Base error for SDK failures, carrying a machine-readable [ErrorType](enumerations/ErrorType.md). |

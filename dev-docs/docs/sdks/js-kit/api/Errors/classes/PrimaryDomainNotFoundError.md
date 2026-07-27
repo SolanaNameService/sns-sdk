@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: PrimaryDomainNotFoundError
 
-Defined in: [errors.ts:59](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/errors.ts#L59)
+Defined in: [errors.ts:60](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L60)
 
 Thrown when an address has no configured primary domain.
 
@@ -20,7 +20,7 @@ Thrown when an address has no configured primary domain.
 
 > **new PrimaryDomainNotFoundError**(`message?`): `PrimaryDomainNotFoundError`
 
-Defined in: [errors.ts:60](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/errors.ts#L60)
+Defined in: [errors.ts:61](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L61)
 
 #### Parameters
 
@@ -42,7 +42,7 @@ Defined in: [errors.ts:60](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005df
 
 > **type**: [`ErrorType`](../enumerations/ErrorType.md)
 
-Defined in: [errors.ts:38](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/errors.ts#L38)
+Defined in: [errors.ts:39](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L39)
 
 #### Inherited from
 

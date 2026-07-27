@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: DomainDoesNotExistError
 
-Defined in: [errors.ts:185](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/errors.ts#L185)
+Defined in: [errors.ts:186](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L186)
 
 Thrown when a requested SNS domain account does not exist.
 
@@ -20,7 +20,7 @@ Thrown when a requested SNS domain account does not exist.
 
 > **new DomainDoesNotExistError**(`message?`): `DomainDoesNotExistError`
 
-Defined in: [errors.ts:186](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/errors.ts#L186)
+Defined in: [errors.ts:187](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L187)
 
 #### Parameters
 
@@ -42,7 +42,7 @@ Defined in: [errors.ts:186](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005d
 
 > **type**: [`ErrorType`](../enumerations/ErrorType.md)
 
-Defined in: [errors.ts:38](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/errors.ts#L38)
+Defined in: [errors.ts:39](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L39)
 
 #### Inherited from
 

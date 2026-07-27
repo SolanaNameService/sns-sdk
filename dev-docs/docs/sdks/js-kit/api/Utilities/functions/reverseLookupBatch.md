@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **reverseLookupBatch**(`params`): `Promise`\<(`string` \| `undefined`)[]\>
 
-Defined in: [utils/reverseLookupBatch.ts:35](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/utils/reverseLookupBatch.ts#L35)
+Defined in: [utils/reverseLookupBatch.ts:35](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/utils/reverseLookupBatch.ts#L35)
 
 Performs reverse lookups for domain addresses.
 

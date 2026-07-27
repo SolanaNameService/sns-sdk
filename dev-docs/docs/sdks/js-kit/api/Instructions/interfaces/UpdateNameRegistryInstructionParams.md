@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: UpdateNameRegistryInstructionParams
 
-Defined in: [instructions/updateNameRegistryInstruction.ts:12](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/updateNameRegistryInstruction.ts#L12)
+Defined in: [instructions/updateNameRegistryInstruction.ts:12](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/updateNameRegistryInstruction.ts#L12)
 
 Input for updating an SNS name-registry account.
 
@@ -22,7 +22,7 @@ const params: UpdateNameRegistryInstructionParams = { offset: 0, inputData };
 
 > **inputData**: `Uint8Array`
 
-Defined in: [instructions/updateNameRegistryInstruction.ts:16](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/updateNameRegistryInstruction.ts#L16)
+Defined in: [instructions/updateNameRegistryInstruction.ts:16](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/updateNameRegistryInstruction.ts#L16)
 
 Bytes to write.
 
@@ -32,6 +32,6 @@ Bytes to write.
 
 > **offset**: `number`
 
-Defined in: [instructions/updateNameRegistryInstruction.ts:14](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/updateNameRegistryInstruction.ts#L14)
+Defined in: [instructions/updateNameRegistryInstruction.ts:14](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/updateNameRegistryInstruction.ts#L14)
 
 Byte offset where the update begins.

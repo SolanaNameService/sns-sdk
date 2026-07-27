@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **transferSubdomain**(`params`): `Promise`\<`Instruction`\<`string`, readonly (`AccountLookupMeta`\<`string`, `string`\> \| `AccountMeta`\<`string`\>)[]\>\>
 
-Defined in: [bindings/transferSubdomain.ts:51](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/transferSubdomain.ts#L51)
+Defined in: [bindings/transferSubdomain.ts:51](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/transferSubdomain.ts#L51)
 
 Builds an instruction to transfer a `.sns` subdomain.
 

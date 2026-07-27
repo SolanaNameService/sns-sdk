@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **setRecordRoaVerifier**(`domain`, `record`, `owner`, `payer`, `verifier`): `TransactionInstruction`
 
-Defined in: [bindings/setRecordRoaVerifier.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/bindings/setRecordRoaVerifier.ts#L24)
+Defined in: [bindings/setRecordRoaVerifier.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/bindings/setRecordRoaVerifier.ts#L24)
 
 Builds an instruction to store the expected Right of Association verifier.
 

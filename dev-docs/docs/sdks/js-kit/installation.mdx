@@ -22,19 +22,25 @@ JS Kit SDK v1 requires Node.js 24 or newer.
 The package root and category subpaths are supported. Use either style consistently with the application:
 
 ```ts title="Package root"
-import { getPrimaryDomain, resolve } from "@solana-name-service/sns-sdk-kit";
+import {
+  getPrimaryDomain,
+  resolve,
+  safeResolve,
+} from "@solana-name-service/sns-sdk-kit";
 ```
 
 ```ts title="Category subpaths"
 import { getPrimaryDomain } from "@solana-name-service/sns-sdk-kit/address";
-import { resolve } from "@solana-name-service/sns-sdk-kit/domain";
+import { resolve, safeResolve } from "@solana-name-service/sns-sdk-kit/domain";
 ```
 
 CommonJS applications can load the same exports with `require`:
 
 ```js
-const { resolve } = require("@solana-name-service/sns-sdk-kit");
+const { resolve, safeResolve } = require("@solana-name-service/sns-sdk-kit");
 ```
+
+Use `safeResolve` when `.sol` resolution must require matching SRS and SNS targets after SRS-backed resolution is enabled.
 
 ## RPC Configuration
 

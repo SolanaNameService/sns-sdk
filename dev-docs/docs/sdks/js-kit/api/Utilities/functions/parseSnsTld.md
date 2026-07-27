@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **parseSnsTld**(`domain`): \[`string`, `string`\]
 
-Defined in: [utils/tld.ts:73](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/utils/tld.ts#L73)
+Defined in: [utils/tld.ts:73](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/utils/tld.ts#L73)
 
 Ensures `domain` ends with `.sns` and strips that suffix.
 

@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: NftState
 
-Defined in: [states/nft.ts:46](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/nft.ts#L46)
+Defined in: [states/nft.ts:46](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/states/nft.ts#L46)
 
 Decoded state of an SNS NFT account.
 
@@ -16,7 +16,7 @@ Decoded state of an SNS NFT account.
 
 > **new NftState**(`obj`): `NftState`
 
-Defined in: [states/nft.ts:76](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/nft.ts#L76)
+Defined in: [states/nft.ts:76](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/states/nft.ts#L76)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [states/nft.ts:76](https://github.com/Bonfida/sns-sdk-beta/blob/2ee0
 
 > **nameAccount**: `Address`
 
-Defined in: [states/nft.ts:52](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/nft.ts#L52)
+Defined in: [states/nft.ts:52](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/states/nft.ts#L52)
 
 SNS domain account address.
 
@@ -44,7 +44,7 @@ SNS domain account address.
 
 > **nftMint**: `Address`
 
-Defined in: [states/nft.ts:56](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/nft.ts#L56)
+Defined in: [states/nft.ts:56](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/states/nft.ts#L56)
 
 NFT mint address.
 
@@ -54,7 +54,7 @@ NFT mint address.
 
 > **nonce**: `number`
 
-Defined in: [states/nft.ts:50](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/nft.ts#L50)
+Defined in: [states/nft.ts:50](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/states/nft.ts#L50)
 
 NFT record nonce.
 
@@ -64,7 +64,7 @@ NFT record nonce.
 
 > **owner**: `Address`
 
-Defined in: [states/nft.ts:54](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/nft.ts#L54)
+Defined in: [states/nft.ts:54](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/states/nft.ts#L54)
 
 NFT owner address.
 
@@ -74,7 +74,7 @@ NFT owner address.
 
 > **tag**: [`NftTag`](../enumerations/NftTag.md)
 
-Defined in: [states/nft.ts:48](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/nft.ts#L48)
+Defined in: [states/nft.ts:48](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/states/nft.ts#L48)
 
 NFT state tag.
 
@@ -84,7 +84,7 @@ NFT state tag.
 
 > `static` **LEN**: `number`
 
-Defined in: [states/nft.ts:74](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/nft.ts#L74)
+Defined in: [states/nft.ts:74](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/states/nft.ts#L74)
 
 ***
 
@@ -92,7 +92,7 @@ Defined in: [states/nft.ts:74](https://github.com/Bonfida/sns-sdk-beta/blob/2ee0
 
 > `static` **schema**: `object`
 
-Defined in: [states/nft.ts:58](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/nft.ts#L58)
+Defined in: [states/nft.ts:58](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/states/nft.ts#L58)
 
 #### struct
 
@@ -160,7 +160,7 @@ Defined in: [states/nft.ts:58](https://github.com/Bonfida/sns-sdk-beta/blob/2ee0
 
 > `static` **deserialize**(`data`): `NftState`
 
-Defined in: [states/nft.ts:84](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/nft.ts#L84)
+Defined in: [states/nft.ts:84](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/states/nft.ts#L84)
 
 #### Parameters
 
@@ -178,7 +178,7 @@ Defined in: [states/nft.ts:84](https://github.com/Bonfida/sns-sdk-beta/blob/2ee0
 
 > `static` **getAddress**(`domainAddress`): `Promise`\<`Address`\>
 
-Defined in: [states/nft.ts:141](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/nft.ts#L141)
+Defined in: [states/nft.ts:141](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/states/nft.ts#L141)
 
 #### Parameters
 
@@ -196,7 +196,7 @@ Defined in: [states/nft.ts:141](https://github.com/Bonfida/sns-sdk-beta/blob/2ee
 
 > `static` **retrieve**(`rpc`, `address`): `Promise`\<`NftState`\>
 
-Defined in: [states/nft.ts:94](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/nft.ts#L94)
+Defined in: [states/nft.ts:94](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/states/nft.ts#L94)
 
 #### Parameters
 
@@ -218,7 +218,7 @@ Defined in: [states/nft.ts:94](https://github.com/Bonfida/sns-sdk-beta/blob/2ee0
 
 > `static` **retrieveFromMint**(`rpc`, `mint`): `Promise`\<`NftState`\>
 
-Defined in: [states/nft.ts:105](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/states/nft.ts#L105)
+Defined in: [states/nft.ts:105](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/states/nft.ts#L105)
 
 #### Parameters
 

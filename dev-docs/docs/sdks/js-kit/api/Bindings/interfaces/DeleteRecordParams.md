@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: DeleteRecordParams
 
-Defined in: [bindings/deleteRecord.ts:28](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/deleteRecord.ts#L28)
+Defined in: [bindings/deleteRecord.ts:28](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/deleteRecord.ts#L28)
 
 Parameters for deleting a domain record.
 
@@ -27,7 +27,7 @@ const params: DeleteRecordParams = {
 
 > **domain**: `string`
 
-Defined in: [bindings/deleteRecord.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/deleteRecord.ts#L30)
+Defined in: [bindings/deleteRecord.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/deleteRecord.ts#L30)
 
 Full `.sns` domain name.
 
@@ -37,7 +37,7 @@ Full `.sns` domain name.
 
 > **owner**: `Address`
 
-Defined in: [bindings/deleteRecord.ts:34](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/deleteRecord.ts#L34)
+Defined in: [bindings/deleteRecord.ts:34](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/deleteRecord.ts#L34)
 
 Current domain owner.
 
@@ -47,7 +47,7 @@ Current domain owner.
 
 > **payer**: `Address`
 
-Defined in: [bindings/deleteRecord.ts:36](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/deleteRecord.ts#L36)
+Defined in: [bindings/deleteRecord.ts:36](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/deleteRecord.ts#L36)
 
 Instruction fee payer.
 
@@ -57,6 +57,6 @@ Instruction fee payer.
 
 > **record**: [`Record`](../../Types/enumerations/Record.md)
 
-Defined in: [bindings/deleteRecord.ts:32](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/deleteRecord.ts#L32)
+Defined in: [bindings/deleteRecord.ts:32](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/deleteRecord.ts#L32)
 
 Record type.

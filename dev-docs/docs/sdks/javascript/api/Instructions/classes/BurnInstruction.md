@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: BurnInstruction
 
-Defined in: [instructions/burnInstruction.ts:7](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/instructions/burnInstruction.ts#L7)
+Defined in: [instructions/burnInstruction.ts:7](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/instructions/burnInstruction.ts#L7)
 
 Serializable registrar instruction for burning a registered domain.
 
@@ -16,7 +16,7 @@ Serializable registrar instruction for burning a registered domain.
 
 > **new BurnInstruction**(): `BurnInstruction`
 
-Defined in: [instructions/burnInstruction.ts:16](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/instructions/burnInstruction.ts#L16)
+Defined in: [instructions/burnInstruction.ts:16](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/instructions/burnInstruction.ts#L16)
 
 #### Returns
 
@@ -28,7 +28,7 @@ Defined in: [instructions/burnInstruction.ts:16](https://github.com/Bonfida/sns-
 
 > **tag**: `number`
 
-Defined in: [instructions/burnInstruction.ts:9](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/instructions/burnInstruction.ts#L9)
+Defined in: [instructions/burnInstruction.ts:9](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/instructions/burnInstruction.ts#L9)
 
 Instruction discriminator.
 
@@ -38,7 +38,7 @@ Instruction discriminator.
 
 > `static` **schema**: `object`
 
-Defined in: [instructions/burnInstruction.ts:10](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/instructions/burnInstruction.ts#L10)
+Defined in: [instructions/burnInstruction.ts:10](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/instructions/burnInstruction.ts#L10)
 
 #### struct
 
@@ -54,7 +54,7 @@ Defined in: [instructions/burnInstruction.ts:10](https://github.com/Bonfida/sns-
 
 > **getInstruction**(`programId`, `nameServiceId`, `systemProgram`, `domain`, `reverse`, `resellingState`, `state`, `centralState`, `owner`, `target`): `TransactionInstruction`
 
-Defined in: [instructions/burnInstruction.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/instructions/burnInstruction.ts#L24)
+Defined in: [instructions/burnInstruction.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/instructions/burnInstruction.ts#L24)
 
 Builds the transaction instruction with the required burn accounts.
 
@@ -110,7 +110,7 @@ Builds the transaction instruction with the required burn accounts.
 
 > **serialize**(): `Uint8Array`
 
-Defined in: [instructions/burnInstruction.ts:20](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/instructions/burnInstruction.ts#L20)
+Defined in: [instructions/burnInstruction.ts:20](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/instructions/burnInstruction.ts#L20)
 
 Serializes the registrar instruction payload.
 

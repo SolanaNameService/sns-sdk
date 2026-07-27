@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: DomainExpiredError
 
-Defined in: [errors.ts:227](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/errors.ts#L227)
+Defined in: [errors.ts:228](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L228)
 
 Thrown when a Solana Registration Service domain has expired.
 
@@ -20,7 +20,7 @@ Thrown when a Solana Registration Service domain has expired.
 
 > **new DomainExpiredError**(`message?`): `DomainExpiredError`
 
-Defined in: [errors.ts:228](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/errors.ts#L228)
+Defined in: [errors.ts:229](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L229)
 
 #### Parameters
 
@@ -42,7 +42,7 @@ Defined in: [errors.ts:228](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005d
 
 > **type**: [`ErrorType`](../enumerations/ErrorType.md)
 
-Defined in: [errors.ts:38](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/errors.ts#L38)
+Defined in: [errors.ts:39](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L39)
 
 #### Inherited from
 

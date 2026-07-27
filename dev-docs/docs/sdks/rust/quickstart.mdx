@@ -31,6 +31,8 @@ println!("{owner}");
 
 `resolve` returns the effective owner as a Solana `Pubkey`.
 
+For a `.sol` name that must resolve to matching SRS and SNS targets when SRS-backed resolution is enabled, call `safe_resolve(&client, "name.sol", AllowPda::Deny)` with the same arguments.
+
 ### Get a primary domain
 
 Use `get_primary_domain` with the wallet public key, then reverse-resolve the returned name-account key for display:

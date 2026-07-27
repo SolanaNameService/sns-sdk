@@ -18,19 +18,25 @@ npm install @bonfida/spl-name-service@^4 @solana/web3.js@^1.98.2
 The package root and category subpaths are supported. Use either style consistently with the application:
 
 ```ts title="Package root"
-import { getPrimaryDomain, resolve } from "@bonfida/spl-name-service";
+import {
+  getPrimaryDomain,
+  resolve,
+  safeResolve,
+} from "@bonfida/spl-name-service";
 ```
 
 ```ts title="Category subpaths"
 import { getPrimaryDomain } from "@bonfida/spl-name-service/address";
-import { resolve } from "@bonfida/spl-name-service/domain";
+import { resolve, safeResolve } from "@bonfida/spl-name-service/domain";
 ```
 
 CommonJS applications can load the same exports with `require`:
 
 ```js
-const { resolve } = require("@bonfida/spl-name-service");
+const { resolve, safeResolve } = require("@bonfida/spl-name-service");
 ```
+
+Use `safeResolve` when `.sol` resolution must require matching SRS and SNS targets after SRS-backed resolution is enabled.
 
 ## RPC Configuration
 

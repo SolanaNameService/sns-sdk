@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: ValidateRecordRoaEthereumParams
 
-Defined in: [bindings/validateRecordRoaEthereum.ts:25](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/validateRecordRoaEthereum.ts#L25)
+Defined in: [bindings/validateRecordRoaEthereum.ts:25](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/validateRecordRoaEthereum.ts#L25)
 
 Parameters for validating a record with an Ethereum signature.
 
@@ -24,7 +24,7 @@ const params: ValidateRecordRoaEthereumParams = {
 
 > **domain**: `string`
 
-Defined in: [bindings/validateRecordRoaEthereum.ts:27](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/validateRecordRoaEthereum.ts#L27)
+Defined in: [bindings/validateRecordRoaEthereum.ts:27](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/validateRecordRoaEthereum.ts#L27)
 
 Full `.sns` domain name.
 
@@ -34,7 +34,7 @@ Full `.sns` domain name.
 
 > **expectedPubkey**: `Uint8Array`
 
-Defined in: [bindings/validateRecordRoaEthereum.ts:37](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/validateRecordRoaEthereum.ts#L37)
+Defined in: [bindings/validateRecordRoaEthereum.ts:37](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/validateRecordRoaEthereum.ts#L37)
 
 Expected Ethereum public key.
 
@@ -44,7 +44,7 @@ Expected Ethereum public key.
 
 > **owner**: `Address`
 
-Defined in: [bindings/validateRecordRoaEthereum.ts:31](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/validateRecordRoaEthereum.ts#L31)
+Defined in: [bindings/validateRecordRoaEthereum.ts:31](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/validateRecordRoaEthereum.ts#L31)
 
 Current domain owner.
 
@@ -54,7 +54,7 @@ Current domain owner.
 
 > **payer**: `Address`
 
-Defined in: [bindings/validateRecordRoaEthereum.ts:33](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/validateRecordRoaEthereum.ts#L33)
+Defined in: [bindings/validateRecordRoaEthereum.ts:33](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/validateRecordRoaEthereum.ts#L33)
 
 Instruction fee payer.
 
@@ -64,7 +64,7 @@ Instruction fee payer.
 
 > **record**: [`Record`](../../Types/enumerations/Record.md)
 
-Defined in: [bindings/validateRecordRoaEthereum.ts:29](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/validateRecordRoaEthereum.ts#L29)
+Defined in: [bindings/validateRecordRoaEthereum.ts:29](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/validateRecordRoaEthereum.ts#L29)
 
 Record type.
 
@@ -74,6 +74,6 @@ Record type.
 
 > **signature**: `Uint8Array`
 
-Defined in: [bindings/validateRecordRoaEthereum.ts:35](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/bindings/validateRecordRoaEthereum.ts#L35)
+Defined in: [bindings/validateRecordRoaEthereum.ts:35](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/validateRecordRoaEthereum.ts#L35)
 
 Ethereum signature.

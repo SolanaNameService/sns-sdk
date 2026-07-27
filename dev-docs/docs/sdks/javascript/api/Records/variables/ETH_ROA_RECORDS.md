@@ -8,6 +8,6 @@ displayed_sidebar: docsSidebar
 
 > `const` **ETH\_ROA\_RECORDS**: `Set`\<[`Record`](../enumerations/Record.md)\>
 
-Defined in: [record/const.ts:27](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/record/const.ts#L27)
+Defined in: [record/const.ts:27](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/record/const.ts#L27)
 
 Record types that use secp256k1 verification.

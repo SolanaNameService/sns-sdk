@@ -35,6 +35,8 @@ console.log(owner);
 
 `resolve` returns the effective owner as a Solana Kit `Address`.
 
+For `.sol` resolution that must verify the SRS and corresponding SNS targets match when SRS-backed resolution is enabled in a future update, use `safeResolve({ rpc, domain: "name.sol" })` instead.
+
 ### Get a primary domain
 
 Use `getPrimaryDomain` with the wallet address:

@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **\_getDefaultVerifier**(`params`): `Uint8Array`\<`ArrayBufferLike`\> \| `ReadonlyUint8Array`\<`ArrayBuffer`\> \| `undefined`
 
-Defined in: [record/verifyRecordRightOfAssociation.ts:36](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/record/verifyRecordRightOfAssociation.ts#L36)
+Defined in: [record/verifyRecordRightOfAssociation.ts:36](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/record/verifyRecordRightOfAssociation.ts#L36)
 
 Internal helper that derives the default verifier for a record state.
 

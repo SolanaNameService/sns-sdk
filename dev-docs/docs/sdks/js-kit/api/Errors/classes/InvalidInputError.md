@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: InvalidInputError
 
-Defined in: [errors.ts:129](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/errors.ts#L129)
+Defined in: [errors.ts:130](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L130)
 
 Thrown when a general SDK input contract is not met.
 
@@ -20,7 +20,7 @@ Thrown when a general SDK input contract is not met.
 
 > **new InvalidInputError**(`message?`): `InvalidInputError`
 
-Defined in: [errors.ts:130](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/errors.ts#L130)
+Defined in: [errors.ts:131](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L131)
 
 #### Parameters
 
@@ -42,7 +42,7 @@ Defined in: [errors.ts:130](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005d
 
 > **type**: [`ErrorType`](../enumerations/ErrorType.md)
 
-Defined in: [errors.ts:38](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/errors.ts#L38)
+Defined in: [errors.ts:39](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L39)
 
 #### Inherited from
 

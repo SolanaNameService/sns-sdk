@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **getHandleAndRegistryKey**(`connection`, `verifiedPubkey`): `Promise`\<\[`string`, `PublicKey`\]\>
 
-Defined in: [twitter/getHandleAndRegistryKey.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/twitter/getHandleAndRegistryKey.ts#L22)
+Defined in: [twitter/getHandleAndRegistryKey.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/twitter/getHandleAndRegistryKey.ts#L22)
 
 Retrieves a verified public key's Twitter handle and user-facing registry key.
 

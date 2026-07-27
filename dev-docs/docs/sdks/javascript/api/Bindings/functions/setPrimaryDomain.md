@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **setPrimaryDomain**(`connection`, `nameAccount`, `owner`): `Promise`\<`TransactionInstruction`\>
 
-Defined in: [bindings/setPrimaryDomain.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/bindings/setPrimaryDomain.ts#L24)
+Defined in: [bindings/setPrimaryDomain.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/bindings/setPrimaryDomain.ts#L24)
 
 Builds an instruction to set a domain as the owner's primary domain.
 

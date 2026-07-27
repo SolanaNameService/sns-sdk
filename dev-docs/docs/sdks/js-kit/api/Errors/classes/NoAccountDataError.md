@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: NoAccountDataError
 
-Defined in: [errors.ts:122](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/errors.ts#L122)
+Defined in: [errors.ts:123](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L123)
 
 Thrown when an existing account has no readable data.
 
@@ -20,7 +20,7 @@ Thrown when an existing account has no readable data.
 
 > **new NoAccountDataError**(`message?`): `NoAccountDataError`
 
-Defined in: [errors.ts:123](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/errors.ts#L123)
+Defined in: [errors.ts:124](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L124)
 
 #### Parameters
 
@@ -42,7 +42,7 @@ Defined in: [errors.ts:123](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005d
 
 > **type**: [`ErrorType`](../enumerations/ErrorType.md)
 
-Defined in: [errors.ts:38](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/errors.ts#L38)
+Defined in: [errors.ts:39](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L39)
 
 #### Inherited from
 

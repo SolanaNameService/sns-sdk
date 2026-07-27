@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **updateNameRegistry**(`connection`, `name`, `offset`, `input_data`, `nameClass?`, `nameParent?`): `Promise`\<`TransactionInstruction`\>
 
-Defined in: [bindings/updateNameRegistry.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/bindings/updateNameRegistry.ts#L26)
+Defined in: [bindings/updateNameRegistry.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/bindings/updateNameRegistry.ts#L26)
 
 Builds an instruction to overwrite name registry data.
 

@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **reverseLookupBatch**(`connection`, `nameAccounts`): `Promise`\<(`string` \| `undefined`)[]\>
 
-Defined in: [utils/reverseLookupBatch.ts:21](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/utils/reverseLookupBatch.ts#L21)
+Defined in: [utils/reverseLookupBatch.ts:21](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/utils/reverseLookupBatch.ts#L21)
 
 Performs reverse lookups for domain accounts.
 

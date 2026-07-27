@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: PythFeedNotFoundError
 
-Defined in: [errors.ts:150](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/errors.ts#L150)
+Defined in: [errors.ts:151](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L151)
 
 Thrown when no Pyth price feed is configured for a mint.
 
@@ -20,7 +20,7 @@ Thrown when no Pyth price feed is configured for a mint.
 
 > **new PythFeedNotFoundError**(`message?`): `PythFeedNotFoundError`
 
-Defined in: [errors.ts:151](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/errors.ts#L151)
+Defined in: [errors.ts:152](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L152)
 
 #### Parameters
 
@@ -42,7 +42,7 @@ Defined in: [errors.ts:151](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005d
 
 > **type**: [`ErrorType`](../enumerations/ErrorType.md)
 
-Defined in: [errors.ts:38](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/errors.ts#L38)
+Defined in: [errors.ts:39](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L39)
 
 #### Inherited from
 

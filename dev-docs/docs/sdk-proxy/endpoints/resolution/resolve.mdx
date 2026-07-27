@@ -40,6 +40,8 @@ For `.sns`, resolution checks an active tokenized-domain owner, a valid V2 `SOL`
 
 For `.sol`, the SDK uses SNS-backed resolution while the selected RPC reports a finalized slot below <code><CutoffSlot /></code>. At or after that slot, the SDK automatically pauses `.sol` resolution and the route returns `400 Unsupported TLD`.
 
+For `.sol` requests that must require matching SRS and SNS targets when SRS-backed resolution is enabled, use [`GET /safe-resolve/:domain`](./safe-resolve.mdx).
+
 ## Example
 
 ```bash

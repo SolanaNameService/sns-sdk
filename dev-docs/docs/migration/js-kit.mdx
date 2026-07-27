@@ -65,10 +65,20 @@ const owner = await resolve({
   rpc,
   domain: "name.sns",
   options: { allowPda: false },
-});
+}); // Or use `safeResolve`.
 ```
 
 The parameter-object pattern, caller-provided RPC client, and PDA options remain supported.
+
+:::info New API: `safeResolve`
+
+A new `safeResolve` API has been added, currently functioning identically to `resolve`. Once SRS-backed .sol resolution is enabled in a future update, `safeResolve` will only return an address if the `.sol` domain and the corresponding `.sns` domain resolve to the same address — throwing an error on mismatch.
+
+This is intended as a short-term safety measure for the period immediately following SRS-backed .sol enablement. In the long term, `.sns` and `.sol` should be treated as separate namespaces, and integrations should use `resolve` instead.
+
+**Recommended alternative:** rather than relying on `safeResolve` (which throws on mismatch), apps and wallets can implement custom logic to detect resolution mismatches and surface a warning or confirmation dialog to the user.
+
+:::
 
 ## Update primary-domain lookup
 

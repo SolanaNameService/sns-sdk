@@ -28,7 +28,7 @@ These modules use `solana_client::nonblocking::rpc_client::RpcClient` and are av
 
 | API family                                            | Description                                                             |
 | ----------------------------------------------------- | ----------------------------------------------------------------------- |
-| [Domain resolution](./non-blocking/domain-resolution) | Resolve full domains to their effective targets                         |
+| [Domain resolution](./non-blocking/domain-resolution) | Resolve full domains with ordinary or safe SRS/SNS target checks        |
 | [Name registries](./non-blocking/name-registries)     | Read one or multiple SPL Name Service accounts                          |
 | [Reverse lookup](./non-blocking/reverse-lookup)       | Reverse-resolve one or multiple name-account keys                       |
 | [Wallet domains](./non-blocking/wallet-domains)       | List top-level name-account keys owned by a wallet                      |
@@ -45,7 +45,7 @@ These modules use `solana_client::rpc_client::RpcClient` and are available when 
 
 | API family                                        | Description                                                             |
 | ------------------------------------------------- | ----------------------------------------------------------------------- |
-| [Domain resolution](./blocking/domain-resolution) | Resolve full domains to their effective targets                         |
+| [Domain resolution](./blocking/domain-resolution) | Resolve full domains with ordinary or safe SRS/SNS target checks        |
 | [Name registries](./blocking/name-registries)     | Read one or multiple SPL Name Service accounts                          |
 | [Reverse lookup](./blocking/reverse-lookup)       | Reverse-resolve one or multiple name-account keys                       |
 | [Wallet domains](./blocking/wallet-domains)       | List top-level name-account keys owned by a wallet                      |

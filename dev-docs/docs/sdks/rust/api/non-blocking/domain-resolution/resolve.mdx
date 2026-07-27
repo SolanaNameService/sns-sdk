@@ -22,6 +22,8 @@ Resolves a full `.sns` or currently supported `.sol` domain to its effective tar
 
 `.sol` currently uses legacy SNS-backed resolution until finalized slot <code><CutoffSlot /></code>; it then pauses automatically for that RPC endpoint. SRS-backed `.sol` resolution remains disabled until the complete ownership path is available.
 
+For `.sol` resolution that must require matching SRS and SNS targets when SRS-backed resolution is enabled, use [`safe_resolve`](./safe-resolve.mdx).
+
 ## Availability
 
 This API is available in the default build. Enabling the `blocking` feature replaces `sns_sdk::non_blocking` with [`sns_sdk::blocking`](/docs/sdks/rust/api/blocking/domain-resolution/resolve).

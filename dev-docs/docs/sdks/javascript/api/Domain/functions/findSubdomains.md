@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **findSubdomains**(`connection`, `parentKey`): `Promise`\<`string`[]\>
 
-Defined in: [utils/findSubdomains.ts:20](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/utils/findSubdomains.ts#L20)
+Defined in: [utils/findSubdomains.ts:20](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/utils/findSubdomains.ts#L20)
 
 Finds subdomains for a parent domain account.
 

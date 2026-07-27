@@ -420,6 +420,17 @@
       "requiredLinks": []
     },
     {
+      "id": "javascript:Domain/functions/safeResolve",
+      "product": "javascript",
+      "kind": "function",
+      "source": "js/src/resolve/index.ts",
+      "page": "docs/sdks/javascript/api/Domain/functions/safeResolve.md",
+      "symbol": "safeResolve",
+      "errorMode": "throws",
+      "transitionSensitive": false,
+      "requiredLinks": []
+    },
+    {
       "id": "javascript:Instructions/functions/createInstruction",
       "product": "javascript",
       "kind": "function",
@@ -1872,6 +1883,17 @@
       "requiredLinks": []
     },
     {
+      "id": "js-kit:Domain/functions/safeResolve",
+      "product": "js-kit",
+      "kind": "function",
+      "source": "js-kit/src/domain/resolve.ts",
+      "page": "docs/sdks/js-kit/api/Domain/functions/safeResolve.md",
+      "symbol": "safeResolve",
+      "errorMode": "throws",
+      "transitionSensitive": false,
+      "requiredLinks": []
+    },
+    {
       "id": "js-kit:Domain/interfaces/GetSubdomainsParams",
       "product": "js-kit",
       "kind": "interface",
@@ -2563,6 +2585,17 @@
       "source": "react/src/hooks/useResolve/index.ts",
       "page": "docs/react-hooks/api/useResolve/functions/useResolve.md",
       "symbol": "useResolve",
+      "errorMode": "query-result",
+      "transitionSensitive": false,
+      "requiredLinks": []
+    },
+    {
+      "id": "react:useSafeResolve/functions/useSafeResolve",
+      "product": "react",
+      "kind": "function",
+      "source": "react/src/hooks/useSafeResolve/index.ts",
+      "page": "docs/react-hooks/api/useSafeResolve/functions/useSafeResolve.md",
+      "symbol": "useSafeResolve",
       "errorMode": "query-result",
       "transitionSensitive": false,
       "requiredLinks": []

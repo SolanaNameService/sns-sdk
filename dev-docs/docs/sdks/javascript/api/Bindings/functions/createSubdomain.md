@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **createSubdomain**(`connection`, `subdomain`, `owner`, `space?`, `feePayer?`): `Promise`\<`TransactionInstruction`[]\>
 
-Defined in: [bindings/createSubdomain.ts:25](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/bindings/createSubdomain.ts#L25)
+Defined in: [bindings/createSubdomain.ts:25](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/bindings/createSubdomain.ts#L25)
 
 Builds the instructions to create a `.sns` subdomain.
 

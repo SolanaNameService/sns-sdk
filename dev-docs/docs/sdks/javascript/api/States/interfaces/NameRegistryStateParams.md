@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: NameRegistryStateParams
 
-Defined in: [state.ts:15](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/state.ts#L15)
+Defined in: [state.ts:15](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/state.ts#L15)
 
 Input for decoding an SNS name registry account.
 
@@ -22,7 +22,7 @@ const params: NameRegistryStateParams = { parentName, owner, class: classAddress
 
 > **class**: `Uint8Array`
 
-Defined in: [state.ts:21](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/state.ts#L21)
+Defined in: [state.ts:21](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/state.ts#L21)
 
 Encoded registry class address.
 
@@ -32,7 +32,7 @@ Encoded registry class address.
 
 > **owner**: `Uint8Array`
 
-Defined in: [state.ts:19](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/state.ts#L19)
+Defined in: [state.ts:19](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/state.ts#L19)
 
 Encoded registry owner address.
 
@@ -42,6 +42,6 @@ Encoded registry owner address.
 
 > **parentName**: `Uint8Array`
 
-Defined in: [state.ts:17](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/state.ts#L17)
+Defined in: [state.ts:17](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/state.ts#L17)
 
 Encoded parent registry address.

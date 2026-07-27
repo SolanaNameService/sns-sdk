@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: GetSnsNftsForAddressResult
 
-Defined in: [address/getSnsNftsForAddress.ts:41](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/address/getSnsNftsForAddress.ts#L41)
+Defined in: [address/getSnsNftsForAddress.ts:41](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/address/getSnsNftsForAddress.ts#L41)
 
 An SNS domain NFT owned by an address.
 
@@ -26,7 +26,7 @@ const domain: GetSnsNftsForAddressResult = {
 
 > **domain**: `string`
 
-Defined in: [address/getSnsNftsForAddress.ts:43](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/address/getSnsNftsForAddress.ts#L43)
+Defined in: [address/getSnsNftsForAddress.ts:43](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/address/getSnsNftsForAddress.ts#L43)
 
 TLD-less domain name.
 
@@ -36,7 +36,7 @@ TLD-less domain name.
 
 > **domainAddress**: `Address`
 
-Defined in: [address/getSnsNftsForAddress.ts:45](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/address/getSnsNftsForAddress.ts#L45)
+Defined in: [address/getSnsNftsForAddress.ts:45](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/address/getSnsNftsForAddress.ts#L45)
 
 Domain account address.
 
@@ -46,6 +46,6 @@ Domain account address.
 
 > **mint**: `Address`
 
-Defined in: [address/getSnsNftsForAddress.ts:47](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/address/getSnsNftsForAddress.ts#L47)
+Defined in: [address/getSnsNftsForAddress.ts:47](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/address/getSnsNftsForAddress.ts#L47)
 
 NFT mint address.

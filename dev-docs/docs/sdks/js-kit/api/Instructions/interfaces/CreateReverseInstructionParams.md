@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: CreateReverseInstructionParams
 
-Defined in: [instructions/createReverseInstruction.ts:12](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/createReverseInstruction.ts#L12)
+Defined in: [instructions/createReverseInstruction.ts:12](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/createReverseInstruction.ts#L12)
 
 Input for creating an SNS reverse-lookup account.
 
@@ -22,6 +22,6 @@ const params: CreateReverseInstructionParams = { domain: "example" };
 
 > **domain**: `string`
 
-Defined in: [instructions/createReverseInstruction.ts:14](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/instructions/createReverseInstruction.ts#L14)
+Defined in: [instructions/createReverseInstruction.ts:14](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/createReverseInstruction.ts#L14)
 
 Raw reverse lookup payload.

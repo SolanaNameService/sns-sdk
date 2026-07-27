@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: NftAccountNotFoundError
 
-Defined in: [errors.ts:171](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/errors.ts#L171)
+Defined in: [errors.ts:172](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L172)
 
 Thrown when an expected SNS NFT account cannot be found.
 
@@ -20,7 +20,7 @@ Thrown when an expected SNS NFT account cannot be found.
 
 > **new NftAccountNotFoundError**(`message?`): `NftAccountNotFoundError`
 
-Defined in: [errors.ts:172](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/errors.ts#L172)
+Defined in: [errors.ts:173](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L173)
 
 #### Parameters
 
@@ -42,7 +42,7 @@ Defined in: [errors.ts:172](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005d
 
 > **type**: [`ErrorType`](../enumerations/ErrorType.md)
 
-Defined in: [errors.ts:38](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js-kit/src/errors.ts#L38)
+Defined in: [errors.ts:39](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L39)
 
 #### Inherited from
 

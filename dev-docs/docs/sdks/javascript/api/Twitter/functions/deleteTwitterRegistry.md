@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **deleteTwitterRegistry**(`twitterHandle`, `verifiedPubkey`): `Promise`\<`TransactionInstruction`[]\>
 
-Defined in: [twitter/deleteTwitterRegistry.ts:25](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/twitter/deleteTwitterRegistry.ts#L25)
+Defined in: [twitter/deleteTwitterRegistry.ts:25](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/twitter/deleteTwitterRegistry.ts#L25)
 
 Builds instructions to delete a verified Twitter handle registry and reverse registry.
 

@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **validateRecordRoa**(`domain`, `record`, `owner`, `payer`, `verifier`): `TransactionInstruction`
 
-Defined in: [bindings/validateRecordRoa.ts:21](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/js/src/bindings/validateRecordRoa.ts#L21)
+Defined in: [bindings/validateRecordRoa.ts:21](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/bindings/validateRecordRoa.ts#L21)
 
 Builds an instruction to validate a record's Right of Association with a Solana verifier.
 

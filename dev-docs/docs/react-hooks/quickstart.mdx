@@ -18,7 +18,7 @@ const connection = new Connection(process.env.RPC_URL!);
 const queryClient = new QueryClient();
 
 function DomainLookup() {
-  const domain = useResolve(connection, "name.sns");
+  const domain = useResolve(connection, "name.sns"); // Or use `useSafeResolve`.
 
   if (domain.isPending) return <p>Loading...</p>;
   if (domain.isError) return <p>{domain.error.message}</p>;
@@ -36,6 +36,16 @@ export function App() {
 ```
 
 Pass the application-owned web3.js `Connection` to each SNS hook. Query failures are available through the hook result's `isError` and `error` fields.
+
+:::info New hook: `useSafeResolve`
+
+A new `useSafeResolve` hook has also been added, currently functioning identically to `useResolve`. Once SRS-backed .sol resolution is enabled in a future update, `useSafeResolve` will only return an address if the `.sol` domain and the corresponding `.sns` domain resolve to the same address — throwing an error on mismatch.
+
+This is intended as a short-term safety measure for the period immediately following SRS-backed .sol enablement. In the long term, `.sns` and `.sol` should be treated as separate namespaces, and integrations should use `useResolve` instead.
+
+**Recommended alternative:** rather than relying on `useSafeResolve` (which throws on mismatch), apps and wallets can implement custom logic to detect resolution mismatches and surface a warning or confirmation dialog to the user.
+
+:::
 
 ## Next steps
 

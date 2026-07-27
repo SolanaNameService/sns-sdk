@@ -20,6 +20,8 @@ Defined in: <SourceLink path="rust-crates/sns-sdk/src/blocking/resolve.rs" line=
 
 Resolves a full `.sns` or currently supported `.sol` name to its effective owner. SNS resolution prefers an active tokenized-domain owner, then a valid V2 `SOL` record, then a valid V1 `SOL` record, and finally the name-registry owner. SRS-backed `.sol` resolution is disabled; legacy SNS-backed `.sol` reads stop at finalized slot <code><CutoffSlot /></code>.
 
+For `.sol` resolution that must require matching SRS and SNS targets when SRS-backed resolution is enabled, use [`safe_resolve`](./safe-resolve.mdx).
+
 ## Availability
 
 Requires the `blocking` feature, which exposes `sns_sdk::blocking` instead of `sns_sdk::non_blocking`.

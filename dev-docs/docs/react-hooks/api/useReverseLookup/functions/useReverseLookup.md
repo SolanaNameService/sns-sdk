@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **useReverseLookup**\<`TData`\>(`connection`, `pubkey`, `options?`): `UseQueryResult`\<`NoInfer`\<`TData`\>, `Error`\>
 
-Defined in: [react/src/hooks/useReverseLookup/index.ts:27](https://github.com/Bonfida/sns-sdk-beta/blob/2ee005dffe8ba20dd8d38eda54d669d0225b4b26/react/src/hooks/useReverseLookup/index.ts#L27)
+Defined in: [react/src/hooks/useReverseLookup/index.ts:27](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/react/src/hooks/useReverseLookup/index.ts#L27)
 
 Performs a reverse lookup for a domain account through React Query.
 

@@ -16,5 +16,6 @@ hide_title: true
 | [useRecords](useRecords/index.md) | Verified SNS record queries and their public result types. |
 | [useResolve](useResolve/index.md) | Domain resolution through TanStack Query. |
 | [useReverseLookup](useReverseLookup/index.md) | Domain-account reverse lookup through TanStack Query. |
+| [useSafeResolve](useSafeResolve/index.md) | Safe domain resolution through TanStack Query. |
 | [useSnsDomainsForOwner](useSnsDomainsForOwner/index.md) | Wallet-owned SNS domain queries through TanStack Query. |
 | [useSubdomains](useSubdomains/index.md) | SNS subdomain queries through TanStack Query. |

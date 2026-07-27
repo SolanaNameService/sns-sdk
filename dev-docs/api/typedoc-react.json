@@ -4,6 +4,7 @@
   "plugin": ["typedoc-plugin-markdown"],
   "entryPoints": [
     "../../react/src/hooks/useResolve/index.ts",
+    "../../react/src/hooks/useSafeResolve/index.ts",
     "../../react/src/hooks/usePrimaryDomain/index.ts",
     "../../react/src/hooks/useProfilePic/index.ts",
     "../../react/src/hooks/useRecords/index.ts",
