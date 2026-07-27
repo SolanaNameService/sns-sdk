@@ -65,6 +65,26 @@ for (const target of exportTargets) {
   );
 }
 
+const runtimeFiles = (
+  await Promise.all(
+    ["esm", "cjs"].map(async (format) =>
+      (await walk(path.join(packageRoot, "dist", format))).filter((file) =>
+        file.endsWith(`.${format === "esm" ? "mjs" : "cjs"}`),
+      ),
+    ),
+  )
+).flat();
+for (const runtimeFile of runtimeFiles) {
+  const lines = (await readFile(runtimeFile, "utf8")).split(/\r?\n/);
+  for (const line of lines) {
+    assert(
+      !/^\s*import\s+["'][^"']+["'];?\s*$/.test(line) &&
+        !/^\s*require\(\s*["'][^"']+["']\s*\);?\s*$/.test(line),
+      `Runtime file contains a side-effect-only module load: ${runtimeFile}: ${line.trim()}`,
+    );
+  }
+}
+
 const declarationFiles = (await walk(path.join(packageRoot, "dist"))).filter(
   (file) => file.endsWith(".d.ts"),
 );

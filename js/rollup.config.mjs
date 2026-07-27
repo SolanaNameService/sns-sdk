@@ -1,4 +1,5 @@
 import { createRequire } from "node:module";
+import path from "node:path";
 
 import typescript from "@rollup/plugin-typescript";
 import del from "rollup-plugin-delete";
@@ -7,6 +8,19 @@ import { visualizer } from "rollup-plugin-visualizer";
 
 const require = createRequire(import.meta.url);
 const packageJson = require("./package.json");
+const sourceRoot = path.resolve("src");
+
+const isSourceModule = (id) => {
+  if (!path.isAbsolute(id) || id.startsWith("\0")) return false;
+
+  const relativePath = path.relative(sourceRoot, id);
+  return (
+    relativePath.length > 0 &&
+    !path.isAbsolute(relativePath) &&
+    relativePath !== ".." &&
+    !relativePath.startsWith(`..${path.sep}`)
+  );
+};
 
 const externalPackages = new Set([
   ...Object.keys(packageJson.dependencies ?? {}),
@@ -100,7 +114,9 @@ export default [
       typescript({ tsconfig: "./tsconfig.json" }),
       visualizer(),
     ],
-    treeshake: true,
+    treeshake: {
+      moduleSideEffects: (id, external) => external || !isSourceModule(id),
+    },
   },
   ...declarationConfigs,
 ];
