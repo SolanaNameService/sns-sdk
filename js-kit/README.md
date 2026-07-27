@@ -35,11 +35,8 @@ import {
   createSolanaRpcFromTransport,
 } from "@solana/kit";
 
-const rpcUrl = process.env.RPC_URL;
-if (!rpcUrl) throw new Error("RPC_URL is required");
-
 const transport = createDefaultRpcTransport({
-  url: rpcUrl,
+  url: "https://your-rpc-endpoint.example",
 });
 const rpc = createSolanaRpcFromTransport(transport);
 ```

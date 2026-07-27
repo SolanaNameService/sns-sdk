@@ -45,7 +45,7 @@ use sns_sdk::blocking::nft::get_record_from_mint;
 use solana_client::rpc_client::RpcClient;
 use solana_program::pubkey::Pubkey;
 
-let client = RpcClient::new(std::env::var("RPC_URL")?);
+let client = RpcClient::new("https://your-rpc-endpoint.example".to_string());
 let mint: Pubkey = std::env::var("MINT")?.parse()?;
 let records = get_record_from_mint(&client, &mint)?;
 println!("{} active records", records.len());

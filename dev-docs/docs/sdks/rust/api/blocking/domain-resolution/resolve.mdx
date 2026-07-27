@@ -52,7 +52,7 @@ Requires the `blocking` feature, which exposes `sns_sdk::blocking` instead of `s
 use sns_sdk::blocking::resolve::{resolve, AllowPda};
 use solana_client::rpc_client::RpcClient;
 
-let client = RpcClient::new(std::env::var("RPC_URL")?);
+let client = RpcClient::new("https://your-rpc-endpoint.example".to_string());
 let target = resolve(&client, "example.sns", AllowPda::Deny)?;
 println!("{target}");
 ```

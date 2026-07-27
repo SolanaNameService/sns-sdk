@@ -44,7 +44,7 @@ Use `safeResolve` when `.sol` resolution must require matching SRS and SNS targe
 
 ## RPC Configuration
 
-Set an application-owned `RPC_URL` environment variable, then use it to create the typed RPC client passed to SDK operations:
+Create the typed RPC client passed to SDK operations with your Solana RPC endpoint:
 
 ```ts
 import {
@@ -52,8 +52,9 @@ import {
   createSolanaRpcFromTransport,
 } from "@solana/kit";
 
-const rpcUrl = process.env.RPC_URL;
-const transport = createDefaultRpcTransport({ url: rpcUrl! });
+const transport = createDefaultRpcTransport({
+  url: "https://your-rpc-endpoint.example",
+});
 const rpc = createSolanaRpcFromTransport(transport);
 ```
 

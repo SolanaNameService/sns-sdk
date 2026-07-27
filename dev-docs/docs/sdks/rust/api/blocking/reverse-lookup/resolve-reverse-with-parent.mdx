@@ -48,7 +48,7 @@ Requires the `blocking` feature.
 use sns_sdk::{blocking::resolve::resolve_reverse_with_parent, derivation::get_sns_domain_key};
 use solana_client::rpc_client::RpcClient;
 
-let client = RpcClient::new(std::env::var("RPC_URL")?);
+let client = RpcClient::new("https://your-rpc-endpoint.example".to_string());
 let child = get_sns_domain_key("team.example")?;
 let label = resolve_reverse_with_parent(&client, &child.key, Some(&child.parent))?;
 println!("{label:?}");

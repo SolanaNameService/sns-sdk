@@ -41,7 +41,7 @@ Supported subpaths are `address`, `bindings`, `constants`, `domain`, `errors`, `
 import { Connection } from "@solana/web3.js";
 import { resolve } from "@bonfida/spl-name-service/domain";
 
-const connection = new Connection(process.env.RPC_URL!);
+const connection = new Connection("https://your-rpc-endpoint.example");
 const owner = await resolve(connection, "mydomain.sns"); // Or use `safeResolve`.
 
 console.log(owner.toBase58());
@@ -53,7 +53,7 @@ console.log(owner.toBase58());
 import { Connection, PublicKey } from "@solana/web3.js";
 import { getPrimaryDomain } from "@bonfida/spl-name-service/address";
 
-const connection = new Connection(process.env.RPC_URL!);
+const connection = new Connection("https://your-rpc-endpoint.example");
 const wallet = new PublicKey("<WALLET_ADDRESS>");
 const primaryDomain = await getPrimaryDomain(connection, wallet);
 
@@ -66,7 +66,7 @@ console.log(`${primaryDomain.reverse}.sns`, primaryDomain.stale);
 import { Connection, PublicKey } from "@solana/web3.js";
 import { getSnsDomainsForOwner } from "@bonfida/spl-name-service/address";
 
-const connection = new Connection(process.env.RPC_URL!);
+const connection = new Connection("https://your-rpc-endpoint.example");
 const wallet = new PublicKey("<WALLET_ADDRESS>");
 const domains = await getSnsDomainsForOwner(connection, wallet);
 

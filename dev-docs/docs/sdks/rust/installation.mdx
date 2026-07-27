@@ -30,13 +30,12 @@ The default `subdomain` feature enables sub-registrar APIs. Add it alongside `bl
 
 ## RPC Configuration
 
-Set an application-owned `RPC_URL` environment variable, then create the RPC client used by SDK operations:
+Create the RPC client used by SDK operations with your Solana RPC endpoint:
 
 ```rust
 use solana_client::nonblocking::rpc_client::RpcClient;
 
-let rpc_url = std::env::var("RPC_URL")?;
-let client = RpcClient::new(rpc_url);
+let client = RpcClient::new("https://your-rpc-endpoint.example".to_string());
 ```
 
 For a blocking build, import `solana_client::rpc_client::RpcClient` instead.

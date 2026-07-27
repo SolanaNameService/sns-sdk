@@ -43,7 +43,7 @@ solana-sdk = "2.1"
 
 ## Quick Start
 
-The examples below use the default asynchronous client and read the RPC endpoint from the `RPC_URL` environment variable. Each operation is shown separately so it can be adopted independently.
+The examples below use the default asynchronous client. Replace the example RPC URL with your Solana RPC endpoint.
 
 ### Resolve A Domain
 
@@ -55,8 +55,7 @@ use solana_client::nonblocking::rpc_client::RpcClient;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let rpc_url = std::env::var("RPC_URL")?;
-    let client = RpcClient::new(rpc_url);
+    let client = RpcClient::new("https://your-rpc-endpoint.example".to_string());
     let owner = resolve(&client, "mydomain.sns", AllowPda::Deny).await?; // Or use `safe_resolve`.
 
     println!("{owner}");
@@ -84,8 +83,7 @@ use std::str::FromStr;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let rpc_url = std::env::var("RPC_URL")?;
-    let client = RpcClient::new(rpc_url);
+    let client = RpcClient::new("https://your-rpc-endpoint.example".to_string());
     let wallet = Pubkey::from_str("<WALLET_ADDRESS>")?;
     let primary_domain = get_primary_domain(&client, &wallet).await?;
 
@@ -106,8 +104,7 @@ use std::str::FromStr;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let rpc_url = std::env::var("RPC_URL")?;
-    let client = RpcClient::new(rpc_url);
+    let client = RpcClient::new("https://your-rpc-endpoint.example".to_string());
     let wallet = Pubkey::from_str("<WALLET_ADDRESS>")?;
     let domains = get_sns_domains_for_owner(&client, wallet).await?;
 
@@ -212,8 +209,7 @@ use std::io::{Error, ErrorKind};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let rpc_url = std::env::var("RPC_URL")?;
-    let client = RpcClient::new(rpc_url);
+    let client = RpcClient::new("https://your-rpc-endpoint.example".to_string());
     let domain = "mydomain.sns";
     let record = Record::Url;
     let domain_key = get_sns_domain_key("mydomain")?.key;

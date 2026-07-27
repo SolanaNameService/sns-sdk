@@ -46,7 +46,7 @@ Pass a web3.js `Connection` to each hook. SNS React does not create a global RPC
 import { useResolve } from "@bonfida/sns-react";
 import { Connection } from "@solana/web3.js";
 
-const connection = new Connection(process.env.RPC_URL!);
+const connection = new Connection("https://your-rpc-endpoint.example");
 
 function Resolve() {
   const target = useResolve(connection, "example.sns");

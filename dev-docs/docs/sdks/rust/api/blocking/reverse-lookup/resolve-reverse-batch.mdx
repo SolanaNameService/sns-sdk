@@ -46,7 +46,7 @@ Requires the `blocking` feature.
 use sns_sdk::{blocking::resolve::resolve_reverse_batch, derivation::get_sns_domain_key};
 use solana_client::rpc_client::RpcClient;
 
-let client = RpcClient::new(std::env::var("RPC_URL")?);
+let client = RpcClient::new("https://your-rpc-endpoint.example".to_string());
 let keys = [get_sns_domain_key("alice")?.key, get_sns_domain_key("bob")?.key];
 let names = resolve_reverse_batch(&client, &keys)?;
 println!("{names:?}");

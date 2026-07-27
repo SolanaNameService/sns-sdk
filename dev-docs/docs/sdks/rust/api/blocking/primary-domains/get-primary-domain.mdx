@@ -47,7 +47,7 @@ use sns_sdk::blocking::primary_domain::get_primary_domain;
 use solana_client::rpc_client::RpcClient;
 use solana_program::pubkey::Pubkey;
 
-let client = RpcClient::new(std::env::var("RPC_URL")?);
+let client = RpcClient::new("https://your-rpc-endpoint.example".to_string());
 let owner: Pubkey = std::env::var("OWNER")?.parse()?;
 if let Some(domain_key) = get_primary_domain(&client, &owner)? {
     println!("{domain_key}");

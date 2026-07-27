@@ -32,13 +32,12 @@ export function AppProviders({ children }: PropsWithChildren) {
 
 ## RPC Configuration
 
-Set an application-owned `RPC_URL` environment variable, then create the web3.js `Connection` passed to each hook:
+Create the web3.js `Connection` passed to each hook with your Solana RPC endpoint:
 
 ```ts
 import { Connection } from "@solana/web3.js";
 
-const rpcUrl = process.env.RPC_URL;
-const connection = new Connection(rpcUrl!);
+const connection = new Connection("https://your-rpc-endpoint.example");
 ```
 
 SNS React Hooks does not create a global RPC client or wallet provider.

@@ -46,7 +46,7 @@ Requires the `blocking` feature.
 use sns_sdk::{blocking::nft::resolve_nft_owner, derivation::get_sns_domain_key};
 use solana_client::rpc_client::RpcClient;
 
-let client = RpcClient::new(std::env::var("RPC_URL")?);
+let client = RpcClient::new("https://your-rpc-endpoint.example".to_string());
 let domain_key = get_sns_domain_key("example")?.key;
 if let Some(owner) = resolve_nft_owner(&client, &domain_key)? {
     println!("{owner}");

@@ -65,7 +65,7 @@ Use `AllowPda::Deny` unless the application intentionally supports PDA resolutio
 use sns_sdk::non_blocking::resolve::{resolve, AllowPda};
 use solana_client::nonblocking::rpc_client::RpcClient;
 
-let client = RpcClient::new(std::env::var("RPC_URL")?);
+let client = RpcClient::new("https://your-rpc-endpoint.example".to_string());
 let target = resolve(&client, "example.sns", AllowPda::Deny).await?;
 println!("{target}");
 ```

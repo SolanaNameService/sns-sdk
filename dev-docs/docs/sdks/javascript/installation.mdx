@@ -40,16 +40,13 @@ Use `safeResolve` when `.sol` resolution must require matching SRS and SNS targe
 
 ## RPC Configuration
 
-Set an application-owned `RPC_URL` environment variable, then use it to create the web3.js `Connection` passed to RPC-backed SDK APIs:
+Create the web3.js `Connection` passed to RPC-backed SDK APIs with your Solana RPC endpoint:
 
 ```ts
 import { Connection } from "@solana/web3.js";
 
-const rpcUrl = process.env.RPC_URL;
-const connection = new Connection(rpcUrl!);
+const connection = new Connection("https://your-rpc-endpoint.example");
 ```
-
-Browser applications can provide the endpoint through their framework's runtime configuration instead of `process.env`.
 
 ## Next
 

@@ -12,7 +12,7 @@ Complete the [Rust SDK installation](/docs/sdks/rust/installation), then create 
 ```rust
 use solana_client::nonblocking::rpc_client::RpcClient;
 
-let client = RpcClient::new(std::env::var("RPC_URL")?);
+let client = RpcClient::new("https://your-rpc-endpoint.example".to_string());
 ```
 
 ## Common usage

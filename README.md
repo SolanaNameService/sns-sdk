@@ -51,7 +51,7 @@ npm install @bonfida/spl-name-service @solana/web3.js
 import { safeResolve } from "@bonfida/spl-name-service/domain";
 import { Connection } from "@solana/web3.js";
 
-const connection = new Connection(process.env.RPC_URL!);
+const connection = new Connection("https://your-rpc-endpoint.example");
 const owner = await safeResolve(connection, "mydomain.sns");
 ```
 
@@ -73,7 +73,7 @@ import {
 } from "@solana/kit";
 
 const transport = createDefaultRpcTransport({
-  url: process.env.RPC_URL!,
+  url: "https://your-rpc-endpoint.example",
 });
 const rpc = createSolanaRpcFromTransport(transport);
 

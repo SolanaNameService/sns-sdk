@@ -14,7 +14,7 @@ import { useResolve } from "@bonfida/sns-react";
 import { Connection } from "@solana/web3.js";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-const connection = new Connection(process.env.RPC_URL!);
+const connection = new Connection("https://your-rpc-endpoint.example");
 const queryClient = new QueryClient();
 
 function DomainLookup() {

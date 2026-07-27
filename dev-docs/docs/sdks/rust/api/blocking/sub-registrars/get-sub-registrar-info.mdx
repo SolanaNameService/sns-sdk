@@ -43,7 +43,7 @@ Requires both the `blocking` and `subdomain` features.
 use sns_sdk::blocking::subdomain::get_sub_registrar_info;
 use solana_client::rpc_client::RpcClient;
 
-let client = RpcClient::new(std::env::var("RPC_URL")?);
+let client = RpcClient::new("https://your-rpc-endpoint.example".to_string());
 let registrar = get_sub_registrar_info(&client, "example.sns")?;
 println!("{}", registrar.authority);
 ```
