@@ -95,7 +95,7 @@ Given a `solana_client::nonblocking::rpc_client::RpcClient` named `client`:
 ```rust
 use sns_sdk::non_blocking::resolve::{resolve, AllowPda};
 
-let owner = resolve(&client, "mydomain.sns", AllowPda::Deny).await?;
+let owner = resolve(&client, "mydomain.sns", AllowPda::Deny).await?; // Or use `safe_resolve`.
 ```
 
 See the [Rust SDK package guide](./rust-crates/sns-sdk/README.md) and [v2 migration guide](./rust-crates/sns-sdk/CHANGELOG.md).

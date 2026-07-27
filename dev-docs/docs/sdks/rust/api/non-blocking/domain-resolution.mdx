@@ -8,6 +8,7 @@ Domain-resolution APIs determine the effective target public key for supported S
 
 ## APIs
 
-| API                                      | Description                                      |
-| ---------------------------------------- | ------------------------------------------------ |
-| [`resolve`](./domain-resolution/resolve) | Resolves one SNS domain to its effective target. |
+| API                                                | Description                                                                                                              |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| [`resolve`](./domain-resolution/resolve)           | Resolves a `.sns` or `.sol` domain to its effective target.                                                              |
+| [`safe_resolve`](./domain-resolution/safe-resolve) | Resolves a `.sns` or `.sol` domain, requiring matching SRS and SNS targets when SRS-backed `.sol` resolution is enabled. |

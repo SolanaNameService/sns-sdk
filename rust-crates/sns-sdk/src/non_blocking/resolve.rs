@@ -30,12 +30,35 @@ use crate::{
 pub use crate::resolve::AllowPda;
 
 /// Resolves a full `.sns` or `.sol` domain to its current owner.
+///
+/// Use [`safe_resolve`] to verify matching SRS and SNS targets when SRS-backed
+/// `.sol` resolution is enabled.
 pub async fn resolve(
     rpc_client: &RpcClient,
     domain: &str,
     allow_pda: AllowPda,
 ) -> Result<Pubkey, SnsError> {
     resolve_with_config(
+        rpc_client,
+        domain,
+        allow_pda,
+        SOL_SRS_RESOLUTION_ENABLED,
+        current_unix_timestamp(),
+    )
+    .await
+}
+
+/// Resolves a full `.sns` or `.sol` domain using the same routing as [`resolve`].
+///
+/// When SRS-backed `.sol` resolution is enabled, both the `.sol` domain and its
+/// corresponding `.sns` domain must resolve to the same target; otherwise,
+/// [`SnsError::SnsSolResolutionMismatch`] is returned.
+pub async fn safe_resolve(
+    rpc_client: &RpcClient,
+    domain: &str,
+    allow_pda: AllowPda,
+) -> Result<Pubkey, SnsError> {
+    safe_resolve_with_config(
         rpc_client,
         domain,
         allow_pda,
@@ -61,6 +84,39 @@ pub(crate) async fn resolve_with_config(
 
     let (domain, _) = assert_tld_supported(rpc_client, domain).await?;
     resolve_sns(rpc_client, domain, &allow_pda).await
+}
+
+/// Dispatches safe resolution with injected rollout state and time for deterministic tests.
+pub(crate) async fn safe_resolve_with_config(
+    rpc_client: &RpcClient,
+    domain: &str,
+    allow_pda: AllowPda,
+    srs_resolution_enabled: bool,
+    now_unix_seconds: i64,
+) -> Result<Pubkey, SnsError> {
+    if let Some(trimmed_domain) = domain.strip_suffix(SOL_TLD) {
+        if srs_resolution_enabled {
+            let (srs_target, sns_target) = futures::try_join!(
+                resolve_srs(rpc_client, trimmed_domain, &allow_pda, now_unix_seconds),
+                resolve_sns(rpc_client, trimmed_domain, &allow_pda),
+            )?;
+
+            if srs_target != sns_target {
+                return Err(SnsError::SnsSolResolutionMismatch);
+            }
+
+            return Ok(srs_target);
+        }
+    }
+
+    resolve_with_config(
+        rpc_client,
+        domain,
+        allow_pda,
+        srs_resolution_enabled,
+        now_unix_seconds,
+    )
+    .await
 }
 
 /// Resolves a TLD-trimmed name through SNS-IP 5 ownership priority.

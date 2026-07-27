@@ -15,7 +15,7 @@ pub async fn resolve_name_registry_batch(
 ) -> Result<Vec<Option<(NameRecordHeader, Vec<u8>)>>, SnsError>
 ```
 
-Defined in: <SourceLink path="rust-crates/sns-sdk/src/non_blocking/resolve.rs" line={256} label="rust-crates/sns-sdk/src/non_blocking/resolve.rs:256" />
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/non_blocking/resolve.rs" line={312} label="rust-crates/sns-sdk/src/non_blocking/resolve.rs:312" />
 
 Reads name-registry accounts in RPC batches of 100 keys. Results preserve the input order, and every present payload excludes the `NameRecordHeader` bytes.
 

@@ -16,7 +16,7 @@ pub fn resolve(
 ) -> Result<Pubkey, SnsError>
 ```
 
-Defined in: <SourceLink path="rust-crates/sns-sdk/src/blocking/resolve.rs" line={33} label="rust-crates/sns-sdk/src/blocking/resolve.rs:33" />
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/blocking/resolve.rs" line={36} label="rust-crates/sns-sdk/src/blocking/resolve.rs:36" />
 
 Resolves a full `.sns` or currently supported `.sol` name to its effective owner. SNS resolution prefers an active tokenized-domain owner, then a valid V2 `SOL` record, then a valid V1 `SOL` record, and finally the name-registry owner. SRS-backed `.sol` resolution is disabled; legacy SNS-backed `.sol` reads stop at finalized slot <code><CutoffSlot /></code>.
 

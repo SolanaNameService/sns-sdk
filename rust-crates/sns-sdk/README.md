@@ -57,7 +57,7 @@ use solana_client::nonblocking::rpc_client::RpcClient;
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let rpc_url = std::env::var("RPC_URL")?;
     let client = RpcClient::new(rpc_url);
-    let owner = resolve(&client, "mydomain.sns", AllowPda::Deny).await?;
+    let owner = resolve(&client, "mydomain.sns", AllowPda::Deny).await?; // Or use `safe_resolve`.
 
     println!("{owner}");
     Ok(())
@@ -145,6 +145,12 @@ RPC-backed read APIs are available in the selected namespace: use `sns_sdk::non_
 
   ```rust
   resolve::resolve(rpc_client: &RpcClient, domain: &str, allow_pda: AllowPda) -> Result<Pubkey, SnsError>
+  ```
+
+- **`resolve::safe_resolve`** — follows the same routing as `resolve`, except that when SRS-backed `.sol` resolution is enabled, it requires the `.sol` domain and its corresponding `.sns` domain to resolve to the same target; otherwise, it returns `SnsError::SnsSolResolutionMismatch`.
+
+  ```rust
+  resolve::safe_resolve(rpc_client: &RpcClient, domain: &str, allow_pda: AllowPda) -> Result<Pubkey, SnsError>
   ```
 
 - **`resolve::resolve_name_registry`** — fetches one raw name-registry account.

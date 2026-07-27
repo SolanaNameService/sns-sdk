@@ -7,15 +7,16 @@ Use this changelog as a migration guide from v1 to v2.
 ## Table of contents
 
 1. [Domain suffix handling](#1-domain-suffix-handling)
-2. [.sol resolution transition](#2-sol-resolution-transition)
-3. [Renamed public APIs](#3-renamed-public-apis)
-4. [Blocking and non-blocking modules](#4-blocking-and-non-blocking-modules)
-5. [Resolve migration](#5-resolve-migration)
-6. [Record migration](#6-record-migration)
-7. [Domain registration migration](#7-domain-registration-migration)
-8. [Tokenized domain migration](#8-tokenized-domain-migration)
-9. [Primary domain migration](#9-primary-domain-migration)
-10. [Removed APIs](#10-removed-apis)
+2. [.sol read compatibility and cutoff](#2-sol-read-compatibility-and-cutoff)
+3. [New APIs](#3-new-apis)
+4. [Renamed public APIs](#4-renamed-public-apis)
+5. [Blocking and non-blocking modules](#5-blocking-and-non-blocking-modules)
+6. [Resolve migration](#6-resolve-migration)
+7. [Record migration](#7-record-migration)
+8. [Domain registration migration](#8-domain-registration-migration)
+9. [Tokenized domain migration](#9-tokenized-domain-migration)
+10. [Primary domain migration](#10-primary-domain-migration)
+11. [Removed APIs](#11-removed-apis)
 
 ## 1. Domain suffix handling
 
@@ -29,6 +30,8 @@ Affected APIs:
 
 - `non_blocking::resolve::resolve`
 - `blocking::resolve::resolve`
+- `non_blocking::resolve::safe_resolve`
+- `blocking::resolve::safe_resolve`
 - `non_blocking::record_v1::get_record`
 - `blocking::record_v1::get_record`
 - `non_blocking::record_v2::get_record_v2`
@@ -40,6 +43,7 @@ Affected APIs:
 
 ```rust
 let owner = sns_sdk::non_blocking::resolve::resolve(&client, "mydomain.sns", AllowPda::Deny).await?;
+let verified = sns_sdk::non_blocking::resolve::safe_resolve(&client, "mydomain.sol", AllowPda::Deny).await?;
 ```
 
 `.sol` is accepted by these APIs only during a transition window. See section 2 for the cutoff behavior; do not treat `.sol` as a permanent `.sns` alias.
@@ -119,7 +123,7 @@ These low-level APIs take raw names or explicit account keys, not full domain st
 
 For example, use `"mydomain"` rather than `"mydomain.sns"` when directly creating a raw name account.
 
-## 2. `.sol` resolution transition
+## 2. `.sol` read compatibility and cutoff
 
 The high-level Read APIs in section 1 handle `.sol` differently depending on the cluster's finalized slot:
 
@@ -135,7 +139,22 @@ name.sol at/after cutoff         -> unsupported
 
 Native .sol resolution backed by the SRS registrar will be enabled in a future SDK update.
 
-## 3. Renamed public APIs
+## 3. New APIs
+
+### `safe_resolve`
+
+The blocking and non-blocking `safe_resolve` functions follow the same routing as `resolve`, except that when SRS-backed `.sol` resolution is enabled, they require the `.sol` domain and its corresponding `.sns` domain to resolve to the same target; otherwise, they return `SnsError::SnsSolResolutionMismatch`.
+
+```rust
+let target = sns_sdk::non_blocking::resolve::safe_resolve(
+    &client,
+    "mydomain.sol",
+    AllowPda::Deny,
+)
+.await?;
+```
+
+## 4. Renamed public APIs
 
 This section is the authoritative rename/move index. Update imports and calls using these maps.
 
@@ -199,7 +218,7 @@ This section is the authoritative rename/move index. Update imports and calls us
 | no v1 equivalent                               | `blocking::nft::get_nft_records`            |
 | no v1 equivalent                               | `blocking::nft::get_sns_nfts_for_owner`     |
 
-## 4. Blocking and non-blocking modules
+## 5. Blocking and non-blocking modules
 
 The Rust SDK keeps mutually exclusive blocking and non-blocking modes. RPC-backed APIs moved into feature-specific modules, so imports must change:
 
@@ -218,7 +237,7 @@ non_blocking::subdomain          blocking::subdomain
 
 Shared modules such as `record`, `derivation`, `tld`, `primary_domain`, and `bindings` contain pure parsing, key derivation, constants, or instruction builders.
 
-## 5. Resolve migration
+## 6. Resolve migration
 
 `resolve` replaces `resolve_owner`, takes a full domain with a `.sns` or `.sol` TLD suffix, and returns the owner directly:
 
@@ -231,7 +250,7 @@ use sns_sdk::non_blocking::resolve::{resolve, AllowPda};
 let owner = resolve(&client, "mydomain.sns", AllowPda::Deny).await?;
 ```
 
-## 6. Record migration
+## 7. Record migration
 
 ### V1 and V2 record fetching
 
@@ -297,7 +316,7 @@ Also note:
 - `ParsedRecordV2::verify_staleness` expects the effective domain owner, such as `nft_owner.unwrap_or(domain_registry.owner)`;
 - the optional owner account data argument to `verify_staleness` is only needed for XChain-owned domains.
 
-## 7. Domain registration migration
+## 8. Domain registration migration
 
 Registration changed from mode-specific RPC helpers to a single synchronous instruction builder:
 
@@ -323,7 +342,7 @@ let instructions = sns_sdk::bindings::register_domain::register_domain(
 )?;
 ```
 
-## 8. Tokenized domain migration
+## 9. Tokenized domain migration
 
 - `get_tokenized_domains` was renamed to `get_sns_nfts_for_owner` and moved from `resolve` to `nft`.
 - The return type changes from `Vec<(String, Pubkey)>` to `Vec<SnsNftDomain>`, so tuple destructuring becomes field access on `.reverse`, `.key`, and `.mint`.
@@ -343,7 +362,7 @@ for SnsNftDomain { reverse, key, mint } in domains {
 }
 ```
 
-## 9. Primary domain migration
+## 10. Primary domain migration
 
 The favourite-domain API was renamed to primary domain across terminology, types, and module paths:
 
@@ -359,7 +378,7 @@ The favourite-domain API was renamed to primary domain across terminology, types
 let primary = get_primary_domain(&client, &owner)?;
 ```
 
-## 10. Removed APIs
+## 11. Removed APIs
 
 - `record::convert_u5_array` and `record::record_v1::convert_u5_array` were removed without a public replacement. Use a standard Bech32 conversion if direct conversion is still needed.
 - `non_blocking::resolve::deserialize_name_registry` was removed. Use `resolve_name_registry` or `resolve_name_registry_batch` to fetch and deserialize name registry accounts.

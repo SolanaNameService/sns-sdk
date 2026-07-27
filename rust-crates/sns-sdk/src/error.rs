@@ -50,6 +50,7 @@ pub enum SnsError {
     DomainExpired,
     CouldNotFindSrsOwner,
     CouldNotFindNftOwner,
+    SnsSolResolutionMismatch,
 }
 
 impl From<ClientError> for SnsError {

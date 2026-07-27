@@ -443,6 +443,16 @@
       }
     },
     {
+      "id": "rust.non-blocking.safe-resolve",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "safe_resolve",
+      "source": "rust-crates/sns-sdk/src/non_blocking/resolve.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/non-blocking/domain-resolution/safe-resolve.mdx"
+      }
+    },
+    {
       "id": "rust.non-blocking.resolve-name-registry",
       "product": "rust",
       "kind": "rust-callable",
@@ -610,6 +620,16 @@
       "source": "rust-crates/sns-sdk/src/blocking/resolve.rs",
       "target": {
         "path": "dev-docs/docs/sdks/rust/api/blocking/domain-resolution/resolve.mdx"
+      }
+    },
+    {
+      "id": "rust.blocking.safe-resolve",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "safe_resolve",
+      "source": "rust-crates/sns-sdk/src/blocking/resolve.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/blocking/domain-resolution/safe-resolve.mdx"
       }
     },
     {

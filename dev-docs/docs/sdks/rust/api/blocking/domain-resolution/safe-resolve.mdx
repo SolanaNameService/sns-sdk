@@ -1,0 +1,60 @@
+---
+displayed_sidebar: docsSidebar
+title: safe_resolve
+description: Resolve a domain with SRS and SNS consistency checking using the blocking Rust client.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Domain resolution](../domain-resolution.mdx) / `safe_resolve`
+
+# Function: `safe_resolve()`
+
+```rust
+pub fn safe_resolve(
+    rpc_client: &RpcClient,
+    domain: &str,
+    allow_pda: AllowPda,
+) -> Result<Pubkey, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/blocking/resolve.rs" line={55} label="rust-crates/sns-sdk/src/blocking/resolve.rs:55" />
+
+Uses the same routing as [`resolve`](./resolve.mdx). When SRS-backed `.sol` resolution is enabled, it resolves the TLD-trimmed name through both SRS and SNS with the same `allow_pda` policy. Matching targets are returned; differing targets produce `SnsError::SnsSolResolutionMismatch`.
+
+For `.sns`, unsupported inputs, and `.sol` while SRS-backed resolution is disabled, this function follows ordinary `resolve` behavior. Resolver and RPC errors propagate unchanged.
+
+## Availability
+
+Requires the `blocking` feature, which exposes `sns_sdk::blocking` instead of `sns_sdk::non_blocking`.
+
+## Parameters
+
+| Parameter    | Type                                    | Description                                                             |
+| ------------ | --------------------------------------- | ----------------------------------------------------------------------- |
+| `rpc_client` | `&solana_client::rpc_client::RpcClient` | Blocking Solana RPC client used for SRS and SNS resolution.             |
+| `domain`     | `&str`                                  | Full supported `.sns` or `.sol` domain name.                            |
+| `allow_pda`  | `AllowPda`                              | Policy applied consistently to both SRS and SNS final-owner resolution. |
+
+## Returns
+
+`Result<Pubkey, SnsError>` containing the matching SRS/SNS target when compared, or the target returned by ordinary resolution.
+
+## Errors
+
+- `SnsError::SnsSolResolutionMismatch` when enabled SRS and SNS resolution return different targets.
+- Any error returned by ordinary SRS or SNS resolution, including RPC, domain, record, and PDA-policy errors.
+
+## Example
+
+```rust
+use sns_sdk::blocking::resolve::{safe_resolve, AllowPda};
+use solana_client::rpc_client::RpcClient;
+
+let client = RpcClient::new(std::env::var("RPC_URL")?);
+let target = safe_resolve(&client, "example.sol", AllowPda::Deny)?;
+println!("{target}");
+```
+
+## Related APIs
+
+- [`resolve`](./resolve.mdx)
+- [Non-blocking `safe_resolve`](/docs/sdks/rust/api/non-blocking/domain-resolution/safe-resolve)
