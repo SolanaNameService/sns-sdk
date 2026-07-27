@@ -28,7 +28,7 @@ The proxy exposes selected [`@bonfida/spl-name-service`](../js/) operations over
 
 All application endpoints use `GET`.
 
-The `/resolve/:domain` route requires a full domain name ending in `.sns` or `.sol`, such as `mydomain.sns`, `sub.mydomain.sns`, or `mydomain.sol`.
+The `/resolve/:domain` and `/safe-resolve/:domain` routes require a full domain name ending in `.sns` or `.sol`, such as `mydomain.sns`, `sub.mydomain.sns`, or `mydomain.sol`.
 
 All other routes that accept a domain assume an `.sns` domain and require a name without the suffix, such as `mydomain` or `sub.mydomain`. The proxy appends `.sns` internally.
 
@@ -84,6 +84,7 @@ type RecordResult = {
 | `200`  | Route result                                                                         | Successful request, including `null` primary-domain results.              |
 | `400`  | `Invalid input`, `Unsupported TLD`, or a deprecation message                         | Invalid schema input or selected SDK validation failures.                 |
 | `404`  | `Domain not found`, `Record not found`, `Account not found`, or `Resource not found` | Requested chain data is absent.                                           |
+| `409`  | `SRS and SNS resolution mismatch`                                                    | Safe `.sol` resolution returned different SRS and SNS targets.            |
 | `422`  | `Record is malformed`                                                                | Record data or validation is malformed.                                   |
 | `502`  | `RPC unavailable`                                                                    | Solana RPC returned a JSON-RPC error.                                     |
 | `500`  | `Internal error`                                                                     | Any other failure, including a missing `RPC_URL` for an RPC-backed route. |
@@ -104,7 +105,20 @@ type RecordResult = {
   GET /resolve/mydomain.sol
   ```
 
-For `.sol`, the JavaScript SDK uses the legacy SNS-backed path only while the selected RPC reports a finalized slot below `452,825,395`. At or after that slot, `.sol` is rejected as unsupported. SRS-backed `.sol` resolution is expected to be enabled in a future update.
+- **`GET /safe-resolve/:domain`** — follows `/resolve/:domain`, except that when SRS-backed `.sol` resolution is enabled, the `.sol` domain and its corresponding `.sns` domain must resolve to the same target.
+
+  ```http
+  GET /safe-resolve/:domain
+  ```
+
+  Inputs and successful results are identical to `/resolve/:domain`; optional `rpc` is supported. A target mismatch returns `409 SRS and SNS resolution mismatch`.
+
+  ```http
+  GET /safe-resolve/mydomain.sns
+  GET /safe-resolve/mydomain.sol
+  ```
+
+For `.sol`, both routes use the legacy SNS-backed path only while the selected RPC reports a finalized slot below `452,825,395`. At or after that slot, `.sol` is rejected as unsupported. Once SRS-backed `.sol` resolution is enabled, `/safe-resolve/:domain` additionally requires matching SRS and SNS targets.
 
 ## Domain And Key Queries
 

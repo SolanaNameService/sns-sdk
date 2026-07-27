@@ -1,10 +1,11 @@
 import {
   resolve,
+  safeResolve,
   SNS_TLD,
   SOL_TLD,
   UnsupportedTldError,
 } from "@bonfida/spl-name-service";
-import type { Hono } from "hono";
+import type { Context, Hono } from "hono";
 
 import {
   getConnection,
@@ -14,8 +15,8 @@ import {
 } from "../utils/http";
 import { domainOrSubdomainWithoutTldSchema } from "../utils/schemas";
 
-export const registerResolveRoutes = (app: Hono<Env>) => {
-  app.get("/resolve/:domain", async (c) => {
+const resolveHandler = (resolver: typeof resolve) =>
+  async function handleResolve(c: Context<Env>) {
     try {
       const domain = c.req.param("domain").trim().toLowerCase();
       const tld = [SNS_TLD, SOL_TLD].find((value) => domain.endsWith(value));
@@ -25,10 +26,14 @@ export const registerResolveRoutes = (app: Hono<Env>) => {
       }
 
       domainOrSubdomainWithoutTldSchema.parse(domain.slice(0, -tld.length));
-      const res = await resolve(getConnection(c), domain);
+      const res = await resolver(getConnection(c), domain);
       return c.json(response(true, res));
     } catch (err) {
       return handleApiError(c, err);
     }
-  });
+  };
+
+export const registerResolveRoutes = (app: Hono<Env>) => {
+  app.get("/resolve/:domain", resolveHandler(resolve));
+  app.get("/safe-resolve/:domain", resolveHandler(safeResolve));
 };

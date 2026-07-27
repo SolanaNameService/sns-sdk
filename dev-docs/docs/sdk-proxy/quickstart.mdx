@@ -26,6 +26,12 @@ A successful response contains the effective target's base58 public key:
 }
 ```
 
+Use `GET /safe-resolve/:domain` as the explicit alternative when SRS-backed `.sol` resolution must agree with the corresponding SNS target:
+
+```bash
+curl "https://sdk-proxy.sns.id/safe-resolve/bonfida.sol"
+```
+
 ## Build registration instructions
 
 Pass the buyer public key, a TLD-less unregistered domain name, and an account size from `0` through `10000` bytes to `GET /register`:

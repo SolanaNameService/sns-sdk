@@ -1,0 +1,66 @@
+---
+title: "GET /safe-resolve/:domain"
+description: Resolve a full SNS or .sol domain with conditional SRS and SNS consistency checking.
+---
+
+Resolve a full `.sns` or `.sol` domain using the same routing as [`GET /resolve/:domain`](./resolve.mdx), with an additional consistency check for SRS-backed `.sol` resolution.
+
+## Request
+
+```http
+GET /safe-resolve/:domain
+```
+
+## Path parameters
+
+### `domain`
+
+Required. A full domain ending in `.sns` or `.sol`. The value before the suffix must contain one non-empty label, such as `name.sns`, or two non-empty labels, such as `team.name.sns`.
+
+The route trims surrounding whitespace and converts the value to lowercase. Bare names, unsupported suffixes, empty labels, and deeper subdomains are rejected.
+
+## Query parameters
+
+### `rpc`
+
+Optional. A non-empty Solana RPC URL that overrides the proxy Worker's `RPC_URL` binding for this request.
+
+## Response
+
+A successful request returns `200 OK` with the effective target as a base58 public key:
+
+```ts
+type SafeResolveResponse = {
+  s: "ok";
+  result: string;
+};
+```
+
+When SRS-backed `.sol` resolution is enabled, the TLD-trimmed name is resolved through both SRS and SNS. The target is returned only when both systems resolve to the same public key. For `.sns`, or while SRS-backed resolution is disabled, the route follows ordinary `/resolve/:domain` behavior.
+
+## Example
+
+```bash
+curl "https://sdk-proxy.sns.id/safe-resolve/bonfida.sol"
+```
+
+```json
+{
+  "s": "ok",
+  "result": "<TARGET_PUBLIC_KEY>"
+}
+```
+
+## Errors
+
+Error responses use `{ "s": "error", "result": string }`.
+
+| Status | `result`                          | When                                                                               |
+| ------ | --------------------------------- | ---------------------------------------------------------------------------------- |
+| `400`  | `Invalid input`                   | The value before the suffix has empty labels or more than two labels.              |
+| `400`  | `Unsupported TLD`                 | The suffix is missing or unsupported, or SDK-managed `.sol` resolution has paused. |
+| `404`  | `Domain not found`                | The requested domain registry does not exist.                                      |
+| `409`  | `SRS and SNS resolution mismatch` | Enabled SRS and SNS resolution return different targets.                           |
+| `422`  | `Record is malformed`             | A selected resolution record has malformed content or unsupported validation.      |
+| `502`  | `RPC unavailable`                 | The selected Solana RPC returns a JSON-RPC error.                                  |
+| `500`  | `Internal error`                  | No RPC endpoint is configured, or resolution fails for another unmapped reason.    |

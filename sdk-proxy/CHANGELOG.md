@@ -8,13 +8,15 @@ v1.0.0.
 ## Table of contents
 
 1. [Domain inputs and resolution](#1-domain-inputs-and-resolution)
-2. [Updated endpoints](#2-updated-endpoints)
-3. [Removed endpoints](#3-removed-endpoints)
+2. [New endpoints](#2-new-endpoints)
+3. [Updated endpoints](#3-updated-endpoints)
+4. [Removed endpoints](#4-removed-endpoints)
 
 ## 1. Domain inputs and resolution
 
-In v1, `/resolve/:domain` requires a full domain name ending in `.sns` or
-`.sol`, such as `mydomain.sns`, `sub.mydomain.sns`, or `mydomain.sol`.
+In v1, `/resolve/:domain` and `/safe-resolve/:domain` require a full domain name
+ending in `.sns` or `.sol`, such as `mydomain.sns`, `sub.mydomain.sns`, or
+`mydomain.sol`.
 
 All other routes that accept a domain assume an `.sns` domain and require a
 name without the suffix, such as `mydomain` or `sub.mydomain`. The proxy appends
@@ -41,7 +43,28 @@ SDK release.
 
 **Action required:** Add `.sns` or `.sol` to existing `/resolve` path values.
 
-## 2. Updated endpoints
+## 2. New endpoints
+
+### `/safe-resolve/:domain`
+
+`/safe-resolve/:domain` follows the same routing and response contract as `/resolve/:domain`, except that when SRS-backed `.sol` resolution is enabled, it requires the `.sol` domain and its corresponding `.sns` domain to resolve to the same target.
+
+```http
+GET /safe-resolve/mydomain.sol
+```
+
+If the SRS and SNS targets differ, the route returns `409 Conflict`:
+
+```json
+{
+  "s": "error",
+  "result": "SRS and SNS resolution mismatch"
+}
+```
+
+The existing `/resolve/:domain` endpoint is unchanged.
+
+## 3. Updated endpoints
 
 ### Record endpoints
 
@@ -180,7 +203,7 @@ The API now exposes routes using primary-domain terminology:
 **No action required:** The favorite-domain routes remain functional aliases.
 New integrations should use the primary-domain route names.
 
-## 3. Removed endpoints
+## 4. Removed endpoints
 
 The following legacy endpoints were removed:
 

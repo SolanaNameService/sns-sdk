@@ -166,6 +166,11 @@ const sidebars: SidebarsConfig = {
                   id: "sdk-proxy/endpoints/resolution/resolve",
                   label: "GET /resolve/:domain",
                 },
+                {
+                  type: "doc",
+                  id: "sdk-proxy/endpoints/resolution/safe-resolve",
+                  label: "GET /safe-resolve/:domain",
+                },
               ],
             },
             {

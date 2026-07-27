@@ -82,6 +82,8 @@ export const handleApiError = (
       return c.json(response(false, "Domain not found"), 404);
     case ErrorType.DomainExpired:
       return c.json(response(false, "Domain expired"), 410);
+    case ErrorType.SnsSolResolutionMismatch:
+      return c.json(response(false, "SRS and SNS resolution mismatch"), 409);
     case ErrorType.AccountDoesNotExist:
     case ErrorType.NoAccountData:
     case ErrorType.NftRecordNotFound:

@@ -900,6 +900,18 @@
       }
     },
     {
+      "id": "proxy.safe-resolve",
+      "product": "sdk-proxy",
+      "kind": "proxy-route",
+      "method": "GET",
+      "route": "/safe-resolve/:domain",
+      "status": "current",
+      "source": "sdk-proxy/src/routes/resolve.ts",
+      "target": {
+        "path": "dev-docs/docs/sdk-proxy/endpoints/resolution/safe-resolve.mdx"
+      }
+    },
+    {
       "id": "proxy.domain-key",
       "product": "sdk-proxy",
       "kind": "proxy-route",
