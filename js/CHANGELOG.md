@@ -7,12 +7,13 @@ Use this changelog as a migration guide from v3 to v4.
 ## Table of contents
 
 1. [Domain suffix handling](#1-domain-suffix-handling)
-2. [Renamed public APIs](#2-renamed-public-apis)
-3. [Registration migration](#3-registration-migration)
-4. [Transfer migration](#4-transfer-migration)
-5. [Record migration](#5-record-migration)
-6. [Removed APIs and modules](#6-removed-apis-and-modules)
-7. [Package entrypoints and subpaths](#7-package-entrypoints-and-subpaths)
+2. [New APIs](#2-new-apis)
+3. [Renamed public APIs](#3-renamed-public-apis)
+4. [Registration migration](#4-registration-migration)
+5. [Transfer migration](#5-transfer-migration)
+6. [Record migration](#6-record-migration)
+7. [Removed APIs and modules](#7-removed-apis-and-modules)
+8. [Package entrypoints and subpaths](#8-package-entrypoints-and-subpaths)
 
 ## 1. Domain suffix handling
 
@@ -43,6 +44,7 @@ Bare names passed to high-level APIs throw an unsupported TLD error.
 This applies to APIs such as:
 
 - `resolve`
+- `safeResolve`
 - `getRecord`
 - `getMultipleRecords`
 - `verifyStaleness`
@@ -52,12 +54,12 @@ Example:
 
 ```ts
 await resolve(connection, "mydomain.sns");
-await resolve(connection, "mydomain.sol");
+await safeResolve(connection, "mydomain.sol");
 ```
 
 Before slot `452825395` (`SOL_TLD_CUTOFF_SLOT`), high-level `.sol` reads and resolution use the existing SNS compatibility path. At or after that slot, high-level APIs including domain resolution will no longer support `.sol` domains and throw `UnsupportedTldError`.
 
-`.sns` behavior is unaffected. SRS-based `.sol` resolution is expected to be restored in a separate future SDK update.
+`.sns` behavior is unaffected. SRS-backed `.sol` resolution is expected to be restored in a separate future SDK update.
 
 ### Synchronous derivation APIs
 
@@ -144,7 +146,17 @@ These APIs expect the raw name used for account derivation:
 
 For example, use `"mydomain"` rather than `"mydomain.sns"` when directly creating or updating a raw name account.
 
-## 2. Renamed public APIs
+## 2. New APIs
+
+### `safeResolve`
+
+`safeResolve` follows the same routing as `resolve`, except that when SRS-backed `.sol` resolution is enabled, the `.sol` domain and the corresponding `.sns` domain must resolve to the same target. Otherwise, it throws `SnsSolResolutionMismatchError`.
+
+```ts
+const target = await safeResolve(connection, "mydomain.sol");
+```
+
+## 3. Renamed public APIs
 
 Update imports and function calls using this map.
 
@@ -216,7 +228,7 @@ named `domain`. Returned domain names do not include the `.sns` suffix.
 
 The `SnsDomain` and `SnsNft` result interfaces are exported by the package.
 
-## 3. Registration migration
+## 4. Registration migration
 
 ### `registerDomainNameV2` -> `registerDomain`
 
@@ -258,7 +270,7 @@ Important changes:
 - subdomains such as `"sub.mydomain.sns"` are rejected
 - `.sol` domains are rejected
 
-## 4. Transfer migration
+## 5. Transfer migration
 
 ### `transferNameOwnership` -> `transferDomain`
 
@@ -281,7 +293,7 @@ For subdomains, use `transferSubdomain` with a full `.sns` subdomain:
 await transferSubdomain(connection, "sub.mydomain.sns", newOwner);
 ```
 
-## 5. Record migration
+## 6. Record migration
 
 v4 standardizes public record APIs around SNS record V2.
 
@@ -376,7 +388,7 @@ Do not pass `.sol` domains to record write or validation APIs.
 
 For new code, prefer the high-level record APIs: `getRecord`, `getMultipleRecords`, `createRecord`, `updateRecord`, `deleteRecord`, `serializeRecordContent`, and `deserializeRecordContent`.
 
-## 6. Removed APIs and modules
+## 7. Removed APIs and modules
 
 The deprecated JS modules under `src/deprecated/*` were removed.
 
@@ -391,7 +403,7 @@ The following legacy exports were also removed or replaced:
 - `resolveSolRecordV2`
 - legacy per-record helper exports such as `getUrlRecord`, `getDiscordRecord`, `getGithubRecord`, and similar helpers
 
-## 7. Package entrypoints and subpaths
+## 8. Package entrypoints and subpaths
 
 The root entry point remains fully supported, but V4 introduces curated category subpaths. You can now use subpath imports to target specific modules:
 

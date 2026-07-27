@@ -27,7 +27,7 @@ While the root entry point remains available, applications can also use subpath 
 
 ```ts
 import { getPrimaryDomain } from "@bonfida/spl-name-service/address";
-import { resolve } from "@bonfida/spl-name-service/domain";
+import { resolve, safeResolve } from "@bonfida/spl-name-service/domain";
 import { getMultipleRecords, Record } from "@bonfida/spl-name-service/record";
 ```
 
@@ -42,7 +42,7 @@ import { Connection } from "@solana/web3.js";
 import { resolve } from "@bonfida/spl-name-service/domain";
 
 const connection = new Connection(process.env.RPC_URL!);
-const owner = await resolve(connection, "mydomain.sns");
+const owner = await resolve(connection, "mydomain.sns"); // Or use `safeResolve`.
 
 console.log(owner.toBase58());
 ```
@@ -77,13 +77,13 @@ console.log(domains.map(({ domain }) => `${domain}.sns`));
 
 Use the form required by each API rather than normalizing names yourself:
 
-| API family                                                                    | Required input                                                     | Scope                                                      |
-| ----------------------------------------------------------------------------- | ------------------------------------------------------------------ | ---------------------------------------------------------- |
-| High-level reads such as `resolve`, `getRecord`, and `getMultipleRecords`     | Full suffixed name, for example `mydomain.sns`                     | `.sns`; legacy `.sol` reads have the transition rule below |
-| Top-level writes such as registration, transfer, burn, and background changes | Canonical lowercase `mydomain.sns`                                 | Exactly one label before `.sns`                            |
-| Record writes                                                                 | Canonical lowercase `mydomain.sns` or `sub.mydomain.sns`           | Top-level domain or one-level subdomain                    |
-| Subdomain creation                                                            | Canonical lowercase `sub.mydomain.sns`                             | Exactly one subdomain level                                |
-| Derivation and raw name-account helpers                                       | TLD-trimmed or raw input, for example `mydomain` or `sub.mydomain` | Follow each low-level helper's account-format contract     |
+| API family                                                                               | Required input                                                     | Scope                                                      |
+| ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------ | ---------------------------------------------------------- |
+| High-level reads such as `resolve`, `safeResolve`, `getRecord`, and `getMultipleRecords` | Full suffixed name, for example `mydomain.sns`                     | `.sns`; legacy `.sol` reads have the transition rule below |
+| Top-level writes such as registration, transfer, burn, and background changes            | Canonical lowercase `mydomain.sns`                                 | Exactly one label before `.sns`                            |
+| Record writes                                                                            | Canonical lowercase `mydomain.sns` or `sub.mydomain.sns`           | Top-level domain or one-level subdomain                    |
+| Subdomain creation                                                                       | Canonical lowercase `sub.mydomain.sns`                             | Exactly one subdomain level                                |
+| Derivation and raw name-account helpers                                                  | TLD-trimmed or raw input, for example `mydomain` or `sub.mydomain` | Follow each low-level helper's account-format contract     |
 
 High-level `.sol` reads use the legacy SNS-backed path only before finalized slot `452,825,395`. At and after that slot, `.sol` is rejected. `.sol` writes are not supported.
 
@@ -95,6 +95,12 @@ High-level `.sol` reads use the legacy SNS-backed path only before finalized slo
 
   ```ts
   resolve(connection: Connection, domain: string, config?: ResolveConfig): Promise<PublicKey>
+  ```
+
+- **`safeResolve`** — follows `resolve`, but when SRS-backed `.sol` resolution is enabled, it also checks the SNS-backed target and throws `SnsSolResolutionMismatchError` if the addresses differ.
+
+  ```ts
+  safeResolve(connection: Connection, domain: string, config?: ResolveConfig): Promise<PublicKey>
   ```
 
 ### Record Reads And Validation

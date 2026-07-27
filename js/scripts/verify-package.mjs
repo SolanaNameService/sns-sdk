@@ -86,11 +86,11 @@ assert(
 );
 
 const runtimeChecks = {
-  ".": "getSnsDomainKeySync",
+  ".": ["getSnsDomainKeySync", "safeResolve"],
   "./address": "getPrimaryDomain",
   "./bindings": "burnDomain",
   "./constants": "NAME_PROGRAM_ID",
-  "./domain": "resolve",
+  "./domain": ["resolve", "safeResolve"],
   "./errors": "SNSError",
   "./instructions": "BurnInstruction",
   "./nft": "getDomainMint",
@@ -172,9 +172,14 @@ try {
   );
 
   const cjsAssertion = Object.entries(runtimeChecks)
-    .map(([subpath, exportName]) => {
+    .map(([subpath, exportNames]) => {
       const specifier = `${packageJson.name}${subpath === "." ? "" : subpath.slice(1)}`;
-      return `if (!("${exportName}" in require("${specifier}"))) throw new Error("Missing ${specifier}:${exportName}");`;
+      return (Array.isArray(exportNames) ? exportNames : [exportNames])
+        .map(
+          (exportName) =>
+            `if (!("${exportName}" in require("${specifier}"))) throw new Error("Missing ${specifier}:${exportName}");`,
+        )
+        .join("\n");
     })
     .join("\n");
   execFileSync(process.execPath, ["-e", cjsAssertion], {
@@ -183,9 +188,17 @@ try {
   });
 
   const esmAssertion = Object.entries(runtimeChecks)
-    .map(([subpath, exportName], index) => {
+    .map(([subpath, exportNames], index) => {
       const specifier = `${packageJson.name}${subpath === "." ? "" : subpath.slice(1)}`;
-      return `const module${index} = await import("${specifier}"); if (!("${exportName}" in module${index})) throw new Error("Missing ${specifier}:${exportName}");`;
+      const assertions = (
+        Array.isArray(exportNames) ? exportNames : [exportNames]
+      )
+        .map(
+          (exportName) =>
+            `if (!("${exportName}" in module${index})) throw new Error("Missing ${specifier}:${exportName}");`,
+        )
+        .join(" ");
+      return `const module${index} = await import("${specifier}"); ${assertions}`;
     })
     .join("\n");
   execFileSync(process.execPath, ["--input-type=module", "-e", esmAssertion], {

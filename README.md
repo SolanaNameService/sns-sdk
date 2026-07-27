@@ -48,11 +48,11 @@ npm install @bonfida/spl-name-service @solana/web3.js
 ```
 
 ```typescript
-import { resolve } from "@bonfida/spl-name-service/domain";
+import { safeResolve } from "@bonfida/spl-name-service/domain";
 import { Connection } from "@solana/web3.js";
 
 const connection = new Connection(process.env.RPC_URL!);
-const owner = await resolve(connection, "mydomain.sns");
+const owner = await safeResolve(connection, "mydomain.sns");
 ```
 
 See the [JavaScript SDK package guide](./js/README.md) and [v4 migration guide](./js/CHANGELOG.md).
