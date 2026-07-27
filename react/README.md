@@ -57,6 +57,8 @@ function Resolve() {
 }
 ```
 
+Use `useSafeResolve` instead when the JavaScript SDK's conditional SRS/SNS consistency verification is required.
+
 ### Read Verified Records
 
 ```tsx
@@ -86,12 +88,12 @@ function Records({ connection }: { connection: Connection }) {
 
 ## Domain Inputs
 
-| Hook                                        | Input                                    | Notes                                                            |
-| ------------------------------------------- | ---------------------------------------- | ---------------------------------------------------------------- |
-| `useResolve`, `useRecords`, `useProfilePic` | Full domain such as `example.sns`        | Inherits JS v4 support for `.sns` and transitional `.sol` reads. |
-| `useSubdomains`                             | TLD-trimmed SNS parent such as `example` | Passed to v4 `getSnsDomainKeySync`. Do not include `.sns`.       |
-| `useSnsDomainsForOwner`, `usePrimaryDomain` | Wallet `PublicKey`                       | Nullish input disables the query.                                |
-| `useReverseLookup`                          | Domain account `PublicKey`               | Nullish input disables the query.                                |
+| Hook                                                          | Input                                    | Notes                                                                                                                                                                  |
+| ------------------------------------------------------------- | ---------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `useResolve`, `useSafeResolve`, `useRecords`, `useProfilePic` | Full domain such as `example.sns`        | `useSafeResolve` delegates to JS SDK safe resolution and compares targets only when SRS-backed `.sol` resolution is enabled; other hooks inherit JS v4 domain support. |
+| `useSubdomains`                                               | TLD-trimmed SNS parent such as `example` | Passed to v4 `getSnsDomainKeySync`. Do not include `.sns`.                                                                                                             |
+| `useSnsDomainsForOwner`, `usePrimaryDomain`                   | Wallet `PublicKey`                       | Nullish input disables the query.                                                                                                                                      |
+| `useReverseLookup`                                            | Domain account `PublicKey`               | Nullish input disables the query.                                                                                                                                      |
 
 High-level `.sol` reads use the JS SDK compatibility path only before finalized slot `452825395`. At or after that slot they throw `UnsupportedTldError`. SNS React does not extend that support.
 
@@ -115,6 +117,14 @@ Resolves a full domain to its effective owner with v4 `resolve`.
 
 ```ts
 useResolve(connection, domain, queryOptions?)
+```
+
+### `useSafeResolve`
+
+Resolves a full domain through JS SDK `safeResolve`. When SRS-backed `.sol` resolution is enabled, the `.sol` and corresponding `.sns` targets must match. Mismatches and other SDK failures are available through the query result's `error` and `isError` fields.
+
+```ts
+useSafeResolve(connection, domain, queryOptions?)
 ```
 
 ### `useSnsDomainsForOwner`

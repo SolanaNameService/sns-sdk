@@ -1,6 +1,7 @@
 import type { Connection, PublicKey } from "@solana/web3.js";
 import {
   useResolve,
+  useSafeResolve,
   usePrimaryDomain,
   useProfilePic,
   useRecords,
@@ -15,6 +16,7 @@ declare const publicKey: PublicKey;
 declare const options: Options<PublicKey, string>;
 
 const selectedOwner = useResolve(connection, "example.sns", options);
+const selectedSafeOwner = useSafeResolve(connection, "example.sns", options);
 const selectedRecords = useRecords(
   connection,
   "example.sns",
@@ -23,15 +25,18 @@ const selectedRecords = useRecords(
   { select: (records) => records.filter(Boolean).length },
 );
 const owner: string | undefined = selectedOwner.data;
+const safeOwner: string | undefined = selectedSafeOwner.data;
 const recordCount: number | undefined = selectedRecords.data;
 
 void [
   owner,
+  safeOwner,
   recordCount,
   usePrimaryDomain,
   useProfilePic,
   useReverseLookup,
   useSnsDomainsForOwner,
   useSubdomains,
+  useSafeResolve,
   publicKey,
 ];

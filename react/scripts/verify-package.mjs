@@ -173,6 +173,7 @@ try {
 
   const expectedExports = [
     "useResolve",
+    "useSafeResolve",
     "usePrimaryDomain",
     "useProfilePic",
     "useRecords",

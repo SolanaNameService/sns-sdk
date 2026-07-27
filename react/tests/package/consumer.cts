@@ -1,5 +1,6 @@
 import {
   useResolve,
+  useSafeResolve,
   usePrimaryDomain,
   useProfilePic,
   useRecords,
@@ -10,6 +11,7 @@ import {
 
 void [
   useResolve,
+  useSafeResolve,
   usePrimaryDomain,
   useProfilePic,
   useRecords,

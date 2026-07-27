@@ -156,6 +156,8 @@ export function Resolve({ connection }: { connection: Connection }) {
 }
 ```
 
+Use `useSafeResolve` when callers require the JavaScript SDK's safe-resolution consistency check.
+
 See the [React hooks package guide](./react/README.md) for peer dependencies and available hooks.
 
 ## Compatibility and migration

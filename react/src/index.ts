@@ -1,4 +1,5 @@
 export { useResolve } from "./hooks/useResolve";
+export { useSafeResolve } from "./hooks/useSafeResolve";
 export {
   usePrimaryDomain,
   type PrimaryDomainResult,

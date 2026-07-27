@@ -16,6 +16,10 @@ npm install @bonfida/sns-react @bonfida/spl-name-service@^4.0.0 @solana/web3.js@
 
 ## Updated hooks
 
+### `useSafeResolve`
+
+`useSafeResolve` is new in v4. It follows `useResolve`, except that JS SDK `safeResolve` conditionally checks that SRS-backed `.sol` resolution and the corresponding `.sns` domain resolve to the same target. A mismatch appears as `SnsSolResolutionMismatchError` in the query result's `error` field.
+
 The following v3 hooks have been renamed or replaced in v4:
 
 | v3 hook                  | v4 equivalent                            |
