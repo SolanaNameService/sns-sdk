@@ -5,10 +5,6 @@ const sidebars: SidebarsConfig = {
     {
       type: "category",
       label: "Migration Guide",
-      link: {
-        type: "doc",
-        id: "migration/index",
-      },
       items: [
         {
           type: "doc",
@@ -35,18 +31,10 @@ const sidebars: SidebarsConfig = {
     {
       type: "category",
       label: "SDKs",
-      link: {
-        type: "doc",
-        id: "sdks/javascript/installation",
-      },
       items: [
         {
           type: "category",
           label: "JavaScript",
-          link: {
-            type: "doc",
-            id: "sdks/javascript/installation",
-          },
           items: [
             {
               type: "doc",
@@ -68,10 +56,6 @@ const sidebars: SidebarsConfig = {
         {
           type: "category",
           label: "JS Kit",
-          link: {
-            type: "doc",
-            id: "sdks/js-kit/installation",
-          },
           items: [
             {
               type: "doc",
@@ -93,10 +77,6 @@ const sidebars: SidebarsConfig = {
         {
           type: "category",
           label: "Rust",
-          link: {
-            type: "doc",
-            id: "sdks/rust/installation",
-          },
           items: [
             {
               type: "doc",
@@ -120,10 +100,6 @@ const sidebars: SidebarsConfig = {
     {
       type: "category",
       label: "SDK Proxy",
-      link: {
-        type: "doc",
-        id: "sdk-proxy/quickstart",
-      },
       items: [
         {
           type: "doc",
@@ -133,18 +109,10 @@ const sidebars: SidebarsConfig = {
         {
           type: "category",
           label: "Endpoints",
-          link: {
-            type: "doc",
-            id: "sdk-proxy/endpoints/general/root",
-          },
           items: [
             {
               type: "category",
               label: "General",
-              link: {
-                type: "doc",
-                id: "sdk-proxy/endpoints/general/root",
-              },
               items: [
                 {
                   type: "doc",
@@ -156,10 +124,6 @@ const sidebars: SidebarsConfig = {
             {
               type: "category",
               label: "Resolution",
-              link: {
-                type: "doc",
-                id: "sdk-proxy/endpoints/resolution/resolve",
-              },
               items: [
                 {
                   type: "doc",
@@ -176,10 +140,6 @@ const sidebars: SidebarsConfig = {
             {
               type: "category",
               label: "Domains and ownership",
-              link: {
-                type: "doc",
-                id: "sdk-proxy/endpoints/domains/domain-key",
-              },
               items: [
                 {
                   type: "doc",
@@ -231,10 +191,6 @@ const sidebars: SidebarsConfig = {
             {
               type: "category",
               label: "Records",
-              link: {
-                type: "doc",
-                id: "sdk-proxy/endpoints/records/types-record",
-              },
               items: [
                 {
                   type: "doc",
@@ -271,10 +227,6 @@ const sidebars: SidebarsConfig = {
             {
               type: "category",
               label: "Instructions",
-              link: {
-                type: "doc",
-                id: "sdk-proxy/endpoints/instructions/register",
-              },
               items: [
                 {
                   type: "doc",
@@ -295,10 +247,6 @@ const sidebars: SidebarsConfig = {
     {
       type: "category",
       label: "React Hooks",
-      link: {
-        type: "doc",
-        id: "react-hooks/installation",
-      },
       items: [
         {
           type: "doc",
@@ -320,10 +268,6 @@ const sidebars: SidebarsConfig = {
     {
       type: "category",
       label: "CLI",
-      link: {
-        type: "doc",
-        id: "cli/installation",
-      },
       items: [
         {
           type: "doc",
@@ -338,10 +282,6 @@ const sidebars: SidebarsConfig = {
         {
           type: "category",
           label: "Commands",
-          link: {
-            type: "doc",
-            id: "cli/commands/resolve",
-          },
           items: [
             {
               type: "doc",
