@@ -84,7 +84,8 @@ pub(crate) fn parse_srs_record(
             .try_into()
             .map_err(|_| SnsError::RecordMalformed)?,
     );
-    if expiry <= now_unix_seconds {
+    // Zero is the SRS sentinel for a record that does not expire.
+    if expiry != 0 && expiry <= now_unix_seconds {
         return Err(SnsError::DomainExpired);
     }
 
@@ -315,9 +316,9 @@ mod tests {
     }
 
     #[test]
-    fn enforces_strict_expiry_boundary() {
+    fn supports_zero_expiry_and_enforces_nonzero_boundary() {
         let owner = Pubkey::new_unique();
-        for expiry in [NOW - 1, NOW] {
+        for expiry in [-1, NOW - 1, NOW] {
             assert!(matches!(
                 parse_srs_record(
                     &SRS_PROGRAM_ID,
@@ -327,12 +328,14 @@ mod tests {
                 Err(SnsError::DomainExpired)
             ));
         }
-        assert!(parse_srs_record(
-            &SRS_PROGRAM_ID,
-            &record(SRS_OWNER_TYPE_PUBKEY, owner, NOW + 1),
-            NOW,
-        )
-        .is_ok());
+        for expiry in [0, NOW + 1] {
+            assert!(parse_srs_record(
+                &SRS_PROGRAM_ID,
+                &record(SRS_OWNER_TYPE_PUBKEY, owner, expiry),
+                NOW,
+            )
+            .is_ok());
+        }
     }
 
     #[test]
