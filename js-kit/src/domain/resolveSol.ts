@@ -113,7 +113,8 @@ export const resolveSol = async ({
       SRS_RECORD_EXPIRY_OFFSET + SRS_EXPIRY_LENGTH
     )
   );
-  if (expiry <= BigInt(Math.floor(Date.now() / 1_000))) {
+  // Zero is the SRS sentinel for a record that does not expire.
+  if (expiry !== 0n && expiry <= BigInt(Math.floor(Date.now() / 1_000))) {
     throw new DomainExpiredError(`Domain ${domain} has expired`);
   }
 
