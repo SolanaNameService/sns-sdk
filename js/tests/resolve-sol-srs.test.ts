@@ -274,29 +274,48 @@ describe("SRS .sol resolution", () => {
     );
   });
 
+  const now = 2_000_000_000;
   test.each([
-    { offset: -1, expires: true },
-    { offset: 0, expires: true },
-    { offset: 1, expires: false },
-  ])(
-    "applies the expiry boundary at $offset seconds",
-    async ({ offset, expires }) => {
-      const now = 2_000_000_000;
-      const dateNow = jest.spyOn(Date, "now").mockReturnValue(now * 1_000);
-      const { connection } = createConnection(async () =>
-        accountInfo(createSrsRecord({ expiry: BigInt(now + offset) })),
-      );
-      const result = resolve(connection, "domain.sol");
-
-      if (expires) {
-        await expect(result).rejects.toThrow(DomainExpired);
-      } else {
-        await expect(result).resolves.toBeInstanceOf(PublicKey);
-      }
-
-      dateNow.mockRestore();
+    {
+      name: "negative expiry as expired",
+      expiry: BigInt(-1),
+      expires: true,
     },
-  );
+    {
+      name: "zero expiry as non-expiring",
+      expiry: BigInt(0),
+      expires: false,
+    },
+    {
+      name: "past expiry as expired",
+      expiry: BigInt(now - 1),
+      expires: true,
+    },
+    {
+      name: "current expiry as expired",
+      expiry: BigInt(now),
+      expires: true,
+    },
+    {
+      name: "future expiry as valid",
+      expiry: BigInt(now + 1),
+      expires: false,
+    },
+  ])("treats $name", async ({ expiry, expires }) => {
+    const dateNow = jest.spyOn(Date, "now").mockReturnValue(now * 1_000);
+    const { connection } = createConnection(async () =>
+      accountInfo(createSrsRecord({ expiry })),
+    );
+    const result = resolve(connection, "domain.sol");
+
+    if (expires) {
+      await expect(result).rejects.toThrow(DomainExpired);
+    } else {
+      await expect(result).resolves.toBeInstanceOf(PublicKey);
+    }
+
+    dateNow.mockRestore();
+  });
 
   test("allows any PDA owner when configured", async () => {
     const [owner] = PublicKey.findProgramAddressSync(
