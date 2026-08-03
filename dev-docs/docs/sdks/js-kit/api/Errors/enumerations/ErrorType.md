@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Enumeration: ErrorType
 
-Defined in: [errors.ts:6](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L6)
+Defined in: [errors.ts:6](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/errors.ts#L6)
 
 Stable error codes emitted by SNS SDK operations.
 
@@ -16,7 +16,7 @@ Stable error codes emitted by SNS SDK operations.
 
 > **AccountDoesNotExist**: `"AccountDoesNotExist"`
 
-Defined in: [errors.ts:16](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L16)
+Defined in: [errors.ts:16](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/errors.ts#L16)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [errors.ts:16](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacb
 
 > **CouldNotFindNftOwner**: `"CouldNotFindNftOwner"`
 
-Defined in: [errors.ts:28](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L28)
+Defined in: [errors.ts:28](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/errors.ts#L28)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [errors.ts:28](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacb
 
 > **CouldNotFindSrsOwner**: `"CouldNotFindSrsOwner"`
 
-Defined in: [errors.ts:33](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L33)
+Defined in: [errors.ts:33](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/errors.ts#L33)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [errors.ts:33](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacb
 
 > **DomainDoesNotExist**: `"DomainDoesNotExist"`
 
-Defined in: [errors.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L26)
+Defined in: [errors.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/errors.ts#L26)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [errors.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacb
 
 > **DomainExpired**: `"DomainExpired"`
 
-Defined in: [errors.ts:32](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L32)
+Defined in: [errors.ts:32](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/errors.ts#L32)
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: [errors.ts:32](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacb
 
 > **InvalidAAAARecord**: `"InvalidAAAARecord"`
 
-Defined in: [errors.ts:14](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L14)
+Defined in: [errors.ts:14](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/errors.ts#L14)
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: [errors.ts:14](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacb
 
 > **InvalidARecord**: `"InvalidARecord"`
 
-Defined in: [errors.ts:13](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L13)
+Defined in: [errors.ts:13](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/errors.ts#L13)
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: [errors.ts:13](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacb
 
 > **InvalidDomain**: `"InvalidDomain"`
 
-Defined in: [errors.ts:19](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L19)
+Defined in: [errors.ts:19](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/errors.ts#L19)
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: [errors.ts:19](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacb
 
 > **InvalidEvmAddress**: `"InvalidEvmAddress"`
 
-Defined in: [errors.ts:11](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L11)
+Defined in: [errors.ts:11](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/errors.ts#L11)
 
 ***
 
@@ -88,7 +88,7 @@ Defined in: [errors.ts:11](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacb
 
 > **InvalidInjectiveAddress**: `"InvalidInjectiveAddress"`
 
-Defined in: [errors.ts:12](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L12)
+Defined in: [errors.ts:12](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/errors.ts#L12)
 
 ***
 
@@ -96,7 +96,7 @@ Defined in: [errors.ts:12](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacb
 
 > **InvalidInput**: `"InvalidInput"`
 
-Defined in: [errors.ts:18](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L18)
+Defined in: [errors.ts:18](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/errors.ts#L18)
 
 ***
 
@@ -104,7 +104,7 @@ Defined in: [errors.ts:18](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacb
 
 > **InvalidParent**: `"InvalidParent"`
 
-Defined in: [errors.ts:23](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L23)
+Defined in: [errors.ts:23](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/errors.ts#L23)
 
 ***
 
@@ -112,7 +112,7 @@ Defined in: [errors.ts:23](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacb
 
 > **InvalidRecordData**: `"InvalidRecordData"`
 
-Defined in: [errors.ts:10](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L10)
+Defined in: [errors.ts:10](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/errors.ts#L10)
 
 ***
 
@@ -120,7 +120,7 @@ Defined in: [errors.ts:10](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacb
 
 > **InvalidRecordInput**: `"InvalidRecordInput"`
 
-Defined in: [errors.ts:15](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L15)
+Defined in: [errors.ts:15](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/errors.ts#L15)
 
 ***
 
@@ -128,7 +128,7 @@ Defined in: [errors.ts:15](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacb
 
 > **InvalidRoa**: `"InvalidRoa"`
 
-Defined in: [errors.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L22)
+Defined in: [errors.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/errors.ts#L22)
 
 ***
 
@@ -136,7 +136,7 @@ Defined in: [errors.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacb
 
 > **InvalidSerializedData**: `"InvalidSerializedData"`
 
-Defined in: [errors.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L30)
+Defined in: [errors.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/errors.ts#L30)
 
 ***
 
@@ -144,7 +144,7 @@ Defined in: [errors.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacb
 
 > **InvalidSubdomain**: `"InvalidSubdomain"`
 
-Defined in: [errors.ts:7](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L7)
+Defined in: [errors.ts:7](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/errors.ts#L7)
 
 ***
 
@@ -152,7 +152,7 @@ Defined in: [errors.ts:7](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd
 
 > **InvalidValidation**: `"InvalidValidation"`
 
-Defined in: [errors.ts:29](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L29)
+Defined in: [errors.ts:29](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/errors.ts#L29)
 
 ***
 
@@ -160,7 +160,7 @@ Defined in: [errors.ts:29](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacb
 
 > **MissingVerifier**: `"MissingVerifier"`
 
-Defined in: [errors.ts:20](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L20)
+Defined in: [errors.ts:20](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/errors.ts#L20)
 
 ***
 
@@ -168,7 +168,7 @@ Defined in: [errors.ts:20](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacb
 
 > **NftAccountNotFound**: `"NftRecordNotFound"`
 
-Defined in: [errors.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L24)
+Defined in: [errors.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/errors.ts#L24)
 
 ***
 
@@ -176,7 +176,7 @@ Defined in: [errors.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacb
 
 > **NoAccountData**: `"NoAccountData"`
 
-Defined in: [errors.ts:17](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L17)
+Defined in: [errors.ts:17](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/errors.ts#L17)
 
 ***
 
@@ -184,7 +184,7 @@ Defined in: [errors.ts:17](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacb
 
 > **NoRecordData**: `"NoRecordData"`
 
-Defined in: [errors.ts:9](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L9)
+Defined in: [errors.ts:9](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/errors.ts#L9)
 
 ***
 
@@ -192,7 +192,7 @@ Defined in: [errors.ts:9](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd
 
 > **PdaOwnerNotAllowed**: `"PdaOwnerNotAllowed"`
 
-Defined in: [errors.ts:25](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L25)
+Defined in: [errors.ts:25](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/errors.ts#L25)
 
 ***
 
@@ -200,7 +200,7 @@ Defined in: [errors.ts:25](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacb
 
 > **PrimaryDomainNotFound**: `"PrimaryDomainNotFound"`
 
-Defined in: [errors.ts:8](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L8)
+Defined in: [errors.ts:8](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/errors.ts#L8)
 
 ***
 
@@ -208,7 +208,7 @@ Defined in: [errors.ts:8](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd
 
 > **PythFeedNotFound**: `"PythFeedNotFound"`
 
-Defined in: [errors.ts:21](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L21)
+Defined in: [errors.ts:21](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/errors.ts#L21)
 
 ***
 
@@ -216,7 +216,7 @@ Defined in: [errors.ts:21](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacb
 
 > **RecordMalformed**: `"RecordMalformed"`
 
-Defined in: [errors.ts:27](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L27)
+Defined in: [errors.ts:27](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/errors.ts#L27)
 
 ***
 
@@ -224,7 +224,7 @@ Defined in: [errors.ts:27](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacb
 
 > **SnsSolResolutionMismatch**: `"SnsSolResolutionMismatch"`
 
-Defined in: [errors.ts:34](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L34)
+Defined in: [errors.ts:34](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/errors.ts#L34)
 
 ***
 
@@ -232,4 +232,4 @@ Defined in: [errors.ts:34](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacb
 
 > **UnsupportedTld**: `"UnsupportedTld"`
 
-Defined in: [errors.ts:31](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L31)
+Defined in: [errors.ts:31](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/errors.ts#L31)

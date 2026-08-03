@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: ValidateEthereumSignatureInstructionParams
 
-Defined in: [instructions/validateEthereumSignatureInstruction.ts:18](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/validateEthereumSignatureInstruction.ts#L18)
+Defined in: [instructions/validateEthereumSignatureInstruction.ts:18](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/validateEthereumSignatureInstruction.ts#L18)
 
 Input for validating an Ethereum signature for an SNS record.
 
@@ -22,7 +22,7 @@ const params: ValidateEthereumSignatureInstructionParams = { validation, signatu
 
 > **expectedPubkey**: `ReadonlyUint8Array`
 
-Defined in: [instructions/validateEthereumSignatureInstruction.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/validateEthereumSignatureInstruction.ts#L24)
+Defined in: [instructions/validateEthereumSignatureInstruction.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/validateEthereumSignatureInstruction.ts#L24)
 
 Expected Ethereum public key.
 
@@ -32,7 +32,7 @@ Expected Ethereum public key.
 
 > **signature**: `ReadonlyUint8Array`
 
-Defined in: [instructions/validateEthereumSignatureInstruction.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/validateEthereumSignatureInstruction.ts#L22)
+Defined in: [instructions/validateEthereumSignatureInstruction.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/validateEthereumSignatureInstruction.ts#L22)
 
 Ethereum signature.
 
@@ -42,6 +42,6 @@ Ethereum signature.
 
 > **validation**: `number`
 
-Defined in: [instructions/validateEthereumSignatureInstruction.ts:20](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/validateEthereumSignatureInstruction.ts#L20)
+Defined in: [instructions/validateEthereumSignatureInstruction.ts:20](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/validateEthereumSignatureInstruction.ts#L20)
 
 Validation mode discriminator.

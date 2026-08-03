@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: RegisterDomainParams
 
-Defined in: [bindings/registerDomain.ts:41](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/registerDomain.ts#L41)
+Defined in: [bindings/registerDomain.ts:41](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/bindings/registerDomain.ts#L41)
 
 Parameters for registering an SNS domain.
 
@@ -27,7 +27,7 @@ const params: RegisterDomainParams = {
 
 > **buyer**: `Address`
 
-Defined in: [bindings/registerDomain.ts:47](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/registerDomain.ts#L47)
+Defined in: [bindings/registerDomain.ts:47](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/bindings/registerDomain.ts#L47)
 
 Account paying for registration.
 
@@ -37,7 +37,7 @@ Account paying for registration.
 
 > **buyerTokenAccount**: `Address`
 
-Defined in: [bindings/registerDomain.ts:49](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/registerDomain.ts#L49)
+Defined in: [bindings/registerDomain.ts:49](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/bindings/registerDomain.ts#L49)
 
 Buyer's payment token account.
 
@@ -47,7 +47,7 @@ Buyer's payment token account.
 
 > **domain**: `string`
 
-Defined in: [bindings/registerDomain.ts:43](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/registerDomain.ts#L43)
+Defined in: [bindings/registerDomain.ts:43](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/bindings/registerDomain.ts#L43)
 
 Full `.sns` domain name.
 
@@ -57,7 +57,7 @@ Full `.sns` domain name.
 
 > `optional` **mint?**: `Address`
 
-Defined in: [bindings/registerDomain.ts:51](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/registerDomain.ts#L51)
+Defined in: [bindings/registerDomain.ts:51](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/bindings/registerDomain.ts#L51)
 
 Payment token mint. Defaults to USDC.
 
@@ -67,7 +67,7 @@ Payment token mint. Defaults to USDC.
 
 > `optional` **referrer?**: `Address`
 
-Defined in: [bindings/registerDomain.ts:53](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/registerDomain.ts#L53)
+Defined in: [bindings/registerDomain.ts:53](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/bindings/registerDomain.ts#L53)
 
 Supported referrer address.
 
@@ -77,6 +77,6 @@ Supported referrer address.
 
 > **space**: `number`
 
-Defined in: [bindings/registerDomain.ts:45](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/registerDomain.ts#L45)
+Defined in: [bindings/registerDomain.ts:45](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/bindings/registerDomain.ts#L45)
 
 Domain registry size in bytes.

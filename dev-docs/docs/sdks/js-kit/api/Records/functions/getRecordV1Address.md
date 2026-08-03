@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **getRecordV1Address**(`params`): `Promise`\<`Address`\>
 
-Defined in: [record/getRecordV1Address.ts:34](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/record/getRecordV1Address.ts#L34)
+Defined in: [record/getRecordV1Address.ts:34](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/record/getRecordV1Address.ts#L34)
 
 Derives the address of a V1 record account.
 

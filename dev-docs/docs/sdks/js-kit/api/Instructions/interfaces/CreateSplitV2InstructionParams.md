@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: CreateSplitV2InstructionParams
 
-Defined in: [instructions/createSplitV2Instruction.ts:12](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/createSplitV2Instruction.ts#L12)
+Defined in: [instructions/createSplitV2Instruction.ts:12](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/createSplitV2Instruction.ts#L12)
 
 Input for creating a split SNS V2 domain account.
 
@@ -22,7 +22,7 @@ const params: CreateSplitV2InstructionParams = { name: "example", space: 1_000, 
 
 > **name**: `string`
 
-Defined in: [instructions/createSplitV2Instruction.ts:14](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/createSplitV2Instruction.ts#L14)
+Defined in: [instructions/createSplitV2Instruction.ts:14](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/createSplitV2Instruction.ts#L14)
 
 TLD-less domain name.
 
@@ -32,7 +32,7 @@ TLD-less domain name.
 
 > **referrerIdxOpt**: `number` \| `null`
 
-Defined in: [instructions/createSplitV2Instruction.ts:18](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/createSplitV2Instruction.ts#L18)
+Defined in: [instructions/createSplitV2Instruction.ts:18](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/createSplitV2Instruction.ts#L18)
 
 Approved referrer index, if any.
 
@@ -42,6 +42,6 @@ Approved referrer index, if any.
 
 > **space**: `number`
 
-Defined in: [instructions/createSplitV2Instruction.ts:16](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/createSplitV2Instruction.ts#L16)
+Defined in: [instructions/createSplitV2Instruction.ts:16](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/createSplitV2Instruction.ts#L16)
 
 Account data size in bytes.

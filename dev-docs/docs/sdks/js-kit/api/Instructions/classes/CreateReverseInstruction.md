@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: CreateReverseInstruction
 
-Defined in: [instructions/createReverseInstruction.ts:18](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/createReverseInstruction.ts#L18)
+Defined in: [instructions/createReverseInstruction.ts:18](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/createReverseInstruction.ts#L18)
 
 Builder for creating an SNS reverse-lookup account.
 
@@ -16,7 +16,7 @@ Builder for creating an SNS reverse-lookup account.
 
 > **new CreateReverseInstruction**(`obj`): `CreateReverseInstruction`
 
-Defined in: [instructions/createReverseInstruction.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/createReverseInstruction.ts#L30)
+Defined in: [instructions/createReverseInstruction.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/createReverseInstruction.ts#L30)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [instructions/createReverseInstruction.ts:30](https://github.com/Bon
 
 > **domain**: `string`
 
-Defined in: [instructions/createReverseInstruction.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/createReverseInstruction.ts#L22)
+Defined in: [instructions/createReverseInstruction.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/createReverseInstruction.ts#L22)
 
 Raw reverse lookup payload.
 
@@ -44,7 +44,7 @@ Raw reverse lookup payload.
 
 > **tag**: `number`
 
-Defined in: [instructions/createReverseInstruction.ts:20](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/createReverseInstruction.ts#L20)
+Defined in: [instructions/createReverseInstruction.ts:20](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/createReverseInstruction.ts#L20)
 
 Instruction discriminator.
 
@@ -54,7 +54,7 @@ Instruction discriminator.
 
 > `static` **schema**: `object`
 
-Defined in: [instructions/createReverseInstruction.ts:23](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/createReverseInstruction.ts#L23)
+Defined in: [instructions/createReverseInstruction.ts:23](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/createReverseInstruction.ts#L23)
 
 #### struct
 
@@ -74,7 +74,7 @@ Defined in: [instructions/createReverseInstruction.ts:23](https://github.com/Bon
 
 > **getInstruction**(`programAddress`, `namingServiceProgram`, `rootDomain`, `reverseLookup`, `systemProgram`, `centralState`, `payer`, `rentSysvar`, `parentAddress?`, `parentOwner?`): `Instruction`
 
-Defined in: [instructions/createReverseInstruction.ts:39](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/createReverseInstruction.ts#L39)
+Defined in: [instructions/createReverseInstruction.ts:39](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/createReverseInstruction.ts#L39)
 
 #### Parameters
 
@@ -128,7 +128,7 @@ Defined in: [instructions/createReverseInstruction.ts:39](https://github.com/Bon
 
 > **serialize**(): `Uint8Array`
 
-Defined in: [instructions/createReverseInstruction.ts:35](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/createReverseInstruction.ts#L35)
+Defined in: [instructions/createReverseInstruction.ts:35](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/createReverseInstruction.ts#L35)
 
 #### Returns
 

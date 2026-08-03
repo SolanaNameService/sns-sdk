@@ -8,6 +8,6 @@ displayed_sidebar: docsSidebar
 
 > `const` **EVM\_RECORDS**: `Set`\<[`Record`](../../Types/enumerations/Record.md)\>
 
-Defined in: [constants/records.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/constants/records.ts#L26)
+Defined in: [constants/records.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/constants/records.ts#L26)
 
 Record types whose content is a `0x`-prefixed EVM address.

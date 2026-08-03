@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **createNameRegistry**(`connection`, `name`, `space`, `payerKey`, `nameOwner`, `lamports?`, `nameClass?`, `parentName?`): `Promise`\<`TransactionInstruction`\>
 
-Defined in: [bindings/createNameRegistry.ts:33](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/bindings/createNameRegistry.ts#L33)
+Defined in: [bindings/createNameRegistry.ts:33](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/bindings/createNameRegistry.ts#L33)
 
 Builds an instruction to create a name account with the given rent budget, space, owner, and class.
 

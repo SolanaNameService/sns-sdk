@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > `const` **VAULT\_OWNER\_DEPRECATED**: `PublicKey`
 
-Defined in: [constants.ts:202](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/constants.ts#L202)
+Defined in: [constants.ts:202](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/constants.ts#L202)
 
 Legacy SNS vault owner.
 

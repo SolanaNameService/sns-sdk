@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: GetDomainRecordsParams\<T, U\>
 
-Defined in: [domain/getDomainRecords.ts:56](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/domain/getDomainRecords.ts#L56)
+Defined in: [domain/getDomainRecords.ts:56](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/domain/getDomainRecords.ts#L56)
 
 Parameters for retrieving domain records.
 
@@ -36,7 +36,7 @@ const params: GetDomainRecordsParams<[Record.Url], [undefined]> = {
 
 > **domain**: `string`
 
-Defined in: [domain/getDomainRecords.ts:68](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/domain/getDomainRecords.ts#L68)
+Defined in: [domain/getDomainRecords.ts:68](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/domain/getDomainRecords.ts#L68)
 
 Full domain name.
 
@@ -46,7 +46,7 @@ Full domain name.
 
 > `optional` **options?**: [`GetDomainRecordsOptions`](GetDomainRecordsOptions.md)\<`T`, `U`\>
 
-Defined in: [domain/getDomainRecords.ts:72](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/domain/getDomainRecords.ts#L72)
+Defined in: [domain/getDomainRecords.ts:72](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/domain/getDomainRecords.ts#L72)
 
 Record retrieval options.
 
@@ -56,7 +56,7 @@ Record retrieval options.
 
 > **records**: \[`...T[]`\]
 
-Defined in: [domain/getDomainRecords.ts:70](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/domain/getDomainRecords.ts#L70)
+Defined in: [domain/getDomainRecords.ts:70](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/domain/getDomainRecords.ts#L70)
 
 Record types to retrieve.
 
@@ -66,6 +66,6 @@ Record types to retrieve.
 
 > **rpc**: `Rpc`\<`GetAccountInfoApi` & `GetMultipleAccountsApi` & `GetTokenLargestAccountsApi` & `GetSlotApi`\>
 
-Defined in: [domain/getDomainRecords.ts:61](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/domain/getDomainRecords.ts#L61)
+Defined in: [domain/getDomainRecords.ts:61](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/domain/getDomainRecords.ts#L61)
 
 RPC client.

@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **getSnsNftsForOwner**(`connection`, `owner`): `Promise`\<[`SnsNft`](../interfaces/SnsNft.md)[]\>
 
-Defined in: [utils/getSnsNftsForOwner.ts:38](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/utils/getSnsNftsForOwner.ts#L38)
+Defined in: [utils/getSnsNftsForOwner.ts:38](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/utils/getSnsNftsForOwner.ts#L38)
 
 Retrieves tokenized `.sns` domains owned by a wallet.
 

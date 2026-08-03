@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **getAllSnsDomains**(`connection`): `Promise`\<`GetProgramAccountsResponse`\>
 
-Defined in: [utils/getAllSnsDomains.ts:17](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/utils/getAllSnsDomains.ts#L17)
+Defined in: [utils/getAllSnsDomains.ts:17](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/utils/getAllSnsDomains.ts#L17)
 
 Retrieves all registered top-level `.sns` domain accounts.
 

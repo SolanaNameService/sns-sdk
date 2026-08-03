@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: SetRecordRoaVerifierInstructionParams
 
-Defined in: [instructions/setRecordRoaVerifierInstruction.ts:20](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/setRecordRoaVerifierInstruction.ts#L20)
+Defined in: [instructions/setRecordRoaVerifierInstruction.ts:20](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/setRecordRoaVerifierInstruction.ts#L20)
 
 Input for setting an SNS record's Right of Association verifier.
 
@@ -22,6 +22,6 @@ const params: SetRecordRoaVerifierInstructionParams = { verifier };
 
 > **verifier**: `Address`
 
-Defined in: [instructions/setRecordRoaVerifierInstruction.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/setRecordRoaVerifierInstruction.ts#L22)
+Defined in: [instructions/setRecordRoaVerifierInstruction.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/setRecordRoaVerifierInstruction.ts#L22)
 
 Verifier account address.

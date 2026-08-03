@@ -5,7 +5,11 @@ description: Resolve an SNS domain and build registration instructions over HTTP
 
 Use the experimental SDK Proxy when an integration cannot run a native SNS SDK.
 
-The proxy base URL is `https://sdk-proxy.sns.id/`.
+:::warning[Deprecation notice]
+Applications using the original proxy at `sdk-proxy.sns.id` should migrate to the v2 proxy at `sdk-proxy-v2.sns.id` as soon as possible. The original proxy will be retired on **October 1**.
+:::
+
+The proxy base URL is `https://sdk-proxy-v2.sns.id/`.
 
 RPC-backed routes use the proxy Worker's `RPC_URL` binding. A non-empty `rpc` query parameter overrides that endpoint for one request. All application responses use an `{ "s": "ok" | "error", "result": ... }` envelope.
 
@@ -14,7 +18,7 @@ RPC-backed routes use the proxy Worker's `RPC_URL` binding. A non-empty `rpc` qu
 Pass a full `.sns` or `.sol` domain or subdomain to `GET /resolve/:domain`:
 
 ```bash
-curl "https://sdk-proxy.sns.id/resolve/bonfida.sns"
+curl "https://sdk-proxy-v2.sns.id/resolve/bonfida.sns"
 ```
 
 A successful response contains the effective target's base58 public key:
@@ -29,7 +33,7 @@ A successful response contains the effective target's base58 public key:
 Use `GET /safe-resolve/:domain` as the explicit alternative when SRS-backed `.sol` resolution must agree with the corresponding SNS target:
 
 ```bash
-curl "https://sdk-proxy.sns.id/safe-resolve/bonfida.sol"
+curl "https://sdk-proxy-v2.sns.id/safe-resolve/bonfida.sol"
 ```
 
 ## Build registration instructions
@@ -37,7 +41,7 @@ curl "https://sdk-proxy.sns.id/safe-resolve/bonfida.sol"
 Pass the buyer public key, a TLD-less unregistered domain name, and an account size from `0` through `10000` bytes to `GET /register`:
 
 ```bash
-curl --get "https://sdk-proxy.sns.id/register" \
+curl --get "https://sdk-proxy-v2.sns.id/register" \
   --data-urlencode "buyer=<BUYER_PUBLIC_KEY>" \
   --data-urlencode "domain=<DOMAIN_NAME>" \
   --data-urlencode "space=1000"

@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: Numberu64
 
-Defined in: [int.ts:49](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/int.ts#L49)
+Defined in: [int.ts:49](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/int.ts#L49)
 
 Unsigned 64-bit integer wrapper for SPL Name Service instruction encoding.
 
@@ -16,7 +16,7 @@ Unsigned 64-bit integer wrapper for SPL Name Service instruction encoding.
 
 > **new Numberu64**(`value`): `Numberu64`
 
-Defined in: [int.ts:53](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/int.ts#L53)
+Defined in: [int.ts:53](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/int.ts#L53)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [int.ts:53](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd96
 
 > **value**: `bigint`
 
-Defined in: [int.ts:51](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/int.ts#L51)
+Defined in: [int.ts:51](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/int.ts#L51)
 
 Wrapped unsigned integer value.
 
@@ -44,7 +44,7 @@ Wrapped unsigned integer value.
 
 > **toBuffer**(): `Buffer`
 
-Defined in: [int.ts:60](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/int.ts#L60)
+Defined in: [int.ts:60](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/int.ts#L60)
 
 Convert to Buffer representation
 
@@ -58,7 +58,7 @@ Convert to Buffer representation
 
 > **toNumber**(): `number`
 
-Defined in: [int.ts:78](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/int.ts#L78)
+Defined in: [int.ts:78](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/int.ts#L78)
 
 #### Returns
 
@@ -70,7 +70,7 @@ Defined in: [int.ts:78](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd96
 
 > **toString**(): `string`
 
-Defined in: [int.ts:82](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/int.ts#L82)
+Defined in: [int.ts:82](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/int.ts#L82)
 
 #### Returns
 
@@ -82,7 +82,7 @@ Defined in: [int.ts:82](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd96
 
 > `static` **fromBuffer**(`buffer`): `Numberu64`
 
-Defined in: [int.ts:69](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/int.ts#L69)
+Defined in: [int.ts:69](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/int.ts#L69)
 
 Construct a Numberu64 from Buffer representation
 

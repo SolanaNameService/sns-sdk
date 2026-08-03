@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: NftRecordNotFoundError
 
-Defined in: [error.ts:181](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/error.ts#L181)
+Defined in: [error.ts:181](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/error.ts#L181)
 
 Base error for SDK failures, carrying a machine-readable [ErrorType](../enumerations/ErrorType.md).
 
@@ -20,7 +20,7 @@ Base error for SDK failures, carrying a machine-readable [ErrorType](../enumerat
 
 > **new NftRecordNotFoundError**(`message?`): `NftRecordNotFoundError`
 
-Defined in: [error.ts:182](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/error.ts#L182)
+Defined in: [error.ts:182](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/error.ts#L182)
 
 #### Parameters
 
@@ -42,7 +42,7 @@ Defined in: [error.ts:182](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacb
 
 > **type**: [`ErrorType`](../enumerations/ErrorType.md)
 
-Defined in: [error.ts:43](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/error.ts#L43)
+Defined in: [error.ts:43](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/error.ts#L43)
 
 Machine-readable error category.
 

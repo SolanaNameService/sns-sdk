@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **getSnsDomainKeySync**(`domain`, `record?`): [`SnsDomainKey`](../interfaces/SnsDomainKey.md)
 
-Defined in: [utils/getSnsDomainKeySync.ts:59](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/utils/getSnsDomainKeySync.ts#L59)
+Defined in: [utils/getSnsDomainKeySync.ts:59](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/utils/getSnsDomainKeySync.ts#L59)
 
 Derives an SNS namespace account from a TLD-trimmed domain name.
 

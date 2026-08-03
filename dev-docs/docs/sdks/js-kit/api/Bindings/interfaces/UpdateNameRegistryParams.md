@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: UpdateNameRegistryParams
 
-Defined in: [bindings/updateNameRegistry.ts:21](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/updateNameRegistry.ts#L21)
+Defined in: [bindings/updateNameRegistry.ts:21](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/bindings/updateNameRegistry.ts#L21)
 
 Input for updating bytes in a raw SNS name-registry account.
 
@@ -27,7 +27,7 @@ const params: UpdateNameRegistryParams = {
 
 > `optional` **classAddress?**: `Address`
 
-Defined in: [bindings/updateNameRegistry.ts:35](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/updateNameRegistry.ts#L35)
+Defined in: [bindings/updateNameRegistry.ts:35](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/bindings/updateNameRegistry.ts#L35)
 
 Optional class address for the registry.
 
@@ -37,7 +37,7 @@ Optional class address for the registry.
 
 > **data**: `Uint8Array`
 
-Defined in: [bindings/updateNameRegistry.ts:32](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/updateNameRegistry.ts#L32)
+Defined in: [bindings/updateNameRegistry.ts:32](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/bindings/updateNameRegistry.ts#L32)
 
 Bytes to write to the registry.
 
@@ -47,7 +47,7 @@ Bytes to write to the registry.
 
 > **domain**: `string`
 
-Defined in: [bindings/updateNameRegistry.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/updateNameRegistry.ts#L26)
+Defined in: [bindings/updateNameRegistry.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/bindings/updateNameRegistry.ts#L26)
 
 Raw registry seed/name to update.
 
@@ -57,7 +57,7 @@ Raw registry seed/name to update.
 
 > **offset**: `number`
 
-Defined in: [bindings/updateNameRegistry.ts:29](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/updateNameRegistry.ts#L29)
+Defined in: [bindings/updateNameRegistry.ts:29](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/bindings/updateNameRegistry.ts#L29)
 
 Byte offset where the update begins.
 
@@ -67,7 +67,7 @@ Byte offset where the update begins.
 
 > `optional` **parentAddress?**: `Address`
 
-Defined in: [bindings/updateNameRegistry.ts:39](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/updateNameRegistry.ts#L39)
+Defined in: [bindings/updateNameRegistry.ts:39](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/bindings/updateNameRegistry.ts#L39)
 
 Optional parent name-account address.
 
@@ -77,6 +77,6 @@ Optional parent name-account address.
 
 > **rpc**: `Rpc`\<`GetAccountInfoApi`\>
 
-Defined in: [bindings/updateNameRegistry.ts:23](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/updateNameRegistry.ts#L23)
+Defined in: [bindings/updateNameRegistry.ts:23](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/bindings/updateNameRegistry.ts#L23)
 
 RPC client used to retrieve the registry owner.

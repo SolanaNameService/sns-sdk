@@ -8,6 +8,6 @@ displayed_sidebar: docsSidebar
 
 > `const` **SUPPORTED\_TLDS**: readonly [`SupportedTld`](../type-aliases/SupportedTld.md)[]
 
-Defined in: [utils/tld.ts:14](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/utils/tld.ts#L14)
+Defined in: [utils/tld.ts:14](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/utils/tld.ts#L14)
 
 TLD suffixes accepted by the domain parsing and resolution helpers.

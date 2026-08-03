@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Enumeration: Validation
 
-Defined in: [types/validation.ts:2](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/types/validation.ts#L2)
+Defined in: [types/validation.ts:2](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/types/validation.ts#L2)
 
 Validation modes encoded in an SNS record header.
 
@@ -16,7 +16,7 @@ Validation modes encoded in an SNS record header.
 
 > **Ethereum**: `2`
 
-Defined in: [types/validation.ts:5](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/types/validation.ts#L5)
+Defined in: [types/validation.ts:5](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/types/validation.ts#L5)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [types/validation.ts:5](https://github.com/Bonfida/sns-sdk-beta/blob
 
 > **None**: `0`
 
-Defined in: [types/validation.ts:3](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/types/validation.ts#L3)
+Defined in: [types/validation.ts:3](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/types/validation.ts#L3)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [types/validation.ts:3](https://github.com/Bonfida/sns-sdk-beta/blob
 
 > **Solana**: `1`
 
-Defined in: [types/validation.ts:4](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/types/validation.ts#L4)
+Defined in: [types/validation.ts:4](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/types/validation.ts#L4)
 
 ***
 
@@ -40,4 +40,4 @@ Defined in: [types/validation.ts:4](https://github.com/Bonfida/sns-sdk-beta/blob
 
 > **UnverifiedSolana**: `3`
 
-Defined in: [types/validation.ts:6](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/types/validation.ts#L6)
+Defined in: [types/validation.ts:6](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/types/validation.ts#L6)

@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **deleteNameRegistry**(`connection`, `name`, `refundTargetKey`, `nameClass?`, `nameParent?`): `Promise`\<`TransactionInstruction`\>
 
-Defined in: [bindings/deleteNameRegistry.ts:23](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/bindings/deleteNameRegistry.ts#L23)
+Defined in: [bindings/deleteNameRegistry.ts:23](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/bindings/deleteNameRegistry.ts#L23)
 
 Builds an instruction to delete a name account and transfer reclaimed rent.
 

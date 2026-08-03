@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **registerDomainWithNft**(`domain`, `space`, `nameAccount`, `reverseLookupAccount`, `buyer`, `nftSource`, `nftMint`): `TransactionInstruction`
 
-Defined in: [bindings/registerDomainWithNft.ts:68](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/bindings/registerDomainWithNft.ts#L68)
+Defined in: [bindings/registerDomainWithNft.ts:68](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/bindings/registerDomainWithNft.ts#L68)
 
 Builds an instruction to register a top-level `.sns` domain using a Wolves NFT.
 

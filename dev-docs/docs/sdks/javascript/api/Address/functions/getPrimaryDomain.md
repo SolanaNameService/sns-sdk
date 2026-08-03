@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **getPrimaryDomain**(`connection`, `owner`): `Promise`\<\{ `domain`: `PublicKey`; `reverse`: `string`; `stale`: `boolean`; \}\>
 
-Defined in: [primary-domain.ts:122](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/primary-domain.ts#L122)
+Defined in: [primary-domain.ts:122](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/primary-domain.ts#L122)
 
 Retrieves the primary domain set for a wallet.
 

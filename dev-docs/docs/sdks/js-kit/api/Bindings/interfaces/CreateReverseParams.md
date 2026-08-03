@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: CreateReverseParams
 
-Defined in: [bindings/createReverse.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/createReverse.ts#L22)
+Defined in: [bindings/createReverse.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/bindings/createReverse.ts#L22)
 
 Parameters for creating a reverse lookup record.
 
@@ -22,7 +22,7 @@ const params: CreateReverseParams = { domainAddress, domain: "example", payer };
 
 > **domain**: `string`
 
-Defined in: [bindings/createReverse.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/createReverse.ts#L26)
+Defined in: [bindings/createReverse.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/bindings/createReverse.ts#L26)
 
 Raw reverse lookup payload.
 
@@ -32,7 +32,7 @@ Raw reverse lookup payload.
 
 > **domainAddress**: `Address`
 
-Defined in: [bindings/createReverse.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/createReverse.ts#L24)
+Defined in: [bindings/createReverse.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/bindings/createReverse.ts#L24)
 
 Domain account address.
 
@@ -42,7 +42,7 @@ Domain account address.
 
 > `optional` **parentAddress?**: `Address`
 
-Defined in: [bindings/createReverse.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/createReverse.ts#L30)
+Defined in: [bindings/createReverse.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/bindings/createReverse.ts#L30)
 
 Parent domain address for a subdomain.
 
@@ -52,7 +52,7 @@ Parent domain address for a subdomain.
 
 > `optional` **parentOwner?**: `Address`
 
-Defined in: [bindings/createReverse.ts:32](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/createReverse.ts#L32)
+Defined in: [bindings/createReverse.ts:32](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/bindings/createReverse.ts#L32)
 
 Parent domain owner for a subdomain.
 
@@ -62,6 +62,6 @@ Parent domain owner for a subdomain.
 
 > **payer**: `Address`
 
-Defined in: [bindings/createReverse.ts:28](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/createReverse.ts#L28)
+Defined in: [bindings/createReverse.ts:28](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/bindings/createReverse.ts#L28)
 
 Account funding creation.

@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: ValidateSolanaSignatureInstructionParams
 
-Defined in: [instructions/validateSolanaSignatureInstruction.ts:12](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/validateSolanaSignatureInstruction.ts#L12)
+Defined in: [instructions/validateSolanaSignatureInstruction.ts:12](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/validateSolanaSignatureInstruction.ts#L12)
 
 Input for validating a Solana signature for an SNS record.
 
@@ -22,6 +22,6 @@ const params: ValidateSolanaSignatureInstructionParams = { staleness: false };
 
 > **staleness**: `boolean`
 
-Defined in: [instructions/validateSolanaSignatureInstruction.ts:14](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/validateSolanaSignatureInstruction.ts#L14)
+Defined in: [instructions/validateSolanaSignatureInstruction.ts:14](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/validateSolanaSignatureInstruction.ts#L14)
 
 Whether to validate staleness.

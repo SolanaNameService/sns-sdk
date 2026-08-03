@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: CreateNameRegistryInstruction
 
-Defined in: [instructions/createNameRegistryInstruction.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/createNameRegistryInstruction.ts#L24)
+Defined in: [instructions/createNameRegistryInstruction.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/createNameRegistryInstruction.ts#L24)
 
 Builder for creating an SNS name-registry account.
 
@@ -16,7 +16,7 @@ Builder for creating an SNS name-registry account.
 
 > **new CreateNameRegistryInstruction**(`obj`): `CreateNameRegistryInstruction`
 
-Defined in: [instructions/createNameRegistryInstruction.ts:43](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/createNameRegistryInstruction.ts#L43)
+Defined in: [instructions/createNameRegistryInstruction.ts:43](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/createNameRegistryInstruction.ts#L43)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [instructions/createNameRegistryInstruction.ts:43](https://github.co
 
 > **lamports**: `bigint`
 
-Defined in: [instructions/createNameRegistryInstruction.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/createNameRegistryInstruction.ts#L30)
+Defined in: [instructions/createNameRegistryInstruction.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/createNameRegistryInstruction.ts#L30)
 
 Account funding amount.
 
@@ -44,7 +44,7 @@ Account funding amount.
 
 > **nameHash**: `Uint8Array`
 
-Defined in: [instructions/createNameRegistryInstruction.ts:28](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/createNameRegistryInstruction.ts#L28)
+Defined in: [instructions/createNameRegistryInstruction.ts:28](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/createNameRegistryInstruction.ts#L28)
 
 Hash of the registry name.
 
@@ -54,7 +54,7 @@ Hash of the registry name.
 
 > **space**: `number`
 
-Defined in: [instructions/createNameRegistryInstruction.ts:32](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/createNameRegistryInstruction.ts#L32)
+Defined in: [instructions/createNameRegistryInstruction.ts:32](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/createNameRegistryInstruction.ts#L32)
 
 Account data size in bytes.
 
@@ -64,7 +64,7 @@ Account data size in bytes.
 
 > **tag**: `number`
 
-Defined in: [instructions/createNameRegistryInstruction.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/createNameRegistryInstruction.ts#L26)
+Defined in: [instructions/createNameRegistryInstruction.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/createNameRegistryInstruction.ts#L26)
 
 Instruction discriminator.
 
@@ -74,7 +74,7 @@ Instruction discriminator.
 
 > `static` **schema**: `object`
 
-Defined in: [instructions/createNameRegistryInstruction.ts:34](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/createNameRegistryInstruction.ts#L34)
+Defined in: [instructions/createNameRegistryInstruction.ts:34](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/createNameRegistryInstruction.ts#L34)
 
 #### struct
 
@@ -110,7 +110,7 @@ Defined in: [instructions/createNameRegistryInstruction.ts:34](https://github.co
 
 > **getInstruction**(`programAddress`, `systemProgram`, `domainAddress`, `owner`, `payer`, `classAddress?`, `parentAddress?`, `parentOwner?`): `Instruction`
 
-Defined in: [instructions/createNameRegistryInstruction.ts:54](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/createNameRegistryInstruction.ts#L54)
+Defined in: [instructions/createNameRegistryInstruction.ts:54](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/createNameRegistryInstruction.ts#L54)
 
 #### Parameters
 
@@ -156,7 +156,7 @@ Defined in: [instructions/createNameRegistryInstruction.ts:54](https://github.co
 
 > **serialize**(): `Uint8Array`
 
-Defined in: [instructions/createNameRegistryInstruction.ts:50](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/createNameRegistryInstruction.ts#L50)
+Defined in: [instructions/createNameRegistryInstruction.ts:50](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/createNameRegistryInstruction.ts#L50)
 
 #### Returns
 

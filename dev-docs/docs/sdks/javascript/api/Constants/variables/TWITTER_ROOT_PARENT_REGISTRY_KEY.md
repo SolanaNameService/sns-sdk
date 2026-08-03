@@ -8,6 +8,6 @@ displayed_sidebar: docsSidebar
 
 > `const` **TWITTER\_ROOT\_PARENT\_REGISTRY\_KEY**: `PublicKey`
 
-Defined in: [constants.ts:72](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/constants.ts#L72)
+Defined in: [constants.ts:72](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/constants.ts#L72)
 
 The `.twitter` TLD

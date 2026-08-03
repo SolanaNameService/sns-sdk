@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: RecordResult
 
-Defined in: [record/getRecord.ts:44](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/record/getRecord.ts#L44)
+Defined in: [record/getRecord.ts:44](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/record/getRecord.ts#L44)
 
 Result returned by [getRecord](../functions/getRecord.md) and by defined entries from
 [getMultipleRecords](../functions/getMultipleRecords.md).
@@ -31,7 +31,7 @@ Result returned by [getRecord](../functions/getRecord.md) and by defined entries
 
 > `optional` **deserializedContent?**: `string`
 
-Defined in: [record/getRecord.ts:66](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/record/getRecord.ts#L66)
+Defined in: [record/getRecord.ts:66](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/record/getRecord.ts#L66)
 
 Record payload decoded to its display string. Present only when the caller
 sets `options.deserialize` to `true`.
@@ -42,7 +42,7 @@ sets `options.deserialize` to `true`.
 
 > **record**: [`Record`](../enumerations/Record.md)
 
-Defined in: [record/getRecord.ts:46](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/record/getRecord.ts#L46)
+Defined in: [record/getRecord.ts:46](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/record/getRecord.ts#L46)
 
 Record type requested by the caller.
 
@@ -52,7 +52,7 @@ Record type requested by the caller.
 
 > **retrievedRecord**: [`RetrievedRecord`](RetrievedRecord.md)
 
-Defined in: [record/getRecord.ts:49](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/record/getRecord.ts#L49)
+Defined in: [record/getRecord.ts:49](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/record/getRecord.ts#L49)
 
 Raw V2 record account, including its header and encoded payload.
 
@@ -62,7 +62,7 @@ Raw V2 record account, including its header and encoded payload.
 
 > **verified**: `object`
 
-Defined in: [record/getRecord.ts:52](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/record/getRecord.ts#L52)
+Defined in: [record/getRecord.ts:52](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/record/getRecord.ts#L52)
 
 Verification results for the current effective domain owner and record verifier.
 

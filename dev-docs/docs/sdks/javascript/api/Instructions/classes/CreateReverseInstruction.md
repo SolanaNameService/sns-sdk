@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: CreateReverseInstruction
 
-Defined in: [instructions/createReverseInstruction.ts:20](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/instructions/createReverseInstruction.ts#L20)
+Defined in: [instructions/createReverseInstruction.ts:20](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/instructions/createReverseInstruction.ts#L20)
 
 Serializable registrar instruction for creating a reverse-lookup registry.
 
@@ -16,7 +16,7 @@ Serializable registrar instruction for creating a reverse-lookup registry.
 
 > **new CreateReverseInstruction**(`obj`): `CreateReverseInstruction`
 
-Defined in: [instructions/createReverseInstruction.ts:32](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/instructions/createReverseInstruction.ts#L32)
+Defined in: [instructions/createReverseInstruction.ts:32](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/instructions/createReverseInstruction.ts#L32)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [instructions/createReverseInstruction.ts:32](https://github.com/Bon
 
 > **name**: `string`
 
-Defined in: [instructions/createReverseInstruction.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/instructions/createReverseInstruction.ts#L24)
+Defined in: [instructions/createReverseInstruction.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/instructions/createReverseInstruction.ts#L24)
 
 Raw reverse lookup payload.
 
@@ -44,7 +44,7 @@ Raw reverse lookup payload.
 
 > **tag**: `number`
 
-Defined in: [instructions/createReverseInstruction.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/instructions/createReverseInstruction.ts#L22)
+Defined in: [instructions/createReverseInstruction.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/instructions/createReverseInstruction.ts#L22)
 
 Instruction discriminator.
 
@@ -54,7 +54,7 @@ Instruction discriminator.
 
 > `static` **schema**: `object`
 
-Defined in: [instructions/createReverseInstruction.ts:25](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/instructions/createReverseInstruction.ts#L25)
+Defined in: [instructions/createReverseInstruction.ts:25](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/instructions/createReverseInstruction.ts#L25)
 
 #### struct
 
@@ -74,7 +74,7 @@ Defined in: [instructions/createReverseInstruction.ts:25](https://github.com/Bon
 
 > **getInstruction**(`programId`, `namingServiceProgram`, `rootDomain`, `reverseLookup`, `systemProgram`, `centralState`, `feePayer`, `rentSysvar`, `parentName?`, `parentNameOwner?`): `TransactionInstruction`
 
-Defined in: [instructions/createReverseInstruction.ts:41](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/instructions/createReverseInstruction.ts#L41)
+Defined in: [instructions/createReverseInstruction.ts:41](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/instructions/createReverseInstruction.ts#L41)
 
 Builds the transaction instruction with the required reverse-registry accounts.
 
@@ -130,7 +130,7 @@ Builds the transaction instruction with the required reverse-registry accounts.
 
 > **serialize**(): `Uint8Array`
 
-Defined in: [instructions/createReverseInstruction.ts:37](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/instructions/createReverseInstruction.ts#L37)
+Defined in: [instructions/createReverseInstruction.ts:37](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/instructions/createReverseInstruction.ts#L37)
 
 Serializes the registrar instruction payload.
 

@@ -8,6 +8,6 @@ displayed_sidebar: docsSidebar
 
 > `const` **SRS\_HASH\_PREFIX**: `"SRS"` = `"SRS"`
 
-Defined in: [constants.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/constants.ts#L22)
+Defined in: [constants.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/constants.ts#L22)
 
 Hash prefix used to derive SRS domain name addresses

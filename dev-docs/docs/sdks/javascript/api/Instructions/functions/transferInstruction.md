@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **transferInstruction**(`nameProgramId`, `nameAccountKey`, `newOwnerKey`, `currentNameOwnerKey`, `nameClassKey?`, `nameParent?`, `parentOwner?`): `TransactionInstruction`
 
-Defined in: [instructions/transferInstruction.ts:21](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/instructions/transferInstruction.ts#L21)
+Defined in: [instructions/transferInstruction.ts:21](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/instructions/transferInstruction.ts#L21)
 
 Builds an SPL Name Service instruction that transfers a name registry owner.
 

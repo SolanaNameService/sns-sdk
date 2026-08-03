@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: GetDomainRecordResult
 
-Defined in: [domain/getDomainRecord.ts:92](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/domain/getDomainRecord.ts#L92)
+Defined in: [domain/getDomainRecord.ts:92](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/domain/getDomainRecord.ts#L92)
 
 A retrieved domain record.
 
@@ -26,7 +26,7 @@ const result: GetDomainRecordResult = {
 
 > `optional` **deserializedContent?**: `string`
 
-Defined in: [domain/getDomainRecord.ts:100](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/domain/getDomainRecord.ts#L100)
+Defined in: [domain/getDomainRecord.ts:100](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/domain/getDomainRecord.ts#L100)
 
 Decoded record content.
 
@@ -36,7 +36,7 @@ Decoded record content.
 
 > **record**: [`Record`](../../Types/enumerations/Record.md)
 
-Defined in: [domain/getDomainRecord.ts:94](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/domain/getDomainRecord.ts#L94)
+Defined in: [domain/getDomainRecord.ts:94](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/domain/getDomainRecord.ts#L94)
 
 Record type.
 
@@ -46,7 +46,7 @@ Record type.
 
 > **retrievedRecord**: [`RecordState`](../../States/classes/RecordState.md)
 
-Defined in: [domain/getDomainRecord.ts:96](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/domain/getDomainRecord.ts#L96)
+Defined in: [domain/getDomainRecord.ts:96](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/domain/getDomainRecord.ts#L96)
 
 Retrieved record state.
 
@@ -56,6 +56,6 @@ Retrieved record state.
 
 > **verified**: [`GetDomainRecordVerification`](GetDomainRecordVerification.md)
 
-Defined in: [domain/getDomainRecord.ts:98](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/domain/getDomainRecord.ts#L98)
+Defined in: [domain/getDomainRecord.ts:98](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/domain/getDomainRecord.ts#L98)
 
 Verification status.

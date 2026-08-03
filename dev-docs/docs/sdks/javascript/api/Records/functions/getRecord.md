@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **getRecord**(`connection`, `domain`, `record`, `options?`): `Promise`\<[`RecordResult`](../interfaces/RecordResult.md)\>
 
-Defined in: [record/getRecord.ts:120](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/record/getRecord.ts#L120)
+Defined in: [record/getRecord.ts:120](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/record/getRecord.ts#L120)
 
 Retrieves a record for a domain, verifies its staleness and right of
 association, and optionally deserializes the record content.

@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: GetSnsDomainAddressResult
 
-Defined in: [domain/getSnsDomainAddress.ts:37](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/domain/getSnsDomainAddress.ts#L37)
+Defined in: [domain/getSnsDomainAddress.ts:37](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/domain/getSnsDomainAddress.ts#L37)
 
 A derived SNS domain address.
 
@@ -25,7 +25,7 @@ const derived: GetSnsDomainAddressResult = {
 
 > **domainAddress**: `Address`
 
-Defined in: [domain/getSnsDomainAddress.ts:39](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/domain/getSnsDomainAddress.ts#L39)
+Defined in: [domain/getSnsDomainAddress.ts:39](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/domain/getSnsDomainAddress.ts#L39)
 
 Derived account address.
 
@@ -35,7 +35,7 @@ Derived account address.
 
 > **isSub**: `boolean`
 
-Defined in: [domain/getSnsDomainAddress.ts:43](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/domain/getSnsDomainAddress.ts#L43)
+Defined in: [domain/getSnsDomainAddress.ts:43](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/domain/getSnsDomainAddress.ts#L43)
 
 Whether the input is a subdomain.
 
@@ -45,7 +45,7 @@ Whether the input is a subdomain.
 
 > `optional` **isSubRecord?**: `boolean`
 
-Defined in: [domain/getSnsDomainAddress.ts:45](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/domain/getSnsDomainAddress.ts#L45)
+Defined in: [domain/getSnsDomainAddress.ts:45](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/domain/getSnsDomainAddress.ts#L45)
 
 Whether the input is a subdomain record.
 
@@ -55,6 +55,6 @@ Whether the input is a subdomain record.
 
 > `optional` **parentAddress?**: `Address`
 
-Defined in: [domain/getSnsDomainAddress.ts:41](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/domain/getSnsDomainAddress.ts#L41)
+Defined in: [domain/getSnsDomainAddress.ts:41](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/domain/getSnsDomainAddress.ts#L41)
 
 Parent domain address for subdomains.

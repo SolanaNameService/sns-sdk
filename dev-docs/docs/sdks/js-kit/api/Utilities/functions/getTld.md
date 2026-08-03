@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **getTld**(`domain`, `supportedTlds?`): `string` \| `undefined`
 
-Defined in: [utils/tld.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/utils/tld.ts#L30)
+Defined in: [utils/tld.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/utils/tld.ts#L30)
 
 Returns the matching TLD from `supportedTlds` if `domain` ends with one,
 or `undefined` otherwise.

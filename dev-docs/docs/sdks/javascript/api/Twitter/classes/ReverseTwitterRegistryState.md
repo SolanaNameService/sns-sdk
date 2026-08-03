@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: ReverseTwitterRegistryState
 
-Defined in: [twitter/ReverseTwitterRegistryState.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/twitter/ReverseTwitterRegistryState.ts#L22)
+Defined in: [twitter/ReverseTwitterRegistryState.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/twitter/ReverseTwitterRegistryState.ts#L22)
 
 Deserialized reverse registry linking a verified key to a Twitter handle.
 
@@ -16,7 +16,7 @@ Deserialized reverse registry linking a verified key to a Twitter handle.
 
 > **new ReverseTwitterRegistryState**(`obj`): `ReverseTwitterRegistryState`
 
-Defined in: [twitter/ReverseTwitterRegistryState.ts:35](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/twitter/ReverseTwitterRegistryState.ts#L35)
+Defined in: [twitter/ReverseTwitterRegistryState.ts:35](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/twitter/ReverseTwitterRegistryState.ts#L35)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [twitter/ReverseTwitterRegistryState.ts:35](https://github.com/Bonfi
 
 > **twitterHandle**: `string`
 
-Defined in: [twitter/ReverseTwitterRegistryState.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/twitter/ReverseTwitterRegistryState.ts#L26)
+Defined in: [twitter/ReverseTwitterRegistryState.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/twitter/ReverseTwitterRegistryState.ts#L26)
 
 Verified Twitter handle.
 
@@ -44,7 +44,7 @@ Verified Twitter handle.
 
 > **twitterRegistryKey**: `Uint8Array`
 
-Defined in: [twitter/ReverseTwitterRegistryState.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/twitter/ReverseTwitterRegistryState.ts#L24)
+Defined in: [twitter/ReverseTwitterRegistryState.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/twitter/ReverseTwitterRegistryState.ts#L24)
 
 Encoded verified Twitter registry address.
 
@@ -54,7 +54,7 @@ Encoded verified Twitter registry address.
 
 > `static` **schema**: `object`
 
-Defined in: [twitter/ReverseTwitterRegistryState.ts:28](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/twitter/ReverseTwitterRegistryState.ts#L28)
+Defined in: [twitter/ReverseTwitterRegistryState.ts:28](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/twitter/ReverseTwitterRegistryState.ts#L28)
 
 #### struct
 
@@ -86,7 +86,7 @@ Defined in: [twitter/ReverseTwitterRegistryState.ts:28](https://github.com/Bonfi
 
 > `static` **retrieve**(`connection`, `reverseTwitterAccountKey`): `Promise`\<`ReverseTwitterRegistryState`\>
 
-Defined in: [twitter/ReverseTwitterRegistryState.ts:41](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/twitter/ReverseTwitterRegistryState.ts#L41)
+Defined in: [twitter/ReverseTwitterRegistryState.ts:41](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/twitter/ReverseTwitterRegistryState.ts#L41)
 
 Fetches and deserializes a reverse Twitter registry account.
 

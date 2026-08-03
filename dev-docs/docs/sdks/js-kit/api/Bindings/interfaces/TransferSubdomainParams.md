@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: TransferSubdomainParams
 
-Defined in: [bindings/transferSubdomain.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/transferSubdomain.ts#L22)
+Defined in: [bindings/transferSubdomain.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/bindings/transferSubdomain.ts#L22)
 
 Parameters for transferring an SNS subdomain.
 
@@ -26,7 +26,7 @@ const params: TransferSubdomainParams = {
 
 > `optional` **currentOwner?**: `Address`
 
-Defined in: [bindings/transferSubdomain.ts:32](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/transferSubdomain.ts#L32)
+Defined in: [bindings/transferSubdomain.ts:32](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/bindings/transferSubdomain.ts#L32)
 
 Current subdomain owner. Resolved when omitted.
 
@@ -36,7 +36,7 @@ Current subdomain owner. Resolved when omitted.
 
 > `optional` **isParentOwnerSigner?**: `boolean`
 
-Defined in: [bindings/transferSubdomain.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/transferSubdomain.ts#L30)
+Defined in: [bindings/transferSubdomain.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/bindings/transferSubdomain.ts#L30)
 
 Whether the parent domain owner signs.
 
@@ -46,7 +46,7 @@ Whether the parent domain owner signs.
 
 > **newOwner**: `Address`
 
-Defined in: [bindings/transferSubdomain.ts:28](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/transferSubdomain.ts#L28)
+Defined in: [bindings/transferSubdomain.ts:28](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/bindings/transferSubdomain.ts#L28)
 
 New subdomain owner.
 
@@ -56,7 +56,7 @@ New subdomain owner.
 
 > **rpc**: `Rpc`\<`GetAccountInfoApi`\>
 
-Defined in: [bindings/transferSubdomain.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/transferSubdomain.ts#L24)
+Defined in: [bindings/transferSubdomain.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/bindings/transferSubdomain.ts#L24)
 
 RPC client.
 
@@ -66,6 +66,6 @@ RPC client.
 
 > **subdomain**: `string`
 
-Defined in: [bindings/transferSubdomain.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/transferSubdomain.ts#L26)
+Defined in: [bindings/transferSubdomain.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/bindings/transferSubdomain.ts#L26)
 
 Full `.sns` subdomain name.

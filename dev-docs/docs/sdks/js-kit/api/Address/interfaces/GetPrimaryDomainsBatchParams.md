@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: GetPrimaryDomainsBatchParams
 
-Defined in: [address/getPrimaryDomainsBatch.ts:32](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/address/getPrimaryDomainsBatch.ts#L32)
+Defined in: [address/getPrimaryDomainsBatch.ts:32](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/address/getPrimaryDomainsBatch.ts#L32)
 
 Parameters for retrieving primary domains for multiple wallets.
 
@@ -22,7 +22,7 @@ const params: GetPrimaryDomainsBatchParams = { rpc, walletAddresses };
 
 > **rpc**: `Rpc`\<`GetMultipleAccountsApi` & `GetTokenLargestAccountsApi`\>
 
-Defined in: [address/getPrimaryDomainsBatch.ts:34](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/address/getPrimaryDomainsBatch.ts#L34)
+Defined in: [address/getPrimaryDomainsBatch.ts:34](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/address/getPrimaryDomainsBatch.ts#L34)
 
 RPC client.
 
@@ -32,6 +32,6 @@ RPC client.
 
 > **walletAddresses**: `Address`[]
 
-Defined in: [address/getPrimaryDomainsBatch.ts:36](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/address/getPrimaryDomainsBatch.ts#L36)
+Defined in: [address/getPrimaryDomainsBatch.ts:36](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/address/getPrimaryDomainsBatch.ts#L36)
 
 Wallet addresses.

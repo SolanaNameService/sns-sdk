@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **burnDomain**(`domain`, `owner`, `target`): `TransactionInstruction`
 
-Defined in: [bindings/burnDomain.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/bindings/burnDomain.ts#L26)
+Defined in: [bindings/burnDomain.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/bindings/burnDomain.ts#L26)
 
 Builds an instruction to burn a top-level `.sns` domain and its reverse lookup account.
 

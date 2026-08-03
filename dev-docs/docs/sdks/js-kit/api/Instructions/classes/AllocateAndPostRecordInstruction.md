@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: AllocateAndPostRecordInstruction
 
-Defined in: [instructions/allocateAndPostRecordInstruction.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/allocateAndPostRecordInstruction.ts#L26)
+Defined in: [instructions/allocateAndPostRecordInstruction.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/allocateAndPostRecordInstruction.ts#L26)
 
 Builder for allocating and writing an SNS V2 record account.
 
@@ -16,7 +16,7 @@ Builder for allocating and writing an SNS V2 record account.
 
 > **new AllocateAndPostRecordInstruction**(`obj`): `AllocateAndPostRecordInstruction`
 
-Defined in: [instructions/allocateAndPostRecordInstruction.ts:42](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/allocateAndPostRecordInstruction.ts#L42)
+Defined in: [instructions/allocateAndPostRecordInstruction.ts:42](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/allocateAndPostRecordInstruction.ts#L42)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [instructions/allocateAndPostRecordInstruction.ts:42](https://github
 
 > **content**: `ReadonlyUint8Array`
 
-Defined in: [instructions/allocateAndPostRecordInstruction.ts:32](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/allocateAndPostRecordInstruction.ts#L32)
+Defined in: [instructions/allocateAndPostRecordInstruction.ts:32](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/allocateAndPostRecordInstruction.ts#L32)
 
 Serialized record content.
 
@@ -44,7 +44,7 @@ Serialized record content.
 
 > **record**: `string`
 
-Defined in: [instructions/allocateAndPostRecordInstruction.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/allocateAndPostRecordInstruction.ts#L30)
+Defined in: [instructions/allocateAndPostRecordInstruction.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/allocateAndPostRecordInstruction.ts#L30)
 
 Encoded V2 record label.
 
@@ -54,7 +54,7 @@ Encoded V2 record label.
 
 > **tag**: `number`
 
-Defined in: [instructions/allocateAndPostRecordInstruction.ts:28](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/allocateAndPostRecordInstruction.ts#L28)
+Defined in: [instructions/allocateAndPostRecordInstruction.ts:28](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/allocateAndPostRecordInstruction.ts#L28)
 
 Instruction discriminator.
 
@@ -64,7 +64,7 @@ Instruction discriminator.
 
 > `static` **schema**: `object`
 
-Defined in: [instructions/allocateAndPostRecordInstruction.ts:34](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/allocateAndPostRecordInstruction.ts#L34)
+Defined in: [instructions/allocateAndPostRecordInstruction.ts:34](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/allocateAndPostRecordInstruction.ts#L34)
 
 #### struct
 
@@ -96,7 +96,7 @@ Defined in: [instructions/allocateAndPostRecordInstruction.ts:34](https://github
 
 > **getInstruction**(`programAddress`, `systemProgram`, `splNameServiceProgram`, `payer`, `record`, `domainAddress`, `domainOwner`, `centralState`): `Instruction`
 
-Defined in: [instructions/allocateAndPostRecordInstruction.ts:52](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/allocateAndPostRecordInstruction.ts#L52)
+Defined in: [instructions/allocateAndPostRecordInstruction.ts:52](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/allocateAndPostRecordInstruction.ts#L52)
 
 #### Parameters
 
@@ -142,7 +142,7 @@ Defined in: [instructions/allocateAndPostRecordInstruction.ts:52](https://github
 
 > **serialize**(): `Uint8Array`
 
-Defined in: [instructions/allocateAndPostRecordInstruction.ts:48](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/allocateAndPostRecordInstruction.ts#L48)
+Defined in: [instructions/allocateAndPostRecordInstruction.ts:48](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/allocateAndPostRecordInstruction.ts#L48)
 
 #### Returns
 

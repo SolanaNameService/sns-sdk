@@ -8,6 +8,6 @@ displayed_sidebar: docsSidebar
 
 > `const` **RECORD\_V1\_SIZE**: `Map`\<[`Record`](../enumerations/Record.md), `number`\>
 
-Defined in: [types/record.ts:36](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/types/record.ts#L36)
+Defined in: [types/record.ts:36](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/types/record.ts#L36)
 
 Fixed byte lengths for V1 record payloads.

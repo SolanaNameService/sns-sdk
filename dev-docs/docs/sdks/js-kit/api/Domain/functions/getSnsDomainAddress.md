@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **getSnsDomainAddress**(`params`): `Promise`\<[`GetSnsDomainAddressResult`](../interfaces/GetSnsDomainAddressResult.md)\>
 
-Defined in: [domain/getSnsDomainAddress.ts:61](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/domain/getSnsDomainAddress.ts#L61)
+Defined in: [domain/getSnsDomainAddress.ts:61](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/domain/getSnsDomainAddress.ts#L61)
 
 Derives the address of a domain, subdomain, or record account.
 

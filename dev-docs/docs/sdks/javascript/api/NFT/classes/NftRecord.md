@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: NftRecord
 
-Defined in: [nft/state.ts:40](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/nft/state.ts#L40)
+Defined in: [nft/state.ts:40](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/nft/state.ts#L40)
 
 Deserialized name-tokenizer record linking a name account to its NFT mint.
 
@@ -16,7 +16,7 @@ Deserialized name-tokenizer record linking a name account to its NFT mint.
 
 > **new NftRecord**(`obj`): `NftRecord`
 
-Defined in: [nft/state.ts:64](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/nft/state.ts#L64)
+Defined in: [nft/state.ts:64](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/nft/state.ts#L64)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [nft/state.ts:64](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbc
 
 > **nameAccount**: `PublicKey`
 
-Defined in: [nft/state.ts:46](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/nft/state.ts#L46)
+Defined in: [nft/state.ts:46](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/nft/state.ts#L46)
 
 SNS domain account address.
 
@@ -44,7 +44,7 @@ SNS domain account address.
 
 > **nftMint**: `PublicKey`
 
-Defined in: [nft/state.ts:50](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/nft/state.ts#L50)
+Defined in: [nft/state.ts:50](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/nft/state.ts#L50)
 
 NFT mint address.
 
@@ -54,7 +54,7 @@ NFT mint address.
 
 > **nonce**: `number`
 
-Defined in: [nft/state.ts:44](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/nft/state.ts#L44)
+Defined in: [nft/state.ts:44](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/nft/state.ts#L44)
 
 NFT record nonce.
 
@@ -64,7 +64,7 @@ NFT record nonce.
 
 > **owner**: `PublicKey`
 
-Defined in: [nft/state.ts:48](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/nft/state.ts#L48)
+Defined in: [nft/state.ts:48](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/nft/state.ts#L48)
 
 NFT owner address.
 
@@ -74,7 +74,7 @@ NFT owner address.
 
 > **tag**: [`Tag`](../enumerations/Tag.md)
 
-Defined in: [nft/state.ts:42](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/nft/state.ts#L42)
+Defined in: [nft/state.ts:42](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/nft/state.ts#L42)
 
 NFT state tag.
 
@@ -84,7 +84,7 @@ NFT state tag.
 
 > `static` **LEN**: `number`
 
-Defined in: [nft/state.ts:52](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/nft/state.ts#L52)
+Defined in: [nft/state.ts:52](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/nft/state.ts#L52)
 
 ***
 
@@ -92,7 +92,7 @@ Defined in: [nft/state.ts:52](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbc
 
 > `static` **schema**: `object`
 
-Defined in: [nft/state.ts:54](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/nft/state.ts#L54)
+Defined in: [nft/state.ts:54](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/nft/state.ts#L54)
 
 #### struct
 
@@ -160,7 +160,7 @@ Defined in: [nft/state.ts:54](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbc
 
 > `static` **deserialize**(`data`): `NftRecord`
 
-Defined in: [nft/state.ts:73](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/nft/state.ts#L73)
+Defined in: [nft/state.ts:73](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/nft/state.ts#L73)
 
 Deserializes raw name-tokenizer account data.
 
@@ -180,7 +180,7 @@ Deserializes raw name-tokenizer account data.
 
 > `static` **findKey**(`nameAccount`, `programId`): `Promise`\<\[`PublicKey`, `number`\]\>
 
-Defined in: [nft/state.ts:88](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/nft/state.ts#L88)
+Defined in: [nft/state.ts:88](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/nft/state.ts#L88)
 
 Derives the asynchronous PDA for a name-tokenizer record.
 
@@ -204,7 +204,7 @@ Derives the asynchronous PDA for a name-tokenizer record.
 
 > `static` **findKeySync**(`nameAccount`, `programId`): \[`PublicKey`, `number`\]
 
-Defined in: [nft/state.ts:95](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/nft/state.ts#L95)
+Defined in: [nft/state.ts:95](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/nft/state.ts#L95)
 
 Derives the synchronous PDA for a name-tokenizer record.
 
@@ -228,7 +228,7 @@ Derives the synchronous PDA for a name-tokenizer record.
 
 > `static` **retrieve**(`connection`, `key`): `Promise`\<`NftRecord`\>
 
-Defined in: [nft/state.ts:78](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/nft/state.ts#L78)
+Defined in: [nft/state.ts:78](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/nft/state.ts#L78)
 
 Fetches and deserializes a name-tokenizer record account.
 

@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: GetAllSnsDomainsParams
 
-Defined in: [domain/getAllSnsDomains.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/domain/getAllSnsDomains.ts#L22)
+Defined in: [domain/getAllSnsDomains.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/domain/getAllSnsDomains.ts#L22)
 
 Parameters for retrieving all SNS domains.
 
@@ -22,6 +22,6 @@ const params: GetAllSnsDomainsParams = { rpc };
 
 > **rpc**: `Rpc`\<`GetProgramAccountsApi`\>
 
-Defined in: [domain/getAllSnsDomains.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/domain/getAllSnsDomains.ts#L24)
+Defined in: [domain/getAllSnsDomains.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/domain/getAllSnsDomains.ts#L24)
 
 RPC client.

@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: SetPrimaryInstruction
 
-Defined in: [instructions/setPrimaryInstruction.ts:7](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/instructions/setPrimaryInstruction.ts#L7)
+Defined in: [instructions/setPrimaryInstruction.ts:7](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/instructions/setPrimaryInstruction.ts#L7)
 
 Serializable registrar instruction for setting a wallet primary domain.
 
@@ -16,7 +16,7 @@ Serializable registrar instruction for setting a wallet primary domain.
 
 > **new SetPrimaryInstruction**(): `SetPrimaryInstruction`
 
-Defined in: [instructions/setPrimaryInstruction.ts:15](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/instructions/setPrimaryInstruction.ts#L15)
+Defined in: [instructions/setPrimaryInstruction.ts:15](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/instructions/setPrimaryInstruction.ts#L15)
 
 #### Returns
 
@@ -28,7 +28,7 @@ Defined in: [instructions/setPrimaryInstruction.ts:15](https://github.com/Bonfid
 
 > **tag**: `number`
 
-Defined in: [instructions/setPrimaryInstruction.ts:9](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/instructions/setPrimaryInstruction.ts#L9)
+Defined in: [instructions/setPrimaryInstruction.ts:9](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/instructions/setPrimaryInstruction.ts#L9)
 
 Instruction discriminator.
 
@@ -38,7 +38,7 @@ Instruction discriminator.
 
 > `static` **schema**: `object`
 
-Defined in: [instructions/setPrimaryInstruction.ts:10](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/instructions/setPrimaryInstruction.ts#L10)
+Defined in: [instructions/setPrimaryInstruction.ts:10](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/instructions/setPrimaryInstruction.ts#L10)
 
 #### struct
 
@@ -54,7 +54,7 @@ Defined in: [instructions/setPrimaryInstruction.ts:10](https://github.com/Bonfid
 
 > **getInstruction**(`programId`, `nameAccount`, `primaryAccount`, `owner`, `systemProgram`, `optParent?`): `TransactionInstruction`
 
-Defined in: [instructions/setPrimaryInstruction.ts:23](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/instructions/setPrimaryInstruction.ts#L23)
+Defined in: [instructions/setPrimaryInstruction.ts:23](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/instructions/setPrimaryInstruction.ts#L23)
 
 Builds the transaction instruction with the required primary-domain accounts.
 
@@ -94,7 +94,7 @@ Builds the transaction instruction with the required primary-domain accounts.
 
 > **serialize**(): `Uint8Array`
 
-Defined in: [instructions/setPrimaryInstruction.ts:19](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/instructions/setPrimaryInstruction.ts#L19)
+Defined in: [instructions/setPrimaryInstruction.ts:19](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/instructions/setPrimaryInstruction.ts#L19)
 
 Serializes the registrar instruction payload.
 

@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **\_verifyRoaSync**(`params`): `boolean`
 
-Defined in: [record/verifyRecordRightOfAssociation.ts:71](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/record/verifyRecordRightOfAssociation.ts#L71)
+Defined in: [record/verifyRecordRightOfAssociation.ts:71](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/record/verifyRecordRightOfAssociation.ts#L71)
 
 Internal helper that verifies a record's Right of Association validation.
 

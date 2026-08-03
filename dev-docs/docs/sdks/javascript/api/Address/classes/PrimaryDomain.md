@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: PrimaryDomain
 
-Defined in: [primary-domain.ts:37](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/primary-domain.ts#L37)
+Defined in: [primary-domain.ts:37](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/primary-domain.ts#L37)
 
 Deserialized primary-domain account and its address derivation helpers.
 
@@ -16,7 +16,7 @@ Deserialized primary-domain account and its address derivation helpers.
 
 > **new PrimaryDomain**(`obj`): `PrimaryDomain`
 
-Defined in: [primary-domain.ts:49](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/primary-domain.ts#L49)
+Defined in: [primary-domain.ts:49](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/primary-domain.ts#L49)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [primary-domain.ts:49](https://github.com/Bonfida/sns-sdk-beta/blob/
 
 > **nameAccount**: `PublicKey`
 
-Defined in: [primary-domain.ts:41](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/primary-domain.ts#L41)
+Defined in: [primary-domain.ts:41](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/primary-domain.ts#L41)
 
 Primary domain account address.
 
@@ -44,7 +44,7 @@ Primary domain account address.
 
 > **tag**: `number`
 
-Defined in: [primary-domain.ts:39](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/primary-domain.ts#L39)
+Defined in: [primary-domain.ts:39](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/primary-domain.ts#L39)
 
 Account state tag.
 
@@ -54,7 +54,7 @@ Account state tag.
 
 > `static` **schema**: `object`
 
-Defined in: [primary-domain.ts:42](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/primary-domain.ts#L42)
+Defined in: [primary-domain.ts:42](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/primary-domain.ts#L42)
 
 #### struct
 
@@ -86,7 +86,7 @@ Defined in: [primary-domain.ts:42](https://github.com/Bonfida/sns-sdk-beta/blob/
 
 > `static` **deserialize**(`data`): `PrimaryDomain`
 
-Defined in: [primary-domain.ts:60](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/primary-domain.ts#L60)
+Defined in: [primary-domain.ts:60](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/primary-domain.ts#L60)
 
 Deserializes raw primary-domain account data.
 
@@ -110,7 +110,7 @@ The deserialized primary-domain account
 
 > `static` **getKey**(`programId`, `owner`): `Promise`\<\[`PublicKey`, `number`\]\>
 
-Defined in: [primary-domain.ts:88](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/primary-domain.ts#L88)
+Defined in: [primary-domain.ts:88](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/primary-domain.ts#L88)
 
 Derives the primary-domain account address for an owner.
 
@@ -140,7 +140,7 @@ The derived primary-domain account address and bump seed
 
 > `static` **getKeySync**(`programId`, `owner`): \[`PublicKey`, `number`\]
 
-Defined in: [primary-domain.ts:102](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/primary-domain.ts#L102)
+Defined in: [primary-domain.ts:102](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/primary-domain.ts#L102)
 
 Synchronously derives the primary-domain account address for an owner.
 
@@ -170,7 +170,7 @@ The derived primary-domain account address and bump seed
 
 > `static` **retrieve**(`connection`, `key`): `Promise`\<`PrimaryDomain`\>
 
-Defined in: [primary-domain.ts:71](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/primary-domain.ts#L71)
+Defined in: [primary-domain.ts:71](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/primary-domain.ts#L71)
 
 Fetches and deserializes a primary-domain account.
 

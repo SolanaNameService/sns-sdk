@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: AccountKey
 
-Defined in: [instructions/types.ts:11](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/instructions/types.ts#L11)
+Defined in: [instructions/types.ts:11](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/instructions/types.ts#L11)
 
 Account metadata used when constructing a Solana transaction instruction.
 
@@ -22,7 +22,7 @@ const account: AccountKey = { pubkey: owner, isSigner: true, isWritable: false }
 
 > **isSigner**: `boolean`
 
-Defined in: [instructions/types.ts:15](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/instructions/types.ts#L15)
+Defined in: [instructions/types.ts:15](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/instructions/types.ts#L15)
 
 Whether the account must sign the transaction.
 
@@ -32,7 +32,7 @@ Whether the account must sign the transaction.
 
 > **isWritable**: `boolean`
 
-Defined in: [instructions/types.ts:17](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/instructions/types.ts#L17)
+Defined in: [instructions/types.ts:17](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/instructions/types.ts#L17)
 
 Whether the instruction may modify the account.
 
@@ -42,6 +42,6 @@ Whether the instruction may modify the account.
 
 > **pubkey**: `PublicKey`
 
-Defined in: [instructions/types.ts:13](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/instructions/types.ts#L13)
+Defined in: [instructions/types.ts:13](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/instructions/types.ts#L13)
 
 Public key of the account.

@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: ValidateEthereumSignatureInstruction
 
-Defined in: [instructions/validateEthereumSignatureInstruction.ts:28](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/validateEthereumSignatureInstruction.ts#L28)
+Defined in: [instructions/validateEthereumSignatureInstruction.ts:28](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/validateEthereumSignatureInstruction.ts#L28)
 
 Builder for validating an Ethereum signature for an SNS record.
 
@@ -16,7 +16,7 @@ Builder for validating an Ethereum signature for an SNS record.
 
 > **new ValidateEthereumSignatureInstruction**(`obj`): `ValidateEthereumSignatureInstruction`
 
-Defined in: [instructions/validateEthereumSignatureInstruction.ts:47](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/validateEthereumSignatureInstruction.ts#L47)
+Defined in: [instructions/validateEthereumSignatureInstruction.ts:47](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/validateEthereumSignatureInstruction.ts#L47)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [instructions/validateEthereumSignatureInstruction.ts:47](https://gi
 
 > **expectedPubkey**: `ReadonlyUint8Array`
 
-Defined in: [instructions/validateEthereumSignatureInstruction.ts:36](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/validateEthereumSignatureInstruction.ts#L36)
+Defined in: [instructions/validateEthereumSignatureInstruction.ts:36](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/validateEthereumSignatureInstruction.ts#L36)
 
 Expected Ethereum public key.
 
@@ -44,7 +44,7 @@ Expected Ethereum public key.
 
 > **signature**: `ReadonlyUint8Array`
 
-Defined in: [instructions/validateEthereumSignatureInstruction.ts:34](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/validateEthereumSignatureInstruction.ts#L34)
+Defined in: [instructions/validateEthereumSignatureInstruction.ts:34](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/validateEthereumSignatureInstruction.ts#L34)
 
 Ethereum signature.
 
@@ -54,7 +54,7 @@ Ethereum signature.
 
 > **tag**: `number`
 
-Defined in: [instructions/validateEthereumSignatureInstruction.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/validateEthereumSignatureInstruction.ts#L30)
+Defined in: [instructions/validateEthereumSignatureInstruction.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/validateEthereumSignatureInstruction.ts#L30)
 
 Instruction discriminator.
 
@@ -64,7 +64,7 @@ Instruction discriminator.
 
 > **validation**: `number`
 
-Defined in: [instructions/validateEthereumSignatureInstruction.ts:32](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/validateEthereumSignatureInstruction.ts#L32)
+Defined in: [instructions/validateEthereumSignatureInstruction.ts:32](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/validateEthereumSignatureInstruction.ts#L32)
 
 Validation mode discriminator.
 
@@ -74,7 +74,7 @@ Validation mode discriminator.
 
 > `static` **schema**: `object`
 
-Defined in: [instructions/validateEthereumSignatureInstruction.ts:38](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/validateEthereumSignatureInstruction.ts#L38)
+Defined in: [instructions/validateEthereumSignatureInstruction.ts:38](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/validateEthereumSignatureInstruction.ts#L38)
 
 #### struct
 
@@ -118,7 +118,7 @@ Defined in: [instructions/validateEthereumSignatureInstruction.ts:38](https://gi
 
 > **getInstruction**(`programAddress`, `systemProgram`, `splNameServiceProgram`, `feePayer`, `record`, `domain`, `domainOwner`, `centralState`): `Instruction`
 
-Defined in: [instructions/validateEthereumSignatureInstruction.ts:58](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/validateEthereumSignatureInstruction.ts#L58)
+Defined in: [instructions/validateEthereumSignatureInstruction.ts:58](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/validateEthereumSignatureInstruction.ts#L58)
 
 #### Parameters
 
@@ -164,7 +164,7 @@ Defined in: [instructions/validateEthereumSignatureInstruction.ts:58](https://gi
 
 > **serialize**(): `Uint8Array`
 
-Defined in: [instructions/validateEthereumSignatureInstruction.ts:54](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/validateEthereumSignatureInstruction.ts#L54)
+Defined in: [instructions/validateEthereumSignatureInstruction.ts:54](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/validateEthereumSignatureInstruction.ts#L54)
 
 #### Returns
 

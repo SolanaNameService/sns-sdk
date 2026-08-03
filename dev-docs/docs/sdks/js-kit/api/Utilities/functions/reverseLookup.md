@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **reverseLookup**(`params`): `Promise`\<`string`\>
 
-Defined in: [utils/reverseLookup.ts:40](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/utils/reverseLookup.ts#L40)
+Defined in: [utils/reverseLookup.ts:40](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/utils/reverseLookup.ts#L40)
 
 Performs a reverse lookup for a domain address.
 

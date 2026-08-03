@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **changeVerifiedPubkey**(`connection`, `twitterHandle`, `currentVerifiedPubkey`, `newVerifiedPubkey`, `payerKey`): `Promise`\<`TransactionInstruction`[]\>
 
-Defined in: [twitter/changeVerifiedPubkey.ts:36](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/twitter/changeVerifiedPubkey.ts#L36)
+Defined in: [twitter/changeVerifiedPubkey.ts:36](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/twitter/changeVerifiedPubkey.ts#L36)
 
 Builds instructions to transfer a Twitter handle to a new verified public key.
 

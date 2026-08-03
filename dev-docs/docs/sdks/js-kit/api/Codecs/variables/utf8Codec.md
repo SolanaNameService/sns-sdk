@@ -8,6 +8,6 @@ displayed_sidebar: docsSidebar
 
 > `const` **utf8Codec**: `VariableSizeCodec`\<`string`\>
 
-Defined in: [codecs.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/codecs.ts#L26)
+Defined in: [codecs.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/codecs.ts#L26)
 
 Codec for UTF-8 text data.

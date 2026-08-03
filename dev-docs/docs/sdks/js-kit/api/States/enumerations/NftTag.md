@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Enumeration: NftTag
 
-Defined in: [states/nft.ts:17](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/states/nft.ts#L17)
+Defined in: [states/nft.ts:17](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/states/nft.ts#L17)
 
 Tags identifying the SNS NFT state variant.
 
@@ -16,7 +16,7 @@ Tags identifying the SNS NFT state variant.
 
 > **ActiveRecord**: `2`
 
-Defined in: [states/nft.ts:20](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/states/nft.ts#L20)
+Defined in: [states/nft.ts:20](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/states/nft.ts#L20)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [states/nft.ts:20](https://github.com/Bonfida/sns-sdk-beta/blob/2fdb
 
 > **CentralState**: `1`
 
-Defined in: [states/nft.ts:19](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/states/nft.ts#L19)
+Defined in: [states/nft.ts:19](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/states/nft.ts#L19)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [states/nft.ts:19](https://github.com/Bonfida/sns-sdk-beta/blob/2fdb
 
 > **InactiveRecord**: `3`
 
-Defined in: [states/nft.ts:21](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/states/nft.ts#L21)
+Defined in: [states/nft.ts:21](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/states/nft.ts#L21)
 
 ***
 
@@ -40,4 +40,4 @@ Defined in: [states/nft.ts:21](https://github.com/Bonfida/sns-sdk-beta/blob/2fdb
 
 > **Uninitialized**: `0`
 
-Defined in: [states/nft.ts:18](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/states/nft.ts#L18)
+Defined in: [states/nft.ts:18](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/states/nft.ts#L18)

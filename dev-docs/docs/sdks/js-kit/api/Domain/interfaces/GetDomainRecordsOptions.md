@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: GetDomainRecordsOptions\<T, U\>
 
-Defined in: [domain/getDomainRecords.ts:34](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/domain/getDomainRecords.ts#L34)
+Defined in: [domain/getDomainRecords.ts:34](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/domain/getDomainRecords.ts#L34)
 
 Options for retrieving domain records.
 
@@ -35,7 +35,7 @@ const options: GetDomainRecordsOptions<[Record.Url], [undefined]> = {
 
 > `optional` **deserialize?**: `boolean`
 
-Defined in: [domain/getDomainRecords.ts:39](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/domain/getDomainRecords.ts#L39)
+Defined in: [domain/getDomainRecords.ts:39](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/domain/getDomainRecords.ts#L39)
 
 Whether to decode record content.
 
@@ -45,6 +45,6 @@ Whether to decode record content.
 
 > `optional` **verifiers?**: \[`...U[]`\]
 
-Defined in: [domain/getDomainRecords.ts:41](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/domain/getDomainRecords.ts#L41)
+Defined in: [domain/getDomainRecords.ts:41](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/domain/getDomainRecords.ts#L41)
 
 Right of Association verifiers by record position.

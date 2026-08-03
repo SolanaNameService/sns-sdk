@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **createReverse**(`nameAccount`, `name`, `feePayer`, `parentName?`, `parentNameOwner?`): `Promise`\<`TransactionInstruction`[]\>
 
-Defined in: [bindings/createReverse.ts:34](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/bindings/createReverse.ts#L34)
+Defined in: [bindings/createReverse.ts:34](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/bindings/createReverse.ts#L34)
 
 Builds an instruction to create an SNS reverse lookup account.
 

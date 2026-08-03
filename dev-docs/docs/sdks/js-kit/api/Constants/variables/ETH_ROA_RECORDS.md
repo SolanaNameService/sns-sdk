@@ -8,6 +8,6 @@ displayed_sidebar: docsSidebar
 
 > `const` **ETH\_ROA\_RECORDS**: `Set`\<[`Record`](../../Types/enumerations/Record.md)\>
 
-Defined in: [constants/records.ts:16](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/constants/records.ts#L16)
+Defined in: [constants/records.ts:16](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/constants/records.ts#L16)
 
 Record types that use Ethereum/secp256k1 Right of Association validation.

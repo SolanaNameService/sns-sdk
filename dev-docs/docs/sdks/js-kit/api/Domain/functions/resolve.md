@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **resolve**(`params`): `Promise`\<`Address`\>
 
-Defined in: [domain/resolve.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/domain/resolve.ts#L30)
+Defined in: [domain/resolve.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/domain/resolve.ts#L30)
 
 Resolves a `.sns` or `.sol` domain to its target address.
 

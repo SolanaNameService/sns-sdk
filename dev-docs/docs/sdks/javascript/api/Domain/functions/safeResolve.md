@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **safeResolve**(`connection`, `domain`, `config?`): `Promise`\<`PublicKey`\>
 
-Defined in: [resolve/index.ts:88](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/resolve/index.ts#L88)
+Defined in: [resolve/index.ts:88](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/resolve/index.ts#L88)
 
 Resolves a full `.sns` or `.sol` domain using the same routing as
 [resolve](resolve.md).

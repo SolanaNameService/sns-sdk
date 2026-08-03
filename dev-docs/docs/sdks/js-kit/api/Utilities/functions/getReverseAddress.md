@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **getReverseAddress**(`domain`): `Promise`\<`Address`\>
 
-Defined in: [utils/getReverseAddress.ts:15](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/utils/getReverseAddress.ts#L15)
+Defined in: [utils/getReverseAddress.ts:15](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/utils/getReverseAddress.ts#L15)
 
 Derives the reverse lookup account address for a TLD-trimmed SNS domain.
 

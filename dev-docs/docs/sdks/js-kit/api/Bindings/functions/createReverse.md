@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **createReverse**(`params`): `Promise`\<`Instruction`\<`string`, readonly (`AccountLookupMeta`\<`string`, `string`\> \| `AccountMeta`\<`string`\>)[]\>\>
 
-Defined in: [bindings/createReverse.ts:54](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/createReverse.ts#L54)
+Defined in: [bindings/createReverse.ts:54](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/bindings/createReverse.ts#L54)
 
 Creates a raw reverse lookup record for the specified domain account.
 

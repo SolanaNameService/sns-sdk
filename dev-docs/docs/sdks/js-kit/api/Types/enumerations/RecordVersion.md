@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Enumeration: RecordVersion
 
-Defined in: [types/record.ts:47](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/types/record.ts#L47)
+Defined in: [types/record.ts:47](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/types/record.ts#L47)
 
 Versions of the SNS record account layout.
 
@@ -16,7 +16,7 @@ Versions of the SNS record account layout.
 
 > **V1**: `1`
 
-Defined in: [types/record.ts:48](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/types/record.ts#L48)
+Defined in: [types/record.ts:48](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/types/record.ts#L48)
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: [types/record.ts:48](https://github.com/Bonfida/sns-sdk-beta/blob/2f
 
 > **V2**: `2`
 
-Defined in: [types/record.ts:49](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/types/record.ts#L49)
+Defined in: [types/record.ts:49](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/types/record.ts#L49)

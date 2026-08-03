@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **verifyStaleness**(`connection`, `record`, `domain`): `Promise`\<`boolean`\>
 
-Defined in: [record/verifyStaleness.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/record/verifyStaleness.ts#L24)
+Defined in: [record/verifyStaleness.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/record/verifyStaleness.ts#L24)
 
 Verifies a record's staleness validation.
 

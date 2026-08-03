@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **validateRecordRoaEthereum**(`params`): `Promise`\<`Instruction`\<`string`, readonly (`AccountLookupMeta`\<`string`, `string`\> \| `AccountMeta`\<`string`\>)[]\>\>
 
-Defined in: [bindings/validateRecordRoaEthereum.ts:64](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/validateRecordRoaEthereum.ts#L64)
+Defined in: [bindings/validateRecordRoaEthereum.ts:64](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/bindings/validateRecordRoaEthereum.ts#L64)
 
 Builds an instruction to validate a V2 record's Right of Association with an Ethereum signature.
 

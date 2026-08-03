@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **getSrsDomainAddress**(`params`): `Promise`\<[`GetSrsDomainAddressResult`](../interfaces/GetSrsDomainAddressResult.md)\>
 
-Defined in: [domain/getSrsDomainAddress.ts:47](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/domain/getSrsDomainAddress.ts#L47)
+Defined in: [domain/getSrsDomainAddress.ts:47](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/domain/getSrsDomainAddress.ts#L47)
 
 Derives the canonical SRS record address for a TLD-trimmed `.sol` name.
 

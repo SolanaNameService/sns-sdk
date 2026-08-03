@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: ValidateSolanaSignatureInstruction
 
-Defined in: [instructions/validateSolanaSignatureInstruction.ts:18](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/validateSolanaSignatureInstruction.ts#L18)
+Defined in: [instructions/validateSolanaSignatureInstruction.ts:18](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/validateSolanaSignatureInstruction.ts#L18)
 
 Builder for validating a Solana signature for an SNS record.
 
@@ -16,7 +16,7 @@ Builder for validating a Solana signature for an SNS record.
 
 > **new ValidateSolanaSignatureInstruction**(`obj`): `ValidateSolanaSignatureInstruction`
 
-Defined in: [instructions/validateSolanaSignatureInstruction.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/validateSolanaSignatureInstruction.ts#L30)
+Defined in: [instructions/validateSolanaSignatureInstruction.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/validateSolanaSignatureInstruction.ts#L30)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [instructions/validateSolanaSignatureInstruction.ts:30](https://gith
 
 > **staleness**: `boolean`
 
-Defined in: [instructions/validateSolanaSignatureInstruction.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/validateSolanaSignatureInstruction.ts#L22)
+Defined in: [instructions/validateSolanaSignatureInstruction.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/validateSolanaSignatureInstruction.ts#L22)
 
 Whether to validate staleness.
 
@@ -44,7 +44,7 @@ Whether to validate staleness.
 
 > **tag**: `number`
 
-Defined in: [instructions/validateSolanaSignatureInstruction.ts:20](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/validateSolanaSignatureInstruction.ts#L20)
+Defined in: [instructions/validateSolanaSignatureInstruction.ts:20](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/validateSolanaSignatureInstruction.ts#L20)
 
 Instruction discriminator.
 
@@ -54,7 +54,7 @@ Instruction discriminator.
 
 > `static` **schema**: `object`
 
-Defined in: [instructions/validateSolanaSignatureInstruction.ts:23](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/validateSolanaSignatureInstruction.ts#L23)
+Defined in: [instructions/validateSolanaSignatureInstruction.ts:23](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/validateSolanaSignatureInstruction.ts#L23)
 
 #### struct
 
@@ -74,7 +74,7 @@ Defined in: [instructions/validateSolanaSignatureInstruction.ts:23](https://gith
 
 > **getInstruction**(`programAddress`, `systemProgram`, `splNameServiceProgram`, `feePayer`, `record`, `domain`, `domainOwner`, `centralState`, `verifier`): `Instruction`
 
-Defined in: [instructions/validateSolanaSignatureInstruction.ts:39](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/validateSolanaSignatureInstruction.ts#L39)
+Defined in: [instructions/validateSolanaSignatureInstruction.ts:39](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/validateSolanaSignatureInstruction.ts#L39)
 
 #### Parameters
 
@@ -124,7 +124,7 @@ Defined in: [instructions/validateSolanaSignatureInstruction.ts:39](https://gith
 
 > **serialize**(): `Uint8Array`
 
-Defined in: [instructions/validateSolanaSignatureInstruction.ts:35](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/instructions/validateSolanaSignatureInstruction.ts#L35)
+Defined in: [instructions/validateSolanaSignatureInstruction.ts:35](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/instructions/validateSolanaSignatureInstruction.ts#L35)
 
 #### Returns
 

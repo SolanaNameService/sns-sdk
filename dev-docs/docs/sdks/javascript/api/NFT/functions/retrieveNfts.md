@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **retrieveNfts**(`connection`): `Promise`\<`PublicKey`[]\>
 
-Defined in: [nft/retrieveNfts.ts:20](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/nft/retrieveNfts.ts#L20)
+Defined in: [nft/retrieveNfts.ts:20](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/nft/retrieveNfts.ts#L20)
 
 Retrieves all tokenized domain name accounts.
 

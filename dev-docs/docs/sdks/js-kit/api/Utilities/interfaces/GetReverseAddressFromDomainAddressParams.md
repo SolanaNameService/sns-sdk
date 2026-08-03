@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: GetReverseAddressFromDomainAddressParams
 
-Defined in: [utils/getReverseAddressFromDomainAddress.ts:14](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/utils/getReverseAddressFromDomainAddress.ts#L14)
+Defined in: [utils/getReverseAddressFromDomainAddress.ts:14](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/utils/getReverseAddressFromDomainAddress.ts#L14)
 
 Parameters for deriving a reverse lookup address.
 
@@ -22,7 +22,7 @@ const params: GetReverseAddressFromDomainAddressParams = { domainAddress };
 
 > **domainAddress**: `Address`
 
-Defined in: [utils/getReverseAddressFromDomainAddress.ts:16](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/utils/getReverseAddressFromDomainAddress.ts#L16)
+Defined in: [utils/getReverseAddressFromDomainAddress.ts:16](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/utils/getReverseAddressFromDomainAddress.ts#L16)
 
 Domain account address.
 
@@ -32,6 +32,6 @@ Domain account address.
 
 > `optional` **parentAddress?**: `Address`
 
-Defined in: [utils/getReverseAddressFromDomainAddress.ts:18](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/utils/getReverseAddressFromDomainAddress.ts#L18)
+Defined in: [utils/getReverseAddressFromDomainAddress.ts:18](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/utils/getReverseAddressFromDomainAddress.ts#L18)
 
 Parent domain address for a subdomain.

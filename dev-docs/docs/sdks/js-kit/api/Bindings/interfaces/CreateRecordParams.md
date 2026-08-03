@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: CreateRecordParams
 
-Defined in: [bindings/createRecord.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/createRecord.ts#L30)
+Defined in: [bindings/createRecord.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/bindings/createRecord.ts#L30)
 
 Parameters for creating a domain record.
 
@@ -28,7 +28,7 @@ const params: CreateRecordParams = {
 
 > **content**: `string`
 
-Defined in: [bindings/createRecord.ts:36](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/createRecord.ts#L36)
+Defined in: [bindings/createRecord.ts:36](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/bindings/createRecord.ts#L36)
 
 Record content.
 
@@ -38,7 +38,7 @@ Record content.
 
 > **domain**: `string`
 
-Defined in: [bindings/createRecord.ts:32](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/createRecord.ts#L32)
+Defined in: [bindings/createRecord.ts:32](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/bindings/createRecord.ts#L32)
 
 Full `.sns` domain name.
 
@@ -48,7 +48,7 @@ Full `.sns` domain name.
 
 > **owner**: `Address`
 
-Defined in: [bindings/createRecord.ts:38](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/createRecord.ts#L38)
+Defined in: [bindings/createRecord.ts:38](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/bindings/createRecord.ts#L38)
 
 Current domain owner.
 
@@ -58,7 +58,7 @@ Current domain owner.
 
 > **payer**: `Address`
 
-Defined in: [bindings/createRecord.ts:40](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/createRecord.ts#L40)
+Defined in: [bindings/createRecord.ts:40](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/bindings/createRecord.ts#L40)
 
 Instruction fee payer.
 
@@ -68,6 +68,6 @@ Instruction fee payer.
 
 > **record**: [`Record`](../../Types/enumerations/Record.md)
 
-Defined in: [bindings/createRecord.ts:34](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/createRecord.ts#L34)
+Defined in: [bindings/createRecord.ts:34](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/bindings/createRecord.ts#L34)
 
 Record type.

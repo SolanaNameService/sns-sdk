@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: GetSrsDomainAddressParams
 
-Defined in: [domain/getSrsDomainAddress.ts:15](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/domain/getSrsDomainAddress.ts#L15)
+Defined in: [domain/getSrsDomainAddress.ts:15](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/domain/getSrsDomainAddress.ts#L15)
 
 Parameters for deriving an SRS domain address.
 
@@ -22,6 +22,6 @@ const params: GetSrsDomainAddressParams = { domain: "example" };
 
 > **domain**: `string`
 
-Defined in: [domain/getSrsDomainAddress.ts:17](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/domain/getSrsDomainAddress.ts#L17)
+Defined in: [domain/getSrsDomainAddress.ts:17](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/domain/getSrsDomainAddress.ts#L17)
 
 TLD-less `.sol` domain name.

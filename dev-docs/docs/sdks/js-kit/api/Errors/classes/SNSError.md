@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: SNSError
 
-Defined in: [errors.ts:38](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L38)
+Defined in: [errors.ts:38](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/errors.ts#L38)
 
 Base error thrown by SNS SDK operations. Inspect `type` for a stable error code.
 
@@ -51,7 +51,7 @@ Base error thrown by SNS SDK operations. Inspect `type` for a stable error code.
 
 > **new SNSError**(`type`, `message?`): `SNSError`
 
-Defined in: [errors.ts:41](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L41)
+Defined in: [errors.ts:41](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/errors.ts#L41)
 
 #### Parameters
 
@@ -77,4 +77,4 @@ Defined in: [errors.ts:41](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacb
 
 > **type**: [`ErrorType`](../enumerations/ErrorType.md)
 
-Defined in: [errors.ts:39](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L39)
+Defined in: [errors.ts:39](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/errors.ts#L39)

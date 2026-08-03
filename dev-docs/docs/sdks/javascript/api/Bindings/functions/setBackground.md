@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **setBackground**(`connection`, `domain`, `bg`, `owner`): `Promise`\<`TransactionInstruction`[]\>
 
-Defined in: [bindings/setBackground.ts:36](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/bindings/setBackground.ts#L36)
+Defined in: [bindings/setBackground.ts:36](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/bindings/setBackground.ts#L36)
 
 Builds the instructions to set an issued custom background for a top-level `.sns` domain.
 

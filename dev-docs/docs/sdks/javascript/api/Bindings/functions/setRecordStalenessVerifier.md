@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **setRecordStalenessVerifier**(`domain`, `record`, `owner`, `payer`, `verifier`): `TransactionInstruction`
 
-Defined in: [bindings/setRecordStalenessVerifier.ts:21](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/bindings/setRecordStalenessVerifier.ts#L21)
+Defined in: [bindings/setRecordStalenessVerifier.ts:21](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/bindings/setRecordStalenessVerifier.ts#L21)
 
 Builds an instruction to write or refresh staleness verifier metadata.
 

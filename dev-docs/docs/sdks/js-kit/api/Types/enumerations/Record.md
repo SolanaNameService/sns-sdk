@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Enumeration: Record
 
-Defined in: [types/record.ts:4](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/types/record.ts#L4)
+Defined in: [types/record.ts:4](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/types/record.ts#L4)
 
 Supported SNS record identifiers.
 
@@ -16,7 +16,7 @@ Supported SNS record identifiers.
 
 > **A**: `"A"`
 
-Defined in: [types/record.ts:25](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/types/record.ts#L25)
+Defined in: [types/record.ts:25](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/types/record.ts#L25)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [types/record.ts:25](https://github.com/Bonfida/sns-sdk-beta/blob/2f
 
 > **AAAA**: `"AAAA"`
 
-Defined in: [types/record.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/types/record.ts#L26)
+Defined in: [types/record.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/types/record.ts#L26)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [types/record.ts:26](https://github.com/Bonfida/sns-sdk-beta/blob/2f
 
 > **ARWV**: `"ARWV"`
 
-Defined in: [types/record.ts:6](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/types/record.ts#L6)
+Defined in: [types/record.ts:6](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/types/record.ts#L6)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [types/record.ts:6](https://github.com/Bonfida/sns-sdk-beta/blob/2fd
 
 > **Background**: `"background"`
 
-Defined in: [types/record.ts:29](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/types/record.ts#L29)
+Defined in: [types/record.ts:29](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/types/record.ts#L29)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [types/record.ts:29](https://github.com/Bonfida/sns-sdk-beta/blob/2f
 
 > **Backpack**: `"backpack"`
 
-Defined in: [types/record.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/types/record.ts#L24)
+Defined in: [types/record.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/types/record.ts#L24)
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: [types/record.ts:24](https://github.com/Bonfida/sns-sdk-beta/blob/2f
 
 > **BASE**: `"BASE"`
 
-Defined in: [types/record.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/types/record.ts#L30)
+Defined in: [types/record.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/types/record.ts#L30)
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: [types/record.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/2f
 
 > **Bio**: `"bio"`
 
-Defined in: [types/record.ts:32](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/types/record.ts#L32)
+Defined in: [types/record.ts:32](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/types/record.ts#L32)
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: [types/record.ts:32](https://github.com/Bonfida/sns-sdk-beta/blob/2f
 
 > **BSC**: `"BSC"`
 
-Defined in: [types/record.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/types/record.ts#L22)
+Defined in: [types/record.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/types/record.ts#L22)
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: [types/record.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/2f
 
 > **BTC**: `"BTC"`
 
-Defined in: [types/record.ts:9](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/types/record.ts#L9)
+Defined in: [types/record.ts:9](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/types/record.ts#L9)
 
 ***
 
@@ -88,7 +88,7 @@ Defined in: [types/record.ts:9](https://github.com/Bonfida/sns-sdk-beta/blob/2fd
 
 > **CNAME**: `"CNAME"`
 
-Defined in: [types/record.ts:27](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/types/record.ts#L27)
+Defined in: [types/record.ts:27](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/types/record.ts#L27)
 
 ***
 
@@ -96,7 +96,7 @@ Defined in: [types/record.ts:27](https://github.com/Bonfida/sns-sdk-beta/blob/2f
 
 > **Discord**: `"discord"`
 
-Defined in: [types/record.ts:14](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/types/record.ts#L14)
+Defined in: [types/record.ts:14](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/types/record.ts#L14)
 
 ***
 
@@ -104,7 +104,7 @@ Defined in: [types/record.ts:14](https://github.com/Bonfida/sns-sdk-beta/blob/2f
 
 > **DOGE**: `"DOGE"`
 
-Defined in: [types/record.ts:11](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/types/record.ts#L11)
+Defined in: [types/record.ts:11](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/types/record.ts#L11)
 
 ***
 
@@ -112,7 +112,7 @@ Defined in: [types/record.ts:11](https://github.com/Bonfida/sns-sdk-beta/blob/2f
 
 > **Email**: `"email"`
 
-Defined in: [types/record.ts:12](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/types/record.ts#L12)
+Defined in: [types/record.ts:12](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/types/record.ts#L12)
 
 ***
 
@@ -120,7 +120,7 @@ Defined in: [types/record.ts:12](https://github.com/Bonfida/sns-sdk-beta/blob/2f
 
 > **ETH**: `"ETH"`
 
-Defined in: [types/record.ts:8](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/types/record.ts#L8)
+Defined in: [types/record.ts:8](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/types/record.ts#L8)
 
 ***
 
@@ -128,7 +128,7 @@ Defined in: [types/record.ts:8](https://github.com/Bonfida/sns-sdk-beta/blob/2fd
 
 > **Github**: `"github"`
 
-Defined in: [types/record.ts:15](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/types/record.ts#L15)
+Defined in: [types/record.ts:15](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/types/record.ts#L15)
 
 ***
 
@@ -136,7 +136,7 @@ Defined in: [types/record.ts:15](https://github.com/Bonfida/sns-sdk-beta/blob/2f
 
 > **Injective**: `"INJ"`
 
-Defined in: [types/record.ts:23](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/types/record.ts#L23)
+Defined in: [types/record.ts:23](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/types/record.ts#L23)
 
 ***
 
@@ -144,7 +144,7 @@ Defined in: [types/record.ts:23](https://github.com/Bonfida/sns-sdk-beta/blob/2f
 
 > **IPFS**: `"IPFS"`
 
-Defined in: [types/record.ts:5](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/types/record.ts#L5)
+Defined in: [types/record.ts:5](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/types/record.ts#L5)
 
 ***
 
@@ -152,7 +152,7 @@ Defined in: [types/record.ts:5](https://github.com/Bonfida/sns-sdk-beta/blob/2fd
 
 > **IPNS**: `"IPNS"`
 
-Defined in: [types/record.ts:31](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/types/record.ts#L31)
+Defined in: [types/record.ts:31](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/types/record.ts#L31)
 
 ***
 
@@ -160,7 +160,7 @@ Defined in: [types/record.ts:31](https://github.com/Bonfida/sns-sdk-beta/blob/2f
 
 > **LTC**: `"LTC"`
 
-Defined in: [types/record.ts:10](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/types/record.ts#L10)
+Defined in: [types/record.ts:10](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/types/record.ts#L10)
 
 ***
 
@@ -168,7 +168,7 @@ Defined in: [types/record.ts:10](https://github.com/Bonfida/sns-sdk-beta/blob/2f
 
 > **Pic**: `"pic"`
 
-Defined in: [types/record.ts:19](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/types/record.ts#L19)
+Defined in: [types/record.ts:19](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/types/record.ts#L19)
 
 ***
 
@@ -176,7 +176,7 @@ Defined in: [types/record.ts:19](https://github.com/Bonfida/sns-sdk-beta/blob/2f
 
 > **POINT**: `"POINT"`
 
-Defined in: [types/record.ts:21](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/types/record.ts#L21)
+Defined in: [types/record.ts:21](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/types/record.ts#L21)
 
 ***
 
@@ -184,7 +184,7 @@ Defined in: [types/record.ts:21](https://github.com/Bonfida/sns-sdk-beta/blob/2f
 
 > **Reddit**: `"reddit"`
 
-Defined in: [types/record.ts:16](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/types/record.ts#L16)
+Defined in: [types/record.ts:16](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/types/record.ts#L16)
 
 ***
 
@@ -192,7 +192,7 @@ Defined in: [types/record.ts:16](https://github.com/Bonfida/sns-sdk-beta/blob/2f
 
 > **SHDW**: `"SHDW"`
 
-Defined in: [types/record.ts:20](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/types/record.ts#L20)
+Defined in: [types/record.ts:20](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/types/record.ts#L20)
 
 ***
 
@@ -200,7 +200,7 @@ Defined in: [types/record.ts:20](https://github.com/Bonfida/sns-sdk-beta/blob/2f
 
 > **SOL**: `"SOL"`
 
-Defined in: [types/record.ts:7](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/types/record.ts#L7)
+Defined in: [types/record.ts:7](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/types/record.ts#L7)
 
 ***
 
@@ -208,7 +208,7 @@ Defined in: [types/record.ts:7](https://github.com/Bonfida/sns-sdk-beta/blob/2fd
 
 > **Telegram**: `"telegram"`
 
-Defined in: [types/record.ts:18](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/types/record.ts#L18)
+Defined in: [types/record.ts:18](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/types/record.ts#L18)
 
 ***
 
@@ -216,7 +216,7 @@ Defined in: [types/record.ts:18](https://github.com/Bonfida/sns-sdk-beta/blob/2f
 
 > **Twitter**: `"twitter"`
 
-Defined in: [types/record.ts:17](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/types/record.ts#L17)
+Defined in: [types/record.ts:17](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/types/record.ts#L17)
 
 ***
 
@@ -224,7 +224,7 @@ Defined in: [types/record.ts:17](https://github.com/Bonfida/sns-sdk-beta/blob/2f
 
 > **TXT**: `"TXT"`
 
-Defined in: [types/record.ts:28](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/types/record.ts#L28)
+Defined in: [types/record.ts:28](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/types/record.ts#L28)
 
 ***
 
@@ -232,4 +232,4 @@ Defined in: [types/record.ts:28](https://github.com/Bonfida/sns-sdk-beta/blob/2f
 
 > **Url**: `"url"`
 
-Defined in: [types/record.ts:13](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/types/record.ts#L13)
+Defined in: [types/record.ts:13](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/types/record.ts#L13)

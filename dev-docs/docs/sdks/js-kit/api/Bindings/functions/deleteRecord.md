@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **deleteRecord**(`params`): `Promise`\<`Instruction`\<`string`, readonly (`AccountLookupMeta`\<`string`, `string`\> \| `AccountMeta`\<`string`\>)[]\>\>
 
-Defined in: [bindings/deleteRecord.ts:59](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/deleteRecord.ts#L59)
+Defined in: [bindings/deleteRecord.ts:59](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/bindings/deleteRecord.ts#L59)
 
 Builds an instruction to delete a V2 record for a `.sns` domain or subdomain.
 

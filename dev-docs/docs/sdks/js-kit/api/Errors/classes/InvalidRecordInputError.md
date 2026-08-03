@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: InvalidRecordInputError
 
-Defined in: [errors.ts:109](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L109)
+Defined in: [errors.ts:109](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/errors.ts#L109)
 
 Thrown when record creation or update input is incomplete or invalid.
 
@@ -20,7 +20,7 @@ Thrown when record creation or update input is incomplete or invalid.
 
 > **new InvalidRecordInputError**(`message?`): `InvalidRecordInputError`
 
-Defined in: [errors.ts:110](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L110)
+Defined in: [errors.ts:110](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/errors.ts#L110)
 
 #### Parameters
 
@@ -42,7 +42,7 @@ Defined in: [errors.ts:110](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcac
 
 > **type**: [`ErrorType`](../enumerations/ErrorType.md)
 
-Defined in: [errors.ts:39](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/errors.ts#L39)
+Defined in: [errors.ts:39](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/errors.ts#L39)
 
 #### Inherited from
 

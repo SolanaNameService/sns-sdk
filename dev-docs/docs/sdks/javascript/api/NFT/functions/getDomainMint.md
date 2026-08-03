@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **getDomainMint**(`domain`): `PublicKey`
 
-Defined in: [nft/getDomainMint.ts:15](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/nft/getDomainMint.ts#L15)
+Defined in: [nft/getDomainMint.ts:15](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/nft/getDomainMint.ts#L15)
 
 Derives the NFT mint PDA for a tokenized SNS name account.
 

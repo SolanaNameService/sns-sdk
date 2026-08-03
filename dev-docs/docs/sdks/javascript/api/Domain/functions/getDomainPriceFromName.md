@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **getDomainPriceFromName**(`name`): `20` \| `160` \| `640` \| `700` \| `750`
 
-Defined in: [utils/getDomainPriceFromName.ts:14](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/utils/getDomainPriceFromName.ts#L14)
+Defined in: [utils/getDomainPriceFromName.ts:14](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/utils/getDomainPriceFromName.ts#L14)
 
 Retrieves the domain registration price in USD from a domain name.
 

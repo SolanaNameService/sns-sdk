@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: GetSubdomainsResult
 
-Defined in: [domain/getSubdomains.ts:48](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/domain/getSubdomains.ts#L48)
+Defined in: [domain/getSubdomains.ts:48](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/domain/getSubdomains.ts#L48)
 
 A subdomain and the owner recorded in its name registry.
 
@@ -25,7 +25,7 @@ const subdomain: GetSubdomainsResult = {
 
 > **owner**: `Address`
 
-Defined in: [domain/getSubdomains.ts:52](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/domain/getSubdomains.ts#L52)
+Defined in: [domain/getSubdomains.ts:52](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/domain/getSubdomains.ts#L52)
 
 Owner address stored in the subdomain's name registry account.
 
@@ -35,6 +35,6 @@ Owner address stored in the subdomain's name registry account.
 
 > **subdomain**: `string`
 
-Defined in: [domain/getSubdomains.ts:50](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/domain/getSubdomains.ts#L50)
+Defined in: [domain/getSubdomains.ts:50](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/domain/getSubdomains.ts#L50)
 
 TLD-less label recorded by the subdomain's reverse lookup account.

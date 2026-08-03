@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **getNameAccountKeySync**(`hashed_name`, `nameClass?`, `nameParent?`): `PublicKey`
 
-Defined in: [utils/getNameAccountKeySync.ts:18](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/utils/getNameAccountKeySync.ts#L18)
+Defined in: [utils/getNameAccountKeySync.ts:18](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/utils/getNameAccountKeySync.ts#L18)
 
 Derives a synchronous SPL Name Service account PDA from hashed name inputs.
 

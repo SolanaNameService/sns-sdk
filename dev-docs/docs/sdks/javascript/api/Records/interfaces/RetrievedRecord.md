@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: RetrievedRecord
 
-Defined in: [record/getRecord.ts:83](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/record/getRecord.ts#L83)
+Defined in: [record/getRecord.ts:83](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/record/getRecord.ts#L83)
 
 Raw SNS record account data returned by the records program.
 
@@ -29,7 +29,7 @@ Raw SNS record account data returned by the records program.
 
 > **data**: `Buffer`
 
-Defined in: [record/getRecord.ts:91](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/record/getRecord.ts#L91)
+Defined in: [record/getRecord.ts:91](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/record/getRecord.ts#L91)
 
 Complete encoded account data.
 
@@ -39,7 +39,7 @@ Complete encoded account data.
 
 > **header**: `object`
 
-Defined in: [record/getRecord.ts:85](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/record/getRecord.ts#L85)
+Defined in: [record/getRecord.ts:85](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/record/getRecord.ts#L85)
 
 Record header containing validation modes and payload length.
 
@@ -61,7 +61,7 @@ Record header containing validation modes and payload length.
 
 > **getContent**(): `Buffer`
 
-Defined in: [record/getRecord.ts:94](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/record/getRecord.ts#L94)
+Defined in: [record/getRecord.ts:94](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/record/getRecord.ts#L94)
 
 Returns the record payload bytes.
 
@@ -75,7 +75,7 @@ Returns the record payload bytes.
 
 > **getRoAId**(): `Buffer`
 
-Defined in: [record/getRecord.ts:100](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/record/getRecord.ts#L100)
+Defined in: [record/getRecord.ts:100](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/record/getRecord.ts#L100)
 
 Returns the identifier bytes used for right-of-association validation.
 
@@ -89,7 +89,7 @@ Returns the identifier bytes used for right-of-association validation.
 
 > **getStalenessId**(): `Buffer`
 
-Defined in: [record/getRecord.ts:97](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/record/getRecord.ts#L97)
+Defined in: [record/getRecord.ts:97](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/record/getRecord.ts#L97)
 
 Returns the public-key bytes used for staleness validation.
 

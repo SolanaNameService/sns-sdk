@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: BurnDomainParams
 
-Defined in: [bindings/burnDomain.ts:27](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/burnDomain.ts#L27)
+Defined in: [bindings/burnDomain.ts:27](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/bindings/burnDomain.ts#L27)
 
 Parameters for burning an SNS domain.
 
@@ -26,7 +26,7 @@ const params: BurnDomainParams = {
 
 > **domain**: `string`
 
-Defined in: [bindings/burnDomain.ts:29](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/burnDomain.ts#L29)
+Defined in: [bindings/burnDomain.ts:29](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/bindings/burnDomain.ts#L29)
 
 Full `.sns` domain name.
 
@@ -36,7 +36,7 @@ Full `.sns` domain name.
 
 > **owner**: `Address`
 
-Defined in: [bindings/burnDomain.ts:31](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/burnDomain.ts#L31)
+Defined in: [bindings/burnDomain.ts:31](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/bindings/burnDomain.ts#L31)
 
 Current domain owner.
 
@@ -46,6 +46,6 @@ Current domain owner.
 
 > **refundAddress**: `Address`
 
-Defined in: [bindings/burnDomain.ts:33](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/bindings/burnDomain.ts#L33)
+Defined in: [bindings/burnDomain.ts:33](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/bindings/burnDomain.ts#L33)
 
 Account receiving reclaimed rent.

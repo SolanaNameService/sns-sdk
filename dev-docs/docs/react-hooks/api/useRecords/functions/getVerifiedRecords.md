@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **getVerifiedRecords**(`connection`, `domain`, `records`, `deserialize?`): `Promise`\<[`VerifiedRecordResult`](../type-aliases/VerifiedRecordResult.md)[]\>
 
-Defined in: [react/src/hooks/useRecords/index.ts:55](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/react/src/hooks/useRecords/index.ts#L55)
+Defined in: [react/src/hooks/useRecords/index.ts:55](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/react/src/hooks/useRecords/index.ts#L55)
 
 Retrieves records and removes entries that fail verification.
 

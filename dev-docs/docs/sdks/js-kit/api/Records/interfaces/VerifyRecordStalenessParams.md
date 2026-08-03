@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: VerifyRecordStalenessParams
 
-Defined in: [record/verifyRecordStaleness.ts:58](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/record/verifyRecordStaleness.ts#L58)
+Defined in: [record/verifyRecordStaleness.ts:58](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/record/verifyRecordStaleness.ts#L58)
 
 Parameters for verifying record staleness.
 
@@ -26,7 +26,7 @@ const params: VerifyRecordStalenessParams = {
 
 > **domain**: `string`
 
-Defined in: [record/verifyRecordStaleness.ts:62](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/record/verifyRecordStaleness.ts#L62)
+Defined in: [record/verifyRecordStaleness.ts:62](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/record/verifyRecordStaleness.ts#L62)
 
 Full domain name.
 
@@ -36,7 +36,7 @@ Full domain name.
 
 > **record**: [`Record`](../../Types/enumerations/Record.md)
 
-Defined in: [record/verifyRecordStaleness.ts:64](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/record/verifyRecordStaleness.ts#L64)
+Defined in: [record/verifyRecordStaleness.ts:64](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/record/verifyRecordStaleness.ts#L64)
 
 Record type.
 
@@ -46,6 +46,6 @@ Record type.
 
 > **rpc**: `Rpc`\<`GetAccountInfoApi` & `GetTokenLargestAccountsApi` & `GetSlotApi`\>
 
-Defined in: [record/verifyRecordStaleness.ts:60](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/record/verifyRecordStaleness.ts#L60)
+Defined in: [record/verifyRecordStaleness.ts:60](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/record/verifyRecordStaleness.ts#L60)
 
 RPC client.

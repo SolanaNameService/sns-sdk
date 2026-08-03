@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **verifyRightOfAssociation**(`connection`, `record`, `domain`, `verifier?`): `Promise`\<`boolean`\>
 
-Defined in: [record/verifyRightOfAssociation.ts:28](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js/src/record/verifyRightOfAssociation.ts#L28)
+Defined in: [record/verifyRightOfAssociation.ts:34](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/record/verifyRightOfAssociation.ts#L34)
 
 Verifies a record's Right of Association validation.
 
@@ -38,7 +38,8 @@ Full `.sns` or `.sol` domain name
 
 `Buffer`\<`ArrayBufferLike`\>
 
-Optional verifier. Required when no guardian exists for the record
+Optional verifier. Defaults to the record content for self-signed
+records and to the guardian pubkey otherwise. Required when neither applies.
 
 ## Returns
 

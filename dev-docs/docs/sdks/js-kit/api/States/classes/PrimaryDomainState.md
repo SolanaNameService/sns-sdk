@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: PrimaryDomainState
 
-Defined in: [states/primaryDomain.ts:34](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/states/primaryDomain.ts#L34)
+Defined in: [states/primaryDomain.ts:34](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/states/primaryDomain.ts#L34)
 
 Decoded state of an SNS primary-domain account.
 
@@ -16,7 +16,7 @@ Decoded state of an SNS primary-domain account.
 
 > **new PrimaryDomainState**(`obj`): `PrimaryDomainState`
 
-Defined in: [states/primaryDomain.ts:47](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/states/primaryDomain.ts#L47)
+Defined in: [states/primaryDomain.ts:47](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/states/primaryDomain.ts#L47)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [states/primaryDomain.ts:47](https://github.com/Bonfida/sns-sdk-beta
 
 > **nameAccount**: `Address`
 
-Defined in: [states/primaryDomain.ts:38](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/states/primaryDomain.ts#L38)
+Defined in: [states/primaryDomain.ts:38](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/states/primaryDomain.ts#L38)
 
 Primary domain account address.
 
@@ -44,7 +44,7 @@ Primary domain account address.
 
 > **tag**: `number`
 
-Defined in: [states/primaryDomain.ts:36](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/states/primaryDomain.ts#L36)
+Defined in: [states/primaryDomain.ts:36](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/states/primaryDomain.ts#L36)
 
 Account state tag.
 
@@ -54,7 +54,7 @@ Account state tag.
 
 > `static` **schema**: `object`
 
-Defined in: [states/primaryDomain.ts:40](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/states/primaryDomain.ts#L40)
+Defined in: [states/primaryDomain.ts:40](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/states/primaryDomain.ts#L40)
 
 #### struct
 
@@ -86,7 +86,7 @@ Defined in: [states/primaryDomain.ts:40](https://github.com/Bonfida/sns-sdk-beta
 
 > `static` **\_retrieveBatch**(`rpc`, `primaryAddresses`): `Promise`\<(`PrimaryDomainState` \| `undefined`)[]\>
 
-Defined in: [states/primaryDomain.ts:72](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/states/primaryDomain.ts#L72)
+Defined in: [states/primaryDomain.ts:72](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/states/primaryDomain.ts#L72)
 
 #### Parameters
 
@@ -108,7 +108,7 @@ Defined in: [states/primaryDomain.ts:72](https://github.com/Bonfida/sns-sdk-beta
 
 > `static` **deserialize**(`data`): `PrimaryDomainState`
 
-Defined in: [states/primaryDomain.ts:52](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/states/primaryDomain.ts#L52)
+Defined in: [states/primaryDomain.ts:52](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/states/primaryDomain.ts#L52)
 
 #### Parameters
 
@@ -126,7 +126,7 @@ Defined in: [states/primaryDomain.ts:52](https://github.com/Bonfida/sns-sdk-beta
 
 > `static` **getAddress**(`programAddress`, `walletAddress`): `Promise`\<`Address`\<`string`\>\>
 
-Defined in: [states/primaryDomain.ts:98](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/states/primaryDomain.ts#L98)
+Defined in: [states/primaryDomain.ts:98](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/states/primaryDomain.ts#L98)
 
 #### Parameters
 
@@ -148,7 +148,7 @@ Defined in: [states/primaryDomain.ts:98](https://github.com/Bonfida/sns-sdk-beta
 
 > `static` **retrieve**(`rpc`, `address`): `Promise`\<`PrimaryDomainState`\>
 
-Defined in: [states/primaryDomain.ts:62](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/states/primaryDomain.ts#L62)
+Defined in: [states/primaryDomain.ts:62](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/states/primaryDomain.ts#L62)
 
 #### Parameters
 
@@ -170,7 +170,7 @@ Defined in: [states/primaryDomain.ts:62](https://github.com/Bonfida/sns-sdk-beta
 
 > `static` **retrieveBatch**(`rpc`, `primaryAddresses`): `Promise`\<(`PrimaryDomainState` \| `undefined`)[]\>
 
-Defined in: [states/primaryDomain.ts:83](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/states/primaryDomain.ts#L83)
+Defined in: [states/primaryDomain.ts:83](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/states/primaryDomain.ts#L83)
 
 #### Parameters
 

@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: GetSrsDomainAddressResult
 
-Defined in: [domain/getSrsDomainAddress.ts:28](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/domain/getSrsDomainAddress.ts#L28)
+Defined in: [domain/getSrsDomainAddress.ts:28](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/domain/getSrsDomainAddress.ts#L28)
 
 A derived SRS domain address.
 
@@ -22,7 +22,7 @@ const derived: GetSrsDomainAddressResult = { domainAddress, hashed };
 
 > **domainAddress**: `Address`
 
-Defined in: [domain/getSrsDomainAddress.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/domain/getSrsDomainAddress.ts#L30)
+Defined in: [domain/getSrsDomainAddress.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/domain/getSrsDomainAddress.ts#L30)
 
 Derived SRS record address.
 
@@ -32,6 +32,6 @@ Derived SRS record address.
 
 > **hashed**: `Uint8Array`
 
-Defined in: [domain/getSrsDomainAddress.ts:32](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/domain/getSrsDomainAddress.ts#L32)
+Defined in: [domain/getSrsDomainAddress.ts:32](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/domain/getSrsDomainAddress.ts#L32)
 
 SHA-256 hash of the canonical name.

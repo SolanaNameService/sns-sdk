@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: GetPrimaryDomainResult
 
-Defined in: [address/getPrimaryDomain.ts:44](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/address/getPrimaryDomain.ts#L44)
+Defined in: [address/getPrimaryDomain.ts:44](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/address/getPrimaryDomain.ts#L44)
 
 A wallet's primary domain.
 
@@ -26,7 +26,7 @@ const primary: GetPrimaryDomainResult = {
 
 > **domainAddress**: `Address`
 
-Defined in: [address/getPrimaryDomain.ts:46](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/address/getPrimaryDomain.ts#L46)
+Defined in: [address/getPrimaryDomain.ts:46](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/address/getPrimaryDomain.ts#L46)
 
 Primary domain account address.
 
@@ -36,7 +36,7 @@ Primary domain account address.
 
 > **domainName**: `string`
 
-Defined in: [address/getPrimaryDomain.ts:48](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/address/getPrimaryDomain.ts#L48)
+Defined in: [address/getPrimaryDomain.ts:48](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/address/getPrimaryDomain.ts#L48)
 
 TLD-less primary domain name.
 
@@ -46,6 +46,6 @@ TLD-less primary domain name.
 
 > **stale**: `boolean`
 
-Defined in: [address/getPrimaryDomain.ts:50](https://github.com/Bonfida/sns-sdk-beta/blob/2fdbcacbd9670d538f5137e9d196a9ca079923fa/js-kit/src/address/getPrimaryDomain.ts#L50)
+Defined in: [address/getPrimaryDomain.ts:50](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/address/getPrimaryDomain.ts#L50)
 
 Whether the wallet is no longer the domain's effective owner.
