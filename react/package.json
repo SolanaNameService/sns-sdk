@@ -47,7 +47,7 @@
   },
   "devDependencies": {
     "@bonfida/prettier-config": "^1.1.0",
-    "@bonfida/spl-name-service": "file:../js",
+    "@bonfida/spl-name-service": "^4.0.0",
     "@rollup/plugin-typescript": "^11.1.6",
     "@solana/web3.js": "^1.98.2",
     "@tanstack/react-query": "^5.0.0",
