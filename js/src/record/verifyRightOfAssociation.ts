@@ -4,10 +4,15 @@ import { Connection } from "@solana/web3.js";
 import { MissingVerifierError } from "../error";
 import { Record } from "../types/record";
 import { assertTldSupported } from "../utils/assertTldSupported";
-import { ETH_ROA_RECORDS, GUARDIANS, Validation } from "./const";
+import { ETH_ROA_RECORDS, GUARDIANS, SELF_SIGNED, Validation } from "./const";
 import { getRecordV2Key } from "./getRecordV2Key";
 
 import type { Buffer } from "buffer";
+
+const getDefaultVerifier = (record: Record, recordObj: SnsRecord) =>
+  SELF_SIGNED.has(record)
+    ? recordObj.getContent()
+    : GUARDIANS.get(record)?.toBuffer();
 
 /**
  * Verifies a record's Right of Association validation.
@@ -17,7 +22,8 @@ import type { Buffer } from "buffer";
  * @param connection Solana RPC connection
  * @param record Record type
  * @param domain Full `.sns` or `.sol` domain name
- * @param verifier Optional verifier. Required when no guardian exists for the record
+ * @param verifier Optional verifier. Defaults to the record content for self-signed
+ * records and to the guardian pubkey otherwise. Required when neither applies.
  * @returns Whether the record's Right of Association validation matches the verifier.
  *
  * @example
@@ -31,16 +37,19 @@ export const verifyRightOfAssociation = async (
   domain: string,
   verifier?: Buffer,
 ) => {
-  verifier = verifier ?? GUARDIANS.get(record)?.toBuffer();
-  if (!verifier) {
+  if (!verifier && !SELF_SIGNED.has(record) && !GUARDIANS.has(record)) {
     throw new MissingVerifierError("You must specify the verifier");
   }
 
   const [trimmedDomain] = await assertTldSupported(connection, domain);
   const recordKey = getRecordV2Key(trimmedDomain, record);
   const recordObj = await SnsRecord.retrieve(connection, recordKey);
-
   const roaId = recordObj.getRoAId();
+
+  verifier = verifier ?? getDefaultVerifier(record, recordObj);
+  if (!verifier) {
+    throw new MissingVerifierError("You must specify the verifier");
+  }
 
   const validation = ETH_ROA_RECORDS.has(record)
     ? Validation.Ethereum
