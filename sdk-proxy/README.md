@@ -8,9 +8,9 @@
 
 > **Experimental:** This Cloudflare Worker REST facade is for integrations that cannot use a native SDK. Its availability and API may change. It is a private package, not an installable SDK or a transaction relayer.
 
-The proxy exposes selected [`@bonfida/spl-name-service`](../js/) operations over HTTP. The example production base URL is `https://sdk-proxy.sns.id`.
+The proxy exposes selected [`@bonfida/spl-name-service`](../js/) operations over HTTP. The example production base URL is `https://sdk-proxy-v2.sns.id`.
 
-> **Migrating from the previous major version?** This release is not fully backward compatible. Review the [changelog](./CHANGELOG.md) for breaking changes and migration notes.
+> **Migration notice:** Applications using the original proxy at `sdk-proxy.sns.id` should migrate to the v2 proxy at `sdk-proxy-v2.sns.id` as soon as possible. The original proxy will be retired on **October 1**. The v2 release is not fully backward compatible; review the [changelog](./CHANGELOG.md) for breaking changes and migration notes.
 
 ## Contents
 
