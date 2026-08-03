@@ -1,16 +1,16 @@
-import address = require("@bonfida/spl-name-service-beta/address");
-import bindings = require("@bonfida/spl-name-service-beta/bindings");
-import constants = require("@bonfida/spl-name-service-beta/constants");
-import domain = require("@bonfida/spl-name-service-beta/domain");
-import errors = require("@bonfida/spl-name-service-beta/errors");
-import instructions = require("@bonfida/spl-name-service-beta/instructions");
-import nft = require("@bonfida/spl-name-service-beta/nft");
-import record = require("@bonfida/spl-name-service-beta/record");
-import root = require("@bonfida/spl-name-service-beta");
-import states = require("@bonfida/spl-name-service-beta/states");
-import twitter = require("@bonfida/spl-name-service-beta/twitter");
-import types = require("@bonfida/spl-name-service-beta/types");
-import utils = require("@bonfida/spl-name-service-beta/utils");
+import address = require("@bonfida/spl-name-service/address");
+import bindings = require("@bonfida/spl-name-service/bindings");
+import constants = require("@bonfida/spl-name-service/constants");
+import domain = require("@bonfida/spl-name-service/domain");
+import errors = require("@bonfida/spl-name-service/errors");
+import instructions = require("@bonfida/spl-name-service/instructions");
+import nft = require("@bonfida/spl-name-service/nft");
+import record = require("@bonfida/spl-name-service/record");
+import root = require("@bonfida/spl-name-service");
+import states = require("@bonfida/spl-name-service/states");
+import twitter = require("@bonfida/spl-name-service/twitter");
+import types = require("@bonfida/spl-name-service/types");
+import utils = require("@bonfida/spl-name-service/utils");
 
 void [
   address.getPrimaryDomain,

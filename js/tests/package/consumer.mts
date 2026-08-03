@@ -1,26 +1,23 @@
-import { getPrimaryDomain } from "@bonfida/spl-name-service-beta/address";
-import { burnDomain } from "@bonfida/spl-name-service-beta/bindings";
-import { NAME_PROGRAM_ID } from "@bonfida/spl-name-service-beta/constants";
+import { getPrimaryDomain } from "@bonfida/spl-name-service/address";
+import { burnDomain } from "@bonfida/spl-name-service/bindings";
+import { NAME_PROGRAM_ID } from "@bonfida/spl-name-service/constants";
 import {
   resolve,
   safeResolve as safeResolveDomain,
-} from "@bonfida/spl-name-service-beta/domain";
-import { SNSError } from "@bonfida/spl-name-service-beta/errors";
-import { BurnInstruction } from "@bonfida/spl-name-service-beta/instructions";
-import { getDomainMint } from "@bonfida/spl-name-service-beta/nft";
+} from "@bonfida/spl-name-service/domain";
+import { SNSError } from "@bonfida/spl-name-service/errors";
+import { BurnInstruction } from "@bonfida/spl-name-service/instructions";
+import { getDomainMint } from "@bonfida/spl-name-service/nft";
 import {
   getMultipleRecords,
   Record,
   type RecordResult,
-} from "@bonfida/spl-name-service-beta/record";
-import { NameRegistryState } from "@bonfida/spl-name-service-beta/states";
-import { getTwitterRegistryKey } from "@bonfida/spl-name-service-beta/twitter";
-import { CustomBg } from "@bonfida/spl-name-service-beta/types";
-import { check } from "@bonfida/spl-name-service-beta/utils";
-import {
-  getSnsDomainKeySync,
-  safeResolve,
-} from "@bonfida/spl-name-service-beta";
+} from "@bonfida/spl-name-service/record";
+import { NameRegistryState } from "@bonfida/spl-name-service/states";
+import { getTwitterRegistryKey } from "@bonfida/spl-name-service/twitter";
+import { CustomBg } from "@bonfida/spl-name-service/types";
+import { check } from "@bonfida/spl-name-service/utils";
+import { getSnsDomainKeySync, safeResolve } from "@bonfida/spl-name-service";
 
 declare const recordResult: RecordResult;
 
