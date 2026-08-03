@@ -1,4 +1,10 @@
 name = "sns-sdk-proxy"
 main = "src/index.ts"
-compatibility_date = "2025-01-01"
+compatibility_date = "2026-05-01"
 compatibility_flags = ["nodejs_compat_v2"]
+
+[cache]
+enabled = true
+
+[vars]
+CACHE_TTL_SECONDS = "120"

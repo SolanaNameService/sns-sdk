@@ -8,6 +8,7 @@ import { rpcSchema } from "./schemas";
 export type Env = {
   Bindings: {
     RPC_URL: string;
+    CACHE_TTL_SECONDS?: string;
   };
 };
 
