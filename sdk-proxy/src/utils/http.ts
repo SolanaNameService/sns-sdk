@@ -3,6 +3,8 @@ import { Connection, SolanaJSONRPCError } from "@solana/web3.js";
 import type { Context } from "hono";
 import { z } from "zod";
 
+import { rpcSchema } from "./schemas";
+
 export type Env = {
   Bindings: {
     RPC_URL: string;
@@ -10,8 +12,11 @@ export type Env = {
 };
 
 export const getConnection = (c: Context<Env>) => {
-  const clientRpc = c.req.query("rpc");
-  const endpoint = clientRpc?.trim() || c.env.RPC_URL?.trim();
+  const clientRpc = c.req.query("rpc")?.trim();
+  if (clientRpc) {
+    rpcSchema.parse(clientRpc);
+  }
+  const endpoint = clientRpc || c.env.RPC_URL?.trim();
 
   if (!endpoint) {
     throw new Error("RPC_URL is not configured");

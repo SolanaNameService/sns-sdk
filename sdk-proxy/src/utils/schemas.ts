@@ -14,6 +14,32 @@ export const isPubkey = (x: string) => {
   }
 };
 
+const isIpLiteral = (host: string) => {
+  const h = host.toLowerCase();
+  if (/^\d{1,3}(\.\d{1,3}){3}$/.test(h)) return true;
+  if (h.includes(":")) return true;
+  return false;
+};
+
+export const rpcSchema = z
+  .string()
+  .trim()
+  .refine((value) => {
+    let url: URL;
+    try {
+      url = new URL(value);
+    } catch {
+      return false;
+    }
+    const host = url.hostname.toLowerCase().replace(/\.$/, "");
+    return (
+      url.protocol === "https:" &&
+      !isIpLiteral(host) &&
+      host !== "localhost" &&
+      !host.endsWith(".localhost")
+    );
+  }, "rpc must be an https URL with a non-numeric host");
+
 export const publicKeySchema = z
   .string()
   .refine(isPubkey)
