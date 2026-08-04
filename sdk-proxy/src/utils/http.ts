@@ -3,12 +3,14 @@ import { Connection, SolanaJSONRPCError } from "@solana/web3.js";
 import type { Context } from "hono";
 import { z } from "zod";
 
+import type { TokenizerCache } from "../tokenizer-cache";
 import { rpcSchema } from "./schemas";
 
 export type Env = {
   Bindings: {
     RPC_URL: string;
     CACHE_TTL_SECONDS?: string;
+    TOKENIZER_CACHE: DurableObjectNamespace<TokenizerCache>;
   };
 };
 

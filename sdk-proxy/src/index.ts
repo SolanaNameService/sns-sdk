@@ -8,6 +8,8 @@ import { registerRecordRoutes } from "./routes/records";
 import { registerResolveRoutes } from "./routes/resolve";
 import type { Env } from "./utils/http";
 
+export { TokenizerCache } from "./tokenizer-cache";
+
 const DEFAULT_CACHE_TTL_SECONDS = 10;
 
 // Read-endpoint whitelist. Prefix match on the URL path (except "/types/record" which is exact).

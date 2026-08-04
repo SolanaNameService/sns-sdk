@@ -18,7 +18,7 @@ import { domainOrSubdomainWithoutTldSchema } from "../utils/schemas";
 const resolveHandler = (resolver: typeof resolve) =>
   async function handleResolve(c: Context<Env>) {
     try {
-      const domain = c.req.param("domain").trim().toLowerCase();
+      const domain = c.req.param("domain")!.trim().toLowerCase();
       const tld = [SNS_TLD, SOL_TLD].find((value) => domain.endsWith(value));
 
       if (!tld) {

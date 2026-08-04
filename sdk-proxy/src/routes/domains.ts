@@ -12,6 +12,7 @@ import {
 } from "@bonfida/spl-name-service";
 import type { Context, Hono } from "hono";
 
+import { getSnsNftsForOwnerCached } from "../tokenizer-cache";
 import {
   getConnection,
   handleApiError,
@@ -71,9 +72,12 @@ export const registerDomainRoutes = (app: Hono<Env>) => {
     try {
       const owner = publicKeySchema.parse(c.req.param("owner"));
       const connection = getConnection(c);
+      const hasClientRpc = Boolean(c.req.query("rpc")?.trim());
       const [domains, nfts] = await Promise.all([
         getSnsDomainsForOwner(connection, owner),
-        getSnsNftsForOwner(connection, owner),
+        hasClientRpc
+          ? getSnsNftsForOwner(connection, owner)
+          : getSnsNftsForOwnerCached(c.env, owner),
       ]);
 
       return c.json(
