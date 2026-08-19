@@ -52,6 +52,12 @@ export const RECORDS_PROGRAM_ADDRESS =
   "HP3D4D1ZCmohQGFVms2SS4LCANgJyksBf5s1F77FuFjZ" as Address;
 
 /**
+ * The SPL Token-2022 program address.
+ */
+export const TOKEN_2022_PROGRAM_ADDRESS =
+  "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb" as Address;
+
+/**
  * The Solana Registration Service registrar central state PDA.
  *
  * This address is derived from the `central_state` seed and must be recomputed

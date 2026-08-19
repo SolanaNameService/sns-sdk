@@ -1,5 +1,11 @@
 import { beforeEach, describe, expect, jest, test } from "@jest/globals";
 import {
+  AccountState,
+  getMintEncoder,
+  getTokenEncoder,
+  getTokenSize,
+} from "@solana-program/token";
+import {
   Address,
   GetAccountInfoApi,
   GetMultipleAccountsApi,
@@ -14,7 +20,10 @@ import {
 
 import { addressCodec, utf8Codec } from "../src/codecs";
 import { SRS_PROGRAM_ADDRESS } from "../src/config";
-import { SOL_SRS_CLASS } from "../src/constants/addresses";
+import {
+  SOL_SRS_CLASS,
+  TOKEN_2022_PROGRAM_ADDRESS,
+} from "../src/constants/addresses";
 import { getSrsDomainAddress } from "../src/domain/getSrsDomainAddress";
 import { resolve } from "../src/domain/resolve";
 import {
@@ -47,9 +56,39 @@ const fetchEncodedAccountMock = fetchEncodedAccount as jest.MockedFunction<
   typeof fetchEncodedAccount
 >;
 const owner = "ALd1XSrQMCPSRayYUoUZnp6KcP6gERfJhWzkP49CkXKs" as Address;
+const TOKEN_HOLDER_ADDRESS =
+  "3ogYncmMM5CmytsGCqKHydmXmKUZ6sGWvizkzqwT7zb1" as Address;
+const OTHER_TOKEN_HOLDER_ADDRESS =
+  "DM1jJCkZZEwY5tmWbgvKRxsDFzXCdbfrYCCH1CtwguEs" as Address;
+const TOKEN_2022_ACCOUNT_TYPE_OFFSET = getTokenSize();
+const TOKEN_2022_MINT_ACCOUNT_TYPE = 1;
+const TOKEN_2022_TOKEN_ACCOUNT_TYPE = 2;
+const TOKEN_2022_MINT_EXTENSION_HEADER_LENGTH = 4;
+const TOKEN_2022_MINT_EXTENSION_VALUE_LENGTH = 32;
 const i64Encoder = getI64Encoder();
+const mintEncoder = getMintEncoder();
+const tokenEncoder = getTokenEncoder();
 
-const createRpc = () => {
+interface TokenLargestAccount {
+  address: Address;
+  amount: string;
+}
+
+type AccountResponse = Awaited<ReturnType<typeof fetchEncodedAccount>>;
+
+interface RpcOptions {
+  accountResponses?: readonly AccountResponse[];
+  largestAccounts?: readonly TokenLargestAccount[];
+}
+
+const createRpc = ({
+  accountResponses = [],
+  largestAccounts,
+}: RpcOptions = {}) => {
+  for (const account of accountResponses) {
+    fetchEncodedAccountMock.mockResolvedValueOnce(account);
+  }
+
   const rpc = {
     getAccountInfo: jest.fn(),
     getMultipleAccounts: jest.fn(() => {
@@ -59,7 +98,13 @@ const createRpc = () => {
       throw new Error("SRS resolution must not request a slot");
     }),
     getTokenLargestAccounts: jest.fn(() => {
-      throw new Error("SRS direct-owner resolution must not use token RPCs");
+      if (!largestAccounts) {
+        throw new Error("SRS direct-owner resolution must not use token RPCs");
+      }
+
+      return {
+        send: jest.fn(async () => ({ value: largestAccounts })),
+      };
     }),
   } as unknown as TestRpc;
 
@@ -111,6 +156,78 @@ const existingAccount = (
     programAddress,
     space: BigInt(data.length),
   }) as const;
+
+interface MintDataOptions {
+  supply?: bigint;
+  decimals?: number;
+  isInitialized?: boolean;
+}
+
+const createMintData = ({
+  supply = 1n,
+  decimals = 0,
+  isInitialized = true,
+}: MintDataOptions = {}) => {
+  const base = mintEncoder.encode({
+    mintAuthority: null,
+    supply,
+    decimals,
+    isInitialized,
+    freezeAuthority: null,
+  });
+
+  const data = new Uint8Array(
+    TOKEN_2022_ACCOUNT_TYPE_OFFSET +
+      1 +
+      TOKEN_2022_MINT_EXTENSION_HEADER_LENGTH +
+      TOKEN_2022_MINT_EXTENSION_VALUE_LENGTH
+  );
+  data.set(base);
+  data[TOKEN_2022_ACCOUNT_TYPE_OFFSET] = TOKEN_2022_MINT_ACCOUNT_TYPE;
+  data.set([3, 0, 32, 0], TOKEN_2022_ACCOUNT_TYPE_OFFSET + 1);
+  return data;
+};
+
+interface TokenAccountDataOptions {
+  mint: Address;
+  owner: Address;
+  amount?: bigint;
+  state?: AccountState;
+}
+
+const createTokenAccountData = ({
+  mint,
+  owner,
+  amount = 1n,
+  state = AccountState.Initialized,
+}: TokenAccountDataOptions) => {
+  const base = tokenEncoder.encode({
+    mint,
+    owner,
+    amount,
+    delegate: null,
+    state,
+    isNative: null,
+    delegatedAmount: 0n,
+    closeAuthority: null,
+  });
+
+  const data = new Uint8Array(TOKEN_2022_ACCOUNT_TYPE_OFFSET + 5);
+  data.set(base);
+  data[TOKEN_2022_ACCOUNT_TYPE_OFFSET] = TOKEN_2022_TOKEN_ACCOUNT_TYPE;
+  data.set([7, 0, 0, 0], TOKEN_2022_ACCOUNT_TYPE_OFFSET + 1);
+  return data;
+};
+
+const getCanonicalTokenizedRecord = async (domain: string) => {
+  const { domainAddress } = await getSrsDomainAddress({ domain });
+  const [mint] = await getProgramDerivedAddress({
+    programAddress: SRS_PROGRAM_ADDRESS,
+    seeds: [utf8Codec.encode("mint"), addressCodec.encode(domainAddress)],
+  });
+
+  return { domainAddress, mint };
+};
 
 describe("SRS .sol resolution", () => {
   beforeEach(() => {
@@ -172,7 +289,8 @@ describe("SRS .sol resolution", () => {
     },
     {
       name: "short data",
-      makeAccount: async () => existingAccount(new Uint8Array(74)),
+      makeAccount: async () =>
+        existingAccount((await createSrsRecord()).slice(0, 74)),
     },
     {
       name: "wrong discriminator",
@@ -234,16 +352,258 @@ describe("SRS .sol resolution", () => {
     await expect(resolve({ rpc, domain: "domain.sol" })).resolves.toBe(owner);
   });
 
-  test("rejects tokenized owners until Token-2022 support lands", async () => {
-    const rpc = createRpc();
-    fetchEncodedAccountMock.mockResolvedValue(
-      existingAccount(await createSrsRecord({ ownerType: 1 }))
+  describe("tokenized SRS owners", () => {
+    test.each([
+      { name: "initialized", state: AccountState.Initialized },
+      { name: "frozen", state: AccountState.Frozen },
+    ])("resolves a $name extension-bearing holder", async ({ state }) => {
+      const { domainAddress, mint } =
+        await getCanonicalTokenizedRecord("domain");
+      const rpc = createRpc({
+        accountResponses: [
+          existingAccount(
+            await createSrsRecord({ recordOwner: mint, ownerType: 1 }),
+            SRS_PROGRAM_ADDRESS,
+            domainAddress
+          ),
+          existingAccount(createMintData(), TOKEN_2022_PROGRAM_ADDRESS, mint),
+          existingAccount(
+            createTokenAccountData({ mint, owner, state }),
+            TOKEN_2022_PROGRAM_ADDRESS,
+            TOKEN_HOLDER_ADDRESS
+          ),
+        ],
+        largestAccounts: [
+          { address: TOKEN_HOLDER_ADDRESS, amount: "1" },
+          { address: OTHER_TOKEN_HOLDER_ADDRESS, amount: "0" },
+        ],
+      });
+
+      await expect(resolve({ rpc, domain: "domain.sol" })).resolves.toBe(owner);
+      expect(rpc.getTokenLargestAccounts).toHaveBeenCalledTimes(1);
+      expect(fetchEncodedAccountMock).toHaveBeenCalledTimes(3);
+    });
+
+    test("rejects a noncanonical embedded mint before token RPCs", async () => {
+      const { domainAddress } = await getCanonicalTokenizedRecord("domain");
+      const rpc = createRpc({
+        accountResponses: [
+          existingAccount(
+            await createSrsRecord({ recordOwner: owner, ownerType: 1 }),
+            SRS_PROGRAM_ADDRESS,
+            domainAddress
+          ),
+        ],
+      });
+
+      await expect(resolve({ rpc, domain: "domain.sol" })).rejects.toThrow(
+        RecordMalformedError
+      );
+      expect(fetchEncodedAccountMock).toHaveBeenCalledTimes(1);
+      expect(rpc.getTokenLargestAccounts).not.toHaveBeenCalled();
+    });
+
+    interface InvalidMintCase {
+      name: string;
+      mintExists?: boolean;
+      mintData?: Uint8Array;
+      mintProgramAddress?: Address;
+    }
+
+    const invalidMintCases: InvalidMintCase[] = [
+      { name: "missing", mintExists: false },
+      { name: "wrong program", mintProgramAddress: owner },
+      { name: "malformed", mintData: new Uint8Array(1) },
+      {
+        name: "uninitialized",
+        mintData: createMintData({ isInitialized: false }),
+      },
+      { name: "nonzero decimals", mintData: createMintData({ decimals: 1 }) },
+      { name: "wrong supply", mintData: createMintData({ supply: 2n }) },
+    ];
+
+    test.each(invalidMintCases)(
+      "rejects a $name token mint",
+      async (testCase) => {
+        const { domainAddress, mint } =
+          await getCanonicalTokenizedRecord("domain");
+        const mintAccount =
+          testCase.mintExists === false
+            ? ({ exists: false, address: mint } as const)
+            : existingAccount(
+                testCase.mintData ?? createMintData(),
+                testCase.mintProgramAddress ?? TOKEN_2022_PROGRAM_ADDRESS,
+                mint
+              );
+        const rpc = createRpc({
+          accountResponses: [
+            existingAccount(
+              await createSrsRecord({ recordOwner: mint, ownerType: 1 }),
+              SRS_PROGRAM_ADDRESS,
+              domainAddress
+            ),
+            mintAccount,
+          ],
+        });
+
+        await expect(resolve({ rpc, domain: "domain.sol" })).rejects.toThrow(
+          CouldNotFindSrsOwnerError
+        );
+        expect(rpc.getTokenLargestAccounts).not.toHaveBeenCalled();
+      }
     );
 
-    await expect(resolve({ rpc, domain: "domain.sol" })).rejects.toThrow(
-      CouldNotFindSrsOwnerError
+    test.each([
+      { name: "no", largestAccounts: [] },
+      {
+        name: "multiple amount-one accounts in an inconsistent RPC response",
+        largestAccounts: [
+          { address: TOKEN_HOLDER_ADDRESS, amount: "1" },
+          { address: OTHER_TOKEN_HOLDER_ADDRESS, amount: "1" },
+        ],
+      },
+    ])("rejects $name unique holder result", async ({ largestAccounts }) => {
+      const { domainAddress, mint } =
+        await getCanonicalTokenizedRecord("domain");
+      const rpc = createRpc({
+        accountResponses: [
+          existingAccount(
+            await createSrsRecord({ recordOwner: mint, ownerType: 1 }),
+            SRS_PROGRAM_ADDRESS,
+            domainAddress
+          ),
+          existingAccount(createMintData(), TOKEN_2022_PROGRAM_ADDRESS, mint),
+        ],
+        largestAccounts,
+      });
+
+      await expect(resolve({ rpc, domain: "domain.sol" })).rejects.toThrow(
+        CouldNotFindSrsOwnerError
+      );
+      expect(fetchEncodedAccountMock).toHaveBeenCalledTimes(2);
+    });
+
+    interface HolderInvalidCase {
+      name: string;
+      holderExists?: boolean;
+      holderProgramAddress?: Address;
+      makeData?: (mint: Address) => Uint8Array;
+    }
+
+    const holderInvalidCases: HolderInvalidCase[] = [
+      { name: "missing", holderExists: false },
+      { name: "wrong program", holderProgramAddress: owner },
+      { name: "malformed", makeData: () => new Uint8Array(1) },
+      {
+        name: "wrong mint",
+        makeData: () => createTokenAccountData({ mint: owner, owner }),
+      },
+      {
+        name: "wrong amount",
+        makeData: (mint) => createTokenAccountData({ mint, owner, amount: 0n }),
+      },
+      {
+        name: "uninitialized",
+        makeData: (mint) =>
+          createTokenAccountData({
+            mint,
+            owner,
+            state: AccountState.Uninitialized,
+          }),
+      },
+    ];
+
+    test.each(holderInvalidCases)(
+      "rejects a $name token holder account",
+      async (testCase) => {
+        const { domainAddress, mint } =
+          await getCanonicalTokenizedRecord("domain");
+        const holderAccount =
+          testCase.holderExists === false
+            ? ({ exists: false, address: TOKEN_HOLDER_ADDRESS } as const)
+            : existingAccount(
+                testCase.makeData?.(mint) ??
+                  createTokenAccountData({ mint, owner }),
+                testCase.holderProgramAddress ?? TOKEN_2022_PROGRAM_ADDRESS,
+                TOKEN_HOLDER_ADDRESS
+              );
+        const rpc = createRpc({
+          accountResponses: [
+            existingAccount(
+              await createSrsRecord({ recordOwner: mint, ownerType: 1 }),
+              SRS_PROGRAM_ADDRESS,
+              domainAddress
+            ),
+            existingAccount(createMintData(), TOKEN_2022_PROGRAM_ADDRESS, mint),
+            holderAccount,
+          ],
+          largestAccounts: [{ address: TOKEN_HOLDER_ADDRESS, amount: "1" }],
+        });
+
+        await expect(resolve({ rpc, domain: "domain.sol" })).rejects.toThrow(
+          CouldNotFindSrsOwnerError
+        );
+      }
     );
-    expect(rpc.getTokenLargestAccounts).not.toHaveBeenCalled();
+
+    test("applies PDA policy to the token holder", async () => {
+      const [holderOwner] = await getProgramDerivedAddress({
+        programAddress: SRS_PROGRAM_ADDRESS,
+        seeds: [utf8Codec.encode("holder")],
+      });
+      const { domainAddress, mint } =
+        await getCanonicalTokenizedRecord("domain");
+      const recordAccount = existingAccount(
+        await createSrsRecord({ recordOwner: mint, ownerType: 1 }),
+        SRS_PROGRAM_ADDRESS,
+        domainAddress
+      );
+      const mintAccount = existingAccount(
+        createMintData(),
+        TOKEN_2022_PROGRAM_ADDRESS,
+        mint
+      );
+      const holderData = createTokenAccountData({
+        mint,
+        owner: holderOwner,
+      });
+      const defaultRpc = createRpc({
+        accountResponses: [
+          recordAccount,
+          mintAccount,
+          existingAccount(
+            holderData,
+            TOKEN_2022_PROGRAM_ADDRESS,
+            TOKEN_HOLDER_ADDRESS
+          ),
+        ],
+        largestAccounts: [{ address: TOKEN_HOLDER_ADDRESS, amount: "1" }],
+      });
+
+      await expect(
+        resolve({ rpc: defaultRpc, domain: "domain.sol" })
+      ).rejects.toThrow(PdaOwnerNotAllowedError);
+
+      const anyRpc = createRpc({
+        accountResponses: [
+          recordAccount,
+          mintAccount,
+          existingAccount(
+            holderData,
+            TOKEN_2022_PROGRAM_ADDRESS,
+            TOKEN_HOLDER_ADDRESS
+          ),
+        ],
+        largestAccounts: [{ address: TOKEN_HOLDER_ADDRESS, amount: "1" }],
+      });
+      await expect(
+        resolve({
+          rpc: anyRpc,
+          domain: "domain.sol",
+          options: { allowPda: "any" },
+        })
+      ).resolves.toBe(holderOwner);
+    });
   });
 
   test("applies direct-owner PDA policy", async () => {
@@ -294,7 +654,11 @@ describe("SRS .sol resolution", () => {
       seeds: [utf8Codec.encode("owner")],
     });
     const { domainAddress } = await getSrsDomainAddress({ domain: "domain" });
-    const record = existingAccount(await createSrsRecord({ recordOwner: pda }));
+    const record = existingAccount(
+      await createSrsRecord({ recordOwner: pda }),
+      SRS_PROGRAM_ADDRESS,
+      domainAddress
+    );
     const rpc = createRpc();
 
     fetchEncodedAccountMock
@@ -310,9 +674,7 @@ describe("SRS .sol resolution", () => {
 
     fetchEncodedAccountMock
       .mockResolvedValueOnce(record)
-      .mockResolvedValueOnce(
-        existingAccount(new Uint8Array(), owner, domainAddress)
-      );
+      .mockResolvedValueOnce(existingAccount(new Uint8Array(), owner, pda));
     await expect(
       resolve({
         rpc,

@@ -49,7 +49,7 @@ export interface ResolveSnsParams {
 
 /** Input required by the `.sol` domain resolver. */
 export interface ResolveSolParams {
-  rpc: Rpc<GetAccountInfoApi>;
+  rpc: Rpc<GetAccountInfoApi & GetTokenLargestAccountsApi>;
   domain: string;
   options: ResolveOptions;
 }

@@ -1,8 +1,17 @@
-import { Address, fetchEncodedAccount, getI64Decoder } from "@solana/kit";
+import { AccountState } from "@solana-program/token";
+import {
+  Address,
+  fetchEncodedAccount,
+  getI64Decoder,
+  getProgramDerivedAddress,
+} from "@solana/kit";
 
-import { addressCodec } from "../codecs";
+import { addressCodec, utf8Codec } from "../codecs";
 import { SRS_PROGRAM_ADDRESS } from "../config";
-import { SOL_SRS_CLASS } from "../constants/addresses";
+import {
+  SOL_SRS_CLASS,
+  TOKEN_2022_PROGRAM_ADDRESS,
+} from "../constants/addresses";
 import {
   CouldNotFindSrsOwnerError,
   DomainDoesNotExistError,
@@ -11,6 +20,7 @@ import {
   RecordMalformedError,
 } from "../errors";
 import { checkAddressOnCurve } from "../utils/checkAddressOnCurve";
+import { unpackAccount, unpackMint } from "../utils/token2022";
 import { getSrsDomainAddress } from "./getSrsDomainAddress";
 import { ResolveSolParams } from "./resolveTypes";
 
@@ -64,6 +74,86 @@ const resolveSrsPubkeyOwner = async ({
   throw new PdaOwnerNotAllowedError(
     `The program ${ownerAccount.programAddress} is not allowed`
   );
+};
+
+const resolveSrsTokenOwner = async ({
+  rpc,
+  record,
+  mint,
+  options,
+}: Pick<ResolveSolParams, "rpc" | "options"> & {
+  record: Address;
+  mint: Address;
+}): Promise<Address> => {
+  const [canonicalMint] = await getProgramDerivedAddress({
+    programAddress: SRS_PROGRAM_ADDRESS,
+    seeds: [utf8Codec.encode("mint"), addressCodec.encode(record)],
+  });
+
+  if (mint !== canonicalMint) {
+    throw new RecordMalformedError("SRS record has a noncanonical token mint");
+  }
+
+  const mintAccount = await fetchEncodedAccount(rpc, mint);
+  if (
+    !mintAccount.exists ||
+    mintAccount.programAddress !== TOKEN_2022_PROGRAM_ADDRESS
+  ) {
+    throw new CouldNotFindSrsOwnerError("SRS token mint is invalid");
+  }
+
+  let mintState;
+  try {
+    mintState = unpackMint(mintAccount.data);
+  } catch {
+    throw new CouldNotFindSrsOwnerError("SRS token mint is invalid");
+  }
+
+  if (
+    !mintState.isInitialized ||
+    mintState.decimals !== 0 ||
+    mintState.supply !== 1n
+  ) {
+    throw new CouldNotFindSrsOwnerError("SRS token mint is invalid");
+  }
+
+  const largestAccounts = await rpc.getTokenLargestAccounts(mint).send();
+  const holders = largestAccounts.value.filter(({ amount }) => amount === "1");
+  if (holders.length !== 1) {
+    throw new CouldNotFindSrsOwnerError(
+      "SRS token mint has no unique current holder"
+    );
+  }
+
+  const holderAddress = holders[0].address;
+  const holderAccount = await fetchEncodedAccount(rpc, holderAddress);
+  if (
+    !holderAccount.exists ||
+    holderAccount.programAddress !== TOKEN_2022_PROGRAM_ADDRESS
+  ) {
+    throw new CouldNotFindSrsOwnerError("SRS token holder account is invalid");
+  }
+
+  let holderState;
+  try {
+    holderState = unpackAccount(holderAccount.data);
+  } catch {
+    throw new CouldNotFindSrsOwnerError("SRS token holder account is invalid");
+  }
+
+  if (
+    holderState.state === AccountState.Uninitialized ||
+    holderState.mint !== mint ||
+    holderState.amount !== 1n
+  ) {
+    throw new CouldNotFindSrsOwnerError("SRS token holder account is invalid");
+  }
+
+  return resolveSrsPubkeyOwner({
+    rpc,
+    owner: holderState.owner,
+    options,
+  });
 };
 
 /** Resolves a TLD-trimmed `.sol` name from its canonical SRS record. */
@@ -125,9 +215,12 @@ export const resolveSol = async ({
     )
   );
   if (ownerType === SRS_OWNER_TYPE_TOKEN) {
-    throw new CouldNotFindSrsOwnerError(
-      "Tokenized SRS owners are not supported yet"
-    );
+    return resolveSrsTokenOwner({
+      rpc,
+      record: domainAddress,
+      mint: owner,
+      options,
+    });
   }
 
   return resolveSrsPubkeyOwner({ rpc, owner, options });
