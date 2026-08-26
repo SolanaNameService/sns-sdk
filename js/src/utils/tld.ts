@@ -1,4 +1,3 @@
-import { SOL_SRS_RESOLUTION_ENABLED } from "../config";
 import { unsupportedTld } from "./unsupportedTld";
 
 /** The Solana Name Service top-level-domain suffix. */
@@ -8,12 +7,10 @@ export const SOL_TLD = ".sol";
 export const SNS_TLD = ".sns";
 
 /** TLD suffixes accepted by the current SDK configuration. */
-export const SUPPORTED_TLDS = SOL_SRS_RESOLUTION_ENABLED
-  ? ([SNS_TLD] as const)
-  : ([SNS_TLD, SOL_TLD] as const);
+export const SUPPORTED_TLDS = [SNS_TLD] as const;
 
 /** A top-level-domain suffix supported by SNS utilities. */
-export type SupportedTld = typeof SNS_TLD | typeof SOL_TLD;
+export type SupportedTld = typeof SNS_TLD;
 
 /**
  * Returns the matching TLD from `supportedTlds` if `domain` ends with one,

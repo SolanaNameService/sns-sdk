@@ -3,8 +3,8 @@ import { Connection, PublicKey } from "@solana/web3.js";
 
 import { NameRegistryState } from "../state";
 import { Record } from "../types/record";
-import { assertTldSupported } from "../utils/assertTldSupported";
 import { getSnsDomainKeySync } from "../utils/getSnsDomainKeySync";
+import { _parseSnsDomain } from "../utils/parseSnsDomain";
 import { Validation } from "./const";
 import { getRecordV2Key } from "./getRecordV2Key";
 
@@ -13,8 +13,10 @@ import { getRecordV2Key } from "./getRecordV2Key";
  *
  * @param connection Solana RPC connection
  * @param record Record type
- * @param domain Full `.sns` or `.sol` domain name
+ * @param domain Full `.sns` domain name
  * @returns Whether the record's staleness validation matches the current owner.
+ * @throws {@link Errors.UnsupportedTldError} when the domain lacks a `.sns` suffix.
+ * @throws {@link Errors.InvalidDomainError} when the `.sns` domain or subdomain is invalid.
  *
  * @example
  * ```ts
@@ -26,7 +28,7 @@ export const verifyStaleness = async (
   record: Record,
   domain: string,
 ) => {
-  const [trimmedDomain] = await assertTldSupported(connection, domain);
+  const trimmedDomain = _parseSnsDomain(domain);
   const recordKey = getRecordV2Key(trimmedDomain, record);
   const { registry, nftOwner } = await NameRegistryState.retrieve(
     connection,

@@ -1,3 +1,32 @@
+# JS SDK v4.1.0
+
+## Changed
+
+### `.sol` resolution
+
+- `resolve` now resolves `.sol` domains through SRS instead of the legacy SNS-backed compatibility path.
+- Legacy cutoff-slot routing and its finalized-slot RPC request have been removed. `.sol` resolution no longer depends on `SOL_TLD_CUTOFF_SLOT`.
+- `.sol` resolution can now surface `DomainExpired`, `RecordMalformed`, `CouldNotFindSrsOwner`, and `PdaOwnerNotAllowed`.
+
+### Record APIs
+
+- `getRecord`, `getMultipleRecords`, `verifyStaleness`, and `verifyRightOfAssociation` now accept canonical lowercase `.sns` names only.
+- These APIs support top-level domains such as `mydomain.sns` and one-level subdomains such as `sub.mydomain.sns`.
+- `.sol` names are rejected with `UnsupportedTldError` before any account RPC request.
+- Malformed domain names are rejected with `InvalidDomainError` before any account RPC request.
+
+### TLD utilities
+
+- `SUPPORTED_TLDS` now contains `.sns` only.
+- By default, `getTld` no longer recognizes `.sol`, and `parseSupportedTld` rejects `.sol`. The `resolve` and `safeResolve` APIs continue to support `.sol` through their dedicated SRS routing.
+
+### SRS configuration
+
+- Enabled SRS-backed `.sol` resolution.
+- Updated `SRS_HASH_PREFIX`, `SRS_CENTRAL_STATE`, `SOL_SRS_CLASS`, and `SOL_REGISTRAR_PROGRAM_ID` to the canonical SRS values used for `.sol` resolution.
+
+---
+
 # JS SDK v4.0.0
 
 This is a breaking release of `@bonfida/spl-name-service`.

@@ -10,14 +10,13 @@ import {
   parseSnsTld,
   parseSupportedTld,
   SNS_TLD,
-  SOL_TLD,
 } from "../src/utils/tld";
 import { UnsupportedTldError } from "../src/error";
 
 test.each([
   // .sol matches
-  { input: "parent.sol", expected: SOL_TLD },
-  { input: "sub.parent.sol", expected: SOL_TLD },
+  { input: "parent.sol", expected: undefined },
+  { input: "sub.parent.sol", expected: undefined },
   // .sns matches
   { input: "alice.sns", expected: SNS_TLD },
   { input: "sub.alice.sns", expected: SNS_TLD },
@@ -31,7 +30,7 @@ test.each([
   { input: "parent.SOL", expected: undefined },
   { input: "parent.SNS", expected: undefined },
   // TLD alone (edge case: the string IS the suffix)
-  { input: ".sol", expected: SOL_TLD },
+  { input: ".sol", expected: undefined },
   { input: ".sns", expected: SNS_TLD },
 ])("getTld('$input') === $expected", ({ input, expected }) => {
   expect(getTld(input)).toBe(expected);
@@ -40,13 +39,11 @@ test.each([
 test.each([
   ["parent.sns", ["parent", SNS_TLD]],
   ["sub.parent.sns", ["sub.parent", SNS_TLD]],
-  ["parent.sol", ["parent", SOL_TLD]],
-  ["sub.parent.sol", ["sub.parent", SOL_TLD]],
 ])("parseSupportedTld(%s)", (input, expected) => {
   expect(parseSupportedTld(input)).toEqual(expected);
 });
 
-test.each(["parent", "parent.com", "parent.SNS", "parent.SOL"])(
+test.each(["parent", "parent.sol", "parent.com", "parent.SNS", "parent.SOL"])(
   "parseSupportedTld rejects %s",
   (input) => {
     expect(() => parseSupportedTld(input)).toThrow(UnsupportedTldError);
@@ -66,7 +63,7 @@ test.each([
   expect(parseSnsTld(input)).toEqual(expected);
 });
 
-test.each(["parent", "parent.sol", "parent.com", "parent.SNS"])(
+test.each(["parent", "parent.sol", "parent.com", "parent.SNS", "parent.SOL"])(
   "parseSnsTld rejects %s",
   (input) => {
     expect(() => parseSnsTld(input)).toThrow(UnsupportedTldError);

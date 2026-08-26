@@ -7,8 +7,7 @@ import {
 } from "@solana/spl-token";
 import { Connection, PublicKey } from "@solana/web3.js";
 
-import { SRS_PROGRAM_ID } from "../config";
-import { SOL_SRS_CLASS } from "../constants";
+import { SOL_SRS_CLASS, SRS_PROGRAM_ID } from "../constants";
 import {
   CouldNotFindSrsOwner,
   DomainDoesNotExist,

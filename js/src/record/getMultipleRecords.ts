@@ -3,8 +3,8 @@ import { Connection, PublicKey } from "@solana/web3.js";
 
 import { NameRegistryState } from "../state";
 import { Record } from "../types/record";
-import { assertTldSupported } from "../utils/assertTldSupported";
 import { getSnsDomainKeySync } from "../utils/getSnsDomainKeySync";
+import { _parseSnsDomain } from "../utils/parseSnsDomain";
 import { ETH_ROA_RECORDS, GUARDIANS, SELF_SIGNED, Validation } from "./const";
 import { deserializeRecordContent } from "./deserializeRecordContent";
 import { getRecordV2Key } from "./getRecordV2Key";
@@ -24,11 +24,11 @@ export interface GetMultipleRecordsOptions {
 }
 
 /**
- * Retrieves multiple records for a domain, verifies the staleness and right
+ * Retrieves multiple records for a `.sns` domain, verifies the staleness and right
  * of association of each, and optionally deserializes their content.
  *
  * @param connection Solana RPC connection
- * @param domain Full `.sns` or `.sol` domain name
+ * @param domain Full `.sns` domain name
  * @param records Record types to retrieve
  * @param options Optional retrieval settings.
  * @param options.deserialize When `true`, deserializes the raw content of each record.
@@ -36,6 +36,8 @@ export interface GetMultipleRecordsOptions {
  * contains the record type, the raw SNS record account, staleness and
  * right-of-association verification results, and optionally the deserialized
  * content. Entries are `undefined` for records that do not exist on-chain.
+ * @throws {@link Errors.UnsupportedTldError} when the domain lacks a `.sns` suffix.
+ * @throws {@link Errors.InvalidDomainError} when the `.sns` domain or subdomain is invalid.
  *
  * @example
  * ```ts
@@ -48,8 +50,7 @@ export async function getMultipleRecords(
   records: Record[],
   options: GetMultipleRecordsOptions = {},
 ): Promise<(RecordResult | undefined)[]> {
-  const [trimmedDomain] = await assertTldSupported(connection, domain);
-
+  const trimmedDomain = _parseSnsDomain(domain);
   const pubkeys = records.map((record) =>
     getRecordV2Key(trimmedDomain, record),
   );

@@ -5,34 +5,10 @@
 import { PublicKey } from "@solana/web3.js";
 
 /**
- * The Solana Name Service program ID
+ * The SPL name service program ID
  */
 export const NAME_PROGRAM_ID = new PublicKey(
   "namesLPneVptA9Z5rqUDD9tMTWEJwofgaYwp8cawRkX",
-);
-
-/**
- * Hash prefix used to derive SNS domain name addresses
- */
-export const SNS_HASH_PREFIX = "SPL Name Service";
-
-/**
- * Hash prefix used to derive SRS domain name addresses
- */
-export const SRS_HASH_PREFIX = "SRS";
-
-/**
- * The SRS registrar central state
- */
-export const SRS_CENTRAL_STATE = new PublicKey(
-  "8K9XmpN6nKy3ERnMovnoj5cbqWKPiGYN8hCRRyW4TLQV",
-);
-
-/**
- * The SRS class for `.sol` domains
- */
-export const SOL_SRS_CLASS = new PublicKey(
-  "AjheAtCgSwEcEYd6xi6thcQW25ELWd7wKCx6SKBGUtMQ",
 );
 
 /**
@@ -60,6 +36,11 @@ export const REVERSE_LOOKUP_CLASS = new PublicKey(
 export const CENTRAL_STATE = REVERSE_LOOKUP_CLASS;
 
 /**
+ * Hash prefix used to derive SNS domain name addresses
+ */
+export const SNS_HASH_PREFIX = "SPL Name Service";
+
+/**
  * The `.twitter` TLD authority
  */
 export const TWITTER_VERIFICATION_AUTHORITY = new PublicKey(
@@ -72,6 +53,39 @@ export const TWITTER_VERIFICATION_AUTHORITY = new PublicKey(
 export const TWITTER_ROOT_PARENT_REGISTRY_KEY = new PublicKey(
   "4YcexoW3r78zz16J2aqmukBLRwGq6rAvWzJpkYAXqebv",
 );
+
+/**
+ * The Solana Record Service (SRS) program ID
+ */
+export const SRS_PROGRAM_ID = new PublicKey(
+  "srsWjm76StJucL7atFyPSdXFaVLNPFqEt1uFEDPrZsn",
+);
+
+/**
+ * The SRS class for `.sol` domains
+ */
+export const SOL_SRS_CLASS = new PublicKey(
+  "Dqc9TrYg1AZLEa6UkZUqCDrr9zsHQveo1szGTE1BTW5",
+);
+
+/**
+ * The SRS-backed.sol registry program ID
+ */
+export const SOL_REGISTRAR_PROGRAM_ID = new PublicKey(
+  "soL7856gZrjQMSJMT33YDpfAuRYbetAbkZPuv7YeLht",
+);
+
+/**
+ * The SRS-backed.sol registry central state
+ */
+export const SRS_CENTRAL_STATE = new PublicKey(
+  "EoLdmhHPRZ4xkYj4MetaAR8LjALmqGQEMsKQnFJx6ihE",
+);
+
+/**
+ * Hash prefix used to derive SRS domain name addresses
+ */
+export const SRS_HASH_PREFIX = "name";
 
 /** Mainnet USDC mint address used by SNS registration flows. */
 export const USDC_MINT = new PublicKey(

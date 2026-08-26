@@ -1,14 +1,12 @@
 import type { Connection, PublicKey } from "@solana/web3.js";
 
-import { SOL_SRS_RESOLUTION_ENABLED } from "../config";
-import { SnsSolResolutionMismatchError, UnsupportedTldError } from "../error";
-import { assertTldSupported } from "../utils/assertTldSupported";
+import { SnsSolResolutionMismatchError } from "../error";
 import { parseSupportedTld, SNS_TLD, SOL_TLD } from "../utils/tld";
+import { unsupportedTld } from "../utils/unsupportedTld";
 import { resolveSns } from "./resolveSns";
 import { resolveSol } from "./resolveSol";
 
 import type { ResolveConfig } from "./types";
-
 export type { ResolveConfig } from "./types";
 
 /**
@@ -17,21 +15,28 @@ export type { ResolveConfig } from "./types";
  * `.sns` resolution applies SNS ownership precedence: an active tokenized-domain
  * owner, then valid V2 and V1 `SOL` records, then the registry owner.
  *
- * `.sol` currently falls back to SNS-backed resolution until finalized slot
- * `452_825_395`, then pauses automatically. SRS-backed `.sol` resolution will be
- * restored in a future SDK update.
+ * `.sol` resolution reads and validates the canonical SRS record. It resolves
+ * either the record's direct public-key owner or the unique current holder of
+ * its canonical token mint.
  *
- * @see {@link safeResolve} for `.sol` resolution that verifies the SRS and
- * corresponding SNS targets match when SRS-backed resolution is enabled.
+ * @see {@link safeResolve} for `.sol` resolution that additionally requires the
+ * SRS target to match the corresponding SNS target.
  *
  * @param connection Solana RPC connection
  * @param domain Full domain name with a supported `.sns` or `.sol` suffix
  * @param config PDA allowance policy. Defaults to `{ allowPda: false }`
  * @returns Effective target as a web3.js `PublicKey`
  * @throws
- * - {@link Errors.UnsupportedTldError} when the name is bare, has an unsupported suffix, or uses `.sol` after the SDK-managed pause.
- * - {@link Errors.DomainDoesNotExist} when the domain account does not exist.
- * - {@link Errors.PdaOwnerNotAllowed} when the fallback registry owner is a PDA not allowed by `config`.
+ * - {@link Errors.UnsupportedTldError} when the name is bare or has an unsupported suffix.
+ * - {@link Errors.DomainDoesNotExist} when the SNS registry or canonical SRS record does not exist.
+ * - {@link Errors.DomainExpired} when an SRS record has expired.
+ * - {@link Errors.RecordMalformed} when the on-chain data required for resolution is malformed or invalid.
+ * - {@link Errors.CouldNotFindNftOwner} when an active tokenized SNS domain owner cannot be found.
+ * - {@link Errors.CouldNotFindSrsOwner} when a tokenized SRS owner cannot be resolved.
+ * - {@link Errors.WrongValidation} when an SNS V2 `SOL` record uses unsupported validation types.
+ * - {@link Errors.InvalidRoaError} when an SNS V2 `SOL` record fails right-of-association validation.
+ * - {@link Errors.PdaOwnerNotAllowed} when the effective owner is a PDA not allowed by `config`.
+ *
  * @example
  * ```ts
  * const target = await resolve(connection, "name.sns");
@@ -46,13 +51,7 @@ export const resolve = async (
 ): Promise<PublicKey> => {
   if (domain.endsWith(SOL_TLD)) {
     const trimmedDomain = domain.slice(0, -SOL_TLD.length);
-
-    if (SOL_SRS_RESOLUTION_ENABLED) {
-      return resolveSol(connection, trimmedDomain, config);
-    }
-
-    await assertTldSupported(connection, domain);
-    return resolveSns(connection, trimmedDomain, config);
+    return resolveSol(connection, trimmedDomain, config);
   }
 
   const [trimmedDomain, tld] = parseSupportedTld(domain);
@@ -60,15 +59,13 @@ export const resolve = async (
     return resolveSns(connection, trimmedDomain, config);
   }
 
-  throw new UnsupportedTldError("Domain has an unsupported TLD suffix");
+  throw unsupportedTld();
 };
 
 /**
  * Resolves a full `.sns` or `.sol` domain using the same routing as
- * {@link resolve}.
- *
- * When SRS-backed `.sol` resolution is enabled, both the `.sol` domain and its
- * corresponding `.sns` domain must resolve to the same target; otherwise,
+ * {@link resolve}. For domains with `.sol` suffix, the corresponding `.sns`
+ * domain must resolve to the same target; otherwise,
  * {@link Errors.SnsSolResolutionMismatchError} is thrown.
  *
  * @param connection Solana RPC connection
@@ -78,6 +75,7 @@ export const resolve = async (
  * @throws
  * - {@link Errors.SnsSolResolutionMismatchError} when SRS and SNS resolve a `.sol` domain to different public keys.
  * - Any resolution error propagated by {@link resolve}, `resolveSol`, or `resolveSns`.
+ *
  * @example
  * ```ts
  * const target = await safeResolve(connection, "name.sol");
@@ -90,7 +88,7 @@ export const safeResolve = async (
   domain: string,
   config: ResolveConfig = { allowPda: false },
 ): Promise<PublicKey> => {
-  if (domain.endsWith(SOL_TLD) && SOL_SRS_RESOLUTION_ENABLED) {
+  if (domain.endsWith(SOL_TLD)) {
     const trimmedDomain = domain.slice(0, -SOL_TLD.length);
     const [srsTarget, snsTarget] = await Promise.all([
       resolveSol(connection, trimmedDomain, config),

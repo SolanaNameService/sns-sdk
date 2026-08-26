@@ -1,118 +1,79 @@
 require("dotenv").config();
 import { describe, expect, jest, test } from "@jest/globals";
 import { Connection, PublicKey } from "@solana/web3.js";
-import { getRecordV2Key } from "../../src/record/getRecordV2Key";
-import { Record } from "../../src/types/record";
-import { UnsupportedTldError } from "../../src/error";
+
 import { createRecord } from "../../src/bindings/createRecord";
-import { updateRecord } from "../../src/bindings/updateRecord";
 import { deleteRecord } from "../../src/bindings/deleteRecord";
-import { setRecordStalenessVerifier } from "../../src/bindings/setRecordStalenessVerifier";
 import { setRecordRoaVerifier } from "../../src/bindings/setRecordRoaVerifier";
+import { setRecordStalenessVerifier } from "../../src/bindings/setRecordStalenessVerifier";
+import { updateRecord } from "../../src/bindings/updateRecord";
 import { validateRecordRoa } from "../../src/bindings/validateRecordRoa";
 import { validateRecordRoaEthereum } from "../../src/bindings/validateRecordRoaEthereum";
-import { getRecord } from "../../src/record/getRecord";
+import { UnsupportedTldError } from "../../src/error";
 import { getMultipleRecords } from "../../src/record/getMultipleRecords";
+import { getRecord } from "../../src/record/getRecord";
+import { verifyRightOfAssociation } from "../../src/record/verifyRightOfAssociation";
+import { verifyStaleness } from "../../src/record/verifyStaleness";
+import { Record } from "../../src/types/record";
 
 jest.setTimeout(50_000);
 
 const key = PublicKey.default;
 const connection = new Connection(process.env.RPC_URL!);
+describe("Read APIs reject .sol domains", () => {
+  test("getRecord rejects .sol domain", async () => {
+    const domain = "wallet-guide-9.sol";
+    await expect(
+      getRecord(connection, domain, Record.Url, {
+        deserialize: true,
+      }),
+    ).rejects.toThrow(UnsupportedTldError);
+  });
 
-test("getRecord", async () => {
-  const domain = "wallet-guide-9.sol";
-  const items = [
-    {
-      record: Record.IPFS,
-      value: "ipfs://test",
-      verified: { staleness: true },
-    },
-    {
-      record: Record.Email,
-      value: "test@gmail.com",
-      verified: { staleness: false },
-    },
-    {
-      record: Record.Url,
-      value: "https://google.com",
-      verified: { staleness: false },
-    },
-  ];
-  for (let item of items) {
-    const res = await getRecord(connection, domain, item.record, {
-      deserialize: true,
-    });
-    expect(res.deserializedContent).toBe(item.value);
-    expect(res.verified.staleness).toBe(item.verified.staleness);
-  }
-});
+  test("getMultipleRecords rejects .sol domain", async () => {
+    const domain = "wallet-guide-9.sol";
+    const items = [
+      {
+        record: Record.IPFS,
+        value: "ipfs://test",
+        verified: { staleness: true },
+      },
+      {
+        record: Record.Email,
+        value: "test@gmail.com",
+        verified: { staleness: false },
+      },
+      {
+        record: Record.Url,
+        value: "https://google.com",
+        verified: { staleness: false },
+      },
+    ];
+    await expect(
+      getMultipleRecords(
+        connection,
+        domain,
+        items.map((e) => e.record),
+        { deserialize: true },
+      ),
+    ).rejects.toThrow(UnsupportedTldError);
+  });
 
-test("getMultipleRecords", async () => {
-  const domain = "wallet-guide-9.sol";
-  const items = [
-    {
-      record: Record.IPFS,
-      value: "ipfs://test",
-      verified: { staleness: true },
-    },
-    {
-      record: Record.Email,
-      value: "test@gmail.com",
-      verified: { staleness: false },
-    },
-    {
-      record: Record.Url,
-      value: "https://google.com",
-      verified: { staleness: false },
-    },
-  ];
-  const res = await getMultipleRecords(
-    connection,
-    domain,
-    items.map((e) => e.record),
-    { deserialize: true },
-  );
-  for (let i = 0; i < items.length; i++) {
-    expect(items[i].value).toBe(res[i]?.deserializedContent);
-    expect(items[i].record).toBe(res[i]?.record);
-    expect(items[i].verified.staleness).toBe(res[i]?.verified.staleness);
-  }
-});
+  test("verifyStaleness rejects .sol domain", async () => {
+    await expect(
+      verifyStaleness(connection, Record.Github, "mydomain.sol"),
+    ).rejects.toThrow(UnsupportedTldError);
+  });
 
-describe("getRecordV2Key", () => {
-  test.each([
-    {
-      domain: "domain1",
-      record: Record.SOL,
-      expected: "GBrd6Q53eu1T2PiaQAtm92r3DwxmoGvZ2D6xjtVtN1Qt",
-    },
-    {
-      domain: "sub.domain2",
-      record: Record.SOL,
-      expected: "A3EFmyCmK5rp73TdgLH8aW49PJ8SJw915arhydRZ6Sws",
-    },
-    {
-      domain: "domain3",
-      record: Record.Url,
-      expected: "DMZmnjcAnUwSje4o2LGJhipCfNZ5b37GEbbkwbQBWEW1",
-    },
-    {
-      domain: "sub.domain4",
-      record: Record.Url,
-      expected: "6o8JQ7vss6r9sw9GWNVugZktwfEJ67iUz6H63hhmg4sj",
-    },
-    {
-      domain: "domain5",
-      record: Record.IPFS,
-      expected: "DQHeVmAj9Nz4uAn2dneEsgBZWcfhUqLdtbDcfWhGL47D",
-    },
-    {
-      domain: "sub.domain6",
-      record: Record.IPFS,
-      expected: "Dj7tnTTaktrrmdtatRuLG3YdtGZk8XEBMb4w5WtCBHvr",
-    },
-  ])("$domain", (e) => {
-    expect(getRecordV2Key(e.domain, e.record).toBase58()).toBe(e.expected);
+  test("verifyRightOfAssociation rejects.sol domain", async () => {
+    await expect(
+      verifyRightOfAssociation(
+        connection,
+        Record.Github,
+        "mydomain.sol",
+        Buffer.alloc(32),
+      ),
+    ).rejects.toThrow(UnsupportedTldError);
   });
 });
 

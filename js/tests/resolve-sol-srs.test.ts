@@ -10,13 +10,12 @@ import {
 } from "@solana/spl-token";
 import { AccountInfo, Connection, Keypair, PublicKey } from "@solana/web3.js";
 
-jest.mock("../src/config", () => ({
-  ...jest.requireActual<typeof import("../src/config")>("../src/config"),
-  SOL_SRS_RESOLUTION_ENABLED: true,
-}));
-
-import { SOL_REGISTRAR_PROGRAM_ID, SRS_PROGRAM_ID } from "../src/config";
-import { SOL_SRS_CLASS, SRS_CENTRAL_STATE } from "../src/constants";
+import {
+  SOL_REGISTRAR_PROGRAM_ID,
+  SOL_SRS_CLASS,
+  SRS_CENTRAL_STATE,
+  SRS_PROGRAM_ID,
+} from "../src/constants";
 import {
   CouldNotFindSrsOwner,
   DomainDoesNotExist,

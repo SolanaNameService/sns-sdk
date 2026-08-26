@@ -1,8 +1,12 @@
 require("dotenv").config();
 import { test, jest, expect, describe } from "@jest/globals";
 import { Connection, SystemProgram } from "@solana/web3.js";
-import { resolve, type ResolveConfig } from "../../src/resolve";
-import { DomainExpired, PdaOwnerNotAllowed } from "../../src/error";
+import { safeResolve, type ResolveConfig } from "../../src/resolve";
+import {
+  DomainExpired,
+  PdaOwnerNotAllowed,
+  SnsSolResolutionMismatchError,
+} from "../../src/error";
 
 jest.setTimeout(50_000);
 
@@ -26,23 +30,11 @@ const connection = new Connection(process.env.RPC_URL!);
  * | 8               | true      | true    | false     | false         |
  * | 9               | true      | false   | false     | true          |
  */
-describe("resolve .sol domains", () => {
+describe("safeResolve .sol domains", () => {
   test.each([
     {
       domain: "sns-ip-5-wallet-1.sol",
       result: "ALd1XSrQMCPSRayYUoUZnp6KcP6gERfJhWzkP49CkXKs",
-    },
-    {
-      domain: "sns-ip-5-wallet-2.sol",
-      result: "ALd1XSrQMCPSRayYUoUZnp6KcP6gERfJhWzkP49CkXKs",
-    },
-    {
-      domain: "sns-ip-5-wallet-3.sol",
-      result: "96GKJgm2W3P8Bae78brPrJf4Yi9AN1wtPJwg2XVQ2rMr",
-      config: {
-        allowPda: true,
-        programIds: [SystemProgram.programId],
-      } as ResolveConfig,
     },
     {
       domain: "sns-ip-5-wallet-5.sol",
@@ -56,19 +48,15 @@ describe("resolve .sol domains", () => {
       domain: "sns-ip-5-wallet-7.sol",
       result: "53Ujp7go6CETvC7LTyxBuyopp5ivjKt6VSfixLm1pQrH",
     },
-    {
-      domain: "sns-ip-5-wallet-9.sol",
-      result: "53Ujp7go6CETvC7LTyxBuyopp5ivjKt6VSfixLm1pQrH",
-    },
-  ])("$domain resolves correctly", async ({ domain, config, result }) => {
-    const resolvedValue = await resolve(connection, domain, config);
+  ])("$domain safeResolves correctly", async ({ domain, config, result }) => {
+    const resolvedValue = await safeResolve(connection, domain, config);
     expect(resolvedValue.toBase58()).toBe(result);
   });
 
   test.each([
     {
-      domain: "sns-ip-5-wallet-3.sol",
-      error: PdaOwnerNotAllowed,
+      domain: "sns-ip-5-wallet-2.sol",
+      error: SnsSolResolutionMismatchError,
     },
     {
       domain: "sns-ip-5-wallet-4.sol",
@@ -86,7 +74,11 @@ describe("resolve .sol domains", () => {
       domain: "sns-ip-5-wallet-8.sol",
       error: DomainExpired,
     },
-  ])("resolve $domain throws expected error", async ({ domain, error }) => {
-    await expect(resolve(connection, domain)).rejects.toThrow(error);
+    {
+      domain: "sns-ip-5-wallet-9.sol",
+      error: SnsSolResolutionMismatchError,
+    },
+  ])("safeResolve $domain throws expected error", async ({ domain, error }) => {
+    await expect(safeResolve(connection, domain)).rejects.toThrow(error);
   });
 });

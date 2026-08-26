@@ -43,8 +43,8 @@ export const _parseSnsSubdomain = (subdomain: string): [string, string] => {
 };
 
 /**
- * Parses a writable `.sns` domain and allows either `name.sns` or
- * `sub.parent.sns`.
+ * Parses a canonical `.sns` top-level domain or one-level subdomain and returns
+ * the TLD-trimmed name.
  */
 export const _parseSnsDomain = (domain: string): string => {
   const [trimmedDomain] = parseSnsTld(domain);

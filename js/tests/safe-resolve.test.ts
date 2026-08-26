@@ -1,10 +1,6 @@
 import { beforeEach, describe, expect, jest, test } from "@jest/globals";
 import { Connection, Keypair } from "@solana/web3.js";
 
-jest.mock("../src/config", () => ({
-  ...jest.requireActual<typeof import("../src/config")>("../src/config"),
-  SOL_SRS_RESOLUTION_ENABLED: true,
-}));
 jest.mock("../src/resolve/resolveSns", () => ({ resolveSns: jest.fn() }));
 jest.mock("../src/resolve/resolveSol", () => ({ resolveSol: jest.fn() }));
 

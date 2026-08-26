@@ -5,8 +5,8 @@ import { Connection, PublicKey } from "@solana/web3.js";
 
 import { NameRegistryState } from "../state";
 import { Record } from "../types/record";
-import { assertTldSupported } from "../utils/assertTldSupported";
 import { getSnsDomainKeySync } from "../utils/getSnsDomainKeySync";
+import { _parseSnsDomain } from "../utils/parseSnsDomain";
 import { ETH_ROA_RECORDS, GUARDIANS, SELF_SIGNED, Validation } from "./const";
 import { deserializeRecordContent } from "./deserializeRecordContent";
 import { getRecordV2Key } from "./getRecordV2Key";
@@ -101,15 +101,18 @@ export interface RetrievedRecord {
 }
 
 /**
- * Retrieves a record for a domain, verifies its staleness and right of
+ * Retrieves a record for a `.sns` domain, verifies its staleness and right of
  * association, and optionally deserializes the record content.
  *
  * @param connection Solana RPC connection
- * @param domain Full `.sns` or `.sol` domain name
+ * @param domain Full `.sns` domain name
  * @param record Record type to retrieve
  * @param options Optional retrieval settings
  * @param options.deserialize Whether to deserialize the raw record content
  * @returns The requested record, verification results, and optional decoded content
+ * @throws {@link Errors.UnsupportedTldError} when the domain lacks a `.sns` suffix.
+ * @throws {@link Errors.InvalidDomainError} when the `.sns` domain or subdomain is invalid.
+ *
  * @example
  * ```ts
  * const record = await getRecord(connection, "name.sns", Record.Url, {
@@ -123,7 +126,7 @@ export async function getRecord(
   record: Record,
   options: GetRecordOptions = {},
 ): Promise<RecordResult> {
-  const [trimmedDomain] = await assertTldSupported(connection, domain);
+  const trimmedDomain = _parseSnsDomain(domain);
   const pubkey = getRecordV2Key(trimmedDomain, record);
 
   const [{ registry, nftOwner }, retrievedRecord] = await Promise.all([

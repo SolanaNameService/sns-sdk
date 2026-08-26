@@ -3,8 +3,7 @@ import { Buffer } from "buffer";
 import { sha256 } from "@noble/hashes/sha2";
 import { PublicKey } from "@solana/web3.js";
 
-import { SRS_PROGRAM_ID } from "../config";
-import { SOL_SRS_CLASS, SRS_HASH_PREFIX } from "../constants";
+import { SOL_SRS_CLASS, SRS_HASH_PREFIX, SRS_PROGRAM_ID } from "../constants";
 
 /**
  * Encodes a TLD-trimmed `.sol` domain name as the current SRS record seed.

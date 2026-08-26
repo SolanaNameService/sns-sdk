@@ -77,27 +77,25 @@ console.log(domains.map(({ domain }) => `${domain}.sns`));
 
 Use the form required by each API rather than normalizing names yourself:
 
-| API family                                                                               | Required input                                                     | Scope                                                      |
-| ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------ | ---------------------------------------------------------- |
-| High-level reads such as `resolve`, `safeResolve`, `getRecord`, and `getMultipleRecords` | Full suffixed name, for example `mydomain.sns`                     | `.sns`; legacy `.sol` reads have the transition rule below |
-| Top-level writes such as registration, transfer, burn, and background changes            | Canonical lowercase `mydomain.sns`                                 | Exactly one label before `.sns`                            |
-| Record writes                                                                            | Canonical lowercase `mydomain.sns` or `sub.mydomain.sns`           | Top-level domain or one-level subdomain                    |
-| Subdomain creation                                                                       | Canonical lowercase `sub.mydomain.sns`                             | Exactly one subdomain level                                |
-| Derivation and raw name-account helpers                                                  | TLD-trimmed or raw input, for example `mydomain` or `sub.mydomain` | Follow each low-level helper's account-format contract     |
-
-High-level `.sol` reads use the legacy SNS-backed path only before finalized slot `452,825,395`. At and after that slot, `.sol` is rejected. `.sol` writes are not supported.
+| API family                                                                    | Required input                                                     | Scope                                                  |
+| ----------------------------------------------------------------------------- | ------------------------------------------------------------------ | ------------------------------------------------------ |
+| Domain resolution with `resolve` and `safeResolve`                            | Full suffixed name, for example `mydomain.sns` or `mydomain.sol`   | `.sns` and `.sol` domains                              |
+| Top-level writes such as registration, transfer, burn, and background changes | Canonical lowercase `mydomain.sns`                                 | Top-level domains only; subdomains are not accepted    |
+| Record reads and writes                                                       | Canonical lowercase `mydomain.sns` or `sub.mydomain.sns`           | Top-level domain or one-level subdomain                |
+| Subdomain creation                                                            | Canonical lowercase `sub.mydomain.sns`                             | One-level subdomain                                    |
+| Derivation and raw name-account helpers                                       | TLD-trimmed or raw input, for example `mydomain` or `sub.mydomain` | Follow each low-level helper's account-format contract |
 
 ## API Reference
 
 ### Resolution
 
-- **`resolve`** — resolves a `.sns` domain, or a legacy `.sol` domain while the transition path remains available.
+- **`resolve`** — resolves `.sns` through SNS-IP 5 ownership precedence and `.sol` through its canonical SRS record.
 
   ```ts
   resolve(connection: Connection, domain: string, config?: ResolveConfig): Promise<PublicKey>
   ```
 
-- **`safeResolve`** — follows `resolve`, but when SRS-backed `.sol` resolution is enabled, it also checks the SNS-backed target and throws `SnsSolResolutionMismatchError` if the addresses differ.
+- **`safeResolve`** — follows `resolve`, but for domains with a `.sol` suffix, it also resolves the corresponding `.sns` domain and throws `SnsSolResolutionMismatchError` if the targets differ.
 
   ```ts
   safeResolve(connection: Connection, domain: string, config?: ResolveConfig): Promise<PublicKey>
