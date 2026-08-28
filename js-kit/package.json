@@ -1,6 +1,6 @@
 {
   "name": "@solana-name-service/sns-sdk-kit",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "license": "MIT",
   "files": [
     "dist"
@@ -100,6 +100,7 @@
     "check:package": "npm run build && npm run verify:package"
   },
   "dependencies": {
+    "@metaplex-foundation/umi": "^1.5.1",
     "@scure/base": "^1.2.4",
     "@solana-program/token": "^0.14.0",
     "borsh": "^2.0.0",

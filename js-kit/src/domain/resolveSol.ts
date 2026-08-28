@@ -7,11 +7,24 @@ import {
 } from "@solana/kit";
 
 import { addressCodec, utf8Codec } from "../codecs";
-import { SRS_PROGRAM_ADDRESS } from "../config";
 import {
   SOL_SRS_CLASS,
+  SRS_PROGRAM_ADDRESS,
   TOKEN_2022_PROGRAM_ADDRESS,
 } from "../constants/addresses";
+import {
+  SRS_ADDRESS_LENGTH,
+  SRS_EXPIRY_LENGTH,
+  SRS_OWNER_TYPE_PUBKEY,
+  SRS_OWNER_TYPE_TOKEN,
+  SRS_RECORD_CLASS_OFFSET,
+  SRS_RECORD_DISCRIMINATOR,
+  SRS_RECORD_DISCRIMINATOR_OFFSET,
+  SRS_RECORD_EXPIRY_OFFSET,
+  SRS_RECORD_HEADER_LENGTH,
+  SRS_RECORD_OWNER_OFFSET,
+  SRS_RECORD_OWNER_TYPE_OFFSET,
+} from "../constants/srs";
 import {
   CouldNotFindSrsOwnerError,
   DomainDoesNotExistError,
@@ -21,22 +34,9 @@ import {
 } from "../errors";
 import { checkAddressOnCurve } from "../utils/checkAddressOnCurve";
 import { unpackAccount, unpackMint } from "../utils/token2022";
-import { getSrsDomainAddress } from "./getSrsDomainAddress";
+import { getSolDomainAddress } from "./getSolDomainAddress";
 import { ResolveSolParams } from "./resolveTypes";
 
-const SRS_RECORD_DISCRIMINATOR = 2;
-const SRS_OWNER_TYPE_PUBKEY = 0;
-const SRS_OWNER_TYPE_TOKEN = 1;
-const SRS_ADDRESS_LENGTH = 32;
-const SRS_EXPIRY_LENGTH = 8;
-const SRS_RECORD_DISCRIMINATOR_OFFSET = 0;
-const SRS_RECORD_CLASS_OFFSET = SRS_RECORD_DISCRIMINATOR_OFFSET + 1;
-const SRS_RECORD_OWNER_TYPE_OFFSET =
-  SRS_RECORD_CLASS_OFFSET + SRS_ADDRESS_LENGTH;
-const SRS_RECORD_OWNER_OFFSET = SRS_RECORD_OWNER_TYPE_OFFSET + 1;
-const SRS_RECORD_FROZEN_OFFSET = SRS_RECORD_OWNER_OFFSET + SRS_ADDRESS_LENGTH;
-const SRS_RECORD_EXPIRY_OFFSET = SRS_RECORD_FROZEN_OFFSET + 1;
-const SRS_RECORD_HEADER_LENGTH = SRS_RECORD_EXPIRY_OFFSET + SRS_EXPIRY_LENGTH;
 const i64Decoder = getI64Decoder();
 
 const resolveSrsPubkeyOwner = async ({
@@ -162,7 +162,7 @@ export const resolveSol = async ({
   domain,
   options,
 }: ResolveSolParams): Promise<Address> => {
-  const { domainAddress } = await getSrsDomainAddress({ domain });
+  const { domainAddress } = await getSolDomainAddress({ domain });
   const account = await fetchEncodedAccount(rpc, domainAddress);
 
   if (!account.exists) {

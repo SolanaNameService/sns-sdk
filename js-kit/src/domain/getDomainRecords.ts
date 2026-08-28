@@ -1,7 +1,6 @@
 import {
   GetAccountInfoApi,
   GetMultipleAccountsApi,
-  GetSlotApi,
   GetTokenLargestAccountsApi,
   ReadonlyUint8Array,
   Rpc,
@@ -16,8 +15,8 @@ import {
 import { _verifyStalenessSync } from "../record/verifyRecordStaleness";
 import { RecordState } from "../states/record";
 import { Record } from "../types/record";
-import { assertTldSupported } from "../utils/assertTldSupported";
 import { deserializeRecordContent } from "../utils/deserializers/deserializeRecordContent";
+import { _parseSnsDomain } from "../utils/parseSnsDomain";
 import { _getSnsDomainOwner } from "./getSnsDomainOwner";
 
 /**
@@ -59,12 +58,9 @@ export interface GetDomainRecordsParams<
 > {
   /** RPC client. */
   rpc: Rpc<
-    GetAccountInfoApi &
-      GetMultipleAccountsApi &
-      GetTokenLargestAccountsApi &
-      GetSlotApi
+    GetAccountInfoApi & GetMultipleAccountsApi & GetTokenLargestAccountsApi
   >;
-  /** Full domain name. */
+  /** Full `.sns` domain name. */
   domain: string;
   /** Record types to retrieve. */
   records: [...T];
@@ -115,7 +111,7 @@ export interface GetDomainRecordsResult {
  *
  * @param params Record retrieval parameters
  * @param params.rpc RPC client implementing account, multiple-account, and token-largest-account APIs
- * @param params.domain Full domain name including a `.sns` or `.sol` suffix
+ * @param params.domain Full `.sns` domain name
  * @param params.records Record types to retrieve
  * @param params.options Optional record processing options
  * @returns Results aligned with `records`; missing V2 record accounts produce `undefined`
@@ -143,7 +139,7 @@ export async function getDomainRecords<
     );
   }
 
-  const [trimmedDomain] = await assertTldSupported({ rpc, domain });
+  const trimmedDomain = _parseSnsDomain(domain);
 
   const [domainOwner, states] = await Promise.all([
     _getSnsDomainOwner({ rpc, domain: trimmedDomain }),

@@ -5,3 +5,4 @@
 export * from "./addresses";
 export * from "./pythFeeds";
 export * from "./records";
+export * from "./srs";

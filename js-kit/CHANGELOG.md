@@ -1,3 +1,40 @@
+# JS Kit SDK v1.1.0
+
+## Changed
+
+### `.sol` resolution
+
+- `resolve` now resolves `.sol` domains through SRS.
+- Slot RPC requirements and legacy `.sol` routing have been removed.
+- `.sol` resolution can surface `DomainExpiredError`, `RecordMalformedError`, `CouldNotFindSrsOwnerError`, and `PdaOwnerNotAllowedError`.
+
+### Record APIs
+
+- `getDomainOwner`, `getDomainRecord`, `getDomainRecords`, `getSubdomains`, `verifyRecordStaleness`, and `verifyRecordRightOfAssociation` now parse canonical `.sns` names directly.
+- These APIs support canonical `.sns` top-level names and one-level subdomains where applicable.
+- `.sol` names are rejected with `UnsupportedTldError` before account RPCs.
+- Malformed domain names are rejected with `InvalidDomainError` before any account RPC request.
+
+### TLD utilities
+
+- `SUPPORTED_TLDS` now contains `.sns` only.
+- `getTld` and `parseSupportedTld` no longer treat `.sol` as a default supported TLD; `resolve` and `safeResolve` continue to support `.sol` through dedicated SRS routing.
+
+### SRS configuration
+
+- Updated the canonical SRS registrar, program, central-state, and `.sol` class addresses.
+- Public SRS owner-type and record-layout constants are available from the `constants` entrypoint.
+
+### `.sol` discovery and ownership
+
+- Added `getAllSolDomains({ rpc })`, which returns all `.sol` domains including expired or tokenized domains.
+- Added `getSolDomainsForAddress({ rpc, address })`, which returns non-expired, directly wallet-owned `.sol` domains.
+- Added `getSolNftsForAddress({ rpc, address })`, which returns non-expired tokenized `.sol` domains..
+- Added `getSolDomainAddress({ domain })` as the SRS derivation helper for TLD-trimmed `.sol` names.
+- `getSrsDomainAddress` remains as a deprecated compatibility alias for 1.1.x consumers.
+
+---
+
 # JS Kit SDK v1.0.0
 
 This is a breaking release of `@solana-name-service/sns-sdk-kit`.

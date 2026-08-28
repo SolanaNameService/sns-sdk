@@ -1,8 +1,6 @@
 import { Address } from "@solana/kit";
 
-import { SOL_SRS_RESOLUTION_ENABLED } from "../config";
 import { SnsSolResolutionMismatchError, UnsupportedTldError } from "../errors";
-import { assertTldSupported } from "../utils/assertTldSupported";
 import { SNS_TLD, SOL_TLD, parseSupportedTld } from "../utils/tld";
 import { resolveSns } from "./resolveSns";
 import { resolveSol } from "./resolveSol";
@@ -14,13 +12,12 @@ export type { ResolveOptions, ResolveParams } from "./resolveTypes";
  * Resolves a `.sns` or `.sol` domain to its target address.
  *
  * @param params Resolution parameters
- * @param params.rpc RPC client implementing account, multiple-account, token-largest-account, and slot APIs
+ * @param params.rpc RPC client implementing account, multiple-account, and token-largest-account APIs
  * @param params.domain Full domain name including a `.sns` or `.sol` suffix
  * @param params.options Optional PDA owner resolution options. Defaults to `{ allowPda: false }`
  * @returns The resolved target address.
  *
- * @see {@link safeResolve} for `.sol` resolution that verifies the SRS and
- * corresponding SNS targets match when SRS-backed resolution is enabled.
+ * @see {@link safeResolve} for `.sol` resolution that verifies the SRS and corresponding SNS targets match.
  *
  * @example
  * ```ts
@@ -35,12 +32,7 @@ export const resolve = async ({
   if (domain.endsWith(SOL_TLD)) {
     const trimmedSolDomain = domain.slice(0, -SOL_TLD.length);
 
-    if (SOL_SRS_RESOLUTION_ENABLED) {
-      return resolveSol({ rpc, domain: trimmedSolDomain, options });
-    }
-
-    await assertTldSupported({ rpc, domain });
-    return resolveSns({ rpc, domain: trimmedSolDomain, options });
+    return resolveSol({ rpc, domain: trimmedSolDomain, options });
   }
 
   const [trimmedDomain, tld] = parseSupportedTld(domain);
@@ -54,18 +46,18 @@ export const resolve = async ({
 /**
  * Resolves a `.sns` or `.sol` domain using the same routing as {@link resolve}.
  *
- * When SRS-backed `.sol` resolution is enabled, both the `.sol` domain and its
- * corresponding `.sns` domain must resolve to the same target; otherwise,
- * {@link Errors.SnsSolResolutionMismatchError} is thrown.
+ * For `.sol` input, both the SRS domain and its corresponding `.sns` domain
+ * must resolve to the same target; otherwise, {@link Errors.SnsSolResolutionMismatchError} is thrown.
  *
  * @param params Resolution parameters
- * @param params.rpc RPC client implementing account, multiple-account, token-largest-account, and slot APIs
+ * @param params.rpc RPC client implementing account, multiple-account, and token-largest-account APIs
  * @param params.domain Full domain name including a `.sns` or `.sol` suffix
  * @param params.options Optional PDA owner resolution options. Defaults to `{ allowPda: false }`
  * @returns The matching SRS and SNS target when compared; otherwise the target returned by {@link resolve}
  * @throws
  * - {@link Errors.SnsSolResolutionMismatchError} when SRS and SNS resolve a `.sol` domain to different addresses.
  * - Any resolution error propagated by {@link resolve}, `resolveSol`, or `resolveSns`.
+ *
  * @example
  * ```ts
  * const address = await safeResolve({ rpc, domain: "example.sol" });
@@ -76,7 +68,7 @@ export const safeResolve = async ({
   domain,
   options = { allowPda: false },
 }: ResolveParams): Promise<Address> => {
-  if (domain.endsWith(SOL_TLD) && SOL_SRS_RESOLUTION_ENABLED) {
+  if (domain.endsWith(SOL_TLD)) {
     const trimmedSolDomain = domain.slice(0, -SOL_TLD.length);
     const [srsTarget, snsTarget] = await Promise.all([
       resolveSol({ rpc, domain: trimmedSolDomain, options }),

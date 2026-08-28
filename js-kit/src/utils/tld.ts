@@ -1,4 +1,3 @@
-import { SOL_SRS_RESOLUTION_ENABLED } from "../config";
 import { UnsupportedTldError } from "../errors";
 
 /** The Solana Name Service top-level domain. */
@@ -8,11 +7,10 @@ export const SOL_TLD = ".sol";
 export const SNS_TLD = ".sns";
 
 /** A top-level domain supported by this SDK. */
-export type SupportedTld = typeof SNS_TLD | typeof SOL_TLD;
+export type SupportedTld = typeof SNS_TLD;
 
 /** TLD suffixes accepted by the domain parsing and resolution helpers. */
-export const SUPPORTED_TLDS: readonly SupportedTld[] =
-  SOL_SRS_RESOLUTION_ENABLED ? [SNS_TLD] : [SNS_TLD, SOL_TLD];
+export const SUPPORTED_TLDS: readonly SupportedTld[] = [SNS_TLD];
 
 /**
  * Returns the matching TLD from `supportedTlds` if `domain` ends with one,

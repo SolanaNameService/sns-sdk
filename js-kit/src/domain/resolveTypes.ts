@@ -2,7 +2,6 @@ import {
   Address,
   GetAccountInfoApi,
   GetMultipleAccountsApi,
-  GetSlotApi,
   GetTokenLargestAccountsApi,
   Rpc,
 } from "@solana/kit";
@@ -15,10 +14,7 @@ export type ResolveOptions =
 
 /** RPC client type for domain resolution. */
 export type ResolveRpc = Rpc<
-  GetAccountInfoApi &
-    GetMultipleAccountsApi &
-    GetTokenLargestAccountsApi &
-    GetSlotApi
+  GetAccountInfoApi & GetMultipleAccountsApi & GetTokenLargestAccountsApi
 >;
 
 /**

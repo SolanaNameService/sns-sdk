@@ -1,42 +1,21 @@
-import { Address, getProgramDerivedAddress } from "@solana/kit";
+import { getSolDomainAddress } from "./getSolDomainAddress";
+import type {
+  GetSolDomainAddressParams,
+  GetSolDomainAddressResult,
+} from "./getSolDomainAddress";
 
-import { addressCodec, utf8Codec } from "../codecs";
-import { SRS_HASH_PREFIX, SRS_PROGRAM_ADDRESS } from "../config";
-import { SOL_SRS_CLASS } from "../constants/addresses";
+/** @deprecated Use `GetSolDomainAddressParams` instead. */
+export type GetSrsDomainAddressParams = GetSolDomainAddressParams;
 
-/**
- * Parameters for deriving an SRS domain address.
- *
- * @example
- * ```ts
- * const params: GetSrsDomainAddressParams = { domain: "example" };
- * ```
- */
-export interface GetSrsDomainAddressParams {
-  /** TLD-less `.sol` domain name. */
-  domain: string;
-}
-
-/**
- * A derived SRS domain address.
- *
- * @example
- * ```ts
- * const derived: GetSrsDomainAddressResult = { domainAddress, hashed };
- * ```
- */
-export interface GetSrsDomainAddressResult {
-  /** Derived SRS record address. */
-  domainAddress: Address;
-  /** SHA-256 hash of the canonical name. */
-  hashed: Uint8Array;
-}
+/** @deprecated Use `GetSolDomainAddressResult` instead. */
+export type GetSrsDomainAddressResult = GetSolDomainAddressResult;
 
 /**
  * Derives the canonical SRS record address for a TLD-trimmed `.sol` name.
  *
+ * @deprecated Use {@link getSolDomainAddress} instead.
  * @param params Derivation parameters
- * @param params.domain TLD-trimmed `.sol` name
+ * @param params.domain TLD-trimmed `.sol` domain name
  * @returns The SRS record address and canonical name hash.
  *
  * @example
@@ -44,23 +23,4 @@ export interface GetSrsDomainAddressResult {
  * const derived = await getSrsDomainAddress({ domain: "example" });
  * ```
  */
-export const getSrsDomainAddress = async ({
-  domain,
-}: GetSrsDomainAddressParams): Promise<GetSrsDomainAddressResult> => {
-  const hashed = new Uint8Array(
-    await crypto.subtle.digest(
-      "SHA-256",
-      utf8Codec.encode(SRS_HASH_PREFIX + domain)
-    )
-  );
-  const [domainAddress] = await getProgramDerivedAddress({
-    programAddress: SRS_PROGRAM_ADDRESS,
-    seeds: [
-      utf8Codec.encode("record"),
-      addressCodec.encode(SOL_SRS_CLASS),
-      hashed,
-    ],
-  });
-
-  return { domainAddress, hashed };
-};
+export const getSrsDomainAddress = getSolDomainAddress;

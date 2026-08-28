@@ -83,30 +83,25 @@ console.log(domains);
 
 Use the form required by each API rather than normalizing names yourself:
 
-| API family                                                                                                     | Required input                                             | Scope                                                                                        |
-| -------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| High-level reads such as `resolve`, `safeResolve`, `getDomainOwner`, `getDomainRecord`, and `getDomainRecords` | Full suffixed name, for example `mydomain.sns`             | `.sns`; legacy `.sol` reads have the transition rule below                                   |
-| Subdomain reads such as `getSubdomains`                                                                        | Full suffixed top-level name, for example `mydomain.sns`   | `.sns`                                                                                       |
-| Top-level writes such as registration, transfer, and burn                                                      | Canonical lowercase `mydomain.sns`                         | Exactly one label before `.sns`                                                              |
-| Record writes                                                                                                  | Canonical lowercase `mydomain.sns` or `sub.mydomain.sns`   | Top-level domain or one-level subdomain                                                      |
-| Subdomain creation and transfer                                                                                | Canonical lowercase `sub.mydomain.sns`                     | Exactly one subdomain level                                                                  |
-| SNS derivation and record-address helpers                                                                      | TLD-trimmed name, for example `mydomain` or `sub.mydomain` | Pass to `getSnsDomainAddress`; it derives domain, subdomain, and record addresses            |
-| SRS derivation                                                                                                 | TLD-trimmed `.sol` label, for example `mydomain`           | Pass to `getSrsDomainAddress` only when an SRS address is specifically needed                |
-| Raw registry helpers                                                                                           | Raw labels and explicit parent/class addresses             | Use the advanced name-registry helpers when the higher-level `.sns` conventions do not apply |
-
-High-level `.sol` reads use the legacy SNS-backed path only before finalized slot `452,825,395`. At and after that slot, `.sol` is rejected. `.sol` writes are not supported.
+| API family                                                | Required input                                                     | Scope                                                  |
+| --------------------------------------------------------- | ------------------------------------------------------------------ | ------------------------------------------------------ |
+| Domain resolution with `resolve` and `safeResolve`        | Full suffixed name, for example `mydomain.sns` or `mydomain.sol`   | `.sns` and `.sol` domains                              |
+| Top-level writes such as registration, transfer, and burn | Canonical lowercase `mydomain.sns`                                 | Top-level domains only; subdomains are not accepted    |
+| Record reads and writes                                   | Canonical lowercase `mydomain.sns` or `sub.mydomain.sns`           | Top-level domain or one-level subdomain                |
+| Subdomain creation and transfer                           | Canonical lowercase `sub.mydomain.sns`                             | One-level subdomain                                    |
+| Derivation and raw name-account helpers                   | TLD-trimmed or raw input, for example `mydomain` or `sub.mydomain` | Follow each low-level helper's account-format contract |
 
 ## API Reference
 
 ### Resolution
 
-- **`resolve`** — resolves a full `.sns` domain, or a legacy `.sol` domain while the transition path remains available, to its effective owner.
+- **`resolve`** — resolves a full `.sns` domain through SNS-IP 5 or a full `.sol` domain through its canonical SRS record.
 
   ```ts
   resolve({ rpc, domain, options? }): Promise<Address>
   ```
 
-- **`safeResolve`** — follows the same routing as `resolve`, except that when SRS-backed `.sol` resolution is enabled, it requires the `.sol` domain and its corresponding `.sns` domain to resolve to the same target; otherwise, it throws `SnsSolResolutionMismatchError`.
+- **`safeResolve`** — follows `resolve`, and for `.sol` input always requires the SRS and corresponding SNS targets to match; otherwise, it throws `SnsSolResolutionMismatchError`.
 
   ```ts
   safeResolve({ rpc, domain, options? }): Promise<Address>
@@ -268,6 +263,12 @@ Registration is limited to a lowercase top-level `.sns` name. Return shapes diff
   getAllSnsDomains({ rpc }): Promise<{ domainAddress: Address; owner: Address }[]>
   ```
 
+- **`getAllSolDomains`** — lists all top-level SRS records, including expired records. The returned `owner` is the raw SRS owner field and may be a wallet address or Token-2022 mint.
+
+  ```ts
+  getAllSolDomains({ rpc }): Promise<{ domainAddress: Address; owner: Address }[]>
+  ```
+
 - **`getPrimaryDomain`** — returns a primary-domain account, its TLD-less name, and whether the wallet is no longer its effective owner.
 
   ```ts
@@ -292,6 +293,18 @@ Registration is limited to a lowercase top-level `.sns` name. Return shapes diff
   getSnsNftsForAddress({ rpc, address }): Promise<{ domain: string; domainAddress: Address; mint: Address }[]>
   ```
 
+- **`getSolDomainsForAddress`** — returns non-expired, directly wallet-owned `.sol` records. Tokenized records are excluded and returned names are TLD-trimmed.
+
+  ```ts
+  getSolDomainsForAddress({ rpc, address }): Promise<{ domain: string; domainAddress: Address }[]>
+  ```
+
+- **`getSolNftsForAddress`** — returns non-expired Token-2022 tokenized `.sol` records held by an address. Results include the TLD-trimmed name, SRS record address, and mint.
+
+  ```ts
+  getSolNftsForAddress({ rpc, address }): Promise<{ domain: string; domainAddress: Address; mint: Address }[]>
+  ```
+
 - **`reverseLookup`** — returns one TLD-less reverse name for a domain address.
 
   ```ts
@@ -306,7 +319,7 @@ Registration is limited to a lowercase top-level `.sns` name. Return shapes diff
 
 ### Advanced APIs
 
-For account-level integrations, the root export also includes derivation and raw name-registry helpers such as `getSnsDomainAddress`, `getSrsDomainAddress`, `getReverseAddress`, `getReverseAddressFromDomainAddress`, `checkAddressOnCurve`, `deserializeReverse`, `getPythFeedAddress`, `getTld`, `createNameRegistry`, `updateNameRegistry`, `deleteNameRegistry`, and `createReverse`.
+For account-level integrations, the root export also includes derivation and raw name-registry helpers such as `getSnsDomainAddress`, `getSolDomainAddress`, `getReverseAddress`, `getReverseAddressFromDomainAddress`, `checkAddressOnCurve`, `deserializeReverse`, `getPythFeedAddress`, `getTld`, `createNameRegistry`, `updateNameRegistry`, `deleteNameRegistry`, and `createReverse`.
 
 NFT helpers and state classes include `getSnsNftMint`, `getSnsNftOwner`, `RegistryState`, `RecordState`, `NftState`, and `PrimaryDomainState`. Low-level instruction classes are also exported; use the `@solana-name-service/sns-sdk-kit/instructions` export for custom transaction composition rather than treating those constructors as an onboarding API.
 

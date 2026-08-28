@@ -1,9 +1,19 @@
 import { resolve, safeResolve } from "@solana-name-service/sns-sdk-kit";
-import { getPrimaryDomain } from "@solana-name-service/sns-sdk-kit/address";
+import {
+  getPrimaryDomain,
+  getSolDomainsForAddress,
+  getSolNftsForAddress,
+} from "@solana-name-service/sns-sdk-kit/address";
 import { registerDomain } from "@solana-name-service/sns-sdk-kit/bindings";
 import { addressCodec } from "@solana-name-service/sns-sdk-kit/codecs";
-import { NAME_PROGRAM_ADDRESS } from "@solana-name-service/sns-sdk-kit/constants";
 import {
+  NAME_PROGRAM_ADDRESS,
+  SRS_PROGRAM_ADDRESS,
+} from "@solana-name-service/sns-sdk-kit/constants";
+import {
+  getAllSolDomains,
+  getSolDomainAddress,
+  getSrsDomainAddress,
   resolve as resolveDomain,
   safeResolve as safeResolveDomain,
 } from "@solana-name-service/sns-sdk-kit/domain";
@@ -19,11 +29,17 @@ void [
   resolve,
   safeResolve,
   getPrimaryDomain,
+  getSolDomainsForAddress,
+  getSolNftsForAddress,
   registerDomain,
   addressCodec,
   NAME_PROGRAM_ADDRESS,
+  SRS_PROGRAM_ADDRESS,
   resolveDomain,
   safeResolveDomain,
+  getAllSolDomains,
+  getSolDomainAddress,
+  getSrsDomainAddress,
   SNSError,
   TransferInstruction,
   getSnsNftMint,

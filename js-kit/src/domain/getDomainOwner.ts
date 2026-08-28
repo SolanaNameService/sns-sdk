@@ -1,11 +1,10 @@
 import {
   GetAccountInfoApi,
-  GetSlotApi,
   GetTokenLargestAccountsApi,
   Rpc,
 } from "@solana/kit";
 
-import { assertTldSupported } from "../utils/assertTldSupported";
+import { _parseSnsDomain } from "../utils/parseSnsDomain";
 import { _getSnsDomainOwner } from "./getSnsDomainOwner";
 
 /**
@@ -18,8 +17,8 @@ import { _getSnsDomainOwner } from "./getSnsDomainOwner";
  */
 export interface GetDomainOwnerParams {
   /** RPC client. */
-  rpc: Rpc<GetAccountInfoApi & GetTokenLargestAccountsApi & GetSlotApi>;
-  /** Full domain name. */
+  rpc: Rpc<GetAccountInfoApi & GetTokenLargestAccountsApi>;
+  /** Full `.sns` domain name. */
   domain: string;
 }
 
@@ -29,7 +28,7 @@ export interface GetDomainOwnerParams {
  *
  * @param params Domain owner retrieval parameters
  * @param params.rpc RPC client implementing account and token-largest-account APIs
- * @param params.domain Full domain name including a `.sns` or `.sol` suffix
+ * @param params.domain Full `.sns` domain name
  * @returns The domain owner address.
  *
  * @example
@@ -38,6 +37,6 @@ export interface GetDomainOwnerParams {
  * ```
  */
 export const getDomainOwner = async ({ rpc, domain }: GetDomainOwnerParams) => {
-  const [trimmedDomain] = await assertTldSupported({ rpc, domain });
+  const trimmedDomain = _parseSnsDomain(domain);
   return _getSnsDomainOwner({ rpc, domain: trimmedDomain });
 };

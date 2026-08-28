@@ -14,8 +14,7 @@ interface GetSnsDomainOwnerParams {
 }
 
 /**
- * Resolves the owner of a TLD-trimmed SNS domain without applying public
- * TLD-support or legacy `.sol` cutoff policy.
+ * Resolves the owner of a TLD-trimmed `.sns` domain.
  *
  * This internal helper is intended for public read methods that have already
  * validated and trimmed the full domain name.

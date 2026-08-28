@@ -50,8 +50,7 @@ export const _parseSnsSubdomain = (subdomain: string): [string, string] => {
 };
 
 /**
- * Parses a writable `.sns` domain and allows either `name.sns` or
- * `sub.parent.sns`.
+ * Parses a top-level `.sns` domain or one-level subdomain.
  *
  * @param domain Full lowercase `.sns` domain or subdomain name
  * @returns Domain name without the `.sns` suffix.

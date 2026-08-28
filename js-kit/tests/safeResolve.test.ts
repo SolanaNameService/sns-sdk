@@ -6,10 +6,6 @@ import { resolveSns } from "../src/domain/resolveSns";
 import { resolveSol } from "../src/domain/resolveSol";
 import { ErrorType, SnsSolResolutionMismatchError } from "../src/errors";
 
-jest.mock("../src/config", () => ({
-  ...jest.requireActual<typeof import("../src/config")>("../src/config"),
-  SOL_SRS_RESOLUTION_ENABLED: true,
-}));
 jest.mock("../src/domain/resolveSns", () => ({ resolveSns: jest.fn() }));
 jest.mock("../src/domain/resolveSol", () => ({ resolveSol: jest.fn() }));
 

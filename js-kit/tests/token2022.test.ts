@@ -9,7 +9,15 @@ import {
 } from "@solana-program/token";
 import { Address } from "@solana/kit";
 
-import { unpackAccount, unpackMint } from "../src/utils/token2022";
+import { addressCodec } from "../src/codecs";
+import { getMetadataSerializer } from "../src/srs/metadata";
+import {
+  getToken2022MintExtension,
+  getTokenGroupMember,
+  getTokenMetadataExtension,
+  unpackAccount,
+  unpackMint,
+} from "../src/utils/token2022";
 
 const mint = "ALd1XSrQMCPSRayYUoUZnp6KcP6gERfJhWzkP49CkXKs" as Address;
 const owner = "namesLPneVptA9Z5rqUDD9tMTWEJwofgaYwp8JmZKpU" as Address;
@@ -56,7 +64,71 @@ const withExtensionEnvelope = (
   return data;
 };
 
+const encodeString = (value: string) => {
+  const bytes = new TextEncoder().encode(value);
+  const result = new Uint8Array(4 + bytes.length);
+  new DataView(result.buffer).setUint32(0, bytes.length, true);
+  result.set(bytes, 4);
+  return result;
+};
+
+const concat = (...parts: Uint8Array[]) => {
+  const result = new Uint8Array(
+    parts.reduce((length, part) => length + part.length, 0)
+  );
+  let offset = 0;
+  for (const part of parts) {
+    result.set(part, offset);
+    offset += part.length;
+  }
+  return result;
+};
+
+const withMintExtensions = (
+  extensions: { type: number; data: Uint8Array }[]
+) => {
+  const length =
+    getTokenSize() +
+    1 +
+    extensions.reduce(
+      (total, extension) => total + 4 + extension.data.length,
+      0
+    );
+  const result = new Uint8Array(length);
+  result.set(createMintData(), 0);
+  result[getTokenSize()] = TOKEN_2022_MINT_ACCOUNT_TYPE;
+
+  let offset = getTokenSize() + 1;
+  for (const extension of extensions) {
+    result[offset] = extension.type;
+    result[offset + 1] = extension.type >> 8;
+    result[offset + 2] = extension.data.length;
+    result[offset + 3] = extension.data.length >> 8;
+    result.set(extension.data, offset + 4);
+    offset += 4 + extension.data.length;
+  }
+  return result;
+};
+
+const createMetadataExtension = () =>
+  concat(
+    new Uint8Array(addressCodec.encode(owner)),
+    new Uint8Array(addressCodec.encode(mint)),
+    encodeString("sns-ip-5-wallet-1"),
+    encodeString("SRS"),
+    encodeString("https://example.com/metadata.json"),
+    new Uint8Array([0, 0, 0, 0])
+  );
+
+const createGroupMemberExtension = () =>
+  concat(
+    new Uint8Array(addressCodec.encode(mint)),
+    new Uint8Array(addressCodec.encode(owner)),
+    new Uint8Array(8)
+  );
+
 describe("Token-2022 unpacking", () => {
+  const metadataSerializer = getMetadataSerializer();
   describe("unpackMint", () => {
     test.each([
       { name: "base", data: createMintData() },
@@ -156,6 +228,39 @@ describe("Token-2022 unpacking", () => {
       { name: "malformed base fields", data: malformedBase },
     ])("rejects $name", ({ data }) => {
       expect(() => unpackAccount(data)).toThrow();
+    });
+  });
+
+  describe("SRS discovery extensions", () => {
+    test("decodes Token Group Member and Token Metadata extensions", () => {
+      const data = withMintExtensions([
+        { type: 23, data: createGroupMemberExtension() },
+        { type: 19, data: createMetadataExtension() },
+      ]);
+
+      expect(getTokenGroupMember(data)).toEqual({
+        mint,
+        group: owner,
+      });
+      expect(getTokenMetadataExtension(data)).toBeDefined();
+      const [metadata] = metadataSerializer.deserialize(
+        getTokenMetadataExtension(data)!.subarray(64)
+      );
+      expect(metadata).toEqual({
+        name: "sns-ip-5-wallet-1",
+        symbol: "SRS",
+        uri: "https://example.com/metadata.json",
+        additionalMetadata: [],
+      });
+    });
+
+    test("rejects truncated Token-2022 extension data", () => {
+      const data = new Uint8Array(getTokenSize() + 1 + 4);
+      data[getTokenSize()] = TOKEN_2022_MINT_ACCOUNT_TYPE;
+      data[getTokenSize() + 1] = 19;
+      data[getTokenSize() + 3] = 16;
+
+      expect(() => getToken2022MintExtension(data, 19)).toThrow();
     });
   });
 });

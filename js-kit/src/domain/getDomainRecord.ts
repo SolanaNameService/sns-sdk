@@ -1,7 +1,6 @@
 import {
   GetAccountInfoApi,
   GetMultipleAccountsApi,
-  GetSlotApi,
   GetTokenLargestAccountsApi,
   ReadonlyUint8Array,
   Rpc,
@@ -15,8 +14,8 @@ import {
 import { _verifyStalenessSync } from "../record/verifyRecordStaleness";
 import { RecordState } from "../states/record";
 import { Record } from "../types/record";
-import { assertTldSupported } from "../utils/assertTldSupported";
 import { deserializeRecordContent } from "../utils/deserializers/deserializeRecordContent";
+import { _parseSnsDomain } from "../utils/parseSnsDomain";
 import { _getSnsDomainOwner } from "./getSnsDomainOwner";
 
 /**
@@ -49,12 +48,9 @@ export interface GetDomainRecordOptions {
 export interface GetDomainRecordParams {
   /** RPC client. */
   rpc: Rpc<
-    GetAccountInfoApi &
-      GetMultipleAccountsApi &
-      GetTokenLargestAccountsApi &
-      GetSlotApi
+    GetAccountInfoApi & GetMultipleAccountsApi & GetTokenLargestAccountsApi
   >;
-  /** Full domain name. */
+  /** Full `.sns` domain name. */
   domain: string;
   /** Record type to retrieve. */
   record: Record;
@@ -105,7 +101,7 @@ export interface GetDomainRecordResult {
  *
  * @param params Record retrieval parameters
  * @param params.rpc RPC client implementing account, multiple-account, and token-largest-account APIs
- * @param params.domain Full domain name including a `.sns` or `.sol` suffix
+ * @param params.domain Full `.sns` domain name
  * @param params.record Record type to retrieve
  * @param params.options Optional record processing options
  * @returns The V2 record state, its verification result, and optional decoded content
@@ -121,7 +117,7 @@ export async function getDomainRecord({
   record,
   options = {},
 }: GetDomainRecordParams): Promise<GetDomainRecordResult> {
-  const [trimmedDomain] = await assertTldSupported({ rpc, domain });
+  const trimmedDomain = _parseSnsDomain(domain);
   const [domainOwner, state] = await Promise.all([
     _getSnsDomainOwner({ rpc, domain: trimmedDomain }),
     getRecordV2Address({ domain: trimmedDomain, record }).then((address) =>

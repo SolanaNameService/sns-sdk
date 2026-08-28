@@ -52,37 +52,14 @@ export const RECORDS_PROGRAM_ADDRESS =
   "HP3D4D1ZCmohQGFVms2SS4LCANgJyksBf5s1F77FuFjZ" as Address;
 
 /**
- * The SPL Token-2022 program address.
- */
-export const TOKEN_2022_PROGRAM_ADDRESS =
-  "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb" as Address;
-
-/**
- * The Solana Registration Service registrar central state PDA.
- *
- * This address is derived from the `central_state` seed and must be recomputed
- * if `SOL_REGISTRAR_PROGRAM_ADDRESS` is updated.
- */
-export const SRS_CENTRAL_STATE =
-  "8K9XmpN6nKy3ERnMovnoj5cbqWKPiGYN8hCRRyW4TLQV" as Address;
-
-/**
- * The Solana Registration Service class PDA for `.sol` records.
- *
- * This address is derived from `SRS_CENTRAL_STATE`, `.sol`, and
- * `SRS_PROGRAM_ADDRESS`. It must be recomputed if either
- * `SOL_REGISTRAR_PROGRAM_ADDRESS` or `SRS_PROGRAM_ADDRESS` is updated.
- */
-export const SOL_SRS_CLASS =
-  "AjheAtCgSwEcEYd6xi6thcQW25ELWd7wKCx6SKBGUtMQ" as Address;
-
-/**
  * The reverse lookup class address.
  */
 export const REVERSE_LOOKUP_CLASS =
   "33m47vH6Eav6jr5Ry86XjhRft2jRBLDnDgPSHoquXi2Z" as Address;
 
-/** Legacy alias for the reverse-lookup class address. */
+/**
+ * Legacy alias for the reverse-lookup class address.
+ */
 export const CENTRAL_STATE = REVERSE_LOOKUP_CLASS;
 
 /**
@@ -102,6 +79,36 @@ export const TWITTER_VERIFICATION_AUTHORITY =
  */
 export const TWITTER_ROOT_PARENT_REGISTRY_ADDRESS =
   "4YcexoW3r78zz16J2aqmukBLRwGq6rAvWzJpkYAXqebv" as Address;
+
+/**
+ * The Solana Record Service (SRS) program address
+ */
+export const SRS_PROGRAM_ADDRESS =
+  "srsWjm76StJucL7atFyPSdXFaVLNPFqEt1uFEDPrZsn" as Address;
+
+/**
+ * The SRS class for `.sol` domains
+ */
+export const SOL_SRS_CLASS =
+  "Dqc9TrYg1AZLEa6UkZUqCDrr9zsHQveo1szGTE1BTW5" as Address;
+
+/**
+ * The SRS-backed.sol registry program address.
+ */
+export const SOL_REGISTRAR_PROGRAM_ADDRESS =
+  "soL7856gZrjQMSJMT33YDpfAuRYbetAbkZPuv7YeLht" as Address;
+
+/**
+ * The SRS-backed.sol registry central state
+ */
+export const SRS_CENTRAL_STATE =
+  "EoLdmhHPRZ4xkYj4MetaAR8LjALmqGQEMsKQnFJx6ihE" as Address;
+
+/**
+ * The SPL Token-2022 program address.
+ */
+export const TOKEN_2022_PROGRAM_ADDRESS =
+  "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb" as Address;
 
 /** Owner address of the SNS registration vault. */
 export const VAULT_OWNER =

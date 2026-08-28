@@ -9,7 +9,6 @@ import {
   Address,
   GetAccountInfoApi,
   GetMultipleAccountsApi,
-  GetSlotApi,
   GetTokenLargestAccountsApi,
   Rpc,
   fetchEncodedAccount,
@@ -19,12 +18,12 @@ import {
 } from "@solana/kit";
 
 import { addressCodec, utf8Codec } from "../src/codecs";
-import { SRS_PROGRAM_ADDRESS } from "../src/config";
 import {
   SOL_SRS_CLASS,
+  SRS_PROGRAM_ADDRESS,
   TOKEN_2022_PROGRAM_ADDRESS,
 } from "../src/constants/addresses";
-import { getSrsDomainAddress } from "../src/domain/getSrsDomainAddress";
+import { getSolDomainAddress } from "../src/domain/getSolDomainAddress";
 import { resolve } from "../src/domain/resolve";
 import {
   CouldNotFindSrsOwnerError,
@@ -35,11 +34,6 @@ import {
   UnsupportedTldError,
 } from "../src/errors";
 
-jest.mock("../src/config", () => ({
-  ...jest.requireActual<typeof import("../src/config")>("../src/config"),
-  SOL_SRS_RESOLUTION_ENABLED: true,
-}));
-
 jest.mock("@solana/kit", () => ({
   ...jest.requireActual<typeof import("@solana/kit")>("@solana/kit"),
   fetchEncodedAccount: jest.fn(),
@@ -48,7 +42,6 @@ jest.mock("@solana/kit", () => ({
 type TestRpc = Rpc<
   GetAccountInfoApi &
     GetMultipleAccountsApi &
-    GetSlotApi &
     GetTokenLargestAccountsApi
 >;
 
@@ -93,9 +86,6 @@ const createRpc = ({
     getAccountInfo: jest.fn(),
     getMultipleAccounts: jest.fn(() => {
       throw new Error("SRS resolution must not use legacy SNS");
-    }),
-    getSlot: jest.fn(() => {
-      throw new Error("SRS resolution must not request a slot");
     }),
     getTokenLargestAccounts: jest.fn(() => {
       if (!largestAccounts) {
@@ -220,7 +210,7 @@ const createTokenAccountData = ({
 };
 
 const getCanonicalTokenizedRecord = async (domain: string) => {
-  const { domainAddress } = await getSrsDomainAddress({ domain });
+  const { domainAddress } = await getSolDomainAddress({ domain });
   const [mint] = await getProgramDerivedAddress({
     programAddress: SRS_PROGRAM_ADDRESS,
     seeds: [utf8Codec.encode("mint"), addressCodec.encode(domainAddress)],
@@ -234,26 +224,24 @@ describe("SRS .sol resolution", () => {
     fetchEncodedAccountMock.mockReset();
   });
 
-  test("returns a direct owner without slot, SNS, or token RPCs", async () => {
+  test("returns a direct owner without SNS or token RPCs", async () => {
     const rpc = createRpc();
     fetchEncodedAccountMock.mockResolvedValue(
       existingAccount(await createSrsRecord())
     );
 
     await expect(resolve({ rpc, domain: "domain.sol" })).resolves.toBe(owner);
-    expect(rpc.getSlot).not.toHaveBeenCalled();
     expect(rpc.getMultipleAccounts).not.toHaveBeenCalled();
     expect(rpc.getTokenLargestAccounts).not.toHaveBeenCalled();
     expect(fetchEncodedAccountMock).toHaveBeenCalledTimes(1);
   });
 
-  test("routes .sns through SNS without requesting a slot", async () => {
+  test("routes .sns through SNS", async () => {
     const rpc = createRpc();
 
     await expect(resolve({ rpc, domain: "domain.sns" })).rejects.toThrow(
       "SRS resolution must not use legacy SNS"
     );
-    expect(rpc.getSlot).not.toHaveBeenCalled();
     expect(rpc.getMultipleAccounts).toHaveBeenCalledTimes(1);
     expect(fetchEncodedAccountMock).not.toHaveBeenCalled();
   });
@@ -264,14 +252,13 @@ describe("SRS .sol resolution", () => {
     await expect(resolve({ rpc, domain: "domain.xyz" })).rejects.toThrow(
       UnsupportedTldError
     );
-    expect(rpc.getSlot).not.toHaveBeenCalled();
     expect(rpc.getMultipleAccounts).not.toHaveBeenCalled();
     expect(fetchEncodedAccountMock).not.toHaveBeenCalled();
   });
 
   test("throws when the canonical record does not exist", async () => {
     const rpc = createRpc();
-    const { domainAddress } = await getSrsDomainAddress({ domain: "missing" });
+    const { domainAddress } = await getSolDomainAddress({ domain: "missing" });
     fetchEncodedAccountMock.mockResolvedValue({
       exists: false,
       address: domainAddress,
@@ -653,7 +640,7 @@ describe("SRS .sol resolution", () => {
       programAddress: SRS_PROGRAM_ADDRESS,
       seeds: [utf8Codec.encode("owner")],
     });
-    const { domainAddress } = await getSrsDomainAddress({ domain: "domain" });
+    const { domainAddress } = await getSolDomainAddress({ domain: "domain" });
     const record = existingAccount(
       await createSrsRecord({ recordOwner: pda }),
       SRS_PROGRAM_ADDRESS,

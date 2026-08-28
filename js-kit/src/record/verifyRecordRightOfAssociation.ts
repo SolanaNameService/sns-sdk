@@ -1,6 +1,5 @@
 import {
   GetAccountInfoApi,
-  GetSlotApi,
   GetTokenLargestAccountsApi,
   ReadonlyUint8Array,
   Rpc,
@@ -17,7 +16,7 @@ import { getRecordV2Address } from "../record/getRecordV2Address";
 import { RecordState } from "../states/record";
 import { Record } from "../types/record";
 import { Validation } from "../types/validation";
-import { assertTldSupported } from "../utils/assertTldSupported";
+import { _parseSnsDomain } from "../utils/parseSnsDomain";
 import { uint8ArraysEqual } from "../utils/uint8Array/uint8ArraysEqual";
 
 /**
@@ -93,7 +92,7 @@ export const _verifyRoaSync = ({
  * Verifies a record's Right of Association validation.
  *
  * @param rpc RPC client implementing account and token-largest-account APIs
- * @param domain Full domain name including a `.sns` or `.sol` suffix
+ * @param domain Full `.sns` domain name
  * @param record Record type to verify
  * @param verifier Optional verifier for the record. If omitted, a default verifier is derived
  * @returns True if the association is valid, false otherwise.
@@ -105,12 +104,12 @@ export const _verifyRoaSync = ({
  * ```
  */
 export const verifyRecordRightOfAssociation = async (
-  rpc: Rpc<GetAccountInfoApi & GetTokenLargestAccountsApi & GetSlotApi>,
+  rpc: Rpc<GetAccountInfoApi & GetTokenLargestAccountsApi>,
   domain: string,
   record: Record,
   verifier?: ReadonlyUint8Array
 ) => {
-  const [trimmedDomain] = await assertTldSupported({ rpc, domain });
+  const trimmedDomain = _parseSnsDomain(domain);
   const address = await getRecordV2Address({
     domain: trimmedDomain,
     record,

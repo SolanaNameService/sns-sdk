@@ -4,13 +4,15 @@ import { getProgramDerivedAddress } from "@solana/kit";
 import { addressCodec, utf8Codec } from "../src/codecs";
 import {
   SOL_REGISTRAR_PROGRAM_ADDRESS,
+  SOL_SRS_CLASS,
+  SRS_CENTRAL_STATE,
   SRS_PROGRAM_ADDRESS,
-} from "../src/config";
-import { SOL_SRS_CLASS, SRS_CENTRAL_STATE } from "../src/constants/addresses";
+} from "../src/constants";
+import { getSolDomainAddress } from "../src/domain/getSolDomainAddress";
 import { getSrsDomainAddress } from "../src/domain/getSrsDomainAddress";
 import { uint8ArrayToHex } from "../src/utils/uint8Array/uint8ArrayToHex";
 
-describe("getSrsDomainAddress", () => {
+describe("getSolDomainAddress", () => {
   test("precomputed SRS addresses match their canonical derivation", async () => {
     const [centralState] = await getProgramDerivedAddress({
       programAddress: SOL_REGISTRAR_PROGRAM_ADDRESS,
@@ -31,19 +33,27 @@ describe("getSrsDomainAddress", () => {
 
   test.each([
     {
-      domain: "example",
-      domainAddress: "BtnBwXquD42ehaVbfJQdmoFeB6kS3aooPzhfQmH4FM2N",
-      hash: "5b96a5f79408e4401cdc30fb60f37cffecabc23b16d26b80169e6fb8a0df02dc",
+      domain: "sns-ip-5-wallet-1",
+      domainAddress: "5aJnvSs3K5J1eFS1cemYHWnUeWp3QjKThWh5mWbGBgkt",
+      hash: "39e1e7284dc5893c35d365931178414c9b64017e5db929e5e318607317972304",
     },
     {
-      domain: "sub.example",
-      domainAddress: "9KM3Le7YRzJY3sn6gk7RsBZsEsViTRc4wb8boszLEuk7",
-      hash: "87f20401c8a32a2417a22e2b29ccbe2a8fa8cbd2686a073b40bd27b55b740c6b",
+      domain: "sns-ip-5-wallet-2",
+      domainAddress: "2gN2aGXi9kRnkXewWsshKTUWairEvMapA3z1EaqFqwMd",
+      hash: "e6e08c1d6c566f1795c0aa927b485fc091e888a5d7493892f27887e2fef881c6",
     },
   ])("derives $domain", async ({ domain, domainAddress, hash }) => {
-    const result = await getSrsDomainAddress({ domain });
+    const result = await getSolDomainAddress({ domain });
 
     expect(result.domainAddress).toBe(domainAddress);
     expect(uint8ArrayToHex(result.hashed)).toBe(hash);
+  });
+
+  test("keeps the previous derivation name as a compatibility alias", async () => {
+    await expect(
+      getSrsDomainAddress({ domain: "sns-ip-5-wallet-1" })
+    ).resolves.toEqual(
+      await getSolDomainAddress({ domain: "sns-ip-5-wallet-1" })
+    );
   });
 });
