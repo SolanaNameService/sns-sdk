@@ -1,19 +1,19 @@
 import { expect, test } from "@jest/globals";
-import { getSnsDomainKeySync } from "../../src/utils/getSnsDomainKeySync";
+import { getSolDomainKeySync } from "../../src/utils/getSolDomainKeySync";
 
 const items = [
   {
-    domain: "bonfida",
-    address: "Crf8hzfthWGbGbLTVCiqRqV5MVnbpHB1L9KQMd6gsinb",
+    domain: "sns-ip-5-wallet-1",
+    address: "5aJnvSs3K5J1eFS1cemYHWnUeWp3QjKThWh5mWbGBgkt",
   },
   {
-    domain: "dex.bonfida",
-    address: "HoFfFXqFHAC8RP3duuQNzag1ieUwJRBv1HtRNiWFq4Qu",
+    domain: "sns-ip-5-wallet-2",
+    address: "2gN2aGXi9kRnkXewWsshKTUWairEvMapA3z1EaqFqwMd",
   },
 ];
 
 test("Derivation", () => {
   items.forEach((e) =>
-    expect(getSnsDomainKeySync(e.domain).pubkey.toBase58()).toBe(e.address),
+    expect(getSolDomainKeySync(e.domain).pubkey.toBase58()).toBe(e.address),
   );
 });

@@ -64,13 +64,25 @@ console.log(`${primaryDomain.reverse}.sns`, primaryDomain.stale);
 
 ```ts
 import { Connection, PublicKey } from "@solana/web3.js";
-import { getSnsDomainsForOwner } from "@bonfida/spl-name-service/address";
+import {
+  getSnsDomainsForOwner,
+  getSnsNftsForOwner,
+  getSolDomainsForOwner,
+  getSolNftsForOwner,
+} from "@bonfida/spl-name-service/address";
 
 const connection = new Connection("https://your-rpc-endpoint.example");
 const wallet = new PublicKey("<WALLET_ADDRESS>");
-const domains = await getSnsDomainsForOwner(connection, wallet);
 
-console.log(domains.map(({ domain }) => `${domain}.sns`));
+const snsDomains = await getSnsDomainsForOwner(connection, wallet);
+const snsNfts = await getSnsNftsForOwner(connection, wallet);
+const solDomains = await getSolDomainsForOwner(connection, wallet);
+const solNfts = await getSolNftsForOwner(connection, wallet);
+
+console.log(snsDomains.map(({ domain }) => `${domain}.sns`));
+console.log(snsNfts.map(({ domain }) => `${domain}.sns`));
+console.log(solDomains.map(({ domain }) => `${domain}.sol`));
+console.log(solNfts.map(({ domain }) => `${domain}.sol`));
 ```
 
 ## Domain Inputs And Resolution
@@ -269,10 +281,34 @@ Registration is limited to a lowercase top-level `.sns` name. Return shapes diff
   getSnsNftsForOwner(connection: Connection, owner: PublicKey): Promise<{ domain: string; key: PublicKey; mint: PublicKey }[]>
   ```
 
+- **`getSolDomainKeysForOwner`** — returns the record public keys for non-expired, directly wallet-owned top-level `.sol` records. Tokenized records are excluded.
+
+  ```ts
+  getSolDomainKeysForOwner(connection: Connection, wallet: PublicKey): Promise<PublicKey[]>
+  ```
+
+- **`getSolDomainsForOwner`** — returns non-expired, directly wallet-owned top-level `.sol` records. Returned `domain` values are TLD-trimmed; tokenized domains, subdomains, and malformed individual records are excluded.
+
+  ```ts
+  getSolDomainsForOwner(connection: Connection, wallet: PublicKey): Promise<{ domain: string; key: PublicKey }[]>
+  ```
+
+- **`getSolNftsForOwner`** — returns non-expired Token-2022 tokenized `.sol` domains. Results include the TLD-trimmed name, SRS record key, and token mint.
+
+  ```ts
+  getSolNftsForOwner(connection: Connection, owner: PublicKey): Promise<{ domain: string; key: PublicKey; mint: PublicKey }[]>
+  ```
+
 - **`getAllSnsDomains`** — returns raw top-level registry program accounts whose `account.data` is sliced to the 32-byte registry-owner field.
 
   ```ts
   getAllSnsDomains(connection: Connection): Promise<GetProgramAccountsResponse>
+  ```
+
+- **`getAllSolDomains`** — returns raw top-level SRS program accounts, including expired records, whose `account.data` is sliced to the 32-byte SRS owner field. The owner bytes can represent either a wallet address or a Token-2022 mint.
+
+  ```ts
+  getAllSolDomains(connection: Connection): Promise<GetProgramAccountsResponse>
   ```
 
 - **`getPrimaryDomain`** — returns the primary name-account key, TLD-less reverse name, and stale status.
@@ -301,7 +337,7 @@ Registration is limited to a lowercase top-level `.sns` name. Return shapes diff
 
 ### Advanced APIs
 
-For account-level integrations, the root export also includes derivation and raw name-registry helpers such as `getSnsDomainKeySync`, `getReverseKeySync`, `getReverseKeyFromDomainKey`, `getHashedNameSync`, `getNameAccountKeySync`, `createNameRegistry`, `updateNameRegistry`, `deleteNameRegistry`, and `createReverse`.
+For account-level integrations, the root export also includes derivation and raw name-registry helpers such as `getSnsDomainKeySync`, `getSolDomainKeySync`, `getReverseKeySync`, `getReverseKeyFromDomainKey`, `getHashedNameSync`, `getNameAccountKeySync`, `createNameRegistry`, `updateNameRegistry`, `deleteNameRegistry`, and `createReverse`.
 
 NFT helpers and state classes include domain-mint/owner/record retrieval, `NameRegistryState`, `PrimaryDomain`, and NFT state exports. `CustomBg`, `getCustomBgKeys`, and `setBackground` support issued custom backgrounds. The `devnet` export provides devnet-specific bindings and constants. Low-level instruction classes and raw state decoders are also exported for specialized integrations.
 

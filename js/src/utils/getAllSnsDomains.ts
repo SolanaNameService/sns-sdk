@@ -4,10 +4,11 @@ import { NAME_PROGRAM_ID, SNS_ROOT_DOMAIN_ACCOUNT } from "../constants";
 /**
  * Retrieves all registered top-level `.sns` domain accounts.
  *
- * The account data is sliced to avoid enormous payloads and only the owner is returned.
+ * Each returned account's data contains only the 32-byte owner public key.
  *
  * @param connection Solana RPC connection
- * @returns Registered domain accounts with sliced account data.
+ * @returns Registered domain accounts with account data containing only the
+ * owner public key.
  *
  * @example
  * ```ts

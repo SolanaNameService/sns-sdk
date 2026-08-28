@@ -15,23 +15,21 @@ import {
   PdaOwnerNotAllowed,
   RecordMalformed,
 } from "../error";
-import { getSrsDomainKeySync } from "../utils/getSrsDomainKeySync";
+import { getSolDomainKeySync } from "../utils/getSolDomainKeySync";
+import {
+  SRS_ADDRESS_LENGTH,
+  SRS_OWNER_TYPE_PUBKEY,
+  SRS_OWNER_TYPE_TOKEN,
+  SRS_RECORD_CLASS_OFFSET,
+  SRS_RECORD_DISCRIMINATOR,
+  SRS_RECORD_DISCRIMINATOR_OFFSET,
+  SRS_RECORD_EXPIRY_OFFSET,
+  SRS_RECORD_HEADER_LENGTH,
+  SRS_RECORD_OWNER_OFFSET,
+  SRS_RECORD_OWNER_TYPE_OFFSET,
+} from "../srs/constants";
 
 import type { ResolveConfig } from "./types";
-
-const SRS_RECORD_DISCRIMINATOR = 2;
-const SRS_OWNER_TYPE_PUBKEY = 0;
-const SRS_OWNER_TYPE_TOKEN = 1;
-const SRS_ADDRESS_LENGTH = 32;
-const SRS_EXPIRY_LENGTH = 8;
-const SRS_RECORD_DISCRIMINATOR_OFFSET = 0;
-const SRS_RECORD_CLASS_OFFSET = SRS_RECORD_DISCRIMINATOR_OFFSET + 1;
-const SRS_RECORD_OWNER_TYPE_OFFSET =
-  SRS_RECORD_CLASS_OFFSET + SRS_ADDRESS_LENGTH;
-const SRS_RECORD_OWNER_OFFSET = SRS_RECORD_OWNER_TYPE_OFFSET + 1;
-const SRS_RECORD_FROZEN_OFFSET = SRS_RECORD_OWNER_OFFSET + SRS_ADDRESS_LENGTH;
-const SRS_RECORD_EXPIRY_OFFSET = SRS_RECORD_FROZEN_OFFSET + 1;
-const SRS_RECORD_HEADER_LENGTH = SRS_RECORD_EXPIRY_OFFSET + SRS_EXPIRY_LENGTH;
 
 const resolveSrsPubkeyOwner = async (
   connection: Connection,
@@ -141,7 +139,7 @@ export const resolveSol = async (
   domain: string,
   config: ResolveConfig,
 ): Promise<PublicKey> => {
-  const { pubkey: record } = getSrsDomainKeySync(domain);
+  const { pubkey: record } = getSolDomainKeySync(domain);
   const recordInfo = await connection.getAccountInfo(record);
 
   if (!recordInfo) {

@@ -25,12 +25,12 @@ import {
   UnsupportedTldError,
 } from "../src/error";
 import { resolve } from "../src/resolve";
-import { getSrsDomainKeySync } from "../src/utils/getSrsDomainKeySync";
+import { getSolDomainKeySync } from "../src/utils/getSolDomainKeySync";
 import * as tldUtils from "../src/utils/tld";
 
 const getSrsAddresses = (domain: string) => {
   const name = domain.slice(0, -tldUtils.SOL_TLD.length);
-  const { pubkey: record } = getSrsDomainKeySync(name);
+  const { pubkey: record } = getSolDomainKeySync(name);
 
   return {
     centralState: SRS_CENTRAL_STATE,

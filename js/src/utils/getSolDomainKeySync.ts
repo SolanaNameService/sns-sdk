@@ -27,7 +27,7 @@ export const getSrsRecordSeed = (name: string): Buffer => {
  * @returns Canonical SRS record public key and the seed used to derive it
  * @throws {TypeError} When the current record seed exceeds 32 bytes
  */
-export const getSrsDomainKeySync = (
+export const getSolDomainKeySync = (
   domain: string,
 ): {
   pubkey: PublicKey;

@@ -4,20 +4,22 @@ import { retrieveRecords } from "../nft/retrieveRecords";
 import { reverseLookupBatch } from "./reverseLookupBatch";
 
 /**
- * A tokenized SNS domain and its associated NFT mint.
+ * A tokenized `.sns` domain and its associated NFT mint.
  *
  * @example
  * ```ts
- * const firstDomain: SnsNft | undefined = domains[0];
+ * const nft: SnsNft = {
+ *   domain: "example",
+ *   key: nameAccount,
+ *   mint: nftMint,
+ * };
  * ```
  */
 export interface SnsNft {
-  /** Fully qualified `.sns` domain name. */
+  /** TLD-trimmed `.sns` domain name. */
   domain: string;
-
   /** Name-service account address for `domain`. */
   key: PublicKey;
-
   /** NFT mint that tokenizes `domain`. */
   mint: PublicKey;
 }

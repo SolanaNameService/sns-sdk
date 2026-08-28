@@ -6,3 +6,6 @@ export * from "../primary-domain";
 export * from "../utils/getSnsDomainKeysForOwner";
 export * from "../utils/getSnsDomainsForOwner";
 export * from "../utils/getSnsNftsForOwner";
+export * from "../utils/getSolDomainKeysForOwner";
+export * from "../utils/getSolDomainsForOwner";
+export * from "../utils/getSolNftsForOwner";

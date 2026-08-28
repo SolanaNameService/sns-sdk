@@ -4,8 +4,8 @@
 
 ### `.sol` resolution
 
-- `resolve` now resolves `.sol` domains through SRS instead of the legacy SNS-backed compatibility path.
-- Legacy cutoff-slot routing and its finalized-slot RPC request have been removed. `.sol` resolution no longer depends on `SOL_TLD_CUTOFF_SLOT`.
+- `resolve` now resolves `.sol` domains through SRS.
+- Slot RPC requirements and legacy `.sol` routing have been removed.
 - `.sol` resolution can now surface `DomainExpired`, `RecordMalformed`, `CouldNotFindSrsOwner`, and `PdaOwnerNotAllowed`.
 
 ### Record APIs
@@ -18,12 +18,19 @@
 ### TLD utilities
 
 - `SUPPORTED_TLDS` now contains `.sns` only.
-- By default, `getTld` no longer recognizes `.sol`, and `parseSupportedTld` rejects `.sol`. The `resolve` and `safeResolve` APIs continue to support `.sol` through their dedicated SRS routing.
+- `getTld` and `parseSupportedTld` no longer treat `.sol` as a default supported TLD; `resolve` and `safeResolve` continue to support `.sol` through dedicated SRS routing.
 
 ### SRS configuration
 
-- Enabled SRS-backed `.sol` resolution.
 - Updated `SRS_HASH_PREFIX`, `SRS_CENTRAL_STATE`, `SOL_SRS_CLASS`, and `SOL_REGISTRAR_PROGRAM_ID` to the canonical SRS values used for `.sol` resolution.
+
+### `.sol` discovery and ownership
+
+- Added `getAllSolDomains`, which returns all `.sol` domains including expired or tokenized domains.
+- Added `getSolDomainKeysForOwner`, which finds non-expired, directly wallet-owned `.sol` domain keys.
+- Added `getSolDomainsForOwner`, which returns non-expired, directly wallet-owned `.sol` domains.
+- Added `getSolNftsForOwner`, which returns non-expired tokenized `.sol` domains.
+- Added `getSolDomainKeySync` as the SRS derivation helper for TLD-trimmed `.sol` names.
 
 ---
 

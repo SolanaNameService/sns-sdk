@@ -4,17 +4,19 @@ import { getSnsDomainKeysForOwner } from "./getSnsDomainKeysForOwner";
 import { reverseLookupBatch } from "./reverseLookupBatch";
 
 /**
- * A directly registry-owned top-level SNS domain.
+ * A directly registry-owned top-level `.sns` domain.
  *
  * @example
  * ```ts
- * const firstDomain: SnsDomain | undefined = domains[0];
+ * const domain: SnsDomain = {
+ *   domain: "example",
+ *   key: nameAccount,
+ * };
  * ```
  */
 export interface SnsDomain {
-  /** Fully qualified `.sns` domain name. */
+  /** TLD-trimmed `.sns` domain name. */
   domain: string;
-
   /** Name-service account address for `domain`. */
   key: PublicKey;
 }
