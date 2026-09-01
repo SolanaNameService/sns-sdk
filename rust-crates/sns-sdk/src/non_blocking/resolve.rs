@@ -8,14 +8,12 @@ use {
 };
 
 use crate::{
-    config::SOL_SRS_RESOLUTION_ENABLED,
     derivation::{
-        derive_reverse, get_hashed_name, get_sns_domain_key, get_srs_domain_key, NAME_TOKENIZER_ID,
+        derive_reverse, get_hashed_name, get_sns_domain_key, get_sol_domain_key, NAME_TOKENIZER_ID,
         REVERSE_LOOKUP_CLASS,
     },
     error::SnsError,
     non_blocking::nft::resolve_nft_owner,
-    non_blocking::tld::assert_tld_supported,
     record::{
         get_record_key, record_v1::check_sol_record_v1_data, record_v2::check_sol_record_v2_data,
         Record, RecordVersion,
@@ -24,99 +22,71 @@ use crate::{
         current_unix_timestamp, get_srs_token_mint, parse_srs_record, parse_srs_token_holder,
         validate_srs_token_mint, SrsRecordOwner,
     },
-    tld::SOL_TLD,
+    tld::{parse_supported_tld, SOL_TLD},
 };
 
 pub use crate::resolve::AllowPda;
 
 /// Resolves a full `.sns` or `.sol` domain to its current owner.
 ///
-/// Use [`safe_resolve`] to verify matching SRS and SNS targets when SRS-backed
-/// `.sol` resolution is enabled.
+/// Use [`safe_resolve`] to verify matching SRS and SNS targets for `.sol` domains.
 pub async fn resolve(
     rpc_client: &RpcClient,
     domain: &str,
     allow_pda: AllowPda,
 ) -> Result<Pubkey, SnsError> {
-    resolve_with_config(
-        rpc_client,
-        domain,
-        allow_pda,
-        SOL_SRS_RESOLUTION_ENABLED,
-        current_unix_timestamp(),
-    )
-    .await
+    resolve_with_config(rpc_client, domain, allow_pda, current_unix_timestamp()).await
 }
 
 /// Resolves a full `.sns` or `.sol` domain using the same routing as [`resolve`].
 ///
-/// When SRS-backed `.sol` resolution is enabled, both the `.sol` domain and its
-/// corresponding `.sns` domain must resolve to the same target; otherwise,
+/// For `.sol` domains, both the SRS domain and its corresponding `.sns` domain
+/// must resolve to the same target; otherwise,
 /// [`SnsError::SnsSolResolutionMismatch`] is returned.
 pub async fn safe_resolve(
     rpc_client: &RpcClient,
     domain: &str,
     allow_pda: AllowPda,
 ) -> Result<Pubkey, SnsError> {
-    safe_resolve_with_config(
-        rpc_client,
-        domain,
-        allow_pda,
-        SOL_SRS_RESOLUTION_ENABLED,
-        current_unix_timestamp(),
-    )
-    .await
+    safe_resolve_with_config(rpc_client, domain, allow_pda, current_unix_timestamp()).await
 }
 
-/// Dispatches resolution with injected rollout state and time for deterministic tests.
+/// Dispatches resolution with an injected time for deterministic tests.
 pub(crate) async fn resolve_with_config(
     rpc_client: &RpcClient,
     domain: &str,
     allow_pda: AllowPda,
-    srs_resolution_enabled: bool,
     now_unix_seconds: i64,
 ) -> Result<Pubkey, SnsError> {
     if let Some(domain) = domain.strip_suffix(SOL_TLD) {
-        if srs_resolution_enabled {
-            return resolve_srs(rpc_client, domain, &allow_pda, now_unix_seconds).await;
-        }
+        return resolve_sol(rpc_client, domain, &allow_pda, now_unix_seconds).await;
     }
 
-    let (domain, _) = assert_tld_supported(rpc_client, domain).await?;
+    let (domain, _) = parse_supported_tld(domain)?;
     resolve_sns(rpc_client, domain, &allow_pda).await
 }
 
-/// Dispatches safe resolution with injected rollout state and time for deterministic tests.
+/// Dispatches safe resolution with an injected time for deterministic tests.
 pub(crate) async fn safe_resolve_with_config(
     rpc_client: &RpcClient,
     domain: &str,
     allow_pda: AllowPda,
-    srs_resolution_enabled: bool,
     now_unix_seconds: i64,
 ) -> Result<Pubkey, SnsError> {
     if let Some(trimmed_domain) = domain.strip_suffix(SOL_TLD) {
-        if srs_resolution_enabled {
-            let (srs_target, sns_target) = futures::try_join!(
-                resolve_srs(rpc_client, trimmed_domain, &allow_pda, now_unix_seconds),
-                resolve_sns(rpc_client, trimmed_domain, &allow_pda),
-            )?;
+        let (sol_target, sns_target) = futures::try_join!(
+            resolve_sol(rpc_client, trimmed_domain, &allow_pda, now_unix_seconds),
+            resolve_sns(rpc_client, trimmed_domain, &allow_pda),
+        )?;
 
-            if srs_target != sns_target {
-                return Err(SnsError::SnsSolResolutionMismatch);
-            }
-
-            return Ok(srs_target);
+        if sol_target != sns_target {
+            return Err(SnsError::SnsSolResolutionMismatch);
         }
+
+        return Ok(sol_target);
     }
 
-    resolve_with_config(
-        rpc_client,
-        domain,
-        allow_pda,
-        srs_resolution_enabled,
-        now_unix_seconds,
-    )
-    .await
+    resolve_with_config(rpc_client, domain, allow_pda, now_unix_seconds).await
 }
 
 /// Resolves a TLD-trimmed name through SNS-IP 5 ownership priority.
@@ -176,13 +146,13 @@ async fn resolve_sns(
 }
 
 /// Resolves a TLD-trimmed `.sol` name from its canonical SRS record.
-async fn resolve_srs(
+async fn resolve_sol(
     rpc_client: &RpcClient,
     domain: &str,
     allow_pda: &AllowPda,
     now_unix_seconds: i64,
 ) -> Result<Pubkey, SnsError> {
-    let record_key = get_srs_domain_key(domain).key;
+    let record_key = get_sol_domain_key(domain).key;
     let account = rpc_client
         .get_account_with_commitment(&record_key, rpc_client.commitment())
         .await?

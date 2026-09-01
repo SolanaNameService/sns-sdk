@@ -4078,7 +4078,7 @@ dependencies = [
  "regex",
  "serde",
  "serde_json",
- "sns-sdk",
+ "sns-sdk 2.0.0",
  "solana-account-decoder",
  "solana-client",
  "solana-program",
@@ -4137,6 +4137,36 @@ dependencies = [
 [[package]]
 name = "sns-sdk"
 version = "2.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a0ebbd383a35486b767124bc888689f81703c51dec1e5207382a3e2a4ca63bc1"
+dependencies = [
+ "bech32",
+ "bonfida-utils",
+ "borsh 0.10.4",
+ "bytemuck",
+ "derive_more",
+ "ed25519-dalek",
+ "futures",
+ "hex",
+ "name-tokenizer",
+ "punycode",
+ "sns-records",
+ "sns-warp-common",
+ "solana-account-decoder",
+ "solana-client",
+ "solana-program",
+ "solana-sdk",
+ "solana-sdk-ids",
+ "spl-associated-token-account",
+ "spl-name-service-2",
+ "spl-token 7.0.0",
+ "spl-token-2022 7.0.0",
+ "sub-registrar",
+]
+
+[[package]]
+name = "sns-sdk"
+version = "2.1.0-beta.0"
 dependencies = [
  "async-trait",
  "bech32",

@@ -31,7 +31,6 @@ pub async fn get_primary_domain(
 mod account_tests {
     use super::*;
     use crate::utils::test::{account_response, TestRpcSender};
-    use serde_json::json;
     use solana_client::{rpc_client::RpcClientConfig, rpc_request::RpcRequest};
     use solana_sdk::account::Account;
 
@@ -46,7 +45,7 @@ mod account_tests {
     }
 
     fn test_client(endpoint: &str, account: Option<&Account>) -> RpcClient {
-        let sender = TestRpcSender::new(endpoint, json!(0))
+        let sender = TestRpcSender::new(endpoint)
             .with_response(RpcRequest::GetAccountInfo, account_response(account));
         RpcClient::new_sender(sender, RpcClientConfig::with_commitment(Default::default()))
     }

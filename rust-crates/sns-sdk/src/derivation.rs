@@ -5,12 +5,11 @@ use {
 
 use crate::{error::SnsError, record::RecordVersion};
 
-pub const SOL_REGISTRAR_PROGRAM_ID: Pubkey =
-    pubkey!("GaWnVJgCt174ZtPKiwrbSNxWFwckWbNeWVStLE92Gxj4");
+pub const SOL_REGISTRAR_PROGRAM_ID: Pubkey = pubkey!("soL7856gZrjQMSJMT33YDpfAuRYbetAbkZPuv7YeLht");
 pub const SRS_PROGRAM_ID: Pubkey = pubkey!("srsWjm76StJucL7atFyPSdXFaVLNPFqEt1uFEDPrZsn");
-pub const SRS_CENTRAL_STATE: Pubkey = pubkey!("8K9XmpN6nKy3ERnMovnoj5cbqWKPiGYN8hCRRyW4TLQV");
-pub const SOL_SRS_CLASS: Pubkey = pubkey!("AjheAtCgSwEcEYd6xi6thcQW25ELWd7wKCx6SKBGUtMQ");
-pub const SRS_HASH_PREFIX: &[u8; 3] = b"SRS";
+pub const SRS_CENTRAL_STATE: Pubkey = pubkey!("EoLdmhHPRZ4xkYj4MetaAR8LjALmqGQEMsKQnFJx6ihE");
+pub const SOL_SRS_CLASS: Pubkey = pubkey!("Dqc9TrYg1AZLEa6UkZUqCDrr9zsHQveo1szGTE1BTW5");
+pub const SRS_HASH_PREFIX: &[u8; 4] = b"name";
 
 pub use constants::*;
 #[cfg(not(feature = "devnet"))]
@@ -114,13 +113,13 @@ pub fn get_sns_domain_key(domain: &str) -> Result<DomainKeyWithParent, SnsError>
 }
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
-pub struct SrsDomainKey {
+pub struct SolDomainKey {
     pub key: Pubkey,
     pub hashed: [u8; 32],
 }
 
-/// Derives the canonical SRS record account from a TLD-trimmed `.sol` name.
-pub fn get_srs_domain_key(domain: &str) -> SrsDomainKey {
+/// Derives the canonical SRS record account for a TLD-trimmed `.sol` name.
+pub fn get_sol_domain_key(domain: &str) -> SolDomainKey {
     let hashed = hashv(&[SRS_HASH_PREFIX, domain.as_bytes()]).to_bytes();
     let key = Pubkey::find_program_address(
         &[b"record", SOL_SRS_CLASS.as_ref(), &hashed],
@@ -128,7 +127,18 @@ pub fn get_srs_domain_key(domain: &str) -> SrsDomainKey {
     )
     .0;
 
-    SrsDomainKey { key, hashed }
+    SolDomainKey { key, hashed }
+}
+
+/// The deprecated SRS-oriented result name for [`SolDomainKey`].
+#[deprecated(note = "use SolDomainKey instead")]
+pub type SrsDomainKey = SolDomainKey;
+
+/// Derives the canonical SRS record account for a TLD-trimmed `.sol` name.
+#[deprecated(note = "use get_sol_domain_key instead")]
+#[allow(deprecated)]
+pub fn get_srs_domain_key(domain: &str) -> SrsDomainKey {
+    get_sol_domain_key(domain)
 }
 
 /// Derives an SNS reverse lookup account from a TLD-trimmed domain name.
@@ -191,19 +201,26 @@ mod tests {
     }
 
     #[test]
-    fn srs_domain() {
-        let result = get_srs_domain_key("bonfida");
-        assert_eq!(
-            result.key,
-            pubkey!("HNw6noRQoftAc1QiUMC71wCcD5oTDtFayPBVvgZgr3ur")
-        );
-        assert_eq!(
-            result.hashed,
-            [
-                0x60, 0x78, 0x7e, 0x28, 0x32, 0x67, 0xa2, 0x41, 0xe6, 0x86, 0x95, 0x92, 0xa7, 0x5e,
-                0xa4, 0x32, 0x97, 0xb0, 0x45, 0xfa, 0x26, 0xe8, 0xdb, 0x60, 0xca, 0x7b, 0x99, 0xc0,
-                0x92, 0xae, 0x02, 0x9b,
-            ]
-        );
+    fn sol_domain_key_matches_ref_fixtures() {
+        for (domain, expected_key) in [
+            (
+                "sns-ip-5-wallet-1",
+                pubkey!("5aJnvSs3K5J1eFS1cemYHWnUeWp3QjKThWh5mWbGBgkt"),
+            ),
+            (
+                "sns-ip-5-wallet-2",
+                pubkey!("2gN2aGXi9kRnkXewWsshKTUWairEvMapA3z1EaqFqwMd"),
+            ),
+        ] {
+            assert_eq!(get_sol_domain_key(domain).key, expected_key);
+        }
+    }
+
+    #[test]
+    fn deprecated_get_srs_domain_key_matches_canonical_derivation() {
+        #[allow(deprecated)]
+        let legacy = get_srs_domain_key("sns-ip-5-wallet-1");
+        let canonical = get_sol_domain_key("sns-ip-5-wallet-1");
+        assert_eq!(legacy, canonical);
     }
 }

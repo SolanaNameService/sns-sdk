@@ -4,9 +4,9 @@ use spl_name_service::state::NameRecordHeader;
 
 use crate::{
     blocking::resolve::{resolve_name_registry, resolve_name_registry_batch},
-    blocking::tld::assert_tld_supported,
     error::SnsError,
     record::{get_record_key, Record, RecordVersion},
+    tld::parse_sns_domain,
 };
 
 pub fn get_record_v2(
@@ -14,8 +14,8 @@ pub fn get_record_v2(
     domain: &str,
     record: Record,
 ) -> Result<Option<(NameRecordHeader, Vec<u8>)>, SnsError> {
-    let (domain, _) = assert_tld_supported(rpc_client, domain)?;
-    let record_key = get_record_key(domain, record, RecordVersion::V2)?;
+    let domain = parse_sns_domain(domain)?;
+    let record_key = get_record_key(&domain, record, RecordVersion::V2)?;
     resolve_name_registry(rpc_client, &record_key)
 }
 
@@ -24,10 +24,10 @@ pub fn get_multiple_records_v2(
     domain: &str,
     records: &[Record],
 ) -> Result<Vec<Option<(NameRecordHeader, Vec<u8>)>>, SnsError> {
-    let (domain, _) = assert_tld_supported(rpc_client, domain)?;
+    let domain = parse_sns_domain(domain)?;
     let pubkeys: Vec<Pubkey> = records
         .iter()
-        .map(|r| get_record_key(domain, *r, RecordVersion::V2))
+        .map(|r| get_record_key(&domain, *r, RecordVersion::V2))
         .collect::<Result<Vec<_>, _>>()?;
 
     resolve_name_registry_batch(rpc_client, &pubkeys)
@@ -38,14 +38,22 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_record_v2_getters_reject_bare_domains() {
+    fn test_record_v2_getters_require_sns_suffix() {
         let client = RpcClient::new(String::new());
         assert!(matches!(
             get_record_v2(&client, "mydomain", Record::Github),
             Err(SnsError::UnsupportedTld)
         ));
         assert!(matches!(
+            get_record_v2(&client, "mydomain.sol", Record::Github),
+            Err(SnsError::UnsupportedTld)
+        ));
+        assert!(matches!(
             get_multiple_records_v2(&client, "mydomain", &[Record::Github]),
+            Err(SnsError::UnsupportedTld)
+        ));
+        assert!(matches!(
+            get_multiple_records_v2(&client, "mydomain.sol", &[Record::Github]),
             Err(SnsError::UnsupportedTld)
         ));
     }

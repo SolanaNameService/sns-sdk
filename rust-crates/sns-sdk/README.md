@@ -47,7 +47,7 @@ The examples below use the default asynchronous client. Replace the example RPC 
 
 ### Resolve A Domain
 
-Use a full suffixed name. `resolve` returns the effective owner, applying SNS ownership precedence: an active tokenized-domain owner, then valid V2 and V1 `SOL` records, then the registry owner.
+Use a full suffixed domain. `resolve` accepts `.sns` and `.sol`: `.sns` uses SNS ownership precedence, while `.sol` domains are resolved using the SRS-backed `.sol` registry.
 
 ```rust
 use sns_sdk::non_blocking::resolve::{resolve, AllowPda};
@@ -63,7 +63,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 ```
 
-`AllowPda` governs only the fallback registry-owner path; it does not revalidate an owner returned earlier from a tokenized domain or `SOL` record:
+For `.sns` domains, `AllowPda` governs only the fallback registry-owner path; it does not revalidate an owner returned earlier from a tokenized domain or `SOL` record. For `.sol` domains, the same policy applies to direct SRS owners and Token-2022 holder owners:
 
 - `AllowPda::Deny` rejects a fallback registry owner that is a PDA.
 - `AllowPda::Allow(vec![program_id])` accepts a fallback PDA only when its runtime owner is in the supplied program list.
@@ -119,18 +119,15 @@ With the `blocking` feature enabled, use the equivalent functions under `sns_sdk
 
 ## Domain Inputs And Resolution
 
-`.sns` is the supported durable domain path.
+`resolve` and `safe_resolve` accept both `.sns` and `.sol`. All other full-domain APIs are `.sns`-only.
 
 | API category                          | Expected input                                | Examples                                          |
 | ------------------------------------- | --------------------------------------------- | ------------------------------------------------- |
-| High-level reads                      | Full suffixed domain                          | `mydomain.sns`, `sub.mydomain.sns`                |
+| Resolution                            | Full `.sns` or `.sol` domain                  | `mydomain.sns`, `mydomain.sol`                    |
+| Record and sub-registrar reads        | Full lowercase `.sns` domain                  | `mydomain.sns`, `sub.mydomain.sns`                |
 | Writes                                | Lowercase, whitespace-free full `.sns` domain | `mydomain.sns`, `sub.mydomain.sns` for V2 records |
 | SNS derivation and record-key helpers | TLD-trimmed name                              | `mydomain`, `sub.mydomain`                        |
 | Raw name-registry builders            | Raw name or explicit account keys             | `mydomain`, `"\x01url"`, derived `Pubkey`         |
-
-Registration only accepts a top-level `.sns` name. V2 record builders accept a top-level name or one subdomain level. Bare names and `.sol` are not write inputs.
-
-For the current legacy `.sol` transition, full-domain read APIs use the legacy SNS-backed path only before the RPC endpoint reports finalized slot `452,825,395`. At or after that cutoff, `.sol` reads are rejected. This covers `resolve`, V1/V2 record getters, and enabled sub-registrar lookup. `.sol` writes are unsupported. `get_srs_domain_key` can derive an SRS address, but it does not mean high-level SRS resolution is enabled.
 
 ## API Reference
 
@@ -138,13 +135,13 @@ RPC-backed read APIs are available in the selected namespace: use `sns_sdk::non_
 
 ### Resolution
 
-- **`resolve::resolve`** — resolves a full `.sns` domain owner using the precedence described above.
+- **`resolve::resolve`** — resolves a full `.sns` or `.sol` domain.
 
   ```rust
   resolve::resolve(rpc_client: &RpcClient, domain: &str, allow_pda: AllowPda) -> Result<Pubkey, SnsError>
   ```
 
-- **`resolve::safe_resolve`** — follows the same routing as `resolve`, except that when SRS-backed `.sol` resolution is enabled, it requires the `.sol` domain and its corresponding `.sns` domain to resolve to the same target; otherwise, it returns `SnsError::SnsSolResolutionMismatch`.
+- **`resolve::safe_resolve`** — follows the same routing as `resolve`, except that `.sol` always requires the SRS domain and its corresponding `.sns` domain to resolve to the same target; otherwise, it returns `SnsError::SnsSolResolutionMismatch`.
 
   ```rust
   resolve::safe_resolve(rpc_client: &RpcClient, domain: &str, allow_pda: AllowPda) -> Result<Pubkey, SnsError>
@@ -308,11 +305,13 @@ Not every record type requires right-of-association validation. Call `verify_roa
   get_domain_mint(domain_key: &Pubkey) -> Pubkey
   ```
 
-- **`get_srs_domain_key`** — derives an SRS key only; it does not enable SRS high-level resolution.
+- **`get_sol_domain_key`** — derives the canonical SRS record account for a TLD-trimmed `.sol` name.
 
   ```rust
-  get_srs_domain_key(domain: &str) -> SrsDomainKey
+  get_sol_domain_key(domain: &str) -> SolDomainKey
   ```
+
+  `get_srs_domain_key` and `SrsDomainKey` remain available as deprecated compatibility aliases. New code should use the `sol`-named API.
 
 Mutation builders return `Instruction` or `Vec<Instruction>` values. Construct a transaction around the returned instruction(s), select its fee payer, fetch a recent blockhash, collect the signatures required by its account metas, and submit that transaction with the application's RPC client.
 

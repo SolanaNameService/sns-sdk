@@ -1,47 +1,44 @@
 use super::*;
-use crate::{config::SOL_TLD_CUTOFF_SLOT, utils::test::multiple_accounts_response};
+use crate::utils::test::multiple_accounts_response;
 use solana_program::pubkey;
 
 #[test]
-fn sns_resolves_via_sns_regardless_of_srs_setting() {
+fn sns_resolves_via_spl_name_service() {
     let owner = pubkey!("Fw1ETanDZafof7xEULsnq9UY6o71Tpds89tNwPkWLb1v");
     let registry = registry_account(owner);
+    let (client, sender) = test_client(
+        "blocking-sns-routing",
+        [(
+            RpcRequest::GetMultipleAccounts,
+            multiple_accounts_response(&[None, None, None, Some(&registry)]),
+        )],
+    );
 
-    for srs_enabled in [false, true] {
-        let (client, sender) = test_client(
-            &format!("blocking-sns-routing-{srs_enabled}"),
-            [(
-                RpcRequest::GetMultipleAccounts,
-                multiple_accounts_response(&[None, None, None, Some(&registry)]),
-            )],
-        );
-        assert_eq!(
-            resolve_with_config(&client, "domain.sns", AllowPda::Deny, srs_enabled, TEST_NOW,)
-                .unwrap(),
-            owner
-        );
-        assert_eq!(
-            sender
-                .requests()
-                .iter()
-                .map(|(request, _)| *request)
-                .collect::<Vec<_>>(),
-            vec![RpcRequest::GetMultipleAccounts]
-        );
-    }
+    assert_eq!(
+        resolve_with_config(&client, "domain.sns", AllowPda::Deny, TEST_NOW).unwrap(),
+        owner
+    );
+    assert_eq!(
+        sender
+            .requests()
+            .iter()
+            .map(|(request, _)| *request)
+            .collect::<Vec<_>>(),
+        vec![RpcRequest::GetMultipleAccounts]
+    );
 }
 
-/// Enabled `.sol` resolution requests only the canonical SRS record.
 #[test]
-fn sol_resolves_via_srs_when_srs_is_enabled() {
+fn sol_resolves_via_srs_without_slot_lookup() {
     let owner = pubkey!("Fw1ETanDZafof7xEULsnq9UY6o71Tpds89tNwPkWLb1v");
     let account = srs_account(SrsRecordOwner::Pubkey(owner));
     let (client, sender) = test_client(
         "blocking-srs-direct",
         [(RpcRequest::GetAccountInfo, account_response(Some(&account)))],
     );
+
     assert_eq!(
-        resolve_with_config(&client, "bonfida.sol", AllowPda::Deny, true, TEST_NOW).unwrap(),
+        resolve_with_config(&client, "bonfida.sol", AllowPda::Deny, TEST_NOW).unwrap(),
         owner
     );
     assert_eq!(
@@ -71,7 +68,7 @@ fn safe_sol_returns_matching_srs_and_sns_target() {
     );
 
     assert_eq!(
-        safe_resolve_with_config(&client, "domain.sol", AllowPda::Deny, true, TEST_NOW).unwrap(),
+        safe_resolve_with_config(&client, "domain.sol", AllowPda::Deny, TEST_NOW).unwrap(),
         owner
     );
     assert_eq!(
@@ -101,8 +98,8 @@ fn safe_sol_rejects_mismatching_srs_and_sns_targets() {
         ],
     );
 
-    let error = safe_resolve_with_config(&client, "domain.sol", AllowPda::Deny, true, TEST_NOW)
-        .unwrap_err();
+    let error =
+        safe_resolve_with_config(&client, "domain.sol", AllowPda::Deny, TEST_NOW).unwrap_err();
     assert!(matches!(error, SnsError::SnsSolResolutionMismatch));
 }
 
@@ -119,7 +116,7 @@ fn safe_sns_uses_ordinary_sns_resolution() {
     );
 
     assert_eq!(
-        safe_resolve_with_config(&client, "domain.sns", AllowPda::Deny, true, TEST_NOW).unwrap(),
+        safe_resolve_with_config(&client, "domain.sns", AllowPda::Deny, TEST_NOW).unwrap(),
         owner
     );
     assert_eq!(
@@ -133,35 +130,9 @@ fn safe_sns_uses_ordinary_sns_resolution() {
 }
 
 #[test]
-fn safe_sol_preserves_disabled_srs_routing() {
-    let owner = pubkey!("Fw1ETanDZafof7xEULsnq9UY6o71Tpds89tNwPkWLb1v");
-    let registry = registry_account(owner);
-    let (client, sender) = test_client(
-        "blocking-safe-srs-disabled",
-        [(
-            RpcRequest::GetMultipleAccounts,
-            multiple_accounts_response(&[None, None, None, Some(&registry)]),
-        )],
-    );
-
-    assert_eq!(
-        safe_resolve_with_config(&client, "domain.sol", AllowPda::Deny, false, TEST_NOW).unwrap(),
-        owner
-    );
-    assert_eq!(
-        sender
-            .requests()
-            .iter()
-            .map(|(request, _)| *request)
-            .collect::<Vec<_>>(),
-        vec![RpcRequest::GetSlot, RpcRequest::GetMultipleAccounts]
-    );
-}
-
-#[test]
 fn safe_sol_propagates_resolution_errors() {
     let registry = registry_account(Pubkey::new_unique());
-    let sender = TestRpcSender::new("blocking-safe-error", json!(0))
+    let sender = TestRpcSender::new("blocking-safe-error")
         .with_error(RpcRequest::GetAccountInfo, "RPC unavailable")
         .with_response(
             RpcRequest::GetMultipleAccounts,
@@ -171,7 +142,7 @@ fn safe_sol_propagates_resolution_errors() {
         RpcClient::new_sender(sender, RpcClientConfig::with_commitment(Default::default()));
 
     assert!(matches!(
-        safe_resolve_with_config(&client, "domain.sol", AllowPda::Deny, true, TEST_NOW),
+        safe_resolve_with_config(&client, "domain.sol", AllowPda::Deny, TEST_NOW),
         Err(SnsError::SolanaClient(_))
     ));
 }
@@ -193,62 +164,16 @@ fn safe_sol_applies_the_same_pda_policy_to_both_paths() {
     );
 
     assert_eq!(
-        safe_resolve_with_config(&client, "domain.sol", AllowPda::AllowAny, true, TEST_NOW)
-            .unwrap(),
+        safe_resolve_with_config(&client, "domain.sol", AllowPda::AllowAny, TEST_NOW).unwrap(),
         owner
-    );
-}
-
-#[test]
-fn sol_resolves_via_sns_before_cutoff_when_srs_is_disabled() {
-    let owner = pubkey!("Fw1ETanDZafof7xEULsnq9UY6o71Tpds89tNwPkWLb1v");
-    let registry = registry_account(owner);
-    let (client, sender) = test_client(
-        "blocking-sns-sol-before-cutoff",
-        [(
-            RpcRequest::GetMultipleAccounts,
-            multiple_accounts_response(&[None, None, None, Some(&registry)]),
-        )],
-    );
-    assert_eq!(
-        resolve_with_config(&client, "domain.sol", AllowPda::Deny, false, TEST_NOW).unwrap(),
-        owner
-    );
-    assert_eq!(
-        sender
-            .requests()
-            .iter()
-            .map(|(request, _)| *request)
-            .collect::<Vec<_>>(),
-        vec![RpcRequest::GetSlot, RpcRequest::GetMultipleAccounts]
-    );
-}
-
-#[test]
-fn sol_is_not_resolved_after_cutoff_when_srs_is_disabled() {
-    let (client, sender) = test_client(
-        "blocking-sns-sol-after-cutoff",
-        [(RpcRequest::GetSlot, json!(SOL_TLD_CUTOFF_SLOT + 1))],
-    );
-    assert!(matches!(
-        resolve_with_config(&client, "domain.sol", AllowPda::Deny, false, TEST_NOW),
-        Err(SnsError::UnsupportedTld)
-    ));
-    assert_eq!(
-        sender
-            .requests()
-            .iter()
-            .map(|(request, _)| *request)
-            .collect::<Vec<_>>(),
-        vec![RpcRequest::GetSlot]
     );
 }
 
 #[test]
 fn rejects_unsupported_tld() {
-    let (client, sender) = test_client("blocking-srs-unsupported", []);
+    let (client, sender) = test_client("blocking-unsupported-tld", []);
     assert!(matches!(
-        resolve_with_config(&client, "future.eth", AllowPda::Deny, true, TEST_NOW),
+        resolve_with_config(&client, "future.eth", AllowPda::Deny, TEST_NOW),
         Err(SnsError::UnsupportedTld)
     ));
     assert!(sender.requests().is_empty());

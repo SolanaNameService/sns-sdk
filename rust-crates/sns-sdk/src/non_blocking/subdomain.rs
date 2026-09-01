@@ -10,7 +10,7 @@ use spl_name_service::state::NameRecordHeader;
 use crate::{derivation::REVERSE_LOOKUP_CLASS, error::SnsError};
 
 #[cfg(feature = "subdomain")]
-use crate::{derivation::get_sns_domain_key, non_blocking::tld::assert_tld_supported};
+use crate::{derivation::get_sns_domain_key, tld::parse_sns_domain};
 #[cfg(feature = "subdomain")]
 use borsh::BorshDeserialize;
 #[cfg(feature = "subdomain")]
@@ -89,8 +89,8 @@ pub async fn get_sub_registrar_info(
     rpc_client: &RpcClient,
     domain: &str,
 ) -> Result<Registrar, SnsError> {
-    let (domain, _) = assert_tld_supported(rpc_client, domain).await?;
-    let key = get_sns_domain_key(domain)?.key;
+    let domain = parse_sns_domain(domain)?;
+    let key = get_sns_domain_key(&domain)?.key;
     let registrar_key = Registrar::find_key(&key, &SUB_REGISTRAR_PROGRAM_ID).0;
     let account = rpc_client
         .get_account_with_commitment(&registrar_key, rpc_client.commitment())
@@ -116,7 +116,6 @@ mod sub_registrar_tests {
         super::*,
         crate::utils::test::{account_response, TestRpcSender},
         borsh::BorshSerialize,
-        serde_json::json,
         solana_client::{rpc_client::RpcClientConfig, rpc_request::RpcRequest},
     };
 
@@ -131,7 +130,7 @@ mod sub_registrar_tests {
     }
 
     fn test_client(endpoint: &str, account: Option<&Account>) -> RpcClient {
-        let sender = TestRpcSender::new(endpoint, json!(0))
+        let sender = TestRpcSender::new(endpoint)
             .with_response(RpcRequest::GetAccountInfo, account_response(account));
         RpcClient::new_sender(sender, RpcClientConfig::with_commitment(Default::default()))
     }
@@ -195,5 +194,14 @@ mod sub_registrar_tests {
                 Err(SnsError::InvalidSubRegistrar)
             ));
         }
+    }
+
+    #[tokio::test]
+    async fn sub_registrar_getter_rejects_sol_domains() {
+        let client = RpcClient::new(String::new());
+        assert!(matches!(
+            get_sub_registrar_info(&client, "registrar.sol").await,
+            Err(SnsError::UnsupportedTld)
+        ));
     }
 }

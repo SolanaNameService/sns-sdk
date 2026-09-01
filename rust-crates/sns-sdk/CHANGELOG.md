@@ -1,3 +1,40 @@
+# Rust SDK v2.1.0
+
+## Changed
+
+### `.sol` resolution
+
+- `non_blocking::resolve::resolve` and `blocking::resolve::resolve` now resolve `.sol` domains through the existing SRS-backed resolver.
+- `safe_resolve` now always compares the SRS-backed `.sol` target with the corresponding SNS-backed `.sns` target and returns `SnsError::SnsSolResolutionMismatch` when they differ.
+- Removed the `.sol` rollout flag, finalized-slot cutoff, endpoint cutoff cache, and finalized-slot RPC requirements.
+- Legacy SNS-backed `.sol` fallback routing has been removed.
+
+### Record APIs
+
+- V1 and V2 record getters now accept canonical lowercase `.sns` domains only.
+- `get_sub_registrar_info` now accepts canonical lowercase `.sns` domains only.
+- Existing top-level `.sns` and one-level `.sns` subdomain support is preserved where applicable.
+- `.sol` domains are now rejected with `SnsError::UnsupportedTld`.
+- `.sns` domains with uppercase letters are now rejected with `SnsError::InvalidDomainCasing`.
+
+### TLD utilities
+
+- `SUPPORTED_TLDS` now contains `.sns` only.
+- `parse_supported_tld` no longer treats `.sol` as a default supported TLD.
+- `resolve` and `safe_resolve` continue to support `.sol` through dedicated SRS routing.
+- `Tld::Sol` remains available for source compatibility but is not included in `SUPPORTED_TLDS`.
+
+### SRS configuration
+
+- Updated `SOL_REGISTRAR_PROGRAM_ID`, `SRS_CENTRAL_STATE`, `SOL_SRS_CLASS`, and `SRS_HASH_PREFIX` to the canonical values used for current SRS-backed `.sol` resolution.
+
+### Address derivation APIs
+
+- `derivation::get_sol_domain_key` and `derivation::SolDomainKey` are now the canonical `.sol` SRS derivation API.
+- `derivation::get_srs_domain_key` and `derivation::SrsDomainKey` remain available as deprecated compatibility aliases.
+
+---
+
 # Rust SDK v2.0.0
 
 This is a breaking release of `sns-sdk`.

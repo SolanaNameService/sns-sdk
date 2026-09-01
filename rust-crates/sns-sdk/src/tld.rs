@@ -1,36 +1,25 @@
 //! Domain TLD suffix parsing and validation helpers.
 //!
-//! Mirrors the JS SDK v4 `utils/tld.ts` and `utils/parseSnsDomain.ts`:
-//!
-//! - Read APIs accept the suffixes enabled by the current rollout state (see
-//!   [`parse_supported_tld`]).
+//! - Generic read-side parsing accepts only `.sns` (see [`parse_supported_tld`]).
 //! - Write APIs accept only canonical `.sns` names (see [`parse_sns_domain`] and
 //!   [`parse_sns_top_level_domain`]).
 
-use {
-    crate::{config::SOL_SRS_RESOLUTION_ENABLED, error::SnsError},
-    std::{
-        collections::HashSet,
-        sync::{Mutex, OnceLock},
-    },
-};
+use crate::error::SnsError;
 
 pub const SOL_TLD: &str = ".sol";
 pub const SNS_TLD: &str = ".sns";
-/// A supported top-level domain suffix.
+/// A known top-level domain suffix.
+///
+/// `Tld::Sol` remains available for source compatibility, but `.sol` is
+/// handled only by the dedicated resolver APIs and is not in
+/// [`SUPPORTED_TLDS`].
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum Tld {
     Sns,
     Sol,
 }
 
-pub const SUPPORTED_TLDS: &[Tld] = if SOL_SRS_RESOLUTION_ENABLED {
-    &[Tld::Sns]
-} else {
-    &[Tld::Sns, Tld::Sol]
-};
-
-static ENDPOINTS_PAST_SOL_CUTOFF: OnceLock<Mutex<HashSet<String>>> = OnceLock::new();
+pub const SUPPORTED_TLDS: &[Tld] = &[Tld::Sns];
 
 impl Tld {
     pub fn as_str(&self) -> &'static str {
@@ -47,7 +36,7 @@ fn is_canonical_lowercase(name: &str) -> bool {
     name.trim().to_lowercase() == name
 }
 
-/// Validates that `domain` ends with a supported read-side TLD (`.sns` or `.sol`),
+/// Validates that `domain` ends with a supported read-side TLD (`.sns`),
 /// strips that suffix, and returns `(bare_name, tld)`.
 ///
 /// Bare names without a supported suffix return [`SnsError::UnsupportedTld`].
@@ -56,26 +45,6 @@ pub fn parse_supported_tld(domain: &str) -> Result<(&str, Tld), SnsError> {
         .iter()
         .find_map(|&tld| domain.strip_suffix(tld.as_str()).map(|bare| (bare, tld)))
         .ok_or(SnsError::UnsupportedTld)
-}
-
-/// Returns whether an RPC endpoint has already reported a finalized slot at or
-/// after the legacy `.sol` cutoff.
-pub(crate) fn endpoint_is_past_sol_cutoff(endpoint: &str) -> bool {
-    ENDPOINTS_PAST_SOL_CUTOFF
-        .get_or_init(Default::default)
-        .lock()
-        .expect("SOL cutoff endpoint cache lock poisoned")
-        .contains(endpoint)
-}
-
-/// Caches an RPC endpoint that reported a finalized slot at or after the legacy
-/// `.sol` cutoff.
-pub(crate) fn mark_endpoint_past_sol_cutoff(endpoint: String) {
-    ENDPOINTS_PAST_SOL_CUTOFF
-        .get_or_init(Default::default)
-        .lock()
-        .expect("SOL cutoff endpoint cache lock poisoned")
-        .insert(endpoint);
 }
 
 /// Parses a writable `.sns` domain, allowing either `name.sns` or `sub.parent.sns`,
@@ -131,33 +100,29 @@ mod tests {
     use super::*;
 
     #[test]
-    fn parse_supported_tld_accepts_sns_and_sol() {
+    fn parse_supported_tld_accepts_sns() {
         assert_eq!(
             parse_supported_tld("mydomain.sns").unwrap(),
             ("mydomain", Tld::Sns)
         );
         assert_eq!(
-            parse_supported_tld("mydomain.sol").unwrap(),
-            ("mydomain", Tld::Sol)
-        );
-        assert_eq!(
             parse_supported_tld("sub.mydomain.sns").unwrap(),
             ("sub.mydomain", Tld::Sns)
-        );
-        assert_eq!(
-            parse_supported_tld("sub.mydomain.sol").unwrap(),
-            ("sub.mydomain", Tld::Sol)
         );
     }
 
     #[test]
-    fn parse_supported_tld_rejects_bare_and_unknown() {
+    fn parse_supported_tld_requires_sns_suffix() {
         assert!(matches!(
             parse_supported_tld("mydomain"),
             Err(SnsError::UnsupportedTld)
         ));
         assert!(matches!(
             parse_supported_tld("mydomain.eth"),
+            Err(SnsError::UnsupportedTld)
+        ));
+        assert!(matches!(
+            parse_supported_tld("mydomain.sol"),
             Err(SnsError::UnsupportedTld)
         ));
         // Trailing whitespace means the string does not end with a supported TLD.

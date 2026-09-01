@@ -8,7 +8,7 @@ use crate::{
 async fn rejects_missing_or_invalid_sns_registry_accounts() {
     let (client, sender) = test_client("nb-sns-missing-domain", []);
     assert!(matches!(
-        resolve_with_config(&client, "missing.sns", AllowPda::Deny, true, TEST_NOW).await,
+        resolve_with_config(&client, "missing.sns", AllowPda::Deny, TEST_NOW).await,
         Err(SnsError::DomainDoesNotExist)
     ));
     assert_eq!(
@@ -30,7 +30,7 @@ async fn rejects_missing_or_invalid_sns_registry_accounts() {
         )],
     );
     assert!(matches!(
-        resolve_with_config(&client, "forged.sns", AllowPda::Deny, false, TEST_NOW).await,
+        resolve_with_config(&client, "forged.sns", AllowPda::Deny, TEST_NOW).await,
         Err(SnsError::InvalidNameAccountData)
     ));
 }
@@ -51,7 +51,7 @@ async fn rejects_active_sns_nft_without_holder() {
         [(RpcRequest::GetMultipleAccounts, initial)],
     );
     assert!(matches!(
-        resolve_with_config(&client, "active.sns", AllowPda::Deny, false, TEST_NOW).await,
+        resolve_with_config(&client, "active.sns", AllowPda::Deny, TEST_NOW).await,
         Err(SnsError::CouldNotFindNftOwner)
     ));
 }

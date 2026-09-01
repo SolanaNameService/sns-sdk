@@ -1,11 +1,11 @@
 use super::*;
 use crate::{
-    derivation::{get_srs_domain_key, SRS_PROGRAM_ID},
+    derivation::{get_sol_domain_key, SRS_PROGRAM_ID},
     resolve::{get_srs_token_mint, srs_record_data, token_2022_mint_account, SrsRecordOwner},
     utils::test::{account_response, token_largest_accounts_response, TestRpcSender},
 };
 use borsh::BorshSerialize;
-use serde_json::{json, Value};
+use serde_json::Value;
 use solana_client::{rpc_client::RpcClientConfig, rpc_request::RpcRequest};
 use solana_sdk::account::Account;
 
@@ -16,7 +16,7 @@ fn test_client(
     responses: impl IntoIterator<Item = (RpcRequest, Value)>,
 ) -> (RpcClient, TestRpcSender) {
     let sender = responses.into_iter().fold(
-        TestRpcSender::new(endpoint, json!(0)),
+        TestRpcSender::new(endpoint),
         |sender, (request, response)| sender.with_response(request, response),
     );
     let client = RpcClient::new_sender(
@@ -69,7 +69,7 @@ fn token_srs_test_client(
     holder_account: Option<&Account>,
     owner_account: Option<&Account>,
 ) -> (RpcClient, TestRpcSender) {
-    let record_key = get_srs_domain_key(domain).key;
+    let record_key = get_sol_domain_key(domain).key;
     let mint = get_srs_token_mint(&record_key);
     let record = srs_account(SrsRecordOwner::Token(mint));
     let mint_account = token_2022_mint_account(1, 0, true);

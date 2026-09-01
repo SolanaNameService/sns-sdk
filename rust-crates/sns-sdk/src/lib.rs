@@ -1,7 +1,6 @@
 use solana_program::{pubkey, pubkey::Pubkey};
 
 pub mod bindings;
-mod config;
 pub mod derivation;
 pub mod error;
 pub mod nft;

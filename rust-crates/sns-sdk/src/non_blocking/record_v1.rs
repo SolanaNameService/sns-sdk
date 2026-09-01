@@ -4,8 +4,8 @@ use spl_name_service::state::NameRecordHeader;
 use crate::{
     error::SnsError,
     non_blocking::resolve::resolve_name_registry,
-    non_blocking::tld::assert_tld_supported,
     record::{get_record_key, Record, RecordVersion},
+    tld::parse_sns_domain,
 };
 
 pub async fn get_record(
@@ -13,9 +13,23 @@ pub async fn get_record(
     domain: &str,
     record: Record,
 ) -> Result<Option<(NameRecordHeader, Vec<u8>)>, SnsError> {
-    let (domain, _) = assert_tld_supported(rpc_client, domain).await?;
-    let key = get_record_key(domain, record, RecordVersion::V1)?;
+    let domain = parse_sns_domain(domain)?;
+    let key = get_record_key(&domain, record, RecordVersion::V1)?;
     resolve_name_registry(rpc_client, &key).await
+}
+
+#[cfg(test)]
+mod validation_tests {
+    use super::*;
+
+    #[tokio::test]
+    async fn record_getter_rejects_sol_domains() {
+        let client = RpcClient::new(String::new());
+        assert!(matches!(
+            get_record(&client, "mydomain.sol", Record::Github).await,
+            Err(SnsError::UnsupportedTld)
+        ));
+    }
 }
 
 #[cfg(all(test, not(feature = "devnet")))]

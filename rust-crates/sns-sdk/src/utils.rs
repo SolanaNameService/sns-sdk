@@ -27,11 +27,10 @@ pub mod test {
     }
 
     /// Deterministic RPC sender that records requests and returns configurable
-    /// slot responses plus empty account responses.
+    /// account responses.
     #[derive(Clone)]
     pub struct TestRpcSender {
         endpoint: String,
-        slot_response: Value,
         requests: Arc<Mutex<Vec<(RpcRequest, Value)>>>,
         responses: Arc<Mutex<HashMap<RpcRequest, VecDeque<TestRpcResponse>>>>,
     }
@@ -42,11 +41,10 @@ pub mod test {
     }
 
     impl TestRpcSender {
-        /// Creates a recording sender for an endpoint and `getSlot` response.
-        pub fn new(endpoint: &str, slot_response: Value) -> Self {
+        /// Creates a recording sender for an endpoint.
+        pub fn new(endpoint: &str) -> Self {
             Self {
                 endpoint: endpoint.to_owned(),
-                slot_response,
                 requests: Arc::default(),
                 responses: Arc::default(),
             }
@@ -144,7 +142,6 @@ pub mod test {
                 };
             }
             Ok(match request {
-                RpcRequest::GetSlot => self.slot_response.clone(),
                 RpcRequest::GetAccountInfo => json!({
                     "context": { "slot": 1, "apiVersion": null },
                     "value": null

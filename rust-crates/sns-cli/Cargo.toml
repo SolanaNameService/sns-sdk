@@ -19,7 +19,7 @@ solana-client = { workspace = true }
 solana-account-decoder = { workspace = true }
 spl-associated-token-account = { workspace = true, features = ["no-entrypoint"] }
 spl-name-service = { workspace = true, features = ["no-entrypoint"] }
-sns-sdk = { version = "2.0.0", path = "../sns-sdk" }
+sns-sdk = "2.0.0"
 prettytable-rs = "0.10.0"
 serde_json = "1.0.94"
 serde = { version = "1.0.153", features = ["derive"] }
