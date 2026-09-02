@@ -7,6 +7,7 @@ use {
     spl_name_service::state::{get_seeds_and_key, NameRecordHeader},
 };
 
+use super::rpc::get_multiple_accounts_batched;
 use crate::{
     blocking::nft::resolve_nft_owner,
     derivation::{
@@ -246,15 +247,13 @@ pub fn resolve_name_registry_batch(
     rpc_client: &RpcClient,
     keys: &[Pubkey],
 ) -> Result<Vec<Option<(NameRecordHeader, Vec<u8>)>>, SnsError> {
-    let mut res = vec![];
-    for keys in keys.chunks(100) {
-        let accs = rpc_client.get_multiple_accounts(keys)?;
-        for acc in accs {
-            if let Some(acc) = acc {
-                res.push(Some(deserialize_name_registry(&acc)?));
-            } else {
-                res.push(None);
-            }
+    let accounts = get_multiple_accounts_batched(rpc_client, keys)?;
+    let mut res = Vec::with_capacity(accounts.len());
+    for account in accounts {
+        if let Some(account) = account {
+            res.push(Some(deserialize_name_registry(&account)?));
+        } else {
+            res.push(None);
         }
     }
     Ok(res)

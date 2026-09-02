@@ -9,6 +9,12 @@
 - Removed the `.sol` rollout flag, finalized-slot cutoff, endpoint cutoff cache, and finalized-slot RPC requirements.
 - Legacy SNS-backed `.sol` fallback routing has been removed.
 
+### `.sol` ownership APIs
+
+- Added `domain::get_sol_domains_for_owner` in the blocking and non-blocking clients for directly owned `.sol` domains.
+- Added `nft::get_sol_nfts_for_owner` in the blocking and non-blocking clients for tokenized `.sol` domains.
+- Added the shared `SolDomain` and `SolNftDomain` result types.
+
 ### Record APIs
 
 - V1 and V2 record getters now accept canonical lowercase `.sns` domains only.

@@ -1,6 +1,6 @@
 use borsh::BorshDeserialize;
 use name_tokenizer::state::NftRecord;
-use solana_account_decoder::UiAccountEncoding;
+use solana_account_decoder::{UiAccountEncoding, UiDataSliceConfig};
 use solana_client::{
     nonblocking::rpc_client::RpcClient,
     rpc_config::{RpcAccountInfoConfig, RpcProgramAccountsConfig},
@@ -9,11 +9,17 @@ use solana_client::{
 use solana_program::{program_pack::Pack, pubkey::Pubkey};
 use spl_token::state::{Account, Mint};
 
+use super::rpc::get_multiple_accounts_batched;
 use crate::{
-    derivation::{get_domain_mint, NAME_TOKENIZER_ID},
+    derivation::{get_domain_mint, get_sol_domain_key, NAME_TOKENIZER_ID},
     error::SnsError,
-    nft::SnsNftDomain,
+    nft::{SnsNftDomain, SolNftDomain},
     non_blocking::resolve::resolve_reverse_batch,
+    resolve::{
+        current_unix_timestamp, get_srs_token_mint, parse_sliced_token_2022_account_mint,
+        parse_srs_nft_mint_name, parse_srs_record, sol_srs_group_pda, SrsRecordOwner,
+        TOKEN_2022_ACCOUNT_DATA_SLICE,
+    },
 };
 
 pub async fn get_record_from_mint(
@@ -148,6 +154,73 @@ pub async fn resolve_nft_owner(
     Ok(None)
 }
 
+pub async fn get_sol_nfts_for_owner(
+    rpc_client: &RpcClient,
+    owner: &Pubkey,
+) -> Result<Vec<SolNftDomain>, SnsError> {
+    let config = RpcProgramAccountsConfig {
+        filters: Some(vec![
+            RpcFilterType::Memcmp(Memcmp::new_raw_bytes(32, owner.to_bytes().to_vec())),
+            RpcFilterType::Memcmp(Memcmp::new_raw_bytes(64, 1u64.to_le_bytes().to_vec())),
+        ]),
+        with_context: None,
+        account_config: RpcAccountInfoConfig {
+            encoding: Some(UiAccountEncoding::Base64),
+            data_slice: Some(UiDataSliceConfig {
+                offset: 0,
+                length: TOKEN_2022_ACCOUNT_DATA_SLICE,
+            }),
+            ..Default::default()
+        },
+        sort_results: None,
+    };
+    let mints = rpc_client
+        .get_program_accounts_with_config(&spl_token_2022::ID, config)
+        .await?
+        .into_iter()
+        .filter_map(|(_, account)| parse_sliced_token_2022_account_mint(&account.data))
+        .collect::<Vec<_>>();
+
+    let mint_accounts = get_multiple_accounts_batched(rpc_client, &mints).await?;
+    let sol_group = sol_srs_group_pda();
+    let mut candidates = Vec::new();
+    for (mint, mint_account) in mints.into_iter().zip(mint_accounts) {
+        let Some(mint_account) = mint_account else {
+            continue;
+        };
+        let Some(name) = parse_srs_nft_mint_name(&mint_account, &mint, &sol_group) else {
+            continue;
+        };
+        let key = get_sol_domain_key(&name).key;
+        if get_srs_token_mint(&key) != mint {
+            continue;
+        }
+        candidates.push(SolNftDomain {
+            domain: name,
+            key,
+            mint,
+        });
+    }
+
+    let record_keys = candidates.iter().map(|c| c.key).collect::<Vec<_>>();
+    let record_accounts = get_multiple_accounts_batched(rpc_client, &record_keys).await?;
+    let now = current_unix_timestamp();
+    let mut results = Vec::new();
+    for (candidate, account) in candidates.into_iter().zip(record_accounts) {
+        let Some(account) = account else { continue };
+        let Ok(SrsRecordOwner::Token(record_mint)) =
+            parse_srs_record(&account.owner, &account.data, now)
+        else {
+            continue;
+        };
+        if record_mint != candidate.mint {
+            continue;
+        }
+        results.push(candidate);
+    }
+    Ok(results)
+}
+
 #[cfg(all(test, not(feature = "devnet")))]
 mod tests {
     use super::*;
@@ -239,5 +312,35 @@ mod tests {
         .unwrap();
 
         assert_eq!(owner, Some(OWNER));
+    }
+
+    #[tokio::test]
+    async fn test_get_sol_nfts_for_owner() {
+        dotenv().ok();
+        let client = RpcClient::new(std::env::var("RPC_URL").unwrap());
+        for (owner, expected) in [
+            (
+                pubkey!("ALd1XSrQMCPSRayYUoUZnp6KcP6gERfJhWzkP49CkXKs"),
+                Vec::<&str>::new(),
+            ),
+            (
+                pubkey!("96GKJgm2W3P8Bae78brPrJf4Yi9AN1wtPJwg2XVQ2rMr"),
+                vec!["sns-ip-5-wallet-5"],
+            ),
+            (
+                pubkey!("53Ujp7go6CETvC7LTyxBuyopp5ivjKt6VSfixLm1pQrH"),
+                vec!["sns-ip-5-wallet-7", "sns-ip-5-wallet-9"],
+            ),
+        ] {
+            let nfts = get_sol_nfts_for_owner(&client, &owner).await.unwrap();
+            let mut names = nfts.iter().map(|n| n.domain.as_str()).collect::<Vec<_>>();
+            names.sort_unstable();
+            let mut expected = expected;
+            expected.sort_unstable();
+            assert_eq!(names, expected);
+            for nft in &nfts {
+                assert_eq!(nft.mint, get_srs_token_mint(&nft.key));
+            }
+        }
     }
 }

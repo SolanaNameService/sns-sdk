@@ -2,6 +2,7 @@ use solana_program::{pubkey, pubkey::Pubkey};
 
 pub mod bindings;
 pub mod derivation;
+pub mod domain;
 pub mod error;
 pub mod nft;
 pub mod primary_domain;

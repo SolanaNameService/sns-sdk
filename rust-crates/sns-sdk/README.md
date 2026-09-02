@@ -255,16 +255,28 @@ Not every record type requires right-of-association validation. Call `verify_roa
 
 ### Ownership And Reverse Lookup
 
-- **`domain::get_sns_domains_for_owner`** — returns directly owned top-level registry account keys; it does not enumerate tokenized ownership.
+- **`domain::get_sns_domains_for_owner`** — returns directly owned top-level registry account keys; tokenized domains are excluded.
 
   ```rust
   domain::get_sns_domains_for_owner(rpc_client: &RpcClient, owner: Pubkey) -> Result<Vec<Pubkey>, SnsError>
+  ```
+
+- **`domain::get_sol_domains_for_owner`** — returns directly owned, non-expired `.sol` domains as TLD-trimmed names and SRS record keys; tokenized domains are excluded.
+
+  ```rust
+  domain::get_sol_domains_for_owner(rpc_client: &RpcClient, owner: Pubkey) -> Result<Vec<SolDomain>, SnsError>
   ```
 
 - **`nft::get_sns_nfts_for_owner`** — returns tokenized domains whose `reverse`, `key`, and `mint` fields identify the domain and NFT.
 
   ```rust
   nft::get_sns_nfts_for_owner(rpc_client: &RpcClient, owner: &Pubkey) -> Result<Vec<SnsNftDomain>, SnsError>
+  ```
+
+- **`nft::get_sol_nfts_for_owner`** — returns tokenized, non-expired `.sol` domains for an owner address.
+
+  ```rust
+  nft::get_sol_nfts_for_owner(rpc_client: &RpcClient, owner: &Pubkey) -> Result<Vec<SolNftDomain>, SnsError>
   ```
 
 - **`primary_domain::get_primary_domain`** — returns an optional primary name-account key, not a domain string.

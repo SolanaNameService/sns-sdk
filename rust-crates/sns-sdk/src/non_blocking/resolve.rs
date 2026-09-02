@@ -7,6 +7,7 @@ use {
     spl_name_service::state::{get_seeds_and_key, NameRecordHeader},
 };
 
+use super::rpc::get_multiple_accounts_batched;
 use crate::{
     derivation::{
         derive_reverse, get_hashed_name, get_sns_domain_key, get_sol_domain_key, NAME_TOKENIZER_ID,
@@ -283,16 +284,14 @@ pub async fn resolve_name_registry_batch(
     rpc_client: &RpcClient,
     keys: &[Pubkey],
 ) -> Result<Vec<Option<(NameRecordHeader, Vec<u8>)>>, SnsError> {
-    let mut res = vec![];
-    for k in keys.chunks(100) {
-        let accs = rpc_client.get_multiple_accounts(k).await?;
-        for acc in accs {
-            if let Some(acc) = acc {
-                let des = deserialize_name_registry(&acc)?;
-                res.push(Some(des))
-            } else {
-                res.push(None)
-            }
+    let accounts = get_multiple_accounts_batched(rpc_client, keys).await?;
+    let mut res = Vec::with_capacity(accounts.len());
+    for account in accounts {
+        if let Some(account) = account {
+            let des = deserialize_name_registry(&account)?;
+            res.push(Some(des));
+        } else {
+            res.push(None);
         }
     }
     Ok(res)
