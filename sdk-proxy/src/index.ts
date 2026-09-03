@@ -16,6 +16,7 @@ const DEFAULT_CACHE_TTL_SECONDS = 10;
 const CACHEABLE_ROUTES = [
   "/domain-key/",
   "/domains/",
+  "/nfts/",
   "/primary-domain/",
   "/favorite-domain/",
   "/multiple-primary-domains/",

@@ -1,3 +1,26 @@
+# SNS SDK Proxy v1.1.0
+
+SNS SDK Proxy v1.1.0 targets JavaScript SDK 4.1.0.
+
+## Changed
+
+### `.sol` resolution
+
+- `/resolve/:domain` and `/safe-resolve/:domain` now resolve `.sol` domains
+  through SRS at all slots.
+- Expired SRS records return `410 Domain expired`. Malformed SRS records return
+  `422 Record is malformed`.
+
+## New endpoints
+
+### `/nfts/:owner`
+
+- Lists tokenized `.sns` domains held by a wallet.
+- Returns the TLD-trimmed domain name, name-account public key, and NFT mint
+  as base58 strings.
+
+---
+
 # SNS SDK Proxy v1.0.0
 
 This is a breaking release of the SNS SDK Proxy REST API.

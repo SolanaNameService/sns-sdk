@@ -8,7 +8,7 @@
 
 > **Experimental:** This Cloudflare Worker REST facade is for integrations that cannot use a native SDK. Its availability and API may change. It is a private package, not an installable SDK or a transaction relayer.
 
-The proxy exposes selected [`@bonfida/spl-name-service`](../js/) operations over HTTP. The example production base URL is `https://sdk-proxy-v2.sns.id`.
+The proxy exposes selected [`@bonfida/spl-name-service`](../js/) operations over HTTP. The example production base URL is `https://sdk-proxy-v2.sns.id`. The proxy targets JavaScript SDK 4.1.0.
 
 > **Migration notice:** Applications using the original proxy at `sdk-proxy.sns.id` should migrate to the v2 proxy at `sdk-proxy-v2.sns.id` as soon as possible. The original proxy will be retired on **October 1**. The v2 release is not fully backward compatible; review the [changelog](./CHANGELOG.md) for breaking changes and migration notes.
 
@@ -54,6 +54,7 @@ Recurring result types are:
 
 ```ts
 type DomainEntry = { domain: string; key: string };
+type NftEntry = { domain: string; key: string; mint: string };
 type PrimaryDomainResult = {
   domain: string;
   reverse: string;
@@ -84,6 +85,7 @@ type RecordResult = {
 | `200`  | Route result                                                                         | Successful request, including `null` primary-domain results.              |
 | `400`  | `Invalid input`, `Unsupported TLD`, or a deprecation message                         | Invalid schema input or selected SDK validation failures.                 |
 | `404`  | `Domain not found`, `Record not found`, `Account not found`, or `Resource not found` | Requested chain data is absent.                                           |
+| `410`  | `Domain expired`                                                                     | An SRS record for a `.sol` resolution has expired.                        |
 | `409`  | `SRS and SNS resolution mismatch`                                                    | Safe `.sol` resolution returned different SRS and SNS targets.            |
 | `422`  | `Record is malformed`                                                                | Record data or validation is malformed.                                   |
 | `502`  | `RPC unavailable`                                                                    | Solana RPC returned a JSON-RPC error.                                     |
@@ -105,20 +107,20 @@ type RecordResult = {
   GET /resolve/mydomain.sol
   ```
 
-- **`GET /safe-resolve/:domain`** — follows `/resolve/:domain`, except that when SRS-backed `.sol` resolution is enabled, the `.sol` domain and its corresponding `.sns` domain must resolve to the same target.
+- **`GET /safe-resolve/:domain`** — follows `/resolve/:domain`, except that for `.sol` domains, the SRS target and the corresponding `.sns` target must resolve to the same public key.
 
   ```http
   GET /safe-resolve/:domain
   ```
 
-  Inputs and successful results are identical to `/resolve/:domain`; optional `rpc` is supported. A target mismatch returns `409 SRS and SNS resolution mismatch`.
+  Inputs and successful results are identical to `/resolve/:domain`; optional `rpc` is supported. A target mismatch returns `409 SRS and SNS resolution mismatch`. A `.sol` domain without a corresponding `.sns` registry returns `404 Domain not found`.
 
   ```http
   GET /safe-resolve/mydomain.sns
   GET /safe-resolve/mydomain.sol
   ```
 
-For `.sol`, both routes use the legacy SNS-backed path only while the selected RPC reports a finalized slot below `452,825,395`. At or after that slot, `.sol` is rejected as unsupported. Once SRS-backed `.sol` resolution is enabled, `/safe-resolve/:domain` additionally requires matching SRS and SNS targets.
+For `.sol`, both routes read and validate the canonical SRS record and return the record's direct public-key owner or the unique current holder of its canonical token mint. Expired SRS records return `410 Domain expired`.
 
 ## Domain And Key Queries
 
@@ -130,13 +132,21 @@ For `.sol`, both routes use the legacy SNS-backed path only while the selected R
 
   Inputs: TLD-less domain or subdomain. Result: base58 SNS name-account key.
 
-- **`GET /domains/:owner`** — combines directly owned and tokenized SNS domains. Entries lacking reverse-name data are omitted by the SDK.
+- **`GET /domains/:owner`** — combines directly owned and tokenized SNS domains. Returned `domain` values are TLD-trimmed (no `.sns` suffix). Entries lacking reverse-name data are omitted by the SDK.
 
   ```http
   GET /domains/:owner
   ```
 
   Inputs: `owner` base58 public key; optional `rpc`. Result: `DomainEntry[]`.
+
+- **`GET /nfts/:owner`** — lists tokenized SNS domains held by the wallet. Returned `domain` values are TLD-trimmed (no `.sns` suffix), and entries lacking reverse-name data are omitted by the SDK. Each entry includes its name-account key and NFT mint.
+
+  ```http
+  GET /nfts/:owner
+  ```
+
+  Inputs: `owner` base58 public key; optional `rpc`. Result: `NftEntry[]`.
 
 - **`GET /primary-domain/:owner`** — `stale` indicates that the configured owner no longer owns the domain.
 

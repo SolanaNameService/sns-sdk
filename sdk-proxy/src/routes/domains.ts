@@ -94,6 +94,27 @@ export const registerDomainRoutes = (app: Hono<Env>) => {
     }
   });
 
+  app.get("/nfts/:owner", async (c) => {
+    try {
+      const owner = publicKeySchema.parse(c.req.param("owner"));
+      const connection = getConnection(c);
+      const res = await getSnsNftsForOwner(connection, owner);
+
+      return c.json(
+        response(
+          true,
+          res.map((entry) => ({
+            domain: entry.domain,
+            key: entry.key.toBase58(),
+            mint: entry.mint.toBase58(),
+          })),
+        ),
+      );
+    } catch (err) {
+      return handleApiError(c, err);
+    }
+  });
+
   app.get("/primary-domain/:owner", primaryDomainHandler);
   app.get("/favorite-domain/:owner", primaryDomainHandler);
   app.get("/multiple-primary-domains/:owners", multiplePrimaryDomainsHandler);
