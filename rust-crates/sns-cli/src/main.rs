@@ -13,6 +13,7 @@ use commands::{
     burn::process_burn,
     count::process_count_command,
     domains::{process_domains, process_lookup, process_resolve, process_reverse_lookup},
+    nfts::process_nfts,
     primary_domain::{process_get_primary_domain, process_set_primary_domain},
     record_v2::{process_record_v2_get, process_record_v2_set},
     registration::process_register,
@@ -28,6 +29,7 @@ async fn run() -> commands::CliResult {
     match command {
         Commands::Resolve { domain } => process_resolve(&rpc_client, domain).await,
         Commands::Domains { owners } => process_domains(&rpc_client, owners).await,
+        Commands::Nfts { owners } => process_nfts(&rpc_client, owners).await,
         Commands::Burn {
             domain,
             keypair_path,

@@ -30,7 +30,7 @@ pub(crate) async fn process_domains(rpc_client: &RpcClient, owners: Vec<String>)
                 table.add_row(row![
                     displayed,
                     owner,
-                    format!("https://naming.bonfida.org/domain/{x}")
+                    format!("https://www.sns.id/domain/{x}")
                 ]);
             });
         pb.set_position(idx as u64);

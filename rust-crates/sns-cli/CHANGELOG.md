@@ -1,3 +1,19 @@
+# SNS CLI v3.1.0
+
+## Added
+
+- `nfts` — list tokenized `.sns` domains (name-tokenizer NFTs) held by one or more
+  wallets. Output columns: `Domain`, `Owner`, `Mint`, `Link`. Only tokenized domains
+  with reverse records are listed; use `domains` for direct registry ownership.
+
+## Changed
+
+- Upgraded the `sns-sdk` dependency from 2.0.0 to 2.1.0.
+- The CLI remains `.sns`-only: no `.sol` resolution, discovery, or ownership commands
+  were added, and `.sol`/bare names continue to be rejected by all domain-taking commands.
+
+---
+
 # SNS CLI v3.0.0
 
 This is a breaking release of `sns-cli`.

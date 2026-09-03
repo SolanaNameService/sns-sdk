@@ -126,6 +126,14 @@ pub(crate) enum Commands {
         #[arg(required = true, help = "The list of wallets")]
         owners: Vec<String>,
     },
+    #[command(
+        arg_required_else_help = true,
+        about = "Fetch the tokenized domains owned for the specified wallets"
+    )]
+    Nfts {
+        #[arg(required = true, help = "The list of wallets")]
+        owners: Vec<String>,
+    },
     RecordV2(RecordV2Command),
     SubRegistrar(SubRegistrarCommand),
     Count(CountCommand),
@@ -270,6 +278,24 @@ mod tests {
         assert!(
             matches!(nested.command, Commands::RecordV2(RecordV2Command { cmd: RecordV2SubCommand::Get { domain, record } }) if domain == "bonfida.sns" && record.as_str() == "url")
         );
+    }
+
+    #[test]
+    fn nfts_command_parses_owners_and_accepts_global_url() {
+        let root = Cli::try_parse_from([
+            "sns",
+            "--url",
+            "https://root.example",
+            "nfts",
+            "11111111111111111111111111111111",
+        ])
+        .unwrap();
+        assert_eq!(root.url.as_deref(), Some("https://root.example"));
+        assert!(matches!(
+            root.command,
+            Commands::Nfts { owners } if owners == ["11111111111111111111111111111111"]
+        ));
+        assert!(Cli::try_parse_from(["sns", "nfts"]).is_err());
     }
 
     #[test]

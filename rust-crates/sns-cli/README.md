@@ -68,6 +68,14 @@ List directly owned top-level registry domains for a wallet address:
 sns domains <OWNER_PUBKEY>
 ```
 
+### List Tokenized Domains For An Owner
+
+List tokenized `.sns` domains held by a wallet:
+
+```bash
+sns nfts <OWNER_PUBKEY>
+```
+
 ## Command Summary
 
 | Command                    | Purpose                                        | Transaction behavior |
@@ -81,6 +89,7 @@ sns domains <OWNER_PUBKEY>
 | `lookup`                   | Inspect raw name-registry accounts             | Read only            |
 | `reverse-lookup`           | Find the reverse name for an account key       | Read only            |
 | `domains`                  | List directly owned top-level registry domains | Read only            |
+| `nfts`                     | List tokenized domains held by wallets         | Read only            |
 | `record-v2 get`            | Fetch and validate a V2 record                 | Read only            |
 | `record-v2 set`            | Create or update a V2 record                   | Signs and submits    |
 | `sub-registrar get`        | Print sub-registrar information                | Read only            |
@@ -216,6 +225,22 @@ Output: a table of reverse-resolved `Domain`, requested `Owner`, and a naming-si
 sns domains 11111111111111111111111111111111
 ```
 
+### `nfts`
+
+**`nfts`** — list tokenized domains held by wallets.
+
+```text
+sns [--url <URL>] nfts <OWNER_PUBKEY>...
+```
+
+Arguments: one or more base58 owner public keys. `--url` selects the RPC endpoint.
+
+Output: a table of reverse-resolved `Domain`, requested `Owner`, NFT `Mint`, and a naming-site link. It reports tokenized ownership through name-tokenizer NFT records; entries without reverse records are omitted. Direct registry ownership is reported by `domains`.
+
+```bash
+sns nfts 11111111111111111111111111111111
+```
+
 ### `record-v2 get`
 
 **`record-v2 get`** — fetch and validate a V2 record.
@@ -299,9 +324,9 @@ Registration builds the default mainnet USDC payment path. Treat all keypair pat
 
 ## Operational Caveats
 
-- `lookup` displays the raw name-registry owner, which can differ from an effective tokenized-domain owner. `domains` is intentionally a direct registry-ownership query and does not enumerate all tokenized ownership.
+- `lookup` displays the raw name-registry owner, which can differ from an effective tokenized-domain owner. `domains` is intentionally a direct registry-ownership query and does not enumerate all tokenized ownership; use `nfts` for tokenized domains with reverse records.
 
-- Both `count` commands call `getProgramAccounts`; on public RPCs this can be expensive, slow, or rejected. Progress displays, tables, debug output, and Explorer/naming-site links are presentation conveniences, not stable APIs. Explorer transaction and address links are mainnet-oriented even if `--url` points elsewhere.
+- Both `count` and `nfts` commands call `getProgramAccounts`; on public RPCs this can be expensive, slow, or rejected. Progress displays, tables, debug output, and Explorer/naming-site links are presentation conveniences, not stable APIs. Explorer transaction and address links are mainnet-oriented even if `--url` points elsewhere.
 
 - Command-handler failures print an `Error:` message to stderr and return a nonzero process exit status. Human-readable tables and debug-formatted errors remain presentation output rather than a stable machine schema.
 
