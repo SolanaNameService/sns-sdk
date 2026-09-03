@@ -9,6 +9,7 @@ import type { Options } from "../../types";
 
 /**
  * Resolves a `.sns` or `.sol` domain to its target public key through React Query.
+ * `.sol` domains are resolved through the JavaScript SDK's SRS route.
  *
  * @param connection Solana RPC connection
  * @param domain Full `.sns` or `.sol` domain name, or a nullish value to disable the query
@@ -18,6 +19,8 @@ import type { Options } from "../../types";
  * set `isError` without throwing during render.
  *
  * Query failures are exposed through the result's `error` and `isError` fields.
+ * SRS resolution failures such as expired or malformed domains are surfaced
+ * unchanged from the JavaScript SDK.
  *
  * @example
  * ```tsx

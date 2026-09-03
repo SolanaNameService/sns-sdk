@@ -9,8 +9,8 @@ import type { Options } from "../../types";
 
 /**
  * Resolves a `.sns` or `.sol` domain through the JavaScript SDK's `safeResolve`.
- * When SRS-backed `.sol` resolution is enabled, the `.sol` target and its
- * corresponding `.sns` target must match.
+ * For `.sol` domains, the SRS target and corresponding `.sns` target must
+ * match.
  *
  * @param connection Solana RPC connection
  * @param domain Full `.sns` or `.sol` domain name, or a nullish value to disable the automatic query

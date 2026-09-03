@@ -39,7 +39,8 @@ const isVerified = (result: RecordResult) =>
  * as `undefined`.
  *
  * @param connection Solana RPC connection
- * @param domain Full `.sns` or `.sol` domain name
+ * @param domain Canonical lowercase `.sns` domain name, including a top-level
+ * domain or one-level subdomain
  * @param records Record types to retrieve
  * @param deserialize Whether to deserialize record content
  * @returns Verified record results in the same order as `records`
@@ -71,7 +72,8 @@ export const getVerifiedRecords = async (
  * Retrieves and verifies multiple records through React Query.
  *
  * @param connection Solana RPC connection
- * @param domain Full `.sns` or `.sol` domain name
+ * @param domain Canonical lowercase `.sns` domain name, including a top-level
+ * domain or one-level subdomain
  * @param records Record types to retrieve
  * @param options Optional JavaScript SDK record retrieval settings
  * @param queryOptions Optional React Query settings
@@ -81,6 +83,8 @@ export const getVerifiedRecords = async (
  * throwing during render.
  *
  * Query failures are exposed through the result's `error` and `isError` fields.
+ * `.sol` names fail with `UnsupportedTldError`; malformed names fail with
+ * `InvalidDomainError` before account RPC requests.
  *
  * @example
  * ```tsx

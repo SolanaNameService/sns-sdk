@@ -14,7 +14,7 @@ React Query hooks for the Solana Name Service JavaScript SDK v4. The package pro
 Install SNS React with its peers:
 
 ```bash
-npm install @bonfida/sns-react @bonfida/spl-name-service@^4.0.0 @solana/web3.js@^1.98.2 @tanstack/react-query@^5.0.0 react
+npm install @bonfida/sns-react @bonfida/spl-name-service@^4.1.0 @solana/web3.js@^1.98.2 @tanstack/react-query@^5.0.0 react
 ```
 
 SNS React supports React 18 and 19. The SNS JS SDK is a peer dependency so the application and hooks use one compatible v4 SDK instance.
@@ -57,7 +57,7 @@ function Resolve() {
 }
 ```
 
-Use `useSafeResolve` instead when the JavaScript SDK's conditional SRS/SNS consistency verification is required.
+Use `useSafeResolve` instead when `.sol` resolution must verify that the SRS and corresponding SNS targets agree.
 
 ### Read Verified Records
 
@@ -88,14 +88,14 @@ function Records({ connection }: { connection: Connection }) {
 
 ## Domain Inputs
 
-| Hook                                                          | Input                                    | Notes                                                                                                                                                                  |
-| ------------------------------------------------------------- | ---------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `useResolve`, `useSafeResolve`, `useRecords`, `useProfilePic` | Full domain such as `example.sns`        | `useSafeResolve` delegates to JS SDK safe resolution and compares targets only when SRS-backed `.sol` resolution is enabled; other hooks inherit JS v4 domain support. |
-| `useSubdomains`                                               | TLD-trimmed SNS parent such as `example` | Passed to v4 `getSnsDomainKeySync`. Do not include `.sns`.                                                                                                             |
-| `useSnsDomainsForOwner`, `usePrimaryDomain`                   | Wallet `PublicKey`                       | Nullish input disables the query.                                                                                                                                      |
-| `useReverseLookup`                                            | Domain account `PublicKey`               | Nullish input disables the query.                                                                                                                                      |
-
-High-level `.sol` reads use the JS SDK compatibility path only before finalized slot `452825395`. At or after that slot they throw `UnsupportedTldError`. SNS React does not extend that support.
+| Hook                                                                                                             | Input                                              | Notes                                                          |
+| ---------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- | -------------------------------------------------------------- |
+| `useResolve`                                                                                                     | Full `.sns` or `.sol` domain                       | `.sol` resolution uses the JS SDK's SRS route.                 |
+| `useSafeResolve`                                                                                                 | Full `.sns` or `.sol` domain                       | For `.sol`, the SRS and corresponding SNS targets must match.  |
+| `useRecords`, `useProfilePic`                                                                                    | Canonical lowercase `.sns` domain                  | Top-level domains and one-level subdomains are both supported. |
+| `useSubdomains`                                                                                                  | TLD-trimmed `.sns` parent domain such as `example` | Passed to v4 `getSnsDomainKeySync`. Do not include `.sns`.     |
+| `useSnsDomainsForOwner`, `useSnsNftsForOwner`, `useSolDomainsForOwner`, `useSolNftsForOwner`, `usePrimaryDomain` | Wallet `PublicKey`                                 | Nullish input disables the query.                              |
+| `useReverseLookup`                                                                                               | Domain account `PublicKey`                         | Nullish input disables the query.                              |
 
 ## Record Safety
 
@@ -121,7 +121,7 @@ useResolve(connection, domain, queryOptions?)
 
 ### `useSafeResolve`
 
-Resolves a full domain through JS SDK `safeResolve`. When SRS-backed `.sol` resolution is enabled, the `.sol` and corresponding `.sns` targets must match. Mismatches and other SDK failures are available through the query result's `error` and `isError` fields.
+Resolves a full domain through JS SDK `safeResolve`. For `.sol` domains, the SRS and corresponding `.sns` targets must match. Mismatches and other SDK failures are available through the query result's `error` and `isError` fields.
 
 ```ts
 useSafeResolve(connection, domain, queryOptions?)
@@ -129,10 +129,38 @@ useSafeResolve(connection, domain, queryOptions?)
 
 ### `useSnsDomainsForOwner`
 
-Returns sorted v4 `SnsDomain[]` values with `{ domain, key }`. Results include directly registry-owned top-level domains with valid reverse records. Tokenized domains and subdomains are not included.
+Returns `SnsDomain[]` values with `{ domain, key }`. Results include directly registry-owned top-level domains with valid reverse records. Tokenized domains and subdomains are not included.
 
 ```ts
 useSnsDomainsForOwner(connection, ownerPublicKey, queryOptions?)
+```
+
+### `useSnsNftsForOwner`
+
+Returns `SnsNft[]` values with `{ domain, key, mint }` for tokenized
+`.sns` domains owned by the wallet. Domain names are TLD-trimmed.
+
+```ts
+useSnsNftsForOwner(connection, ownerPublicKey, queryOptions?)
+```
+
+### `useSolDomainsForOwner`
+
+Returns `SolDomain[]` values with `{ domain, key }` for directly
+wallet-owned, non-expired top-level `.sol` domains. Domain names are
+TLD-trimmed. Tokenized domains and subdomains are not included.
+
+```ts
+useSolDomainsForOwner(connection, ownerPublicKey, queryOptions?)
+```
+
+### `useSolNftsForOwner`
+
+Returns `SolNft[]` values with `{ domain, key, mint }` for non-expired
+tokenized `.sol` domains owned by the wallet. Domain names are TLD-trimmed.
+
+```ts
+useSolNftsForOwner(connection, ownerPublicKey, queryOptions?)
 ```
 
 ### `usePrimaryDomain`
@@ -161,7 +189,9 @@ useReverseLookup(connection, domainKey, queryOptions?)
 
 ### `useRecords`
 
-Fetches, optionally deserializes, verifies, and filters multiple v4 records.
+Fetches, optionally deserializes, verifies, and filters multiple v4 records for
+a canonical lowercase `.sns` domain or one-level `.sns` subdomain. `.sol`
+names are rejected.
 
 ```ts
 useRecords(

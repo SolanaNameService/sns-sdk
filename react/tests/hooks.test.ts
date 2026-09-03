@@ -6,6 +6,9 @@ import { useResolve } from "../src/hooks/useResolve";
 import { usePrimaryDomain } from "../src/hooks/usePrimaryDomain";
 import { useReverseLookup } from "../src/hooks/useReverseLookup";
 import { useSnsDomainsForOwner } from "../src/hooks/useSnsDomainsForOwner";
+import { useSnsNftsForOwner } from "../src/hooks/useSnsNftsForOwner";
+import { useSolDomainsForOwner } from "../src/hooks/useSolDomainsForOwner";
+import { useSolNftsForOwner } from "../src/hooks/useSolNftsForOwner";
 import { useSubdomains } from "../src/hooks/useSubdomains";
 import { renderQueryHook, waitFor } from "./test-utils";
 
@@ -24,6 +27,20 @@ describe("v4 SDK hooks against mainnet fixtures", () => {
     await waitFor(() => expect(hook.result.current.isSuccess).toBe(true));
     expect(hook.result.current.data).toBe(
       "Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8",
+    );
+    hook.unmount();
+  });
+
+  test("resolves a full SRS-backed .sol domain", async () => {
+    const hook = renderQueryHook(() =>
+      useResolve(connection, "sns-ip-5-wallet-1.sol", {
+        select: (owner) => owner.toBase58(),
+      }),
+    );
+
+    await waitFor(() => expect(hook.result.current.isSuccess).toBe(true));
+    expect(hook.result.current.data).toBe(
+      "ALd1XSrQMCPSRayYUoUZnp6KcP6gERfJhWzkP49CkXKs",
     );
     hook.unmount();
   });
@@ -65,6 +82,58 @@ describe("v4 SDK hooks against mainnet fixtures", () => {
         domain: "wallet-guide-9",
         key: "8XXesVR1EEsCEePAEyXPL9A4dd9Bayhu9MRkFBpTkibS",
       },
+    ]);
+    hook.unmount();
+  });
+
+  test("returns sorted tokenized SNS domains for an owner", async () => {
+    const owner = new PublicKey("Fxuoy3gFjfJALhwkRcuKjRdechcgffUApeYAfMWck6w8");
+    const hook = renderQueryHook(() => useSnsNftsForOwner(connection, owner));
+
+    await waitFor(() => expect(hook.result.current.isSuccess).toBe(true));
+    expect(
+      hook.result.current.data?.map(({ domain, key, mint }) => ({
+        domain,
+        key: key.toBase58(),
+        mint: mint.toBase58(),
+      })),
+    ).toEqual([
+      {
+        domain: "wallet-guide-0",
+        key: "uDTBDfKrJSBTgmWUZLcENPk5YrHfWbcrUbNFLjsvNpn",
+        mint: "Eskv5Ns4gyREvNPPgANojNPsz6x1cbn9YwT7esAnxPhP",
+      },
+      {
+        domain: "wallet-guide-5",
+        key: "iSNVgWfb31aTWa58UxZ6fp7n3TTrUk5Gojggub5stXk",
+        mint: "2RJhBbxTiPT2bZq5bhjaTZbsnhbDB7VtTAMmCdBrwBZP",
+      },
+    ]);
+    hook.unmount();
+  });
+
+  test("returns sorted native .sol domains for an owner", async () => {
+    const owner = new PublicKey("ALd1XSrQMCPSRayYUoUZnp6KcP6gERfJhWzkP49CkXKs");
+    const hook = renderQueryHook(() =>
+      useSolDomainsForOwner(connection, owner),
+    );
+
+    await waitFor(() => expect(hook.result.current.isSuccess).toBe(true));
+    expect(hook.result.current.data?.map(({ domain }) => domain)).toEqual([
+      "sns-ip-5-wallet-1",
+      "sns-ip-5-wallet-2",
+    ]);
+    hook.unmount();
+  });
+
+  test("returns sorted tokenized .sol domains for an owner", async () => {
+    const owner = new PublicKey("53Ujp7go6CETvC7LTyxBuyopp5ivjKt6VSfixLm1pQrH");
+    const hook = renderQueryHook(() => useSolNftsForOwner(connection, owner));
+
+    await waitFor(() => expect(hook.result.current.isSuccess).toBe(true));
+    expect(hook.result.current.data?.map(({ domain }) => domain)).toEqual([
+      "sns-ip-5-wallet-7",
+      "sns-ip-5-wallet-9",
     ]);
     hook.unmount();
   });

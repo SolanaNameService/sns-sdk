@@ -1,3 +1,4 @@
+import { UnsupportedTldError } from "@bonfida/spl-name-service/errors";
 import { Record } from "@bonfida/spl-name-service/record";
 import { Connection } from "@solana/web3.js";
 
@@ -44,6 +45,16 @@ describe("verified record hooks against mainnet fixtures", () => {
     expect(hook.result.current.data).toBe(
       "https://pbs.twimg.com/profile_images/1733193526714699776/D-6E81Lc_400x400.png",
     );
+    hook.unmount();
+  });
+
+  test("rejects .sol record names before account RPC", async () => {
+    const hook = renderQueryHook(() =>
+      useRecords(connection, "wallet-guide-9.sol", [Record.Url]),
+    );
+
+    await waitFor(() => expect(hook.result.current.isError).toBe(true));
+    expect(hook.result.current.error).toBeInstanceOf(UnsupportedTldError);
     hook.unmount();
   });
 });

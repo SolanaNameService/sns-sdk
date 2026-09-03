@@ -179,6 +179,9 @@ try {
     "useRecords",
     "useReverseLookup",
     "useSnsDomainsForOwner",
+    "useSnsNftsForOwner",
+    "useSolDomainsForOwner",
+    "useSolNftsForOwner",
     "useSubdomains",
   ];
   const runtimeAssertion = `
