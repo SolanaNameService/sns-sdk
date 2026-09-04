@@ -22,6 +22,10 @@ Wallet primary-domain and owned-domain lookup APIs.
 | [GetSnsDomainsForAddressResult](interfaces/GetSnsDomainsForAddressResult.md) | An SNS domain owned directly by a registry address. |
 | [GetSnsNftsForAddressParams](interfaces/GetSnsNftsForAddressParams.md) | Parameters for retrieving SNS domain NFTs owned by an address. |
 | [GetSnsNftsForAddressResult](interfaces/GetSnsNftsForAddressResult.md) | An SNS domain NFT owned by an address. |
+| [GetSolDomainsForAddressParams](interfaces/GetSolDomainsForAddressParams.md) | Parameters for retrieving directly owned SRS `.sol` domains. |
+| [GetSolDomainsForAddressResult](interfaces/GetSolDomainsForAddressResult.md) | A directly wallet-owned SRS `.sol` domain. |
+| [GetSolNftsForAddressParams](interfaces/GetSolNftsForAddressParams.md) | Parameters for retrieving tokenized SRS `.sol` domains. |
+| [GetSolNftsForAddressResult](interfaces/GetSolNftsForAddressResult.md) | A tokenized `.sol` domain and its associated NFT mint. |
 
 ## Functions
 
@@ -31,3 +35,5 @@ Wallet primary-domain and owned-domain lookup APIs.
 | [getPrimaryDomainsBatch](functions/getPrimaryDomainsBatch.md) | Retrieves primary SNS domain names for multiple wallet addresses. |
 | [getSnsDomainsForAddress](functions/getSnsDomainsForAddress.md) | Retrieves directly registry-owned top-level SNS domains for an address. |
 | [getSnsNftsForAddress](functions/getSnsNftsForAddress.md) | Retrieves the SNS domain NFTs owned by a given address. |
+| [getSolDomainsForAddress](functions/getSolDomainsForAddress.md) | Retrieves non-expired, directly wallet-owned top-level `.sol` domains. |
+| [getSolNftsForAddress](functions/getSolNftsForAddress.md) | Retrieves non-expired tokenized `.sol` domains held by an address. |

@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **verifyRightOfAssociation**(`connection`, `record`, `domain`, `verifier?`): `Promise`\<`boolean`\>
 
-Defined in: [record/verifyRightOfAssociation.ts:34](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/record/verifyRightOfAssociation.ts#L34)
+Defined in: [record/verifyRightOfAssociation.ts:35](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/js/src/record/verifyRightOfAssociation.ts#L35)
 
 Verifies a record's Right of Association validation.
 
@@ -32,7 +32,7 @@ Record type
 
 `string`
 
-Full `.sns` or `.sol` domain name
+Full `.sns` domain name
 
 ### verifier?
 
@@ -46,6 +46,11 @@ records and to the guardian pubkey otherwise. Required when neither applies.
 `Promise`\<`boolean`\>
 
 Whether the record's Right of Association validation matches the verifier.
+
+## Throws
+
+[Errors.UnsupportedTldError](../../Errors/classes/UnsupportedTldError.md) when the domain lacks a `.sns` suffix;
+[Errors.InvalidDomainError](../../Errors/classes/InvalidDomainError.md) when the `.sns` domain or subdomain is invalid.
 
 ## Example
 

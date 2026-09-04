@@ -1,0 +1,27 @@
+---
+displayed_sidebar: docsSidebar
+title: SolNftDomain
+description: A canonical tokenized `.sol` domain returned by NFT ownership queries.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Tokenized domains](../tokenized-domains.mdx) / `SolNftDomain`
+
+# Struct: `SolNftDomain`
+
+```rust
+pub struct SolNftDomain {
+    pub domain: String,
+    pub key: Pubkey,
+    pub mint: Pubkey,
+}
+```
+
+| Field    | Description                                   |
+| -------- | --------------------------------------------- |
+| `domain` | TLD-trimmed `.sol` domain name.               |
+| `key`    | SRS record account public key for the domain. |
+| `mint`   | Canonical Token-2022 mint for the domain.     |
+
+This type is returned by `get_sol_nfts_for_owner` in both blocking and non-blocking client modes.
+
+The canonical Rust path is `sns_sdk::nft::SolNftDomain`.

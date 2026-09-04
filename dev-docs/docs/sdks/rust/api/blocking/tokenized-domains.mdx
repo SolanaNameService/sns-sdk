@@ -1,18 +1,19 @@
 ---
 displayed_sidebar: docsSidebar
 title: Tokenized domains
-description: Query tokenized SNS domains and name-tokenizer records with the blocking Rust SDK client.
+description: Query tokenized SNS and `.sol` domains with the blocking Rust SDK client.
 ---
 
 [Rust SDK API Reference](../index.mdx) / Tokenized domains
 
-Tokenized-domain APIs use blocking RPC queries to inspect SPL Token accounts and Name Tokenizer records. They accept wallet owners, domain keys, or mints and expose either high-level SNS domain data or low-level token-record accounts.
+Tokenized domains are domains converted into NFTs — `.sns` domains through the Name Tokenizer, `.sol` domains as Token-2022 mints backed by SRS records. Use the blocking client to list the tokenized domains a wallet holds, find the current holder of a tokenized domain, or query raw Name Tokenizer records.
 
 ## APIs
 
-| API                                                                    | Description                                                            |
-| ---------------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| [`get_record_from_mint`](./tokenized-domains/get-record-from-mint)     | Finds active Name Tokenizer records for a mint.                        |
-| [`get_nft_records`](./tokenized-domains/get-nft-records)               | Finds deserialized active token records held by a wallet.              |
-| [`get_sns_nfts_for_owner`](./tokenized-domains/get-sns-nfts-for-owner) | Lists tokenized SNS domains held by a wallet when reverse data exists. |
-| [`resolve_nft_owner`](./tokenized-domains/resolve-nft-owner)           | Finds the holder of a valid one-of-one tokenized domain mint.          |
+| API                                                                    | Description                                         |
+| ---------------------------------------------------------------------- | --------------------------------------------------- |
+| [`get_sns_nfts_for_owner`](./tokenized-domains/get-sns-nfts-for-owner) | Lists tokenized `.sns`domains held by a wallet.     |
+| [`get_sol_nfts_for_owner`](./tokenized-domains/get-sol-nfts-for-owner) | Lists tokenized `.sol` domains held by a wallet.    |
+| [`resolve_nft_owner`](./tokenized-domains/resolve-nft-owner)           | Finds the holder of a tokenized `.sns` domain mint. |
+| [`get_record_from_mint`](./tokenized-domains/get-record-from-mint)     | Finds active Name Tokenizer records for a mint.     |
+| [`get_nft_records`](./tokenized-domains/get-nft-records)               | Raw-record counterpart of `get_sns_nfts_for_owner`. |

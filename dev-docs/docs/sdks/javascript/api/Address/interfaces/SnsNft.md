@@ -6,14 +6,18 @@ displayed_sidebar: docsSidebar
 
 # Interface: SnsNft
 
-Defined in: [utils/getSnsNftsForOwner.ts:14](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/utils/getSnsNftsForOwner.ts#L14)
+Defined in: [utils/getSnsNftsForOwner.ts:18](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/js/src/utils/getSnsNftsForOwner.ts#L18)
 
-A tokenized SNS domain and its associated NFT mint.
+A tokenized `.sns` domain and its associated NFT mint.
 
 ## Example
 
 ```ts
-const firstDomain: SnsNft | undefined = domains[0];
+const nft: SnsNft = {
+  domain: "example",
+  key: nameAccount,
+  mint: nftMint,
+};
 ```
 
 ## Properties
@@ -22,9 +26,9 @@ const firstDomain: SnsNft | undefined = domains[0];
 
 > **domain**: `string`
 
-Defined in: [utils/getSnsNftsForOwner.ts:16](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/utils/getSnsNftsForOwner.ts#L16)
+Defined in: [utils/getSnsNftsForOwner.ts:20](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/js/src/utils/getSnsNftsForOwner.ts#L20)
 
-Fully qualified `.sns` domain name.
+TLD-trimmed `.sns` domain name.
 
 ***
 
@@ -32,7 +36,7 @@ Fully qualified `.sns` domain name.
 
 > **key**: `PublicKey`
 
-Defined in: [utils/getSnsNftsForOwner.ts:19](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/utils/getSnsNftsForOwner.ts#L19)
+Defined in: [utils/getSnsNftsForOwner.ts:22](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/js/src/utils/getSnsNftsForOwner.ts#L22)
 
 Name-service account address for `domain`.
 
@@ -42,6 +46,6 @@ Name-service account address for `domain`.
 
 > **mint**: `PublicKey`
 
-Defined in: [utils/getSnsNftsForOwner.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/utils/getSnsNftsForOwner.ts#L22)
+Defined in: [utils/getSnsNftsForOwner.ts:24](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/js/src/utils/getSnsNftsForOwner.ts#L24)
 
 NFT mint that tokenizes `domain`.

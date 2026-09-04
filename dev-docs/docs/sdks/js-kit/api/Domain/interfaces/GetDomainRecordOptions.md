@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: GetDomainRecordOptions
 
-Defined in: [domain/getDomainRecord.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/domain/getDomainRecord.ts#L30)
+Defined in: [domain/getDomainRecord.ts:29](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/js-kit/src/domain/getDomainRecord.ts#L29)
 
 Options for retrieving a domain record.
 
@@ -22,7 +22,7 @@ const options: GetDomainRecordOptions = { deserialize: true };
 
 > `optional` **deserialize?**: `boolean`
 
-Defined in: [domain/getDomainRecord.ts:32](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/domain/getDomainRecord.ts#L32)
+Defined in: [domain/getDomainRecord.ts:31](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/js-kit/src/domain/getDomainRecord.ts#L31)
 
 Whether to decode record content.
 
@@ -32,6 +32,6 @@ Whether to decode record content.
 
 > `optional` **verifier?**: `ReadonlyUint8Array`\<`ArrayBufferLike`\>
 
-Defined in: [domain/getDomainRecord.ts:34](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/domain/getDomainRecord.ts#L34)
+Defined in: [domain/getDomainRecord.ts:33](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/js-kit/src/domain/getDomainRecord.ts#L33)
 
 Custom Right of Association verifier.

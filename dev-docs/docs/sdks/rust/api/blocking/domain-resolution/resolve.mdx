@@ -16,11 +16,11 @@ pub fn resolve(
 ) -> Result<Pubkey, SnsError>
 ```
 
-Defined in: <SourceLink path="rust-crates/sns-sdk/src/blocking/resolve.rs" line={36} label="rust-crates/sns-sdk/src/blocking/resolve.rs:36" />
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/blocking/resolve.rs" line={34} label="rust-crates/sns-sdk/src/blocking/resolve.rs:34" />
 
-Resolves a full `.sns` or currently supported `.sol` name to its effective owner. SNS resolution prefers an active tokenized-domain owner, then a valid V2 `SOL` record, then a valid V1 `SOL` record, and finally the name-registry owner. SRS-backed `.sol` resolution is disabled; legacy SNS-backed `.sol` reads stop at finalized slot <code><CutoffSlot /></code>.
+Resolves a full `.sns` or `.sol` name to its effective owner. `.sns` resolution prefers an active tokenized-domain owner, then a valid V2 `SOL` record, then a valid V1 `SOL` record, and finally the name-registry owner. `.sol` resolution uses the canonical SRS record and does not query the current slot.
 
-For `.sol` resolution that must require matching SRS and SNS targets when SRS-backed resolution is enabled, use [`safe_resolve`](./safe-resolve.mdx).
+For `.sol` resolution that must require matching SRS and SNS targets, use [`safe_resolve`](./safe-resolve.mdx).
 
 ## Availability
 
@@ -31,7 +31,7 @@ Requires the `blocking` feature, which exposes `sns_sdk::blocking` instead of `s
 | Parameter    | Type                                    | Description                                                                                                          |
 | ------------ | --------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
 | `rpc_client` | `&solana_client::rpc_client::RpcClient` | Blocking client used for account and token-owner lookups.                                                            |
-| `domain`     | `&str`                                  | Full supported `.sns` or `.sol` domain.                                                                              |
+| `domain`     | `&str`                                  | Full `.sns` or `.sol` domain.                                                                                        |
 | `allow_pda`  | `AllowPda`                              | `Deny` rejects PDAs; `Allow(program_ids)` accepts only PDAs owned by an allowed program; `AllowAny` accepts any PDA. |
 
 ## Returns
@@ -40,7 +40,7 @@ Requires the `blocking` feature, which exposes `sns_sdk::blocking` instead of `s
 
 ## Errors
 
-- `SnsError::UnsupportedTld` when the suffix is unsupported or a `.sol` read is past the cutoff.
+- `SnsError::UnsupportedTld` when the suffix is unsupported. Generic TLD parsing and record APIs accept `.sns` only; `.sol` is handled by the explicit resolver route.
 - `SnsError::DomainDoesNotExist` when the resolved name account is absent.
 - `SnsError::PdaOwnerNotAllowed` when the final PDA violates `allow_pda`.
 - `SnsError::CouldNotFindNftOwner` when an active tokenized domain has no resolvable owner.

@@ -8,16 +8,16 @@ displayed_sidebar: docsSidebar
 
 > **resolve**(`connection`, `domain`, `config?`): `Promise`\<`PublicKey`\>
 
-Defined in: [resolve/index.ts:42](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/resolve/index.ts#L42)
+Defined in: [resolve/index.ts:47](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/js/src/resolve/index.ts#L47)
 
 Resolves a full `.sns` or `.sol` domain name to its effective target public key.
 
 `.sns` resolution applies SNS ownership precedence: an active tokenized-domain
 owner, then valid V2 and V1 `SOL` records, then the registry owner.
 
-`.sol` currently falls back to SNS-backed resolution until finalized slot
-`452_825_395`, then pauses automatically. SRS-backed `.sol` resolution will be
-restored in a future SDK update.
+`.sol` resolution reads and validates the canonical SRS record. It resolves
+either the record's direct public-key owner or the unique current holder of
+its canonical token mint.
 
 ## Parameters
 
@@ -47,14 +47,20 @@ Effective target as a web3.js `PublicKey`
 
 ## See
 
-[safeResolve](safeResolve.md) for `.sol` resolution that verifies the SRS and
-corresponding SNS targets match when SRS-backed resolution is enabled.
+[safeResolve](safeResolve.md) for `.sol` resolution that additionally requires the
+SRS target to match the corresponding SNS target.
 
 ## Throws
 
-- [Errors.UnsupportedTldError](../../Errors/classes/UnsupportedTldError.md) when the name is bare, has an unsupported suffix, or uses `.sol` after the SDK-managed pause.
-- [Errors.DomainDoesNotExist](../../Errors/classes/DomainDoesNotExist.md) when the domain account does not exist.
-- [Errors.PdaOwnerNotAllowed](../../Errors/classes/PdaOwnerNotAllowed.md) when the fallback registry owner is a PDA not allowed by `config`.
+- [Errors.UnsupportedTldError](../../Errors/classes/UnsupportedTldError.md) when the name is bare or has an unsupported suffix.
+- [Errors.DomainDoesNotExist](../../Errors/classes/DomainDoesNotExist.md) when the SNS registry or canonical SRS record does not exist.
+- [Errors.DomainExpired](../../Errors/classes/DomainExpired.md) when an SRS record has expired.
+- [Errors.RecordMalformed](../../Errors/classes/RecordMalformed.md) when the on-chain data required for resolution is malformed or invalid.
+- [Errors.CouldNotFindNftOwner](../../Errors/classes/CouldNotFindNftOwner.md) when an active tokenized SNS domain owner cannot be found.
+- [Errors.CouldNotFindSrsOwner](../../Errors/classes/CouldNotFindSrsOwner.md) when a tokenized SRS owner cannot be resolved.
+- [Errors.WrongValidation](../../Errors/classes/WrongValidation.md) when an SNS V2 `SOL` record uses unsupported validation types.
+- [Errors.InvalidRoaError](../../Errors/classes/InvalidRoaError.md) when an SNS V2 `SOL` record fails right-of-association validation.
+- [Errors.PdaOwnerNotAllowed](../../Errors/classes/PdaOwnerNotAllowed.md) when the effective owner is a PDA not allowed by `config`.
 
 ## Example
 

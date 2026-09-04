@@ -6,7 +6,7 @@ description: Read current SNS record accounts with the non-blocking Rust SDK cli
 
 [Rust SDK API Reference](../index.mdx) / Record V2 reads
 
-Record V2 APIs derive and query current SNS record accounts through a non-blocking Solana RPC client. They accept a full supported `.sns` or `.sol` domain and return a name-record header plus payload when the requested record exists.
+Record V2 APIs derive and query current SNS record accounts through a non-blocking Solana RPC client. They accept a full lowercase `.sns` domain and return a name-record header plus payload when the requested record exists. `.sol` is reserved for `resolve` and `safe_resolve`.
 
 ## APIs
 

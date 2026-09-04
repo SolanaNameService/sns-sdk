@@ -8,13 +8,11 @@ displayed_sidebar: docsSidebar
 
 > **safeResolve**(`connection`, `domain`, `config?`): `Promise`\<`PublicKey`\>
 
-Defined in: [resolve/index.ts:88](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/resolve/index.ts#L88)
+Defined in: [resolve/index.ts:86](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/js/src/resolve/index.ts#L86)
 
 Resolves a full `.sns` or `.sol` domain using the same routing as
-[resolve](resolve.md).
-
-When SRS-backed `.sol` resolution is enabled, both the `.sol` domain and its
-corresponding `.sns` domain must resolve to the same target; otherwise,
+[resolve](resolve.md). For domains with `.sol` suffix, the corresponding `.sns`
+domain must resolve to the same target; otherwise,
 [Errors.SnsSolResolutionMismatchError](../../Errors/classes/SnsSolResolutionMismatchError.md) is thrown.
 
 ## Parameters

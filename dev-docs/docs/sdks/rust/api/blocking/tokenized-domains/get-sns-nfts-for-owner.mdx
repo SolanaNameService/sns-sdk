@@ -15,9 +15,9 @@ pub fn get_sns_nfts_for_owner(
 ) -> Result<Vec<SnsNftDomain>, SnsError>
 ```
 
-Defined in: <SourceLink path="rust-crates/sns-sdk/src/blocking/nft.rs" line={76} label="rust-crates/sns-sdk/src/blocking/nft.rs:76" />
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/blocking/nft.rs" line={82} label="rust-crates/sns-sdk/src/blocking/nft.rs:82" />
 
-Finds the wallet's token records, reverse-resolves their SNS name accounts, and returns only records with reverse data. Each `SnsNftDomain` contains a TLD-less `reverse`, name-account `key`, and NFT `mint`; entries without reverse data are omitted.
+Lists tokenized `.sns` domains held by `owner`.
 
 ## Availability
 

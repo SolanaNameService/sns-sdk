@@ -118,9 +118,10 @@ export default function Home(): ReactNode {
           </div>
           <aside className={styles.migrationPanel}>
             <span className={styles.panelLabel}>Migration</span>
-            <strong>Enabling .sns</strong>
+            <strong>Enabling .sns & .sol</strong>
             <p>
-              Upgrade to the latest SDK versions and enable `.sns` resolution.
+              Upgrade to the latest SDK versions to enable both `.sns` and
+              `.sol` resolution.
             </p>
             <Link to="/docs/migration/">Start the migration →</Link>
           </aside>

@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **parseSnsTld**(`domain`): \[`string`, `string`\]
 
-Defined in: [utils/tld.ts:74](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/utils/tld.ts#L74)
+Defined in: [utils/tld.ts:71](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/js/src/utils/tld.ts#L71)
 
 Validates that `domain` ends with `.sns`, strips that suffix, and returns a
 `[trimmedDomain, SNS_TLD]` tuple.

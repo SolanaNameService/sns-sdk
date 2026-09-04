@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **PrimaryDomainResult** = `Awaited`\<`ReturnType`\<*typeof* `getPrimaryDomain`\>\>
 
-Defined in: [react/src/hooks/usePrimaryDomain/index.ts:17](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/react/src/hooks/usePrimaryDomain/index.ts#L17)
+Defined in: [react/src/hooks/usePrimaryDomain/index.ts:17](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/react/src/hooks/usePrimaryDomain/index.ts#L17)
 
 The resolved primary-domain data returned for a wallet with a configured primary domain.
 

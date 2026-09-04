@@ -37,7 +37,7 @@ type DomainsResponse = {
 };
 ```
 
-`domain` is the fully qualified `.sns` name. `key` is its name-account public key. Subdomains and entries without reverse-name data are omitted.
+`domain` is the TLD-trimmed `.sns` name without the `.sns` suffix. `key` is its name-account public key. Subdomains and entries without reverse-name data are omitted.
 
 ## Example
 
@@ -50,7 +50,7 @@ curl "https://sdk-proxy-v2.sns.id/domains/<OWNER_PUBLIC_KEY>"
   "s": "ok",
   "result": [
     {
-      "domain": "name.sns",
+      "domain": "name",
       "key": "<DOMAIN_ACCOUNT_PUBLIC_KEY>"
     }
   ]

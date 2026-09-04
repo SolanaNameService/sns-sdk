@@ -33,6 +33,16 @@
       }
     },
     {
+      "id": "rust.derivation.get-sol-domain-key",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "get_sol_domain_key",
+      "source": "rust-crates/sns-sdk/src/derivation.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/shared/derivation/get-sol-domain-key.mdx"
+      }
+    },
+    {
       "id": "rust.derivation.get-srs-domain-key",
       "product": "rust",
       "kind": "rust-callable",
@@ -513,6 +523,16 @@
       }
     },
     {
+      "id": "rust.non-blocking.get-sol-domains-for-owner",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "get_sol_domains_for_owner",
+      "source": "rust-crates/sns-sdk/src/non_blocking/domain.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/non-blocking/wallet-domains/get-sol-domains-for-owner.mdx"
+      }
+    },
+    {
       "id": "rust.non-blocking.get-primary-domain",
       "product": "rust",
       "kind": "rust-callable",
@@ -600,6 +620,16 @@
       "source": "rust-crates/sns-sdk/src/non_blocking/nft.rs",
       "target": {
         "path": "dev-docs/docs/sdks/rust/api/non-blocking/tokenized-domains/get-sns-nfts-for-owner.mdx"
+      }
+    },
+    {
+      "id": "rust.non-blocking.get-sol-nfts-for-owner",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "get_sol_nfts_for_owner",
+      "source": "rust-crates/sns-sdk/src/non_blocking/nft.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/non-blocking/tokenized-domains/get-sol-nfts-for-owner.mdx"
       }
     },
     {
@@ -693,6 +723,16 @@
       }
     },
     {
+      "id": "rust.blocking.get-sol-domains-for-owner",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "get_sol_domains_for_owner",
+      "source": "rust-crates/sns-sdk/src/blocking/domain.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/blocking/wallet-domains/get-sol-domains-for-owner.mdx"
+      }
+    },
+    {
       "id": "rust.blocking.get-primary-domain",
       "product": "rust",
       "kind": "rust-callable",
@@ -783,6 +823,16 @@
       }
     },
     {
+      "id": "rust.blocking.get-sol-nfts-for-owner",
+      "product": "rust",
+      "kind": "rust-callable",
+      "symbol": "get_sol_nfts_for_owner",
+      "source": "rust-crates/sns-sdk/src/blocking/nft.rs",
+      "target": {
+        "path": "dev-docs/docs/sdks/rust/api/blocking/tokenized-domains/get-sol-nfts-for-owner.mdx"
+      }
+    },
+    {
       "id": "rust.blocking.resolve-nft-owner",
       "product": "rust",
       "kind": "rust-callable",
@@ -856,6 +906,14 @@
       "command": "domains",
       "source": "rust-crates/sns-cli/src/cli.rs",
       "target": { "path": "dev-docs/docs/cli/commands/domains.mdx" }
+    },
+    {
+      "id": "cli.nfts",
+      "product": "cli",
+      "kind": "cli-command",
+      "command": "nfts",
+      "source": "rust-crates/sns-cli/src/cli.rs",
+      "target": { "path": "dev-docs/docs/cli/commands/nfts.mdx" }
     },
     {
       "id": "cli.record-v2",
@@ -933,6 +991,18 @@
       "source": "sdk-proxy/src/routes/domains.ts",
       "target": {
         "path": "dev-docs/docs/sdk-proxy/endpoints/domains/domains.mdx"
+      }
+    },
+    {
+      "id": "proxy.nfts",
+      "product": "sdk-proxy",
+      "kind": "proxy-route",
+      "method": "GET",
+      "route": "/nfts/:owner",
+      "status": "current",
+      "source": "sdk-proxy/src/routes/domains.ts",
+      "target": {
+        "path": "dev-docs/docs/sdk-proxy/endpoints/domains/nfts.mdx"
       }
     },
     {

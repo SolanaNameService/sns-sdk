@@ -11,7 +11,7 @@ The default build exposes asynchronous RPC APIs under `sns_sdk::non_blocking`:
 
 ```toml
 [dependencies]
-sns-sdk = "2"
+sns-sdk = "2.1"
 solana-client = "2.1"
 solana-sdk = "2.1"
 tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
@@ -21,7 +21,7 @@ For synchronous RPC APIs, disable default features and enable `blocking`:
 
 ```toml
 [dependencies]
-sns-sdk = { version = "2", default-features = false, features = ["blocking"] }
+sns-sdk = { version = "2.1", default-features = false, features = ["blocking"] }
 solana-client = "2.1"
 solana-sdk = "2.1"
 ```
@@ -50,24 +50,25 @@ In a blocking build, use the equivalent modules under `sns_sdk::blocking` and re
 
 Use the input form required by each API family:
 
-| API family                                              | v1 input                                 | v2 input                                              |
-| ------------------------------------------------------- | ---------------------------------------- | ----------------------------------------------------- |
-| High-level reads, including resolution and record reads | Bare name or legacy `.sol` name          | Full name with a supported suffix, such as `name.sns` |
-| Registration and V2 record writes                       | API-dependent bare or legacy `.sol` name | Lowercase full `.sns` name                            |
-| SNS and record-key derivation                           | Bare name or legacy `.sol` name          | TLD-less name, such as `name` or `sub.name`           |
-| Raw name-registry builders                              | Raw name or explicit account key         | Raw name or explicit account key                      |
+| API family                        | v1 input                                 | v2 input                                    |
+| --------------------------------- | ---------------------------------------- | ------------------------------------------- |
+| Resolution                        | Bare name or legacy `.sol` name          | Full `.sns` or `.sol` name                  |
+| Record and sub-registrar reads    | Bare name or legacy `.sol` name          | Full lowercase `.sns` name                  |
+| Registration and V2 record writes | API-dependent bare or legacy `.sol` name | Lowercase full `.sns` name                  |
+| SNS and record-key derivation     | Bare name or legacy `.sol` name          | TLD-less name, such as `name` or `sub.name` |
+| Raw name-registry builders        | Raw name or explicit account key         | Raw name or explicit account key            |
 
 Do not append `.sns` to derivation helpers or raw name-registry inputs.
 
 :::note `.sol` resolution and reads
 
-SNS-backed `.sol` resolution and reads pause automatically at finalized slot <code><CutoffSlot /></code> to transition `.sol` domains to the SRS program; slot checks are not needed at the application level. SRS-backed `.sol` resolution will be enabled in a future SDK update.
+`resolve` and `safe_resolve` now route `.sol` names through the SRS resolver. Record getters and sub-registrar lookup remain `.sns`-only and reject `.sol` domains.
 
 :::
 
 ## Update resolution
 
-Rename `resolve_owner` to `resolve`, pass a full `.sns` name, and add the required `AllowPda` argument:
+Rename `resolve_owner` to `resolve`, pass a full `.sns` or `.sol` name, and add the required `AllowPda` argument:
 
 ```rust title="v1"
 use sns_sdk::non_blocking::resolve::resolve_owner;
@@ -88,7 +89,7 @@ Use `AllowPda::Deny` unless the application intentionally supports program-deriv
 
 :::info New API: `safe_resolve`
 
-A new `safe_resolve` API has also been added, currently functioning identically to `resolve`. Once SRS-backed .sol resolution is enabled in a future update, `safe_resolve` will only return an address if the `.sol` domain and the corresponding `.sns` domain resolve to the same address — returning an error on mismatch.
+A new `safe_resolve` API compares SRS-backed `.sol` resolution with the corresponding `.sns` resolution and returns an address only when both targets match. It returns `SnsError::SnsSolResolutionMismatch` on mismatch.
 
 This is intended as a short-term safety measure for the period immediately following SRS-backed .sol enablement. In the long term, `.sns` and `.sol` should be treated as separate namespaces, and integrations should use `resolve` instead.
 
@@ -116,7 +117,7 @@ The result remains `Option<Pubkey>` containing the primary name-account key, not
 
 ## Update owner-domain lookup
 
-Rename `get_domains_owner` and move it into the `domain` module:
+Use `domain::get_sns_domains_for_owner` and `nft::get_sns_nfts_for_owner` to look up `.sns` domains/NFTs, and `domain::get_sol_domains_for_owner` and `nft::get_sol_nfts_for_owner` to look up `.sol` domains/NFTs:
 
 ```rust title="v1"
 let domains = sns_sdk::non_blocking::resolve::get_domains_owner(
@@ -124,19 +125,36 @@ let domains = sns_sdk::non_blocking::resolve::get_domains_owner(
     owner,
 )
 .await?;
-```
-
-```rust title="v2"
-let domains = sns_sdk::non_blocking::domain::get_sns_domains_for_owner(
+let tokenized = sns_sdk::non_blocking::resolve::get_tokenized_domains(
     &client,
-    owner,
+    &owner,
 )
 .await?;
 ```
 
-The result remains `Vec<Pubkey>` containing top-level name-account keys owned by the wallet. Tokenized domains are not included.
+```rust title="v2"
+let sns_domains = sns_sdk::non_blocking::domain::get_sns_domains_for_owner(
+    &client,
+    owner,
+)
+.await?;
+let sns_nfts = sns_sdk::non_blocking::nft::get_sns_nfts_for_owner(
+    &client,
+    &owner,
+)
+.await?;
 
-For tokenized domains, rename `get_tokenized_domains` to `nft::get_sns_nfts_for_owner`. Its result changes from `Vec<(String, Pubkey)>` to `Vec<SnsNftDomain>` with `reverse`, `key`, and `mint` fields.
+let sol_domains = sns_sdk::non_blocking::domain::get_sol_domains_for_owner(
+    &client,
+    owner,
+)
+.await?;
+let sol_nfts = sns_sdk::non_blocking::nft::get_sol_nfts_for_owner(
+    &client,
+    &owner,
+)
+.await?;
+```
 
 ## Update key derivation
 
@@ -151,7 +169,7 @@ let domain = get_sns_domain_key("sub.name")?;
 let key = domain.key;
 ```
 
-The v2 `DomainKeyWithParent` also exposes `parent` and `is_sub`. `get_srs_domain_key("name")` derives an SRS address only; it does not enable SRS-backed resolution.
+The v2 `DomainKeyWithParent` also exposes `parent` and `is_sub`. To derive the key of a SRS-based `.sol` domain, use `get_sol_domain_key`.
 
 ## Update record reads
 
@@ -163,7 +181,7 @@ Move record getters into versioned, mode-specific modules:
 | `record::record_v2::retrieve_record_v2`        | `record_v2::get_record_v2`           |
 | `record::record_v2::retrieve_records_batch_v2` | `record_v2::get_multiple_records_v2` |
 
-V2 getters now borrow the RPC client, take the domain before the record, and require a full domain:
+V2 getters now borrow the RPC client, take the domain before the record, and require a full `.sns` domain:
 
 ```rust title="v2"
 let record = sns_sdk::non_blocking::record_v2::get_record_v2(

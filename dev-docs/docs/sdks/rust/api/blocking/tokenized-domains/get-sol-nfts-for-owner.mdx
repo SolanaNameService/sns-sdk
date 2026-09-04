@@ -1,0 +1,57 @@
+---
+displayed_sidebar: docsSidebar
+title: get_sol_nfts_for_owner
+description: List canonical tokenized `.sol` domains held by a wallet.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Tokenized domains](../tokenized-domains.mdx) / `get_sol_nfts_for_owner`
+
+# Function: `get_sol_nfts_for_owner()`
+
+```rust
+pub fn get_sol_nfts_for_owner(
+    rpc_client: &RpcClient,
+    owner: &Pubkey,
+) -> Result<Vec<SolNftDomain>, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/blocking/nft.rs" line={142} label="rust-crates/sns-sdk/src/blocking/nft.rs:142" />
+
+Lists tokenized `.sol` domains held by `owner`. Expired domains are excluded.
+
+## Availability
+
+Requires the `blocking` feature.
+
+## Parameters
+
+| Parameter    | Type                                    | Description                                        |
+| ------------ | --------------------------------------- | -------------------------------------------------- |
+| `rpc_client` | `&solana_client::rpc_client::RpcClient` | Blocking Solana RPC client.                        |
+| `owner`      | `&Pubkey`                               | Wallet whose tokenized `.sol` domains are queried. |
+
+## Returns
+
+`Result<Vec<SolNftDomain>, SnsError>` containing canonical, non-expired `.sol` domains in RPC response order. An empty result is returned when no matching NFTs exist.
+
+Each `SolNftDomain` contains the TLD-trimmed `domain`, its SRS record `key`, and its Token-2022 `mint`.
+
+## Errors
+
+- `SnsError::SolanaClient` when a Token-2022, mint, or SRS record RPC request fails.
+
+Malformed accounts, invalid mints, missing metadata or group membership, non-canonical mints, expired records, and owner mismatches are skipped.
+
+## Example
+
+```rust
+use sns_sdk::blocking::nft::get_sol_nfts_for_owner;
+use solana_client::rpc_client::RpcClient;
+use solana_program::pubkey::Pubkey;
+
+let client = RpcClient::new("https://your-rpc-endpoint.example".to_string());
+let owner: Pubkey = std::env::var("OWNER")?.parse()?;
+for domain in get_sol_nfts_for_owner(&client, &owner)? {
+    println!("{}.sol: {} ({})", domain.domain, domain.key, domain.mint);
+}
+```

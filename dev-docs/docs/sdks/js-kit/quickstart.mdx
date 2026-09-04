@@ -1,9 +1,9 @@
 ---
 title: JS Kit SDK quickstart
-description: Resolve an SNS domain and query primary and wallet-owned domains with JS Kit SDK v1.
+description: Resolve an SNS or SRS `.sol` domain and query primary and wallet-owned domains with JS Kit SDK v1.
 ---
 
-Use JS Kit SDK v1 to resolve a `.sns` domain and query domain data for a wallet.
+Use JS Kit SDK v1 to resolve a `.sns` or `.sol` domain and query domain data for a wallet.
 
 ## Setup
 
@@ -25,7 +25,7 @@ const rpc = createSolanaRpcFromTransport(transport);
 
 ### Resolve a domain
 
-Pass a full `.sns` name to `resolve`:
+Pass a full `.sns` or `.sol` name to `resolve`:
 
 ```ts
 import { resolve } from "@solana-name-service/sns-sdk-kit";
@@ -37,9 +37,9 @@ console.log(owner);
 
 `resolve` returns the effective owner as a Solana Kit `Address`.
 
-For `.sol` resolution that must verify the SRS and corresponding SNS targets match when SRS-backed resolution is enabled in a future update, use `safeResolve({ rpc, domain: "name.sol" })` instead.
+Use `safeResolve({ rpc, domain: "name.sol" })` when `.sol` resolution must additionally require the SRS target and the corresponding `.sns` target to match; it throws `SnsSolResolutionMismatchError` on mismatch.
 
-### Get a primary domain
+### Get a primary `.sns` domain
 
 Use `getPrimaryDomain` with the wallet address:
 
@@ -58,23 +58,38 @@ if (!primary.stale) {
 
 `domainName` is TLD-less. Append `.sns` for display. Do not present a stale result as the wallet's current primary domain.
 
-### Get domains for an owner
+### Get `.sns` domains/NFTs for an owner
 
-Use `getSnsDomainsForAddress` to retrieve top-level domains owned by the wallet:
+Use `getSnsDomainsForAddress` to retrieve directly owned top-level `.sns` domains and `getSnsNftsForAddress` to retrieve tokenized `.sns` domains:
 
 ```ts
-import { getSnsDomainsForAddress } from "@solana-name-service/sns-sdk-kit";
+import {
+  getSnsDomainsForAddress,
+  getSnsNftsForAddress,
+} from "@solana-name-service/sns-sdk-kit";
 import type { Address } from "@solana/kit";
 
 const address = "<WALLET_ADDRESS>" as Address;
-const domains = await getSnsDomainsForAddress({ rpc, address });
-const suffixedDomains = domains.map(({ domain }) => `${domain}.sns`);
-
-console.log(suffixedDomains);
-// => ["name.sns", "another-name.sns"]
+const snsDomains = await getSnsDomainsForAddress({ rpc, address });
+const snsNfts = await getSnsNftsForAddress({ rpc, address });
 ```
 
-Each result contains a TLD-less `domain` and its `domainAddress`. Results omit names without reverse data and do not include tokenized domains or subdomains.
+### Get `.sol` domains/NFTs for an owner
+
+Use `getSolDomainsForAddress` to retrieve directly owned top-level `.sol` domains and `getSolNftsForAddress` to retrieve tokenized `.sol` domains:
+
+```ts
+import {
+  getSolDomainsForAddress,
+  getSolNftsForAddress,
+} from "@solana-name-service/sns-sdk-kit";
+import type { Address } from "@solana/kit";
+
+const address = "<WALLET_ADDRESS>" as Address;
+
+const solDomains = await getSolDomainsForAddress({ rpc, address });
+const solNfts = await getSolNftsForAddress({ rpc, address });
+```
 
 ## Next steps
 

@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **useSnsDomainsForOwner**\<`TData`\>(`connection`, `owner`, `options?`): `UseQueryResult`\<`NoInfer`\<`TData`\>, `Error`\>
 
-Defined in: [react/src/hooks/useSnsDomainsForOwner/index.ts:34](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/react/src/hooks/useSnsDomainsForOwner/index.ts#L34)
+Defined in: [react/src/hooks/useSnsDomainsForOwner/index.ts:34](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/react/src/hooks/useSnsDomainsForOwner/index.ts#L34)
 
 Retrieves directly registry-owned top-level `.sns` domains for a wallet
 through React Query.

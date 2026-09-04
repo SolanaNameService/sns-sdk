@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **verifyRecordStaleness**(`params`): `Promise`\<`boolean`\>
 
-Defined in: [record/verifyRecordStaleness.ts:81](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/record/verifyRecordStaleness.ts#L81)
+Defined in: [record/verifyRecordStaleness.ts:80](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/js-kit/src/record/verifyRecordStaleness.ts#L80)
 
 Verifies a record's staleness validation.
 

@@ -8,6 +8,6 @@ displayed_sidebar: docsSidebar
 
 > `const` **NAME\_OFFERS\_ID**: `PublicKey`
 
-Defined in: [primary-domain.ts:17](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/primary-domain.ts#L17)
+Defined in: [primary-domain.ts:17](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/js/src/primary-domain.ts#L17)
 
 Program ID that stores wallet primary-domain selections.

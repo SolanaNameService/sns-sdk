@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: VerifyRecordStalenessParams
 
-Defined in: [record/verifyRecordStaleness.ts:58](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/record/verifyRecordStaleness.ts#L58)
+Defined in: [record/verifyRecordStaleness.ts:57](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/js-kit/src/record/verifyRecordStaleness.ts#L57)
 
 Parameters for verifying record staleness.
 
@@ -26,9 +26,9 @@ const params: VerifyRecordStalenessParams = {
 
 > **domain**: `string`
 
-Defined in: [record/verifyRecordStaleness.ts:62](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/record/verifyRecordStaleness.ts#L62)
+Defined in: [record/verifyRecordStaleness.ts:61](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/js-kit/src/record/verifyRecordStaleness.ts#L61)
 
-Full domain name.
+Full `.sns` domain name.
 
 ***
 
@@ -36,7 +36,7 @@ Full domain name.
 
 > **record**: [`Record`](../../Types/enumerations/Record.md)
 
-Defined in: [record/verifyRecordStaleness.ts:64](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/record/verifyRecordStaleness.ts#L64)
+Defined in: [record/verifyRecordStaleness.ts:63](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/js-kit/src/record/verifyRecordStaleness.ts#L63)
 
 Record type.
 
@@ -44,8 +44,8 @@ Record type.
 
 ### rpc
 
-> **rpc**: `Rpc`\<`GetAccountInfoApi` & `GetTokenLargestAccountsApi` & `GetSlotApi`\>
+> **rpc**: `Rpc`\<`GetAccountInfoApi` & `GetTokenLargestAccountsApi`\>
 
-Defined in: [record/verifyRecordStaleness.ts:60](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/record/verifyRecordStaleness.ts#L60)
+Defined in: [record/verifyRecordStaleness.ts:59](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/js-kit/src/record/verifyRecordStaleness.ts#L59)
 
 RPC client.

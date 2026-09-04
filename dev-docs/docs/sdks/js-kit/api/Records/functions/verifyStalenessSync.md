@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **\_verifyStalenessSync**(`params`): `boolean`
 
-Defined in: [record/verifyRecordStaleness.ts:31](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/record/verifyRecordStaleness.ts#L31)
+Defined in: [record/verifyRecordStaleness.ts:30](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/js-kit/src/record/verifyRecordStaleness.ts#L30)
 
 Internal helper that verifies a record's staleness validation.
 

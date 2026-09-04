@@ -1,9 +1,9 @@
 ---
 title: "GET /safe-resolve/:domain"
-description: Resolve a full SNS or .sol domain with conditional SRS and SNS consistency checking.
+description: Resolve a full SNS or .sol domain with SRS and SNS consistency checking for .sol domains.
 ---
 
-Resolve a full `.sns` or `.sol` domain using the same routing as [`GET /resolve/:domain`](./resolve.mdx), with an additional consistency check for SRS-backed `.sol` resolution.
+Resolve a full `.sns` or `.sol` domain using the same routing as [`GET /resolve/:domain`](./resolve.mdx), with an additional consistency check for `.sol` domains.
 
 ## Request
 
@@ -36,7 +36,7 @@ type SafeResolveResponse = {
 };
 ```
 
-When SRS-backed `.sol` resolution is enabled, the TLD-trimmed name is resolved through both SRS and SNS. The target is returned only when both systems resolve to the same public key. For `.sns`, or while SRS-backed resolution is disabled, the route follows ordinary `/resolve/:domain` behavior.
+For `.sol` domains, the TLD-trimmed name is resolved through both SRS and SNS, and the target is returned only when both resolve to the same public key. A `.sol` domain without a corresponding `.sns` registry returns `404 Domain not found`. For `.sns`, the route follows ordinary [`/resolve/:domain`](./resolve.mdx) behavior.
 
 ## Example
 
@@ -58,9 +58,10 @@ Error responses use `{ "s": "error", "result": string }`.
 | Status | `result`                          | When                                                                               |
 | ------ | --------------------------------- | ---------------------------------------------------------------------------------- |
 | `400`  | `Invalid input`                   | The value before the suffix has empty labels or more than two labels.              |
-| `400`  | `Unsupported TLD`                 | The suffix is missing or unsupported, or SDK-managed `.sol` resolution has paused. |
+| `400`  | `Unsupported TLD`                 | The suffix is missing or unsupported.                                              |
 | `404`  | `Domain not found`                | The requested domain registry does not exist.                                      |
-| `409`  | `SRS and SNS resolution mismatch` | Enabled SRS and SNS resolution return different targets.                           |
+| `410`  | `Domain expired`                  | The SRS record for the requested `.sol` domain has expired.                        |
+| `409`  | `SRS and SNS resolution mismatch` | SRS and SNS resolution return different targets.                                   |
 | `422`  | `Record is malformed`             | A selected resolution record has malformed content or unsupported validation.      |
 | `502`  | `RPC unavailable`                 | The selected Solana RPC returns a JSON-RPC error.                                  |
 | `500`  | `Internal error`                  | No RPC endpoint is configured, or resolution fails for another unmapped reason.    |

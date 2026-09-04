@@ -1,0 +1,37 @@
+---
+title: nfts
+description: List tokenized SNS domains held by one or more wallets with SNS CLI v3.
+---
+
+The `nfts` command lists reverse-resolved tokenized `.sns` domains held through name-tokenizer NFTs by each requested wallet.
+
+## Usage
+
+```text
+sns [--url <URL>] nfts <OWNER_PUBKEY>...
+```
+
+## Arguments
+
+### `<OWNER_PUBKEY>...`
+
+Required. One or more base58 wallet public keys, processed in the order they are provided.
+
+## Options
+
+### `-u, --url <URL>`
+
+Use this RPC endpoint instead of `RPC_URL` or the default public mainnet-beta endpoint at `https://api.mainnet-beta.solana.com`.
+
+## Output
+
+The command prints a table with these columns:
+
+| Column   | Description                                           |
+| -------- | ----------------------------------------------------- |
+| `Domain` | A reverse-resolved domain displayed with `.sns`.      |
+| `Owner`  | The requested wallet public key.                      |
+| `Mint`   | The name-tokenizer NFT mint for the tokenized domain. |
+| `Link`   | A naming-site link for the domain.                    |
+
+The result covers tokenized ownership through name-tokenizer NFT records. Only domains with reverse records are listed. Direct registry ownership is reported by `domains`; subdomains and domains without reverse data are not included.

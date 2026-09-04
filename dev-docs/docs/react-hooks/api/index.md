@@ -18,4 +18,7 @@ hide_title: true
 | [useReverseLookup](useReverseLookup/index.md) | Domain-account reverse lookup through TanStack Query. |
 | [useSafeResolve](useSafeResolve/index.md) | Safe domain resolution through TanStack Query. |
 | [useSnsDomainsForOwner](useSnsDomainsForOwner/index.md) | Wallet-owned SNS domain queries through TanStack Query. |
+| [useSnsNftsForOwner](useSnsNftsForOwner/index.md) | Wallet-owned tokenized SNS domain queries through TanStack Query. |
+| [useSolDomainsForOwner](useSolDomainsForOwner/index.md) | Wallet-owned SRS `.sol` domain queries through TanStack Query. |
+| [useSolNftsForOwner](useSolNftsForOwner/index.md) | Wallet-owned tokenized `.sol` domain queries through TanStack Query. |
 | [useSubdomains](useSubdomains/index.md) | SNS subdomain queries through TanStack Query. |

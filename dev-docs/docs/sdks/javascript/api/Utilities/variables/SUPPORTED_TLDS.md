@@ -6,8 +6,8 @@ displayed_sidebar: docsSidebar
 
 # Variable: SUPPORTED\_TLDS
 
-> `const` **SUPPORTED\_TLDS**: readonly \[`".sns"`\] \| readonly \[`".sns"`, `".sol"`\]
+> `const` **SUPPORTED\_TLDS**: readonly \[`".sns"`\]
 
-Defined in: [utils/tld.ts:11](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/utils/tld.ts#L11)
+Defined in: [utils/tld.ts:10](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/js/src/utils/tld.ts#L10)
 
 TLD suffixes accepted by the current SDK configuration.

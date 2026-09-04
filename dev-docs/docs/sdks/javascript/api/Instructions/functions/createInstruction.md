@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **createInstruction**(`nameProgramId`, `systemProgramId`, `nameKey`, `nameOwnerKey`, `payerKey`, `hashed_name`, `lamports`, `space`, `nameClassKey?`, `nameParent?`, `nameParentOwner?`): `TransactionInstruction`
 
-Defined in: [instructions/createInstruction.ts:28](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/instructions/createInstruction.ts#L28)
+Defined in: [instructions/createInstruction.ts:28](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/js/src/instructions/createInstruction.ts#L28)
 
 Builds an SPL Name Service instruction that creates a name registry account.
 

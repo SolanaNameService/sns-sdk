@@ -15,4 +15,4 @@ Domain resolution through TanStack Query.
 
 | Function | Description |
 | ------ | ------ |
-| [useResolve](functions/useResolve.md) | Resolves a `.sns` or `.sol` domain to its target public key through React Query. |
+| [useResolve](functions/useResolve.md) | Resolves a `.sns` or `.sol` domain to its target public key through React Query. `.sol` domains are resolved through the JavaScript SDK's SRS route. |

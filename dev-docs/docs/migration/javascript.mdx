@@ -10,7 +10,7 @@ Use this guide to migrate an application from JavaScript SDK v3 to JavaScript SD
 Install v4 and its `@solana/web3.js` peer dependency:
 
 ```bash
-npm install @bonfida/spl-name-service@^4 @solana/web3.js@^1.98.2
+npm install @bonfida/spl-name-service@^4.1.0 @solana/web3.js@^1.98.2
 ```
 
 ## Import from the package root
@@ -31,19 +31,13 @@ import {
 
 Use the input form required by each API family instead of applying one transformation to every domain:
 
-| API family                                             | v3 input                                          | v4 input                                                                       |
-| ------------------------------------------------------ | ------------------------------------------------- | ------------------------------------------------------------------------------ |
-| High-level reads, including `resolve` and record reads | TLD-less SNS name; some APIs also accepted `.sol` | Full name with a supported suffix, such as `name.sns`                          |
-| Domain and record writes                               | TLD-less SNS name                                 | Lowercase full `.sns` name; follow the API's top-level or subdomain constraint |
-| Synchronous derivation and raw name-account helpers    | TLD-less or raw account input                     | TLD-less or raw account input, as documented for the helper                    |
+| API family                                          | v3 input                      | v4 input                                                    |
+| --------------------------------------------------- | ----------------------------- | ----------------------------------------------------------- |
+| Domain Resolution                                   | TLD-less SNS name             | Lowercase `.sns` or `.sol` domain                           |
+| Other domain and record APIs                        | TLD-less SNS name             | Lowercase `.sns` domain                                     |
+| Synchronous derivation and raw name-account helpers | TLD-less or raw account input | TLD-less or raw account input, as documented for the helper |
 
 Do not append `.sns` to inputs for low-level helpers such as `getSnsDomainKeySync`, `getRecordV1Key`, or `getRecordV2Key`.
-
-:::note `.sol` resolution and reads
-
-SNS-backed `.sol` resolution and reads pause automatically at finalized slot <code><CutoffSlot /></code> to transition `.sol` domains to the SRS program; slot checks are not needed at the application level. SRS-backed `.sol` resolution will be enabled in a future SDK update.
-
-:::
 
 ## Update resolution
 
@@ -63,7 +57,7 @@ const owner = await resolve(connection, "name.sns"); // Or use `safeResolve`.
 
 :::info New API: `safeResolve`
 
-A new `safeResolve` API has been added, currently functioning identically to `resolve`. Once SRS-backed .sol resolution is enabled in a future update, `safeResolve` will only return an address if the `.sol` domain and the corresponding `.sns` domain resolve to the same address — throwing an error on mismatch.
+A new `safeResolve` API has been added. For `.sol` input, it resolves through the same SRS routing as `resolve` and additionally requires the `.sol` SRS target and the corresponding `.sns` target to match — throwing an error on mismatch.
 
 This is intended as a short-term safety measure for the period immediately following SRS-backed .sol enablement. In the long term, `.sns` and `.sol` should be treated as separate namespaces, and integrations should use `resolve` instead.
 
@@ -87,18 +81,19 @@ The result remains `{ domain, reverse, stale }`. `domain` is the name-account pu
 
 ## Update owner-domain lookup
 
-Replace `getDomainKeysWithReverses` with `getSnsDomainsForOwner`:
+Use `getSnsDomainsForOwner` and `getSnsNftsForOwner` to look up `.sns` domains/NFTs, and `getSolDomainsForOwner` and `getSolNftsForOwner` to look up `.sol` domains/NFTs:
 
 ```ts title="v3"
 const domains = await getDomainKeysWithReverses(connection, wallet);
 ```
 
 ```ts title="v4"
-const domains = await getSnsDomainsForOwner(connection, wallet);
-const displayNames = domains.map(({ domain }) => `${domain}.sns`);
-```
+const snsDomains = await getSnsDomainsForOwner(connection, wallet);
+const snsNfts = await getSnsNftsForOwner(connection, wallet);
 
-The result property `pubKey` is now named `key`, and entries without a valid reverse name are omitted. This lookup returns directly registry-owned top-level domains; use `getSnsNftsForOwner` separately for tokenized domains.
+const solDomains = await getSolDomainsForOwner(connection, wallet);
+const solNfts = await getSolNftsForOwner(connection, wallet);
+```
 
 ## Update record reads
 

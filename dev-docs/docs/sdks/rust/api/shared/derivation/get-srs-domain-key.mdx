@@ -1,7 +1,7 @@
 ---
 displayed_sidebar: docsSidebar
 title: get_srs_domain_key
-description: Derive the canonical SRS record account for a TLD-trimmed .sol name.
+description: Deprecated alias for the canonical .sol SRS derivation helper.
 ---
 
 [Rust SDK API Reference](../../index.mdx) / [Address derivation](../derivation.mdx) / `get_srs_domain_key`
@@ -12,9 +12,9 @@ description: Derive the canonical SRS record account for a TLD-trimmed .sol name
 pub fn get_srs_domain_key(domain: &str) -> SrsDomainKey
 ```
 
-Defined in: <SourceLink path="rust-crates/sns-sdk/src/derivation.rs" line={123} label="derivation.rs:123" />
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/derivation.rs" line={140} label="derivation.rs:140" />
 
-Derives the canonical SRS record PDA from the `SRS` hash prefix and a TLD-trimmed `.sol` name. It performs no validation or RPC request.
+Deprecated compatibility alias for [`get_sol_domain_key`](./get-sol-domain-key.mdx). It derives the canonical SRS record PDA from a TLD-trimmed `.sol` name and performs no validation or RPC request. New code should use `SolDomainKey` and `get_sol_domain_key`.
 
 ## Parameters
 
@@ -24,7 +24,7 @@ Derives the canonical SRS record PDA from the `SRS` hash prefix and a TLD-trimme
 
 ## Returns
 
-`SrsDomainKey`, containing the derived `key` and 32-byte `hashed` name.
+`SrsDomainKey`, a deprecated alias of `SolDomainKey`, containing the derived `key` and 32-byte `hashed` name.
 
 ## Example
 

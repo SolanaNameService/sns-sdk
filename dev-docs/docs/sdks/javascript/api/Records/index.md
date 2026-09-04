@@ -44,8 +44,8 @@ Record reads, key derivation, validation, and content codecs.
 | Function | Description |
 | ------ | ------ |
 | [deserializeRecordContent](functions/deserializeRecordContent.md) | Deserializes record content according to SNS-IP 1. |
-| [getMultipleRecords](functions/getMultipleRecords.md) | Retrieves multiple records for a domain, verifies the staleness and right of association of each, and optionally deserializes their content. |
-| [getRecord](functions/getRecord.md) | Retrieves a record for a domain, verifies its staleness and right of association, and optionally deserializes the record content. |
+| [getMultipleRecords](functions/getMultipleRecords.md) | Retrieves multiple records for a `.sns` domain, verifies the staleness and right of association of each, and optionally deserializes their content. |
+| [getRecord](functions/getRecord.md) | Retrieves a record for a `.sns` domain, verifies its staleness and right of association, and optionally deserializes the record content. |
 | [getRecordV1Key](functions/getRecordV1Key.md) | Derives the legacy V1 record account key. |
 | [getRecordV2Key](functions/getRecordV2Key.md) | Derives the V2 record account key. |
 | [serializeRecordContent](functions/serializeRecordContent.md) | Serializes record content according to SNS-IP 1. |

@@ -8,6 +8,6 @@ displayed_sidebar: docsSidebar
 
 > `const` **SELF\_SIGNED**: `Set`\<[`Record`](../enumerations/Record.md)\>
 
-Defined in: [record/const.ts:70](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/record/const.ts#L70)
+Defined in: [record/const.ts:70](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/js/src/record/const.ts#L70)
 
 Record types self-signed by the public key in their content.

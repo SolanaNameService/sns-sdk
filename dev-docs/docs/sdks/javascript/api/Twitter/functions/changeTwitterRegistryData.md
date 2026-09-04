@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **changeTwitterRegistryData**(`twitterHandle`, `verifiedPubkey`, `offset`, `input_data`): `Promise`\<`TransactionInstruction`[]\>
 
-Defined in: [twitter/changeTwitterRegistryData.ts:28](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/twitter/changeTwitterRegistryData.ts#L28)
+Defined in: [twitter/changeTwitterRegistryData.ts:28](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/js/src/twitter/changeTwitterRegistryData.ts#L28)
 
 Builds an instruction that overwrites bytes in a verified Twitter registry.
 

@@ -15,4 +15,4 @@ Safe domain resolution through TanStack Query.
 
 | Function | Description |
 | ------ | ------ |
-| [useSafeResolve](functions/useSafeResolve.md) | Resolves a `.sns` or `.sol` domain through the JavaScript SDK's `safeResolve`. When SRS-backed `.sol` resolution is enabled, the `.sol` target and its corresponding `.sns` target must match. |
+| [useSafeResolve](functions/useSafeResolve.md) | Resolves a `.sns` or `.sol` domain through the JavaScript SDK's `safeResolve`. For `.sol` domains, the SRS target and corresponding `.sns` target must match. |

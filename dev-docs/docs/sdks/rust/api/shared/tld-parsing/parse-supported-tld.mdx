@@ -12,9 +12,9 @@ description: Split a supported read-side suffix from a domain.
 pub fn parse_supported_tld(domain: &str) -> Result<(&str, Tld), SnsError>
 ```
 
-Defined in: <SourceLink path="rust-crates/sns-sdk/src/tld.rs" line={54} label="tld.rs:54" />
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/tld.rs" line={43} label="tld.rs:43" />
 
-Strips a suffix in `SUPPORTED_TLDS` and returns the borrowed bare name plus `Tld`. Current rollout configuration controls whether `.sol` is supported.
+Strips a suffix in `SUPPORTED_TLDS` and returns the borrowed bare name plus `Tld`. `SUPPORTED_TLDS` is statically `.sns`-only. The dedicated `resolve` and `safe_resolve` APIs handle `.sol` explicitly; use `parse_sns_domain` for other full-domain reads.
 
 ## Parameters
 

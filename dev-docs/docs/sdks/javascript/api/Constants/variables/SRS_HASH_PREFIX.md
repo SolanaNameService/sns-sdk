@@ -6,8 +6,8 @@ displayed_sidebar: docsSidebar
 
 # Variable: SRS\_HASH\_PREFIX
 
-> `const` **SRS\_HASH\_PREFIX**: `"SRS"` = `"SRS"`
+> `const` **SRS\_HASH\_PREFIX**: `"name"` = `"name"`
 
-Defined in: [constants.ts:22](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/constants.ts#L22)
+Defined in: [constants.ts:88](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/js/src/constants.ts#L88)
 
 Hash prefix used to derive SRS domain name addresses

@@ -1,6 +1,6 @@
 ---
 title: "GET /resolve/:domain"
-description: Resolve a full SNS or legacy .sol domain to its effective target public key.
+description: Resolve a full SNS or .sol domain to its effective target public key.
 ---
 
 Resolve a full `.sns` or `.sol` domain to its effective target public key.
@@ -38,9 +38,9 @@ type ResolveResponse = {
 
 For `.sns`, resolution checks an active tokenized-domain owner, a valid V2 `SOL` record, a valid V1 `SOL` record, and then the registry owner, in that order.
 
-For `.sol`, the SDK uses SNS-backed resolution while the selected RPC reports a finalized slot below <code><CutoffSlot /></code>. At or after that slot, the SDK automatically pauses `.sol` resolution and the route returns `400 Unsupported TLD`.
+For `.sol`, resolution reads and validates the canonical SRS record. The route returns the record's direct public-key owner, or the unique current holder of its canonical token mint. Expired SRS records return `410 Domain expired`.
 
-For `.sol` requests that must require matching SRS and SNS targets when SRS-backed resolution is enabled, use [`GET /safe-resolve/:domain`](./safe-resolve.mdx).
+For `.sol` resolutions which require matching SRS and SNS targets, use [`GET /safe-resolve/:domain`](./safe-resolve.mdx).
 
 ## Example
 
@@ -59,11 +59,12 @@ curl "https://sdk-proxy-v2.sns.id/resolve/bonfida.sns"
 
 Error responses use `{ "s": "error", "result": string }`.
 
-| Status | `result`              | When                                                                               |
-| ------ | --------------------- | ---------------------------------------------------------------------------------- |
-| `400`  | `Invalid input`       | The value before the suffix has empty labels or more than two labels.              |
-| `400`  | `Unsupported TLD`     | The suffix is missing or unsupported, or SDK-managed `.sol` resolution has paused. |
-| `404`  | `Domain not found`    | The requested domain registry does not exist.                                      |
-| `422`  | `Record is malformed` | A selected resolution record has malformed content or unsupported validation.      |
-| `502`  | `RPC unavailable`     | The selected Solana RPC returns a JSON-RPC error.                                  |
-| `500`  | `Internal error`      | No RPC endpoint is configured, or resolution fails for another unmapped reason.    |
+| Status | `result`              | When                                                                            |
+| ------ | --------------------- | ------------------------------------------------------------------------------- |
+| `400`  | `Invalid input`       | The value before the suffix has empty labels or more than two labels.           |
+| `400`  | `Unsupported TLD`     | The suffix is missing or unsupported.                                           |
+| `404`  | `Domain not found`    | The requested domain registry does not exist.                                   |
+| `410`  | `Domain expired`      | The SRS record for the requested `.sol` domain has expired.                     |
+| `422`  | `Record is malformed` | A selected resolution record has malformed content or unsupported validation.   |
+| `502`  | `RPC unavailable`     | The selected Solana RPC returns a JSON-RPC error.                               |
+| `500`  | `Internal error`      | No RPC endpoint is configured, or resolution fails for another unmapped reason. |

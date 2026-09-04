@@ -1,15 +1,16 @@
 ---
 displayed_sidebar: docsSidebar
 title: Wallet domains
-description: Query top-level SNS domains with the non-blocking Rust client.
+description: Query directly owned top-level SNS and SRS `.sol` domains with the non-blocking Rust client.
 ---
 
 [Rust SDK API Reference](../index.mdx) / Wallet domains
 
-Domain APIs query top-level SNS name accounts through a non-blocking Solana RPC client.
+Wallet-domain APIs query top-level SNS name accounts and SRS-backed `.sol` records through a non-blocking Solana RPC client.
 
 ## APIs
 
 | API                                                                       | Description                                              |
 | ------------------------------------------------------------------------- | -------------------------------------------------------- |
 | [`get_sns_domains_for_owner`](./wallet-domains/get-sns-domains-for-owner) | Lists top-level SNS name-account keys owned by a wallet. |
+| [`get_sol_domains_for_owner`](./wallet-domains/get-sol-domains-for-owner) | Lists directly owned, non-expired `.sol` domains.        |

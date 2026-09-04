@@ -10,6 +10,9 @@
     "../../react/src/hooks/useRecords/index.ts",
     "../../react/src/hooks/useReverseLookup/index.ts",
     "../../react/src/hooks/useSnsDomainsForOwner/index.ts",
+    "../../react/src/hooks/useSnsNftsForOwner/index.ts",
+    "../../react/src/hooks/useSolDomainsForOwner/index.ts",
+    "../../react/src/hooks/useSolNftsForOwner/index.ts",
     "../../react/src/hooks/useSubdomains/index.ts",
     "../../react/src/types.ts"
   ],

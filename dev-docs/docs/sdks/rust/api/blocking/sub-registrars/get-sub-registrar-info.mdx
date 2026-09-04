@@ -25,7 +25,7 @@ Requires both the `blocking` and `subdomain` features.
 | Parameter    | Type                                    | Description                                    |
 | ------------ | --------------------------------------- | ---------------------------------------------- |
 | `rpc_client` | `&solana_client::rpc_client::RpcClient` | Blocking client used to fetch registrar state. |
-| `domain`     | `&str`                                  | Full supported `.sns` or `.sol` domain.        |
+| `domain`     | `&str`                                  | Full lowercase `.sns` domain.                  |
 
 ## Returns
 
@@ -33,7 +33,7 @@ Requires both the `blocking` and `subdomain` features.
 
 ## Errors
 
-- `SnsError::UnsupportedTld` for a bare, unsupported, or unavailable `.sol` domain.
+- `SnsError::UnsupportedTld` for a bare, `.sol`, or unsupported domain.
 - `SnsError::InvalidSubRegistrar` when the registrar account is absent, has the wrong owner or tag, or cannot be deserialized.
 - `SnsError::SolanaClient` for RPC failures.
 

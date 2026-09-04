@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: AccountDoesNotExistError
 
-Defined in: [errors.ts:116](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/errors.ts#L116)
+Defined in: [errors.ts:116](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/js-kit/src/errors.ts#L116)
 
 Thrown when a required on-chain account does not exist.
 
@@ -20,7 +20,7 @@ Thrown when a required on-chain account does not exist.
 
 > **new AccountDoesNotExistError**(`message?`): `AccountDoesNotExistError`
 
-Defined in: [errors.ts:117](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/errors.ts#L117)
+Defined in: [errors.ts:117](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/js-kit/src/errors.ts#L117)
 
 #### Parameters
 
@@ -42,7 +42,7 @@ Defined in: [errors.ts:117](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d
 
 > **type**: [`ErrorType`](../enumerations/ErrorType.md)
 
-Defined in: [errors.ts:39](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/errors.ts#L39)
+Defined in: [errors.ts:39](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/js-kit/src/errors.ts#L39)
 
 #### Inherited from
 

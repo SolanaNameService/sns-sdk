@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: GetSnsNftMintParams
 
-Defined in: [nft/getSnsNftMint.ts:14](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/nft/getSnsNftMint.ts#L14)
+Defined in: [nft/getSnsNftMint.ts:14](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/js-kit/src/nft/getSnsNftMint.ts#L14)
 
 Parameters for deriving an SNS NFT mint.
 
@@ -22,6 +22,6 @@ const params: GetSnsNftMintParams = { domainAddress };
 
 > **domainAddress**: `Address`
 
-Defined in: [nft/getSnsNftMint.ts:16](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/nft/getSnsNftMint.ts#L16)
+Defined in: [nft/getSnsNftMint.ts:16](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/js-kit/src/nft/getSnsNftMint.ts#L16)
 
 Tokenized domain account address.

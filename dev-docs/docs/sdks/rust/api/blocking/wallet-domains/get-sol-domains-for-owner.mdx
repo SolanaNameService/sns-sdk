@@ -1,0 +1,60 @@
+---
+displayed_sidebar: docsSidebar
+title: get_sol_domains_for_owner
+description: List directly owned, non-expired `.sol` domains.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Wallet domains](../wallet-domains.mdx) / `get_sol_domains_for_owner`
+
+# Function: `get_sol_domains_for_owner()`
+
+```rust
+pub fn get_sol_domains_for_owner(
+    rpc_client: &RpcClient,
+    owner: Pubkey,
+) -> Result<Vec<SolDomain>, SnsError>
+```
+
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/blocking/domain.rs" line={47} label="rust-crates/sns-sdk/src/blocking/domain.rs:47" />
+
+Lists directly registry-owned, non-expired top-level `.sol` domains for `owner`. Tokenized domains and subdomains are excluded. Each returned name is TLD-trimmed, and each `key` is the corresponding SRS record account.
+
+## Availability
+
+Requires the `blocking` feature.
+
+## Parameters
+
+| Parameter    | Type                                    | Description                                     |
+| ------------ | --------------------------------------- | ----------------------------------------------- |
+| `rpc_client` | `&solana_client::rpc_client::RpcClient` | Blocking Solana RPC client.                     |
+| `owner`      | `Pubkey`                                | Wallet whose direct `.sol` domains are queried. |
+
+## Returns
+
+`Result<Vec<SolDomain>, SnsError>` containing matching domains in RPC response order. An empty result is returned when no matching records exist.
+
+Each `SolDomain` contains:
+
+- `domain`: TLD-trimmed domain name, such as `sns-ip-5-wallet-1`.
+- `key`: SRS record account public key.
+
+## Errors
+
+- `SnsError::SolanaClient` when the SRS program-account query fails.
+
+Malformed, expired, token-owned, and otherwise non-matching records are skipped.
+
+## Example
+
+```rust
+use sns_sdk::blocking::domain::get_sol_domains_for_owner;
+use solana_client::rpc_client::RpcClient;
+use solana_program::pubkey::Pubkey;
+
+let client = RpcClient::new("https://your-rpc-endpoint.example".to_string());
+let owner: Pubkey = std::env::var("OWNER")?.parse()?;
+for domain in get_sol_domains_for_owner(&client, owner)? {
+    println!("{}.sol: {}", domain.domain, domain.key);
+}
+```

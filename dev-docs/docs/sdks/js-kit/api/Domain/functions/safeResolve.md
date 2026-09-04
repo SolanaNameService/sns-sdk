@@ -8,13 +8,12 @@ displayed_sidebar: docsSidebar
 
 > **safeResolve**(`params`): `Promise`\<`Address`\>
 
-Defined in: [domain/resolve.ts:74](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/domain/resolve.ts#L74)
+Defined in: [domain/resolve.ts:66](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/js-kit/src/domain/resolve.ts#L66)
 
 Resolves a `.sns` or `.sol` domain using the same routing as [resolve](resolve.md).
 
-When SRS-backed `.sol` resolution is enabled, both the `.sol` domain and its
-corresponding `.sns` domain must resolve to the same target; otherwise,
-[Errors.SnsSolResolutionMismatchError](../../Errors/classes/SnsSolResolutionMismatchError.md) is thrown.
+For `.sol` input, both the SRS domain and its corresponding `.sns` domain
+must resolve to the same target; otherwise, [Errors.SnsSolResolutionMismatchError](../../Errors/classes/SnsSolResolutionMismatchError.md) is thrown.
 
 ## Parameters
 

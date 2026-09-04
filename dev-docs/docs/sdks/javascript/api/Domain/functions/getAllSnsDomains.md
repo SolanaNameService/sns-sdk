@@ -8,11 +8,11 @@ displayed_sidebar: docsSidebar
 
 > **getAllSnsDomains**(`connection`): `Promise`\<`GetProgramAccountsResponse`\>
 
-Defined in: [utils/getAllSnsDomains.ts:17](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/utils/getAllSnsDomains.ts#L17)
+Defined in: [utils/getAllSnsDomains.ts:18](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/js/src/utils/getAllSnsDomains.ts#L18)
 
 Retrieves all registered top-level `.sns` domain accounts.
 
-The account data is sliced to avoid enormous payloads and only the owner is returned.
+Each returned account's data contains only the 32-byte owner public key.
 
 ## Parameters
 
@@ -26,7 +26,8 @@ Solana RPC connection
 
 `Promise`\<`GetProgramAccountsResponse`\>
 
-Registered domain accounts with sliced account data.
+Registered domain accounts with account data containing only the
+owner public key.
 
 ## Example
 

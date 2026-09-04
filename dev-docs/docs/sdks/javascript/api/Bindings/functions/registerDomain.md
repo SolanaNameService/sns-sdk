@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **registerDomain**(`domain`, `space`, `buyer`, `buyerTokenAccount`, `mint?`, `referrerKey?`): `Promise`\<`TransactionInstruction`[]\>
 
-Defined in: [bindings/registerDomain.ts:50](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/bindings/registerDomain.ts#L50)
+Defined in: [bindings/registerDomain.ts:50](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/js/src/bindings/registerDomain.ts#L50)
 
 Builds the instructions to register a top-level `.sns` domain.
 

@@ -15,7 +15,7 @@ pub async fn get_sns_domains_for_owner(
 ) -> Result<Vec<Pubkey>, SnsError>
 ```
 
-Defined in: <SourceLink path="rust-crates/sns-sdk/src/non_blocking/domain.rs" line={11} label="rust-crates/sns-sdk/src/non_blocking/domain.rs:11" />
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/non_blocking/domain.rs" line={20} label="rust-crates/sns-sdk/src/non_blocking/domain.rs:20" />
 
 Queries SPL Name Service accounts whose parent is the SNS root account and whose header owner equals the supplied wallet. It does not include tokenized domains or subdomains, and it does not impose an ordering on returned keys.
 
@@ -38,13 +38,11 @@ Queries SPL Name Service accounts whose parent is the SNS root account and whose
 
 ```rust
 use sns_sdk::non_blocking::domain::get_sns_domains_for_owner;
+use solana_client::nonblocking::rpc_client::RpcClient;
+use solana_program::pubkey::Pubkey;
 
+let client = RpcClient::new("https://your-rpc-endpoint.example".to_string());
+let owner: Pubkey = std::env::var("OWNER")?.parse()?;
 let domains = get_sns_domains_for_owner(&client, owner).await?;
-for domain in domains {
-    println!("{domain}");
-}
+println!("{} domains", domains.len());
 ```
-
-## Related APIs
-
-- [`resolve_reverse`](../reverse-lookup/resolve-reverse.mdx)

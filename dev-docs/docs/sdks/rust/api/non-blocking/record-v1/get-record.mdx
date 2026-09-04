@@ -22,11 +22,11 @@ Validates the full domain's supported TLD, derives the V1 record address, and re
 
 ## Parameters
 
-| Parameter    | Type         | Description                                  |
-| ------------ | ------------ | -------------------------------------------- |
-| `rpc_client` | `&RpcClient` | Non-blocking Solana RPC client.              |
-| `domain`     | `&str`       | Full supported `.sns` or `.sol` domain name. |
-| `record`     | `Record`     | Legacy record type to retrieve.              |
+| Parameter    | Type         | Description                        |
+| ------------ | ------------ | ---------------------------------- |
+| `rpc_client` | `&RpcClient` | Non-blocking Solana RPC client.    |
+| `domain`     | `&str`       | Full lowercase `.sns` domain name. |
+| `record`     | `Record`     | Legacy record type to retrieve.    |
 
 ## Returns
 

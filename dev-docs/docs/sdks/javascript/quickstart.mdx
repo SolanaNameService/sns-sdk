@@ -1,9 +1,9 @@
 ---
 title: JavaScript SDK quickstart
-description: Resolve an SNS domain and query primary and wallet-owned domains with JavaScript SDK v4.
+description: Resolve a `.sns` or `.sol` domain and query primary and wallet-owned domains with JavaScript SDK v4.
 ---
 
-Use JavaScript SDK v4 to resolve a `.sns` domain and query domain data for a wallet.
+Use JavaScript SDK v4 to resolve a `.sns` or `.sol` domain and query domain data for a wallet.
 
 ## Setup
 
@@ -19,7 +19,7 @@ const connection = new Connection("https://your-rpc-endpoint.example");
 
 ### Resolve a domain
 
-Pass a full `.sns` name to `resolve`:
+Pass a full `.sns` or `.sol` name to `resolve`:
 
 ```ts
 import { resolve } from "@bonfida/spl-name-service";
@@ -31,9 +31,9 @@ console.log(owner.toBase58());
 
 `resolve` returns the effective owner as a web3.js `PublicKey`.
 
-For `.sol` resolution that must verify the SRS and corresponding SNS targets match when SRS-backed resolution is enabled in a future update, use `safeResolve(connection, "name.sol")` instead.
+Use `safeResolve(connection, "name.sol")` when `.sol` resolution must additionally require the SRS target and the corresponding `.sns` target to match; it throws `SnsSolResolutionMismatchError` on mismatch.
 
-### Get a primary domain
+### Get a primary `.sns` domain
 
 Use `getPrimaryDomain` with the wallet public key:
 
@@ -52,23 +52,39 @@ if (!primary.stale) {
 
 `reverse` is TLD-less. Append `.sns` for display. Do not present a stale result as the wallet's current primary domain.
 
-### Get domains for an owner
+### Get `.sns` domains/NFTs for an owner
 
-Use `getSnsDomainsForOwner` to retrieve top-level domains owned by the wallet:
+Use `getSnsDomainsForOwner` to retrieve directly owned top-level `.sns` domains and `getSnsNftsForOwner` to retrieve tokenized `.sns` domains:
 
 ```ts
-import { getSnsDomainsForOwner } from "@bonfida/spl-name-service";
+import {
+  getSnsDomainsForOwner,
+  getSnsNftsForOwner,
+} from "@bonfida/spl-name-service";
 import { PublicKey } from "@solana/web3.js";
 
 const wallet = new PublicKey("<WALLET_ADDRESS>");
-const domains = await getSnsDomainsForOwner(connection, wallet);
-const suffixedDomains = domains.map(({ domain }) => `${domain}.sns`);
 
-console.log(suffixedDomains);
-// => ["name.sns", "another-name.sns"]
+const snsDomains = await getSnsDomainsForOwner(connection, wallet);
+const snsNfts = await getSnsNftsForOwner(connection, wallet);
 ```
 
-Each result contains a TLD-less `domain` and its name-account `key`. Results omit domains without reverse data and do not include tokenized domains or subdomains.
+### Get `.sol` domains/NFTs for an owner
+
+Use `getSolDomainsForOwner` to retrieve directly owned top-level `.sol` domains and `getSolNftsForOwner` to retrieve tokenized `.sol` domains:
+
+```ts
+import {
+  getSolDomainsForOwner,
+  getSolNftsForOwner,
+} from "@bonfida/spl-name-service";
+import { PublicKey } from "@solana/web3.js";
+
+const wallet = new PublicKey("<WALLET_ADDRESS>");
+
+const solDomains = await getSolDomainsForOwner(connection, wallet);
+const solNfts = await getSolNftsForOwner(connection, wallet);
+```
 
 ## Next steps
 

@@ -10,7 +10,7 @@ Install JavaScript SDK v4 in an application that uses `@solana/web3.js` 1.x.
 Install the SDK and its web3.js peer dependency:
 
 ```bash
-npm install @bonfida/spl-name-service@^4 @solana/web3.js@^1.98.2
+npm install @bonfida/spl-name-service@^4.1.0 @solana/web3.js@^1.98.2
 ```
 
 ## Import the SDK
@@ -36,7 +36,7 @@ CommonJS applications can load the same exports with `require`:
 const { resolve, safeResolve } = require("@bonfida/spl-name-service");
 ```
 
-Use `safeResolve` when `.sol` resolution must require matching SRS and SNS targets after SRS-backed resolution is enabled.
+Use `safeResolve` when `.sol` resolution must require the SRS target and the corresponding `.sns` target to match.
 
 ## RPC Configuration
 

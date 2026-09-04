@@ -17,6 +17,8 @@ Domain resolution, derivation, records, and subdomain APIs.
 | ------ | ------ |
 | [GetAllSnsDomainsParams](interfaces/GetAllSnsDomainsParams.md) | Parameters for retrieving all SNS domains. |
 | [GetAllSnsDomainsResult](interfaces/GetAllSnsDomainsResult.md) | A top-level SNS domain account. |
+| [GetAllSolDomainsParams](interfaces/GetAllSolDomainsParams.md) | Parameters for retrieving all SRS `.sol` domains. |
+| [GetAllSolDomainsResult](interfaces/GetAllSolDomainsResult.md) | A top-level SRS `.sol` domain record. |
 | [GetDomainOwnerParams](interfaces/GetDomainOwnerParams.md) | Parameters for retrieving a domain owner. |
 | [GetDomainRecordOptions](interfaces/GetDomainRecordOptions.md) | Options for retrieving a domain record. |
 | [GetDomainRecordParams](interfaces/GetDomainRecordParams.md) | Parameters for retrieving a domain record. |
@@ -28,8 +30,8 @@ Domain resolution, derivation, records, and subdomain APIs.
 | [GetDomainRecordVerification](interfaces/GetDomainRecordVerification.md) | Verification status for a domain record. |
 | [GetSnsDomainAddressParams](interfaces/GetSnsDomainAddressParams.md) | Parameters for deriving an SNS domain address. |
 | [GetSnsDomainAddressResult](interfaces/GetSnsDomainAddressResult.md) | A derived SNS domain address. |
-| [GetSrsDomainAddressParams](interfaces/GetSrsDomainAddressParams.md) | Parameters for deriving an SRS domain address. |
-| [GetSrsDomainAddressResult](interfaces/GetSrsDomainAddressResult.md) | A derived SRS domain address. |
+| [GetSolDomainAddressParams](interfaces/GetSolDomainAddressParams.md) | Parameters for deriving an SRS `.sol` domain address. |
+| [GetSolDomainAddressResult](interfaces/GetSolDomainAddressResult.md) | A derived SRS `.sol` domain address and canonical name hash. |
 | [GetSubdomainsParams](interfaces/GetSubdomainsParams.md) | Parameters for retrieving subdomains under a parent domain. |
 | [GetSubdomainsResult](interfaces/GetSubdomainsResult.md) | A subdomain and the owner recorded in its name registry. |
 | [ResolveParams](interfaces/ResolveParams.md) | Parameters for resolving a domain. |
@@ -38,18 +40,27 @@ Domain resolution, derivation, records, and subdomain APIs.
 
 | Type Alias | Description |
 | ------ | ------ |
+| [~~GetSrsDomainAddressParams~~](type-aliases/GetSrsDomainAddressParams.md) | - |
+| [~~GetSrsDomainAddressResult~~](type-aliases/GetSrsDomainAddressResult.md) | - |
 | [ResolveOptions](type-aliases/ResolveOptions.md) | Controls whether resolution may return program-derived addresses. |
+
+## Variables
+
+| Variable | Description |
+| ------ | ------ |
+| [~~getSrsDomainAddress~~](variables/getSrsDomainAddress.md) | Derives the canonical SRS record address for a TLD-trimmed `.sol` name. |
 
 ## Functions
 
 | Function | Description |
 | ------ | ------ |
 | [getAllSnsDomains](functions/getAllSnsDomains.md) | Retrieves all top-level SNS domain accounts. |
+| [getAllSolDomains](functions/getAllSolDomains.md) | Retrieves all registered top-level `.sol` SRS records, including expired records. |
 | [getDomainOwner](functions/getDomainOwner.md) | Retrieves the owner of the specified domain. If the domain is tokenized, the NFT's owner is returned; otherwise, the registry owner is returned. |
 | [getDomainRecord](functions/getDomainRecord.md) | Retrieves a V2 record under a domain, verifies it, and optionally decodes its content. |
 | [getDomainRecords](functions/getDomainRecords.md) | Retrieves V2 records under a domain, verifies them, and optionally decodes their content. |
 | [getSnsDomainAddress](functions/getSnsDomainAddress.md) | Derives the address of a domain, subdomain, or record account. |
-| [getSrsDomainAddress](functions/getSrsDomainAddress.md) | Derives the canonical SRS record address for a TLD-trimmed `.sol` name. |
+| [getSolDomainAddress](functions/getSolDomainAddress.md) | Derives the canonical SRS record address for a TLD-trimmed `.sol` name. |
 | [getSubdomains](functions/getSubdomains.md) | Retrieves subdomains under a parent domain, including their owners. |
 | [resolve](functions/resolve.md) | Resolves a `.sns` or `.sol` domain to its target address. |
 | [safeResolve](functions/safeResolve.md) | Resolves a `.sns` or `.sol` domain using the same routing as [resolve](functions/resolve.md). |

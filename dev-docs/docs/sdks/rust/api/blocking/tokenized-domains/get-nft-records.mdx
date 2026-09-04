@@ -1,7 +1,7 @@
 ---
 displayed_sidebar: docsSidebar
 title: get_nft_records
-description: Find active Name Tokenizer records held by a wallet.
+description: Return raw name-tokenizer records (name account and NFT mint) for a wallet's tokenized `.sns` domains; use `get_sns_nfts_for_owner` for results with display names.
 ---
 
 [Rust SDK API Reference](../../index.mdx) / [Tokenized domains](../tokenized-domains.mdx) / `get_nft_records`
@@ -12,9 +12,9 @@ description: Find active Name Tokenizer records held by a wallet.
 pub fn get_nft_records(rpc_client: &RpcClient, owner: &Pubkey) -> Result<Vec<NftRecord>, SnsError>
 ```
 
-Defined in: <SourceLink path="rust-crates/sns-sdk/src/blocking/nft.rs" line={42} label="rust-crates/sns-sdk/src/blocking/nft.rs:42" />
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/blocking/nft.rs" line={48} label="rust-crates/sns-sdk/src/blocking/nft.rs:48" />
 
-Finds the owner's SPL Token accounts with amount one, looks up each mint's first active Name Tokenizer record, and deserializes valid records. Token accounts, record lookups, and record deserialization failures are skipped rather than returned as errors.
+Returns the raw Name Tokenizer records behind a wallet's tokenized `.sns` domains: each result pairs a domain's name-account key with its NFT mint. Use `get_sns_nfts_for_owner` when display names are needed — it reverse-resolves the name accounts and omits entries without a reverse record. Invalid token accounts, mints without a record, and malformed records are skipped rather than returned as errors.
 
 ## Availability
 

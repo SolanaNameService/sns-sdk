@@ -9,9 +9,6 @@ const config: Config = {
   favicon: "img/logo.svg",
   url: "https://dev.sns.id",
   baseUrl: "/",
-  customFields: {
-    cutoffSlot: 452_825_395,
-  },
   organizationName: "SNS",
   projectName: "sns-sdk",
   onBrokenLinks: "throw",

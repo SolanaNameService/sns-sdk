@@ -8,7 +8,7 @@ displayed_sidebar: docsSidebar
 
 > **resolve**(`params`): `Promise`\<`Address`\>
 
-Defined in: [domain/resolve.ts:30](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/domain/resolve.ts#L30)
+Defined in: [domain/resolve.ts:27](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/js-kit/src/domain/resolve.ts#L27)
 
 Resolves a `.sns` or `.sol` domain to its target address.
 
@@ -28,8 +28,7 @@ The resolved target address.
 
 ## See
 
-[safeResolve](safeResolve.md) for `.sol` resolution that verifies the SRS and
-corresponding SNS targets match when SRS-backed resolution is enabled.
+[safeResolve](safeResolve.md) for `.sol` resolution that verifies the SRS and corresponding SNS targets match.
 
 ## Example
 

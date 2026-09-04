@@ -29,7 +29,7 @@ Requires the `blocking` feature.
 | Parameter    | Type                                    | Description                                         |
 | ------------ | --------------------------------------- | --------------------------------------------------- |
 | `rpc_client` | `&solana_client::rpc_client::RpcClient` | Blocking client used for batched record reads.      |
-| `domain`     | `&str`                                  | Full supported `.sns` or `.sol` domain.             |
+| `domain`     | `&str`                                  | Full lowercase `.sns` domain.                       |
 | `records`    | `&[Record]`                             | SNS record kinds to fetch, in desired output order. |
 
 ## Returns
@@ -38,7 +38,7 @@ Requires the `blocking` feature.
 
 ## Errors
 
-- `SnsError::UnsupportedTld` for a bare, unsupported, or unavailable `.sol` domain.
+- `SnsError::UnsupportedTld` for a bare, `.sol`, or unsupported domain.
 - `SnsError::InvalidNameAccountData` when a present record account is malformed or has the wrong owner.
 - `SnsError::SolanaClient` for RPC failures.
 

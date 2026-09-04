@@ -1,7 +1,7 @@
 ---
 displayed_sidebar: docsSidebar
 title: resolve_nft_owner
-description: Find the holder of a valid one-of-one tokenized SNS domain mint.
+description: Find the holder of a tokenized SNS domain mint.
 ---
 
 [Rust SDK API Reference](../../index.mdx) / [Tokenized domains](../tokenized-domains.mdx) / `resolve_nft_owner`
@@ -15,7 +15,7 @@ pub fn resolve_nft_owner(
 ) -> Result<Option<Pubkey>, SnsError>
 ```
 
-Defined in: <SourceLink path="rust-crates/sns-sdk/src/blocking/nft.rs" line={97} label="rust-crates/sns-sdk/src/blocking/nft.rs:97" />
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/blocking/nft.rs" line={103} label="rust-crates/sns-sdk/src/blocking/nft.rs:103" />
 
 Derives the domain's canonical Name Tokenizer mint. It returns an owner only when the mint account exists, has supply one, and a matching amount-one SPL Token account is found.
 

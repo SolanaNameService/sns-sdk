@@ -6,14 +6,17 @@ displayed_sidebar: docsSidebar
 
 # Interface: SnsDomain
 
-Defined in: [utils/getSnsDomainsForOwner.ts:14](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/utils/getSnsDomainsForOwner.ts#L14)
+Defined in: [utils/getSnsDomainsForOwner.ts:17](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/js/src/utils/getSnsDomainsForOwner.ts#L17)
 
-A directly registry-owned top-level SNS domain.
+A directly registry-owned top-level `.sns` domain.
 
 ## Example
 
 ```ts
-const firstDomain: SnsDomain | undefined = domains[0];
+const domain: SnsDomain = {
+  domain: "example",
+  key: nameAccount,
+};
 ```
 
 ## Properties
@@ -22,9 +25,9 @@ const firstDomain: SnsDomain | undefined = domains[0];
 
 > **domain**: `string`
 
-Defined in: [utils/getSnsDomainsForOwner.ts:16](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/utils/getSnsDomainsForOwner.ts#L16)
+Defined in: [utils/getSnsDomainsForOwner.ts:19](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/js/src/utils/getSnsDomainsForOwner.ts#L19)
 
-Fully qualified `.sns` domain name.
+TLD-trimmed `.sns` domain name.
 
 ***
 
@@ -32,6 +35,6 @@ Fully qualified `.sns` domain name.
 
 > **key**: `PublicKey`
 
-Defined in: [utils/getSnsDomainsForOwner.ts:19](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/utils/getSnsDomainsForOwner.ts#L19)
+Defined in: [utils/getSnsDomainsForOwner.ts:21](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/js/src/utils/getSnsDomainsForOwner.ts#L21)
 
 Name-service account address for `domain`.

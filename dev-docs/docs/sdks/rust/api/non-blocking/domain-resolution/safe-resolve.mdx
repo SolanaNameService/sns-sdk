@@ -16,11 +16,11 @@ pub async fn safe_resolve(
 ) -> Result<Pubkey, SnsError>
 ```
 
-Defined in: <SourceLink path="rust-crates/sns-sdk/src/non_blocking/resolve.rs" line={56} label="rust-crates/sns-sdk/src/non_blocking/resolve.rs:56" />
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/non_blocking/resolve.rs" line={47} label="rust-crates/sns-sdk/src/non_blocking/resolve.rs:47" />
 
-Uses the same routing as [`resolve`](./resolve.mdx). When SRS-backed `.sol` resolution is enabled, it resolves the TLD-trimmed name through both SRS and SNS with the same `allow_pda` policy. Matching targets are returned; differing targets produce `SnsError::SnsSolResolutionMismatch`.
+Uses the same routing as [`resolve`](./resolve.mdx). For `.sol`, it resolves the TLD-trimmed name through both SRS and SNS with the same `allow_pda` policy. Matching targets are returned; differing targets produce `SnsError::SnsSolResolutionMismatch`.
 
-For `.sns`, unsupported inputs, and `.sol` while SRS-backed resolution is disabled, this function follows ordinary `resolve` behavior. Resolver and RPC errors propagate unchanged.
+For `.sns` and unsupported inputs, this function follows ordinary `resolve` behavior. Resolver and RPC errors propagate unchanged.
 
 ## Availability
 
@@ -31,7 +31,7 @@ This API is available in the default build. Enabling the `blocking` feature repl
 | Parameter    | Type         | Description                                                             |
 | ------------ | ------------ | ----------------------------------------------------------------------- |
 | `rpc_client` | `&RpcClient` | Non-blocking Solana RPC client used for SRS and SNS resolution.         |
-| `domain`     | `&str`       | Full supported `.sns` or `.sol` domain name.                            |
+| `domain`     | `&str`       | Full `.sns` or `.sol` domain name.                                      |
 | `allow_pda`  | `AllowPda`   | Policy applied consistently to both SRS and SNS final-owner resolution. |
 
 ## Returns
@@ -40,7 +40,7 @@ This API is available in the default build. Enabling the `blocking` feature repl
 
 ## Errors
 
-- `SnsError::SnsSolResolutionMismatch` when enabled SRS and SNS resolution return different targets.
+- `SnsError::SnsSolResolutionMismatch` when SRS and SNS resolution return different targets.
 - Any error returned by ordinary SRS or SNS resolution, including RPC, domain, record, and PDA-policy errors.
 
 ## Example

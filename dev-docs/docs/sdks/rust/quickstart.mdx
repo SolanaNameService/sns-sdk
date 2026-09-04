@@ -3,7 +3,7 @@ title: Rust SDK quickstart
 description: Resolve an SNS domain and query primary and wallet-owned domains with Rust SDK v2.
 ---
 
-Use Rust SDK v2 to resolve a `.sns` domain and query domain data for a wallet.
+Use Rust SDK v2 to resolve `.sns` and SRS-backed `.sol` domains and query domain data for a wallet.
 
 ## Setup
 
@@ -19,21 +19,21 @@ let client = RpcClient::new("https://your-rpc-endpoint.example".to_string());
 
 ### Resolve a domain
 
-Pass a full `.sns` name to `resolve`:
+Pass a full `.sns` or `.sol` name to `resolve`:
 
 ```rust
 use sns_sdk::non_blocking::resolve::{resolve, AllowPda};
 
-let owner = resolve(&client, "name.sns", AllowPda::Deny).await?;
+let owner = resolve(&client, "name.sol", AllowPda::Deny).await?;
 println!("{owner}");
 // => "<BASE58_PUBLIC_KEY>"
 ```
 
 `resolve` returns the effective owner as a Solana `Pubkey`.
 
-For a `.sol` name that must resolve to matching SRS and SNS targets when SRS-backed resolution is enabled, call `safe_resolve(&client, "name.sol", AllowPda::Deny)` with the same arguments.
+Use `safe_resolve(&client, "name.sol", AllowPda::Deny)` when `.sol` resolution must additionally require the SRS target and the corresponding `.sns` target to match; it returns `SnsError::SnsSolResolutionMismatch` on mismatch.
 
-### Get a primary domain
+### Get a primary `.sns` domain
 
 Use `get_primary_domain` with the wallet public key, then reverse-resolve the returned name-account key for display:
 
@@ -58,32 +58,39 @@ if let Some(primary_key) = primary_key {
 
 `get_primary_domain` returns `None` when the wallet has no primary domain. Reverse lookup domain names are TLD-less, so append `.sns` for display.
 
-### Get domains for an owner
+### Get `.sns` domains/NFTs for an owner
 
-Use `get_sns_domains_for_owner` to retrieve top-level name-account keys owned by the wallet, then reverse-resolve them for display:
+Use `get_sns_domains_for_owner` to retrieve directly owned top-level `.sns` name-account keys and `get_sns_nfts_for_owner` to retrieve tokenized `.sns` domains:
 
 ```rust
 use sns_sdk::non_blocking::{
     domain::get_sns_domains_for_owner,
-    resolve::resolve_reverse_batch,
+    nft::get_sns_nfts_for_owner,
 };
 use solana_sdk::pubkey::Pubkey;
 use std::str::FromStr;
 
 let wallet = Pubkey::from_str("<WALLET_ADDRESS>")?;
 let domain_keys = get_sns_domains_for_owner(&client, wallet).await?;
-let domains = resolve_reverse_batch(&client, &domain_keys).await?;
-let display_domains = domains
-    .into_iter()
-    .flatten()
-    .map(|domain| format!("{domain}.sns"))
-    .collect::<Vec<_>>();
-
-println!("{display_domains:?}");
-// => ["name.sns", "another-name.sns"]
+let sns_nfts = get_sns_nfts_for_owner(&client, &wallet).await?;
 ```
 
-The owner lookup does not include tokenized domains or subdomains. Missing reverse records appear as `None` and are omitted by `flatten`.
+### Get `.sol` domains/NFTs for an owner
+
+Use `get_sol_domains_for_owner` to retrieve directly owned top-level `.sol` domains and `get_sol_nfts_for_owner` to retrieve tokenized `.sol` domains:
+
+```rust
+use sns_sdk::non_blocking::{
+    domain::get_sol_domains_for_owner,
+    nft::get_sol_nfts_for_owner,
+};
+use solana_sdk::pubkey::Pubkey;
+use std::str::FromStr;
+
+let wallet = Pubkey::from_str("<WALLET_ADDRESS>")?;
+let sol_domains = get_sol_domains_for_owner(&client, wallet).await?;
+let sol_nfts = get_sol_nfts_for_owner(&client, &wallet).await?;
+```
 
 ## Next steps
 

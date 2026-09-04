@@ -22,8 +22,10 @@ Wallet ownership, primary-domain, and wallet-domain lookup APIs.
 | Interface | Description |
 | ------ | ------ |
 | [PrimaryDomainParams](interfaces/PrimaryDomainParams.md) | Input for decoding a primary-domain account. |
-| [SnsDomain](interfaces/SnsDomain.md) | A directly registry-owned top-level SNS domain. |
-| [SnsNft](interfaces/SnsNft.md) | A tokenized SNS domain and its associated NFT mint. |
+| [SnsDomain](interfaces/SnsDomain.md) | A directly registry-owned top-level `.sns` domain. |
+| [SnsNft](interfaces/SnsNft.md) | A tokenized `.sns` domain and its associated NFT mint. |
+| [SolDomain](interfaces/SolDomain.md) | A directly registry-owned top-level `.sol` domain. |
+| [SolNft](interfaces/SolNft.md) | A tokenized `.sol` domain and its associated NFT mint. |
 
 ## Variables
 
@@ -40,3 +42,6 @@ Wallet ownership, primary-domain, and wallet-domain lookup APIs.
 | [getSnsDomainKeysForOwner](functions/getSnsDomainKeysForOwner.md) | Retrieves top-level `.sns` domain accounts owned by a wallet. |
 | [getSnsDomainsForOwner](functions/getSnsDomainsForOwner.md) | Retrieves directly registry-owned top-level `.sns` domains for a wallet. |
 | [getSnsNftsForOwner](functions/getSnsNftsForOwner.md) | Retrieves tokenized `.sns` domains owned by a wallet. |
+| [getSolDomainKeysForOwner](functions/getSolDomainKeysForOwner.md) | Retrieves top-level `.sol` domain accounts owned by a wallet, excluding expired domains. |
+| [getSolDomainsForOwner](functions/getSolDomainsForOwner.md) | Retrieves directly registry-owned top-level `.sol` domains for a wallet, excluding expired domains. |
+| [getSolNftsForOwner](functions/getSolNftsForOwner.md) | Retrieves tokenized `.sol` domains owned by a wallet, excluding expired domains. |

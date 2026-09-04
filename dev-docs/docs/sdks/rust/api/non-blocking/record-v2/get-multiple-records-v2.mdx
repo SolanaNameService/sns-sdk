@@ -22,11 +22,11 @@ Validates a full supported domain, derives one V2 record address per requested `
 
 ## Parameters
 
-| Parameter    | Type         | Description                                  |
-| ------------ | ------------ | -------------------------------------------- |
-| `rpc_client` | `&RpcClient` | Non-blocking Solana RPC client.              |
-| `domain`     | `&str`       | Full supported `.sns` or `.sol` domain name. |
-| `records`    | `&[Record]`  | V2 record types to retrieve.                 |
+| Parameter    | Type         | Description                        |
+| ------------ | ------------ | ---------------------------------- |
+| `rpc_client` | `&RpcClient` | Non-blocking Solana RPC client.    |
+| `domain`     | `&str`       | Full lowercase `.sns` domain name. |
+| `records`    | `&[Record]`  | V2 record types to retrieve.       |
 
 ## Returns
 

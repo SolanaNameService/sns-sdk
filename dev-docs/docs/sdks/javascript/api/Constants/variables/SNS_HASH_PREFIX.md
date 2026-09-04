@@ -8,6 +8,6 @@ displayed_sidebar: docsSidebar
 
 > `const` **SNS\_HASH\_PREFIX**: `"SPL Name Service"` = `"SPL Name Service"`
 
-Defined in: [constants.ts:17](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/constants.ts#L17)
+Defined in: [constants.ts:41](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/js/src/constants.ts#L41)
 
 Hash prefix used to derive SNS domain name addresses

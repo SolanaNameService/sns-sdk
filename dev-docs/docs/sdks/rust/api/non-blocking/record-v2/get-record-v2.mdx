@@ -25,7 +25,7 @@ Validates the full domain's supported TLD, derives its V2 record address, and re
 | Parameter    | Type         | Description                                        |
 | ------------ | ------------ | -------------------------------------------------- |
 | `rpc_client` | `&RpcClient` | Non-blocking Solana RPC client.                    |
-| `domain`     | `&str`       | Full supported `.sns` or `.sol` domain name.       |
+| `domain`     | `&str`       | Full lowercase `.sns` domain name.                 |
 | `record`     | `Record`     | V2 record type to retrieve, such as `Record::Url`. |
 
 ## Returns

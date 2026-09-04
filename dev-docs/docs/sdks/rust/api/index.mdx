@@ -15,7 +15,8 @@ The default crate features expose `sns_sdk::non_blocking`. Enabling `blocking` r
 | [Domain registration](./shared/domain-registration)               | Build top-level `.sns` registration instructions                         |
 | [Record instructions](./shared/record-instructions)               | Build V2 record content and verification instructions                    |
 | [Derivation](./shared/derivation)                                 | SNS, SRS, record, and name-account key derivation                        |
-| [Tokenized domains](./shared/tokenized-domains)                   | Shared tokenized-domain result types                                     |
+| [Wallet domains](./shared/wallet-domains)                         | Shared result types for directly owned `.sol` domains                    |
+| [Tokenized domains](./shared/tokenized-domains)                   | Shared result types for tokenized SNS and `.sol` domains                 |
 | [Primary domains](./shared/primary-domains)                       | Primary-domain account parsing, derivation, and instruction construction |
 | [Record types and keys](./shared/record-types)                    | Record enums, versions, classes, and account-key derivation              |
 | [Record V1 codecs](./shared/record-v1)                            | Legacy record serialization, deserialization, and signature checks       |
@@ -31,8 +32,8 @@ These modules use `solana_client::nonblocking::rpc_client::RpcClient` and are av
 | [Domain resolution](./non-blocking/domain-resolution) | Resolve full domains with ordinary or safe SRS/SNS target checks        |
 | [Name registries](./non-blocking/name-registries)     | Read one or multiple SPL Name Service accounts                          |
 | [Reverse lookup](./non-blocking/reverse-lookup)       | Reverse-resolve one or multiple name-account keys                       |
-| [Wallet domains](./non-blocking/wallet-domains)       | List top-level name-account keys owned by a wallet                      |
-| [Tokenized domains](./non-blocking/tokenized-domains) | Retrieve tokenized domains and NFT owners                               |
+| [Wallet domains](./non-blocking/wallet-domains)       | List directly owned top-level SNS and `.sol` domains                    |
+| [Tokenized domains](./non-blocking/tokenized-domains) | Retrieve tokenized SNS and `.sol` domains and NFT owners                |
 | [Primary domains](./non-blocking/primary-domains)     | Retrieve a wallet's primary name-account key                            |
 | [Record V1](./non-blocking/record-v1)                 | Read legacy record accounts                                             |
 | [Record V2](./non-blocking/record-v2)                 | Read current record accounts                                            |
@@ -48,8 +49,8 @@ These modules use `solana_client::rpc_client::RpcClient` and are available when 
 | [Domain resolution](./blocking/domain-resolution) | Resolve full domains with ordinary or safe SRS/SNS target checks        |
 | [Name registries](./blocking/name-registries)     | Read one or multiple SPL Name Service accounts                          |
 | [Reverse lookup](./blocking/reverse-lookup)       | Reverse-resolve one or multiple name-account keys                       |
-| [Wallet domains](./blocking/wallet-domains)       | List top-level name-account keys owned by a wallet                      |
-| [Tokenized domains](./blocking/tokenized-domains) | Retrieve tokenized domains and NFT owners                               |
+| [Wallet domains](./blocking/wallet-domains)       | List directly owned top-level SNS and `.sol` domains                    |
+| [Tokenized domains](./blocking/tokenized-domains) | Retrieve tokenized SNS and `.sol` domains and NFT owners                |
 | [Primary domains](./blocking/primary-domains)     | Retrieve a wallet's primary name-account key                            |
 | [Record V1](./blocking/record-v1)                 | Read legacy record accounts                                             |
 | [Record V2](./blocking/record-v2)                 | Read current record accounts                                            |

@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Interface: GetDomainOwnerParams
 
-Defined in: [domain/getDomainOwner.ts:19](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/domain/getDomainOwner.ts#L19)
+Defined in: [domain/getDomainOwner.ts:18](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/js-kit/src/domain/getDomainOwner.ts#L18)
 
 Parameters for retrieving a domain owner.
 
@@ -22,16 +22,16 @@ const params: GetDomainOwnerParams = { rpc, domain: "example.sns" };
 
 > **domain**: `string`
 
-Defined in: [domain/getDomainOwner.ts:23](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/domain/getDomainOwner.ts#L23)
+Defined in: [domain/getDomainOwner.ts:22](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/js-kit/src/domain/getDomainOwner.ts#L22)
 
-Full domain name.
+Full `.sns` domain name.
 
 ***
 
 ### rpc
 
-> **rpc**: `Rpc`\<`GetAccountInfoApi` & `GetTokenLargestAccountsApi` & `GetSlotApi`\>
+> **rpc**: `Rpc`\<`GetAccountInfoApi` & `GetTokenLargestAccountsApi`\>
 
-Defined in: [domain/getDomainOwner.ts:21](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js-kit/src/domain/getDomainOwner.ts#L21)
+Defined in: [domain/getDomainOwner.ts:20](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/js-kit/src/domain/getDomainOwner.ts#L20)
 
 RPC client.

@@ -1,0 +1,25 @@
+---
+displayed_sidebar: docsSidebar
+title: SolDomain
+description: A directly owned, non-expired `.sol` domain result.
+---
+
+[Rust SDK API Reference](../../index.mdx) / [Wallet domains](../wallet-domains.mdx) / `SolDomain`
+
+# Struct: `SolDomain`
+
+```rust
+pub struct SolDomain {
+    pub domain: String,
+    pub key: Pubkey,
+}
+```
+
+| Field    | Description                                   |
+| -------- | --------------------------------------------- |
+| `domain` | TLD-trimmed `.sol` domain name.               |
+| `key`    | SRS record account public key for the domain. |
+
+This type is returned by `get_sol_domains_for_owner` in both blocking and non-blocking client modes.
+
+The canonical Rust path is `sns_sdk::domain::SolDomain`.

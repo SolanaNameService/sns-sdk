@@ -153,6 +153,11 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                   type: "doc",
+                  id: "sdk-proxy/endpoints/domains/nfts",
+                  label: "GET /nfts/:owner",
+                },
+                {
+                  type: "doc",
                   id: "sdk-proxy/endpoints/domains/primary-domain",
                   label: "GET /primary-domain/:owner",
                 },
@@ -292,6 +297,11 @@ const sidebars: SidebarsConfig = {
               type: "doc",
               id: "cli/commands/domains",
               label: "domains",
+            },
+            {
+              type: "doc",
+              id: "cli/commands/nfts",
+              label: "nfts",
             },
             {
               type: "doc",

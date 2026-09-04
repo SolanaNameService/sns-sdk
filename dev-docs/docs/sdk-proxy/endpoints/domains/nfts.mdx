@@ -1,0 +1,68 @@
+---
+title: "GET /nfts/:owner"
+description: List tokenized SNS domains held by a wallet.
+---
+
+Return tokenized `.sns` domains held by a wallet when they have reverse records.
+
+## Request
+
+```http
+GET /nfts/:owner
+```
+
+## Path parameters
+
+### `owner`
+
+Required. The wallet's base58 public key.
+
+## Query parameters
+
+### `rpc`
+
+Optional. A non-empty Solana RPC URL that overrides the proxy Worker's `RPC_URL` binding for this request.
+
+## Response
+
+A successful request returns `200 OK` with tokenized-domain entries:
+
+```ts
+type NftsResponse = {
+  s: "ok";
+  result: Array<{
+    domain: string;
+    key: string;
+    mint: string;
+  }>;
+};
+```
+
+`domain` is the TLD-trimmed `.sns` name without the `.sns` suffix. `key` is the name-account public key. `mint` is the NFT mint that tokenizes the domain. Entries without reverse-name data are omitted.
+
+## Example
+
+```bash
+curl "https://sdk-proxy-v2.sns.id/nfts/<OWNER_PUBLIC_KEY>"
+```
+
+```json
+{
+  "s": "ok",
+  "result": [
+    {
+      "domain": "name",
+      "key": "<DOMAIN_ACCOUNT_PUBLIC_KEY>",
+      "mint": "<NFT_MINT_PUBLIC_KEY>"
+    }
+  ]
+}
+```
+
+## Errors
+
+| Status | `result`          | When                                             |
+| ------ | ----------------- | ------------------------------------------------ |
+| `400`  | `Invalid input`   | `owner` is not a valid Solana public key.        |
+| `502`  | `RPC unavailable` | The selected RPC returns a JSON-RPC error.       |
+| `500`  | `Internal error`  | No RPC is configured, or another failure occurs. |

@@ -6,7 +6,7 @@ displayed_sidebar: docsSidebar
 
 # Class: InvalidBufferLengthError
 
-Defined in: [error.ts:68](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/error.ts#L68)
+Defined in: [error.ts:68](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/js/src/error.ts#L68)
 
 Base error for SDK failures, carrying a machine-readable [ErrorType](../enumerations/ErrorType.md).
 
@@ -20,7 +20,7 @@ Base error for SDK failures, carrying a machine-readable [ErrorType](../enumerat
 
 > **new InvalidBufferLengthError**(`message?`): `InvalidBufferLengthError`
 
-Defined in: [error.ts:69](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/error.ts#L69)
+Defined in: [error.ts:69](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/js/src/error.ts#L69)
 
 #### Parameters
 
@@ -42,7 +42,7 @@ Defined in: [error.ts:69](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c
 
 > **type**: [`ErrorType`](../enumerations/ErrorType.md)
 
-Defined in: [error.ts:43](https://github.com/Bonfida/sns-sdk-beta/blob/a8db17d4c6f4aa581dcca63f4ee93af53f6fe9ce/js/src/error.ts#L43)
+Defined in: [error.ts:43](https://github.com/SolanaNameService/sns-sdk/blob/3e73244d2a3db5b2505a14c08e8f2bb03d4da18e/js/src/error.ts#L43)
 
 Machine-readable error category.
 

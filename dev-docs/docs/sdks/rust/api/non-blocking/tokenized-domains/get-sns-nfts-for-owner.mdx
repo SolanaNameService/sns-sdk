@@ -15,9 +15,9 @@ pub async fn get_sns_nfts_for_owner(
 ) -> Result<Vec<SnsNftDomain>, SnsError>
 ```
 
-Defined in: <SourceLink path="rust-crates/sns-sdk/src/non_blocking/nft.rs" line={89} label="rust-crates/sns-sdk/src/non_blocking/nft.rs:89" />
+Defined in: <SourceLink path="rust-crates/sns-sdk/src/non_blocking/nft.rs" line={95} label="rust-crates/sns-sdk/src/non_blocking/nft.rs:95" />
 
-Retrieves valid name-tokenizer records for `owner`, then batch reverse-resolves their name accounts. Entries with no reverse record are omitted. Each `SnsNftDomain` contains TLD-less `reverse`, the SNS `key`, and its `mint`.
+Lists tokenized `.sns` domains held by `owner`.
 
 ## Parameters
 
@@ -39,13 +39,12 @@ Retrieves valid name-tokenizer records for `owner`, then batch reverse-resolves 
 
 ```rust
 use sns_sdk::non_blocking::nft::get_sns_nfts_for_owner;
+use solana_client::nonblocking::rpc_client::RpcClient;
+use solana_program::pubkey::Pubkey;
 
+let client = RpcClient::new("https://your-rpc-endpoint.example".to_string());
+let owner: Pubkey = std::env::var("OWNER")?.parse()?;
 for domain in get_sns_nfts_for_owner(&client, &owner).await? {
     println!("{}.sns: {}", domain.reverse, domain.key);
 }
 ```
-
-## Related APIs
-
-- [`get_nft_records`](./get-nft-records.mdx)
-- [`resolve_nft_owner`](./resolve-nft-owner.mdx)
