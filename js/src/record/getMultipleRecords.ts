@@ -36,8 +36,8 @@ export interface GetMultipleRecordsOptions {
  * contains the record type, the raw SNS record account, staleness and
  * right-of-association verification results, and optionally the deserialized
  * content. Entries are `undefined` for records that do not exist on-chain.
- * @throws {@link Errors.UnsupportedTldError} when the domain lacks a `.sns` suffix.
- * @throws {@link Errors.InvalidDomainError} when the `.sns` domain or subdomain is invalid.
+ * @throws {@link Errors.UnsupportedTldError} when the domain lacks a `.sns` suffix;
+ * {@link Errors.InvalidDomainError} when the `.sns` domain or subdomain is invalid.
  *
  * @example
  * ```ts

@@ -10,6 +10,11 @@ import { SOL_SRS_CLASS, SRS_HASH_PREFIX, SRS_PROGRAM_ID } from "../constants";
  *
  * @param name Domain name with the `.sol` TLD suffix trimmed
  * @returns UTF-8 bytes used as the SRS record PDA seed
+ *
+ * @example
+ * ```ts
+ * const seed: Buffer = getSrsRecordSeed("example");
+ * ```
  */
 export const getSrsRecordSeed = (name: string): Buffer => {
   // Buffer.from(`name${name}`, "utf8");
@@ -26,6 +31,11 @@ export const getSrsRecordSeed = (name: string): Buffer => {
  * @param domain Domain name with the `.sol` TLD suffix trimmed
  * @returns Canonical SRS record public key and the seed used to derive it
  * @throws {TypeError} When the current record seed exceeds 32 bytes
+ *
+ * @example
+ * ```ts
+ * const { pubkey } = getSolDomainKeySync("example");
+ * ```
  */
 export const getSolDomainKeySync = (
   domain: string,

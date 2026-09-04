@@ -15,8 +15,8 @@ import { getRecordV2Key } from "./getRecordV2Key";
  * @param record Record type
  * @param domain Full `.sns` domain name
  * @returns Whether the record's staleness validation matches the current owner.
- * @throws {@link Errors.UnsupportedTldError} when the domain lacks a `.sns` suffix.
- * @throws {@link Errors.InvalidDomainError} when the `.sns` domain or subdomain is invalid.
+ * @throws {@link Errors.UnsupportedTldError} when the domain lacks a `.sns` suffix;
+ * {@link Errors.InvalidDomainError} when the `.sns` domain or subdomain is invalid.
  *
  * @example
  * ```ts

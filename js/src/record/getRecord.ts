@@ -110,8 +110,8 @@ export interface RetrievedRecord {
  * @param options Optional retrieval settings
  * @param options.deserialize Whether to deserialize the raw record content
  * @returns The requested record, verification results, and optional decoded content
- * @throws {@link Errors.UnsupportedTldError} when the domain lacks a `.sns` suffix.
- * @throws {@link Errors.InvalidDomainError} when the `.sns` domain or subdomain is invalid.
+ * @throws {@link Errors.UnsupportedTldError} when the domain lacks a `.sns` suffix;
+ * {@link Errors.InvalidDomainError} when the `.sns` domain or subdomain is invalid.
  *
  * @example
  * ```ts

@@ -24,8 +24,8 @@ const getDefaultVerifier = (record: Record, recordObj: SnsRecord) =>
  * @param verifier Optional verifier. Defaults to the record content for self-signed
  * records and to the guardian pubkey otherwise. Required when neither applies.
  * @returns Whether the record's Right of Association validation matches the verifier.
- * @throws {@link Errors.UnsupportedTldError} when the domain lacks a `.sns` suffix.
- * @throws {@link Errors.InvalidDomainError} when the `.sns` domain or subdomain is invalid.
+ * @throws {@link Errors.UnsupportedTldError} when the domain lacks a `.sns` suffix;
+ * {@link Errors.InvalidDomainError} when the `.sns` domain or subdomain is invalid.
  *
  * @example
  * ```ts
