@@ -11,6 +11,24 @@ import { TEST_RPC } from "../constants";
 
 jest.setTimeout(60_000);
 
+/**
+ * On-chain fixtures for testing SRS-backed `.sol` resolution.
+ *
+ * Each `sns-ip-5-wallet-N.sol` fixture represents a specific combination of
+ * record conditions as shown below:
+ *
+ * | sns-ip-5-wallet | tokenized | expired | pda owner | .sns mismatch |
+ * |-----------------|-----------|---------|-----------|---------------|
+ * | 1               | false     | false   | false     | false         |
+ * | 2               | false     | false   | false     | true          |
+ * | 3               | false     | false   | true      | true          |
+ * | 4               | false     | true    | false     | false         |
+ * | 5               | true      | false   | true      | false         |
+ * | 6               | true      | true    | true      | true          |
+ * | 7               | true      | false   | false     | false         |
+ * | 8               | true      | true    | false     | false         |
+ * | 9               | true      | false   | false     | true          |
+ */
 describe("SOL domain reads", () => {
   describe("resolve", () => {
     test.each([
