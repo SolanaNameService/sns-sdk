@@ -9,8 +9,6 @@ import { registerDomain } from "../../src/bindings/registerDomain";
 import { registerDomainWithNft } from "../../src/bindings/registerDomainWithNft";
 import { REFERRERS } from "../../src/constants";
 import { InvalidDomainError } from "../../src/error";
-import { getSnsDomainKeySync } from "../../src/utils/getSnsDomainKeySync";
-import { getReverseKeySync } from "../../src/utils/getReverseKeySync";
 
 jest.setTimeout(20_000);
 jest.retryTimes(3);
@@ -24,13 +22,16 @@ const VAULT_OWNER = new PublicKey(
   "5D2zKog251d6KPCyFyLMt3KroWwXXPWSgTPyhV22K2gR",
 );
 
+// Temporarily disabled due to SIMD-0437 causing burn_nonfungible failures in MPL token metadata.
+// The issue will be resolved in SIMD-0437 gate 2, expected mid September.
+/*
 test("Register with NFT", async () => {
   const tx = new Transaction();
   const trimmedDomain = randomBytes(10).toString("hex");
   const domain = trimmedDomain + ".sns";
   const { pubkey } = getSnsDomainKeySync(trimmedDomain);
   const reverse = getReverseKeySync(trimmedDomain);
-  // https://solscan.io/collection/3c138f8640f62b62016f8020f0532ff888bb0866363c26fb2241bcf28c0776ad#holders
+
   const holder = new PublicKey("FiUYY19eXuVcEAHSJ87KEzYjYnfKZm6KbHoVtdQBNGfk");
   const source = new PublicKey("Df9Jz3NrGVd5jjjrXbedwuHbCc1hL131bUXq2143tTfQ");
   const nftMint = new PublicKey("7cpq5U6ze5PPcTPVxGifXA8xyDp8rgAJQNwBDj8eWd8w");
@@ -51,6 +52,7 @@ test("Register with NFT", async () => {
   const res = await connection.simulateTransaction(tx);
   expect(res.value.err).toBe(null);
 });
+*/
 
 test("Indempotent ATA creation ref", async () => {
   const tx = new Transaction();
