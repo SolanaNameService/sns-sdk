@@ -21,7 +21,6 @@ import { createRecord } from "../../src/bindings/createRecord";
 import { createSubdomain } from "../../src/bindings/createSubdomain";
 import { deleteRecord } from "../../src/bindings/deleteRecord";
 import { registerDomain } from "../../src/bindings/registerDomain";
-import { registerDomainWithNft } from "../../src/bindings/registerDomainWithNft";
 import { setRecordRoaVerifier } from "../../src/bindings/setRecordRoaVerifier";
 import { setRecordStalenessVerifier } from "../../src/bindings/setRecordStalenessVerifier";
 import { transferDomain } from "../../src/bindings/transferDomain";
@@ -135,6 +134,9 @@ describe("SNS write bindings", () => {
     });
   });
 
+  // Temporarily disabled due to SIMD-0437 causing burn_nonfungible failures in MPL token metadata.
+  // The issue will be resolved in SIMD-0437 gate 2, expected mid September.
+  /*
   describe("registerDomainWithNft", () => {
     const domain = `${randomBytes(10).toString("hex")}.sns`;
     test(domain, async () => {
@@ -157,6 +159,7 @@ describe("SNS write bindings", () => {
       await testInstructions(ixs, buyer);
     });
   });
+  */
 
   describe("transferDomain", () => {
     test("wallet-guide-9.sns", async () => {
