@@ -1,6 +1,8 @@
+use super::fixtures::{registry_account, test_client};
 use super::*;
 use crate::{derivation::derive_reverse, utils::test::account_response};
 use serde_json::json;
+use solana_client::rpc_request::RpcRequest;
 
 fn reverse_account(payload: &[u8]) -> Account {
     let mut account = registry_account(Pubkey::new_unique());

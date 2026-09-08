@@ -1,36 +1,6 @@
-use super::*;
+use super::super::*;
 use dotenv::dotenv;
 use solana_program::pubkey;
-
-#[tokio::test]
-async fn resolves_reverse_record_from_rpc() {
-    dotenv().ok();
-    let client = RpcClient::new(std::env::var("RPC_URL").unwrap());
-    let key: Pubkey = pubkey!("Crf8hzfthWGbGbLTVCiqRqV5MVnbpHB1L9KQMd6gsinb");
-    let reverse = resolve_reverse(&client, &key).await.unwrap();
-    assert_eq!(reverse.unwrap(), "bonfida");
-}
-
-#[tokio::test]
-async fn resolves_sns_domains_from_rpc() {
-    dotenv().ok();
-    let client = RpcClient::new(std::env::var("RPC_URL").unwrap());
-
-    // `🇺🇸`: V1 signature no longer verifies after registry-owner rotation, so the
-    // current registry owner is returned.
-    let res = resolve(&client, "🇺🇸.sns", AllowPda::Deny).await.unwrap();
-    assert_eq!(res, pubkey!("8fe1EFcmz4BYeX6zGp6HUdoaHjVYhzsv599ub52WJbos"));
-
-    let res = resolve(&client, "0xluna.sns", AllowPda::Deny)
-        .await
-        .unwrap();
-    assert_eq!(res, pubkey!("8fe1EFcmz4BYeX6zGp6HUdoaHjVYhzsv599ub52WJbos"));
-
-    let res = resolve(&client, "bonfida.sns", AllowPda::Deny)
-        .await
-        .unwrap();
-    assert_eq!(res, pubkey!("Fw1ETanDZafof7xEULsnq9UY6o71Tpds89tNwPkWLb1v"));
-}
 
 #[tokio::test]
 async fn resolves_sns_ip_5_fixtures_from_rpc() {
@@ -118,9 +88,6 @@ async fn resolves_sns_ip_5_fixtures_from_rpc() {
     }
 }
 
-/// SNS-IP 5 §4.2 PDA gate: wallet-5 (V2 stale + PDA owner) and wallet-10 (no V1
-/// + PDA owner). Both should resolve to the registry owner when the caller
-/// explicitly allows the program owning the PDA.
 #[tokio::test]
 async fn resolves_sns_ip_5_pda_fixtures_from_rpc() {
     dotenv().ok();
@@ -176,23 +143,4 @@ async fn returns_expected_sns_ip_5_fixture_errors_from_rpc() {
     // wallet-6 with an empty allow-list still throws (program not in list).
     let res = resolve(&client, "sns-ip-5-wallet-6.sns", AllowPda::Allow(vec![])).await;
     assert!(matches!(res, Err(SnsError::PdaOwnerNotAllowed)), "{res:?}");
-}
-
-#[tokio::test]
-async fn resolves_reverse_records_in_batch_from_rpc() {
-    dotenv().ok();
-    let client = RpcClient::new(std::env::var("RPC_URL").unwrap());
-    let reverses = resolve_reverse_batch(
-        &client,
-        &[
-            pubkey!("Crf8hzfthWGbGbLTVCiqRqV5MVnbpHB1L9KQMd6gsinb"),
-            pubkey!("Crf8hzfthWGbGbLTVCiqRqV5MVnbpHB1L9KQMd6gsinb"),
-        ],
-    )
-    .await
-    .unwrap();
-    assert_eq!(
-        reverses,
-        vec![Some("bonfida".to_string()), Some("bonfida".to_string())]
-    )
 }

@@ -1,8 +1,22 @@
+use super::fixtures::{registry_account, test_client, TEST_NOW};
 use super::*;
 use crate::{
     derivation::{get_domain_mint, get_sns_domain_key},
     utils::test::multiple_accounts_response,
 };
+use borsh::BorshSerialize;
+use solana_client::rpc_request::RpcRequest;
+
+fn active_nft_record_account(domain_key: Pubkey, mint_key: Pubkey) -> Account {
+    let record = NftRecord::new(0, Pubkey::new_unique(), domain_key, mint_key);
+    let mut data = Vec::new();
+    record.serialize(&mut data).unwrap();
+    Account {
+        data,
+        owner: NAME_TOKENIZER_ID,
+        ..Account::default()
+    }
+}
 
 #[test]
 fn rejects_missing_or_invalid_sns_registry_accounts() {

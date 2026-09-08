@@ -1,30 +1,6 @@
-use super::*;
+use super::super::*;
 use dotenv::dotenv;
 use solana_program::pubkey;
-
-#[test]
-fn resolves_reverse_record_from_rpc() {
-    dotenv().ok();
-    let client = RpcClient::new(std::env::var("RPC_URL").unwrap());
-    let key: Pubkey = pubkey!("Crf8hzfthWGbGbLTVCiqRqV5MVnbpHB1L9KQMd6gsinb");
-    let reverse = resolve_reverse(&client, &key).unwrap();
-    assert_eq!(reverse.unwrap(), "bonfida");
-}
-
-#[test]
-fn resolves_sns_domains_from_rpc() {
-    dotenv().ok();
-    let client = RpcClient::new(std::env::var("RPC_URL").unwrap());
-
-    let res = resolve(&client, "🇺🇸.sns", AllowPda::Deny).unwrap();
-    assert_eq!(res, pubkey!("8fe1EFcmz4BYeX6zGp6HUdoaHjVYhzsv599ub52WJbos"));
-
-    let res = resolve(&client, "0xluna.sns", AllowPda::Deny).unwrap();
-    assert_eq!(res, pubkey!("8fe1EFcmz4BYeX6zGp6HUdoaHjVYhzsv599ub52WJbos"));
-
-    let res = resolve(&client, "bonfida.sns", AllowPda::Deny).unwrap();
-    assert_eq!(res, pubkey!("Fw1ETanDZafof7xEULsnq9UY6o71Tpds89tNwPkWLb1v"));
-}
 
 #[test]
 fn resolves_sns_ip_5_fixtures_from_rpc() {

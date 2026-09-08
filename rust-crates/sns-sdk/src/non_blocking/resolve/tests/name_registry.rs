@@ -1,5 +1,7 @@
+use super::fixtures::{registry_account, test_client};
 use super::*;
 use crate::utils::test::{account_response, multiple_accounts_response};
+use solana_client::rpc_request::RpcRequest;
 
 #[tokio::test]
 async fn name_registry_resolvers_validate_accounts() {

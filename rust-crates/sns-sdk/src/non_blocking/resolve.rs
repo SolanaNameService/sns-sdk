@@ -43,7 +43,8 @@ pub async fn resolve(
 ///
 /// For `.sol` domains, both the SRS domain and its corresponding `.sns` domain
 /// must resolve to the same target; otherwise,
-/// [`SnsError::SnsSolResolutionMismatch`] is returned.
+/// [`SnsError::SnsSolResolutionMismatch`] is returned. If either resolution
+/// fails, the SRS (`.sol`) error takes precedence.
 pub async fn safe_resolve(
     rpc_client: &RpcClient,
     domain: &str,
@@ -75,10 +76,16 @@ pub(crate) async fn safe_resolve_with_config(
     now_unix_seconds: i64,
 ) -> Result<Pubkey, SnsError> {
     if let Some(trimmed_domain) = domain.strip_suffix(SOL_TLD) {
-        let (sol_target, sns_target) = futures::try_join!(
+        let (sol_result, sns_result) = futures::future::join(
             resolve_sol(rpc_client, trimmed_domain, &allow_pda, now_unix_seconds),
             resolve_sns(rpc_client, trimmed_domain, &allow_pda),
-        )?;
+        )
+        .await;
+        let (sol_target, sns_target) = match (sol_result, sns_result) {
+            (Ok(sol_target), Ok(sns_target)) => (sol_target, sns_target),
+            (Err(error), _) => return Err(error),
+            (Ok(_), Err(error)) => return Err(error),
+        };
 
         if sol_target != sns_target {
             return Err(SnsError::SnsSolResolutionMismatch);
