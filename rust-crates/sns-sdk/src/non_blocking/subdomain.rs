@@ -43,11 +43,14 @@ pub async fn get_subdomains(
         sort_results: None,
     };
     let res = rpc_client
-        .get_program_accounts_with_config(&spl_name_service::ID, config)
+        .get_program_ui_accounts_with_config(&spl_name_service::ID, config)
         .await?;
 
     let mut results = Vec::with_capacity(res.len());
-    for (_, acc) in res {
+    for (_, ui_account) in res {
+        let Some(acc) = ui_account.to_account() else {
+            continue;
+        };
         let payload = acc
             .data
             .get(NameRecordHeader::LEN..)

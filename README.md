@@ -34,7 +34,7 @@ This README is an integration overview. Use the developer documentation and pack
 | ------------------------- | -------------------------------------------------------------------- | ------------------------------------------- |
 | JavaScript SDK            | TypeScript or JavaScript applications using `@solana/web3.js` 1.x    | [JavaScript SDK](./js/README.md)            |
 | JS Kit SDK                | TypeScript applications using `@solana/kit` on Node.js 24+           | [JS Kit SDK](./js-kit/README.md)            |
-| Rust SDK                  | Async or blocking Rust applications on the Solana 2.1 client stack   | [Rust SDK](./rust-crates/sns-sdk/README.md) |
+| Rust SDK                  | Async or blocking Rust applications on the Solana 4 client stack     | [Rust SDK](./rust-crates/sns-sdk/README.md) |
 | React hooks               | React 18 or 19 applications using the JavaScript SDK and React Query | [React hooks](./react/README.md)            |
 | CLI                       | Mainnet SNS reads and administration from a terminal                 | [CLI](./rust-crates/sns-cli/README.md)      |
 | REST proxy (experimental) | HTTP integrations that cannot use a native SDK                       | [REST proxy](./sdk-proxy/README.md)         |
@@ -98,7 +98,7 @@ use sns_sdk::non_blocking::resolve::{resolve, AllowPda};
 let owner = resolve(&client, "mydomain.sns", AllowPda::Deny).await?; // Or use `safe_resolve`.
 ```
 
-See the [Rust SDK package guide](./rust-crates/sns-sdk/README.md) and [v2 migration guide](./rust-crates/sns-sdk/CHANGELOG.md).
+See the [Rust SDK package guide](./rust-crates/sns-sdk/README.md) and [v3 migration guide](./rust-crates/sns-sdk/CHANGELOG.md).
 
 ## CLI
 

@@ -93,7 +93,7 @@ async fn resolves_sns_ip_5_pda_fixtures_from_rpc() {
     dotenv().ok();
     let client = RpcClient::new(std::env::var("RPC_URL").unwrap());
     let expected = pubkey!("96GKJgm2W3P8Bae78brPrJf4Yi9AN1wtPJwg2XVQ2rMr");
-    let system_program = solana_program::system_program::ID;
+    let system_program = solana_sdk_ids::system_program::ID;
 
     for domain in ["sns-ip-5-wallet-5", "sns-ip-5-wallet-10"] {
         let domain = format!("{domain}.sns");

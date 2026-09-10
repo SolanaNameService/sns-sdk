@@ -39,10 +39,13 @@ pub fn get_subdomains(rpc_client: &RpcClient, parent: &Pubkey) -> Result<Vec<Str
         },
         sort_results: None,
     };
-    let res = rpc_client.get_program_accounts_with_config(&spl_name_service::ID, config)?;
+    let res = rpc_client.get_program_ui_accounts_with_config(&spl_name_service::ID, config)?;
 
     let mut results = Vec::with_capacity(res.len());
-    for (_, acc) in res {
+    for (_, ui_account) in res {
+        let Some(acc) = ui_account.to_account() else {
+            continue;
+        };
         let payload = acc
             .data
             .get(NameRecordHeader::LEN..)

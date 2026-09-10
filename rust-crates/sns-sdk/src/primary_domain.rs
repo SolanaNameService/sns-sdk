@@ -18,6 +18,7 @@ pub fn derive_primary_domain_key(owner: &Pubkey) -> Pubkey {
 }
 
 #[derive(BorshDeserialize)]
+#[borsh(use_discriminant = true)]
 pub enum Tag {
     _A,
     _B,

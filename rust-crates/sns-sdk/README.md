@@ -13,15 +13,15 @@ Rust APIs and instruction builders for resolving Solana Name Service (SNS) domai
 
 ## Installation
 
-The crate uses Rust 2021 and the Solana 2.1.x client stack. No MSRV or target-platform matrix is declared. Create and configure the RPC client in your application; the SDK does not own RPC transport, credentials, signing, or transaction submission.
+The crate uses Rust 2021 and the Solana 4 client stack. Create and configure the RPC client in your application; the SDK does not own RPC transport, credentials, signing, or transaction submission.
 
 The default build is asynchronous and exposes `sns_sdk::non_blocking`:
 
 ```toml
 [dependencies]
-sns-sdk = "2"
-solana-client = "2.1"
-solana-sdk = "2.1"
+sns-sdk = "3"
+solana-client = "4.2"
+solana-sdk = "4.0"
 tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
 ```
 
@@ -29,9 +29,9 @@ For synchronous RPC APIs, disable default features and enable `blocking`. It exp
 
 ```toml
 [dependencies]
-sns-sdk = { version = "2", default-features = false, features = ["blocking"] }
-solana-client = "2.1"
-solana-sdk = "2.1"
+sns-sdk = { version = "3", default-features = false, features = ["blocking"] }
+solana-client = "4.2"
+solana-sdk = "4.0"
 ```
 
 `non_blocking` and `blocking` are mutually exclusive public RPC namespaces in a single feature build. The default async APIs need an async runtime such as Tokio. Shared parsing, derivation, and instruction-builder modules are available in either mode.

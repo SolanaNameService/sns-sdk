@@ -37,7 +37,7 @@ pub(crate) async fn process_count_command(
         ),
     };
     let accounts = rpc_client
-        .get_program_accounts_with_config(
+        .get_program_ui_accounts_with_config(
             &spl_name_service::ID,
             RpcProgramAccountsConfig {
                 filters,
@@ -55,7 +55,10 @@ pub(crate) async fn process_count_command(
         CountSubCommand::SubDomains { top_domains } => {
             let mut name_accounts = HashMap::<Pubkey, Vec<Pubkey>>::with_capacity(accounts.len());
             const NULL_PUBKEY: Pubkey = Pubkey::new_from_array([0; 32]);
-            for (key, account) in accounts {
+            for (key, ui_account) in accounts {
+                let Some(account) = ui_account.to_account() else {
+                    continue;
+                };
                 let name_record = NameRecordHeader::unpack_unchecked(&account.data)?;
                 if name_record.class != NULL_PUBKEY {
                     continue;

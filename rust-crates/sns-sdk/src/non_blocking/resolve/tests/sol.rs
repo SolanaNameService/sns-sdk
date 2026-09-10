@@ -228,7 +228,7 @@ async fn propagates_srs_token_holder_lookup_errors() {
     assert!(matches!(
         error,
         SnsError::SolanaClient(error)
-            if matches!(&error.kind, solana_client::client_error::ClientErrorKind::Custom(message) if message == "RPC unavailable")
+            if matches!(&*error.kind, solana_client::client_error::ClientErrorKind::Custom(message) if message == "RPC unavailable")
     ));
 }
 

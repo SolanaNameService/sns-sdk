@@ -1,4 +1,4 @@
-# SNS CLI v3.1.0
+# SNS CLI v4.0.0
 
 ## Added
 
@@ -8,7 +8,7 @@
 
 ## Changed
 
-- Upgraded the `sns-sdk` dependency from 2.0.0 to 2.1.0.
+- Upgraded the `sns-sdk` dependency from 2.0.0 to 3.0.0.
 - The CLI remains `.sns`-only: no `.sol` resolution, discovery, or ownership commands
   were added, and `.sol`/bare names continue to be rejected by all domain-taking commands.
 

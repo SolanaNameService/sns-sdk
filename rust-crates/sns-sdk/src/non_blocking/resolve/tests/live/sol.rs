@@ -10,7 +10,7 @@ fn live_client() -> RpcClient {
 #[tokio::test]
 async fn resolves_sol_ip_5_fixtures_from_rpc() {
     let client = live_client();
-    let system_program = solana_program::system_program::ID;
+    let system_program = solana_sdk_ids::system_program::ID;
     let cases = [
         (
             "sns-ip-5-wallet-1.sol",
@@ -81,7 +81,7 @@ async fn returns_expected_sol_fixture_errors_from_rpc() {
 #[tokio::test]
 async fn safe_resolves_sol_ip_5_fixtures_from_rpc() {
     let client = live_client();
-    let system_program = solana_program::system_program::ID;
+    let system_program = solana_sdk_ids::system_program::ID;
     let cases = [
         (
             "sns-ip-5-wallet-1.sol",

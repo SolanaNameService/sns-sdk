@@ -1,6 +1,6 @@
 [package]
 name = "sns-sdk"
-version = "2.1.0-beta.0"
+version = "3.0.0-beta.0"
 edition = "2021"
 description = "The Rust SDK provides everything you need for resolving domain ownership and records within the Solana Name Service (SNS)"
 homepage = "https://www.sns.id/"
@@ -28,15 +28,15 @@ spl-token-group-interface = { workspace = true }
 spl-token-metadata-interface = { workspace = true }
 spl-associated-token-account = { workspace = true, features = ["no-entrypoint"] }
 spl-name-service = { workspace = true, features = ["no-entrypoint"] }
-sns-records = { version = "0.2.0", features = ["no-entrypoint"] }
-sub-registrar = { version = "0.1.0", optional = true, features = ["no-entrypoint"] }
-sns-warp-common = { version = "0.2.0", features = ["solana"] }
-name-tokenizer = { version = "2.1.0", features = ["no-entrypoint"] }
+sns-records = { version = "0.3.0-beta.0", features = ["no-entrypoint"] }
+sub-registrar = { version = "0.2.0-beta.1", optional = true, features = ["no-entrypoint"] }
+sns-warp-common = { version = "0.3.0-beta.0", features = ["solana"] }
+name-tokenizer = { version = "3.0.0-beta.0", features = ["no-entrypoint"] }
 derive_more = "0.99.17"
 ed25519-dalek = "1.0.1"
 hex = "0.4.3"
-borsh = "0.10.3"
-bonfida-utils = "0.7.0"
+borsh = { version = "1.7.0", features = ["derive"] }
+bonfida-utils = "0.9.2"
 bech32 = "0.9.1"
 punycode = "0.4.1"
 futures = "0.3.28"

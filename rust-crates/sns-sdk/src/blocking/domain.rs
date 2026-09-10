@@ -40,7 +40,7 @@ pub fn get_sns_domains_for_owner(
         },
         sort_results: None,
     };
-    let res = rpc_client.get_program_accounts_with_config(&spl_name_service::ID, config)?;
+    let res = rpc_client.get_program_ui_accounts_with_config(&spl_name_service::ID, config)?;
     Ok(res.into_iter().map(|x| x.0).collect())
 }
 
@@ -71,11 +71,14 @@ pub fn get_sol_domains_for_owner(
         },
         sort_results: None,
     };
-    let accounts = rpc_client.get_program_accounts_with_config(&SRS_PROGRAM_ID, config)?;
+    let accounts = rpc_client.get_program_ui_accounts_with_config(&SRS_PROGRAM_ID, config)?;
     let now = current_unix_timestamp();
 
     let mut domains = Vec::new();
-    for (key, account) in accounts {
+    for (key, ui_account) in accounts {
+        let Some(account) = ui_account.to_account() else {
+            continue;
+        };
         if let Ok(SrsRecordOwner::Pubkey(_)) = parse_srs_record(&account.owner, &account.data, now)
         {
             if let Ok(domain) = parse_srs_record_metadata_name(&account.data) {

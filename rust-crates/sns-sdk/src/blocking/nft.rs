@@ -8,6 +8,7 @@ use solana_client::{
 };
 use solana_program::{program_pack::Pack, pubkey::Pubkey};
 use spl_token::state::{Account, Mint};
+use spl_token_2022::ID as SPL_TOKEN_2022_ID;
 
 use super::rpc::get_multiple_accounts_batched;
 use crate::{
@@ -42,7 +43,11 @@ pub fn get_record_from_mint(
         sort_results: None,
     };
 
-    Ok(rpc_client.get_program_accounts_with_config(&NAME_TOKENIZER_ID, config)?)
+    let accounts = rpc_client.get_program_ui_accounts_with_config(&NAME_TOKENIZER_ID, config)?;
+    Ok(accounts
+        .into_iter()
+        .filter_map(|(key, account)| account.to_account().map(|account| (key, account)))
+        .collect())
 }
 
 pub fn get_nft_records(rpc_client: &RpcClient, owner: &Pubkey) -> Result<Vec<NftRecord>, SnsError> {
@@ -60,11 +65,12 @@ pub fn get_nft_records(rpc_client: &RpcClient, owner: &Pubkey) -> Result<Vec<Nft
         sort_results: None,
     };
     let token_accounts = rpc_client
-        .get_program_accounts_with_config(&spl_token::ID, config)?
+        .get_program_ui_accounts_with_config(&spl_token::ID, config)?
         .into_iter()
-        .map(|(_, acc)| Account::unpack(&acc.data))
-        .filter(Result::is_ok)
-        .map(Result::unwrap)
+        .filter_map(|(_, acc)| {
+            acc.to_account()
+                .and_then(|acc| Account::unpack(&acc.data).ok())
+        })
         .collect::<Vec<_>>();
 
     let records = token_accounts
@@ -128,12 +134,14 @@ pub fn resolve_nft_owner(
         },
         sort_results: None,
     };
-    let res = rpc_client.get_program_accounts_with_config(&spl_token::ID, config)?;
+    let res = rpc_client.get_program_ui_accounts_with_config(&spl_token::ID, config)?;
 
     if let Some((_, acc)) = res.first() {
-        return Ok(Some(
-            spl_token::state::Account::unpack_unchecked(&acc.data)?.owner,
-        ));
+        if let Some(acc) = acc.to_account() {
+            return Ok(Some(
+                spl_token::state::Account::unpack_unchecked(&acc.data)?.owner,
+            ));
+        }
     }
 
     Ok(None)
@@ -160,9 +168,13 @@ pub fn get_sol_nfts_for_owner(
         sort_results: None,
     };
     let mints = rpc_client
-        .get_program_accounts_with_config(&spl_token_2022::ID, config)?
+        .get_program_ui_accounts_with_config(&SPL_TOKEN_2022_ID, config)?
         .into_iter()
-        .filter_map(|(_, account)| parse_sliced_token_2022_account_mint(&account.data))
+        .filter_map(|(_, account)| {
+            account
+                .to_account()
+                .and_then(|account| parse_sliced_token_2022_account_mint(&account.data))
+        })
         .collect::<Vec<_>>();
 
     let mint_accounts = get_multiple_accounts_batched(rpc_client, &mints)?;

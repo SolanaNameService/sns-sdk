@@ -1,6 +1,13 @@
-# Rust SDK v2.1.0
+# Rust SDK v3.0.0
 
 ## Changed
+
+### Solana ecosystem dependencies
+
+- Migrated the SDK from Solana 2 to Solana 4, using `solana-program` 4.0, `solana-sdk` 4.0, and the Agave `solana-client` and `solana-account-decoder` 4.2 libraries.
+- Updated to SPL Token 9, Token-2022 11, Borsh 1, Bonfida Utils 0.9, and the Solana 4-compatible SNS program bindings.
+- Applications that declare Solana crates directly should use compatible versions to keep public Solana types unified.
+- This dependency migration does not change SNS account layouts, instruction serialization, or address derivation.
 
 ### `.sol` resolution
 
