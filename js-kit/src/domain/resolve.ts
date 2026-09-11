@@ -70,18 +70,29 @@ export const safeResolve = async ({
 }: ResolveParams): Promise<Address> => {
   if (domain.endsWith(SOL_TLD)) {
     const trimmedSolDomain = domain.slice(0, -SOL_TLD.length);
-    const [srsTarget, snsTarget] = await Promise.all([
+    const [solResult, snsResult] = await Promise.allSettled([
       resolveSol({ rpc, domain: trimmedSolDomain, options }),
       resolveSns({ rpc, domain: trimmedSolDomain, options }),
     ]);
 
-    if (srsTarget !== snsTarget) {
+    if (solResult.status === "rejected") {
+      throw solResult.reason;
+    }
+
+    if (snsResult.status === "rejected") {
+      throw snsResult.reason;
+    }
+
+    const solTarget = solResult.value;
+    const snsTarget = snsResult.value;
+
+    if (solTarget !== snsTarget) {
       throw new SnsSolResolutionMismatchError(
-        `SRS resolved ${domain} to ${srsTarget}, but SNS resolved it to ${snsTarget}`
+        `SRS resolved ${domain} to ${solTarget}, but SNS resolved it to ${snsTarget}`
       );
     }
 
-    return srsTarget;
+    return solTarget;
   }
 
   return resolve({ rpc, domain, options });
