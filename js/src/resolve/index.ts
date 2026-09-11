@@ -90,18 +90,29 @@ export const safeResolve = async (
 ): Promise<PublicKey> => {
   if (domain.endsWith(SOL_TLD)) {
     const trimmedDomain = domain.slice(0, -SOL_TLD.length);
-    const [srsTarget, snsTarget] = await Promise.all([
+    const [solResult, snsResult] = await Promise.allSettled([
       resolveSol(connection, trimmedDomain, config),
       resolveSns(connection, trimmedDomain, config),
     ]);
 
-    if (!srsTarget.equals(snsTarget)) {
+    if (solResult.status === "rejected") {
+      throw solResult.reason;
+    }
+
+    if (snsResult.status === "rejected") {
+      throw snsResult.reason;
+    }
+
+    const solTarget = solResult.value;
+    const snsTarget = snsResult.value;
+
+    if (!solTarget.equals(snsTarget)) {
       throw new SnsSolResolutionMismatchError(
-        `SRS resolved ${domain} to ${srsTarget.toBase58()}, but SNS resolved it to ${snsTarget.toBase58()}`,
+        `SRS resolved ${domain} to ${solTarget.toBase58()}, but SNS resolved it to ${snsTarget.toBase58()}`,
       );
     }
 
-    return srsTarget;
+    return solTarget;
   }
 
   return resolve(connection, domain, config);
