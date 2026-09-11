@@ -20,7 +20,7 @@ npm install @solana-name-service/sns-sdk-kit @solana/kit
 Requirements:
 
 - Node.js `>=24.0.0`.
-- `@solana/kit ^6.9.0` as a peer dependency.
+- `@solana/kit ^8.3.0` as a peer dependency.
 - An RPC client with the APIs required by the operation.
 
 Read APIs fetch and decode account data. Write builders return `Instruction`, `Promise<Instruction>`, or `Promise<Instruction[]>`. Build a transaction around the returned instruction(s), set its fee payer and recent blockhash, collect the signatures required by its account metas, and submit that transaction through your RPC client.
