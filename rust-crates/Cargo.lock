@@ -2439,9 +2439,9 @@ dependencies = [
 
 [[package]]
 name = "name-tokenizer"
-version = "3.0.0-beta.0"
+version = "3.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b20e55fde6bf0972206ce3b0f38505e8c50b74d4b013b671de10827ab707ee46"
+checksum = "ad0168e7bd3d0f932f5ec4d97f2ee2b56f6cb6b7e7fbaef087274af091233672"
 dependencies = [
  "bonfida-utils",
  "borsh",
@@ -3830,7 +3830,7 @@ checksum = "b9be42f50aa861c555654aa3a37f52f4b1074bacf4e48fe0ef7fa584e80f1f0f"
 
 [[package]]
 name = "sns-cli"
-version = "4.0.0-beta.0"
+version = "4.0.0-beta.1"
 dependencies = [
  "anyhow",
  "clap",
@@ -3853,9 +3853,9 @@ dependencies = [
 
 [[package]]
 name = "sns-records"
-version = "0.3.0-beta.0"
+version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ca6c84071b5ccca6d15006f3977f132d66d2c34b200f1796ed8033ada845319c"
+checksum = "4bba42208304d14013a0182fb4fcb86aa34bfc20555d0b09ba3ce4f94d51c959"
 dependencies = [
  "bonfida-utils",
  "borsh",
@@ -3874,9 +3874,9 @@ dependencies = [
 
 [[package]]
 name = "sns-registrar"
-version = "0.2.0-beta.0"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6308ba493e542f10f18ae70b7ee9cf5a9b10d0cf1424793afbd6e9ff7cdb3f2c"
+checksum = "758e7bae01c6a3042274099ff571713bcd456c799914b70552d8b62eec9410bc"
 dependencies = [
  "bonfida-utils",
  "borsh",
@@ -3894,7 +3894,7 @@ dependencies = [
 
 [[package]]
 name = "sns-sdk"
-version = "3.0.0-beta.0"
+version = "3.0.0-beta.1"
 dependencies = [
  "async-trait",
  "bech32",
@@ -3929,9 +3929,9 @@ dependencies = [
 
 [[package]]
 name = "sns-warp-common"
-version = "0.3.0-beta.0"
+version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a1a5513a34381a1ab950b45a436e44e80782922787da407571fa0b4685e5deb0"
+checksum = "2fbe95682835f41b149cb5bd3731b6567628452d0485ffd1a0dc90a616088090"
 dependencies = [
  "borsh",
  "bytemuck",
@@ -6672,9 +6672,9 @@ checksum = "7da8b5736845d9f2fcb837ea5d9e2628564b3b043a70948a3f0b778838c5fb4f"
 
 [[package]]
 name = "sub-registrar"
-version = "0.2.0-beta.1"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "661f5e805102847253114762e40270f57adc36138c469efc9c121dcf71e4d609"
+checksum = "7b70b8b52e959f0c712ff0411c07a7b825e52ffd947d4481a8f4c10290eb884c"
 dependencies = [
  "bonfida-utils",
  "borsh",
