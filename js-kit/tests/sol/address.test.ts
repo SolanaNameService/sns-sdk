@@ -13,11 +13,15 @@ describe("SOL address discovery", () => {
   test.each([
     {
       address: "ALd1XSrQMCPSRayYUoUZnp6KcP6gERfJhWzkP49CkXKs" as Address,
-      domains: ["sns-ip-5-wallet-1", "sns-ip-5-wallet-2"],
+      domains: ["sns-ip-5-wallet-1", "sns-ip-5-wallet-2", "sns-ip-5-wallet-12"],
     },
     {
       address: "96GKJgm2W3P8Bae78brPrJf4Yi9AN1wtPJwg2XVQ2rMr" as Address,
-      domains: ["sns-ip-5-wallet-3"],
+      domains: [
+        "sns-ip-5-wallet-3",
+        "sns-ip-5-wallet-10",
+        "sns-ip-5-wallet-11",
+      ],
     },
   ])("getSolDomainsForAddress($address)", async ({ address, domains }) => {
     const result = await getSolDomainsForAddress({ rpc: TEST_RPC, address });
