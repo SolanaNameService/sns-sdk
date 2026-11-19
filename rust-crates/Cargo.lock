@@ -3830,7 +3830,7 @@ checksum = "b9be42f50aa861c555654aa3a37f52f4b1074bacf4e48fe0ef7fa584e80f1f0f"
 
 [[package]]
 name = "sns-cli"
-version = "4.0.0-beta.1"
+version = "4.0.0-beta.2"
 dependencies = [
  "anyhow",
  "clap",
@@ -3894,7 +3894,7 @@ dependencies = [
 
 [[package]]
 name = "sns-sdk"
-version = "3.0.0-beta.1"
+version = "3.0.0-beta.2"
 dependencies = [
  "async-trait",
  "bech32",

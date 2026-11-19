@@ -130,11 +130,11 @@ mod tests {
         for (owner, expected) in [
             (
                 pubkey!("ALd1XSrQMCPSRayYUoUZnp6KcP6gERfJhWzkP49CkXKs"),
-                vec!["sns-ip-5-wallet-1", "sns-ip-5-wallet-2"],
+                vec!["sns-ip-5-wallet-1", "sns-ip-5-wallet-2", "sns-ip-5-wallet-12"],
             ),
             (
                 pubkey!("96GKJgm2W3P8Bae78brPrJf4Yi9AN1wtPJwg2XVQ2rMr"),
-                vec!["sns-ip-5-wallet-3"],
+                vec!["sns-ip-5-wallet-3", "sns-ip-5-wallet-10", "sns-ip-5-wallet-11"],
             ),
             (
                 pubkey!("53Ujp7go6CETvC7LTyxBuyopp5ivjKt6VSfixLm1pQrH"),
